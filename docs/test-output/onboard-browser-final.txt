@@ -1,0 +1,1 @@
+PASS: admin field errors and examples; real Logo/cover upload with private previews; independent brand fields outside gallery; merchant category creation; public menu isolation; admin merge; mobile admin layout. All business mutations used an isolated test database.

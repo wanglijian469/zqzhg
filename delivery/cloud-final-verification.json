@@ -1,0 +1,21 @@
+{
+  "artifactHashes": "passed",
+  "archives": [
+    {
+      "archive": "zqzt-aliyun-v1.5.13-linux.tar.gz",
+      "filesChecked": 226,
+      "safeRelativePaths": true,
+      "checksums": "passed"
+    },
+    {
+      "archive": "private/zqzt-data-20261015.tar.gz",
+      "filesChecked": 254,
+      "safeRelativePaths": true,
+      "checksums": "passed"
+    }
+  ],
+  "sourceFiles": 464,
+  "forbiddenSourceFiles": [],
+  "androidZip": "passed",
+  "allAPKCopiesMatch": true
+}

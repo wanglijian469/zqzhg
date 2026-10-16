@@ -1,0 +1,10 @@
+zqzt_exhibition_restore_1791798024416
+migrated_versions
+5
+vendors_and_products
+21
+image_records
+64
+
+Restored media: D:\workspace-main\codex-zqzt\.local\backups\pre-onboarding-v152\restored-media-zqzt_exhibition_restore_1791798024416
+SHA-256 checks passed.

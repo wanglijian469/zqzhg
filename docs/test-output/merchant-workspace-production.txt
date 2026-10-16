@@ -1,0 +1,13 @@
+{
+  "website": "1.5.10",
+  "backend": "1.5.10",
+  "android": "1.5.2+19",
+  "migrations": 8,
+  "local_and_lan_health": 200,
+  "business_and_home_settings_unchanged": true,
+  "real_representative_settings_unconfigured": true,
+  "default_representatives_match_legacy_order": true,
+  "no_qa_records_in_production": true,
+  "new_backend_and_bundle_verified": true,
+  "original_apk_download_verified": true
+}

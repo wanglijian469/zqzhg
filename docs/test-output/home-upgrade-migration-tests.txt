@@ -1,0 +1,311 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart
+00:00 +0: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:02 +1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Home search selects an existing destination and applies the new query
+00:02 +2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Account menu confirms logout, retains drafts and resets the workspace for another account
+00:03 +3: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:05 +4: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: First booth creation returns to the existing shell and reloads the new booth
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _KeyWidgetFinder:<Found 0 widgets with key [<'app-tab-3'>]: []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:416:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart line 416
+The test description was:
+  First booth creation returns to the existing shell and reloads the new booth
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +4 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: First booth creation returns to the existing shell and reloads the new booth [E]
+  Test failed. See exception logs above.
+  The test description was: First booth creation returns to the existing shell and reloads the new booth
+  
+00:06 +4 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 zh at 1.4 text scale
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.first (dart:core/iterable.dart:663:7)
+#1      _FirstFinderMixin.filter (package:flutter_test/src/finders.dart:1383:28)
+#3      Iterable.single (dart:core/iterable.dart:694:13)
+#4      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#5      tap (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:153:41)
+#6      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:436:17)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 2 frames from dart:async-patch and package:stack_trace)
+
+The test description was:
+  Navigation and task layout 360.0 zh at 1.4 text scale
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +4 -2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 zh at 1.4 text scale [E]
+  Test failed. See exception logs above.
+  The test description was: Navigation and task layout 360.0 zh at 1.4 text scale
+  
+00:07 +4 -2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 en at 1.4 text scale
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.first (dart:core/iterable.dart:663:7)
+#1      _FirstFinderMixin.filter (package:flutter_test/src/finders.dart:1383:28)
+#3      Iterable.single (dart:core/iterable.dart:694:13)
+#4      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#5      tap (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:153:41)
+#6      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:436:17)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 2 frames from dart:async-patch and package:stack_trace)
+
+The test description was:
+  Navigation and task layout 360.0 en at 1.4 text scale
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:08 +4 -3: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 en at 1.4 text scale [E]
+  Test failed. See exception logs above.
+  The test description was: Navigation and task layout 360.0 en at 1.4 text scale
+  
+00:08 +4 -3: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 zh at 1.4 text scale
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.first (dart:core/iterable.dart:663:7)
+#1      _FirstFinderMixin.filter (package:flutter_test/src/finders.dart:1383:28)
+#3      Iterable.single (dart:core/iterable.dart:694:13)
+#4      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#5      tap (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:153:41)
+#6      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:436:17)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 2 frames from dart:async-patch and package:stack_trace)
+
+The test description was:
+  Navigation and task layout 390.0 zh at 1.4 text scale
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:08 +4 -4: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 zh at 1.4 text scale [E]
+  Test failed. See exception logs above.
+  The test description was: Navigation and task layout 390.0 zh at 1.4 text scale
+  
+00:08 +4 -4: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 en at 1.4 text scale
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.first (dart:core/iterable.dart:663:7)
+#1      _FirstFinderMixin.filter (package:flutter_test/src/finders.dart:1383:28)
+#3      Iterable.single (dart:core/iterable.dart:694:13)
+#4      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#5      tap (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:153:41)
+#6      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:436:17)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 2 frames from dart:async-patch and package:stack_trace)
+
+The test description was:
+  Navigation and task layout 390.0 en at 1.4 text scale
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:09 +4 -5: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 en at 1.4 text scale [E]
+  Test failed. See exception logs above.
+  The test description was: Navigation and task layout 390.0 en at 1.4 text scale
+  
+00:09 +4 -5: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 zh at 1.4 text scale
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.first (dart:core/iterable.dart:663:7)
+#1      _FirstFinderMixin.filter (package:flutter_test/src/finders.dart:1383:28)
+#3      Iterable.single (dart:core/iterable.dart:694:13)
+#4      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#5      tap (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:153:41)
+#6      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:436:17)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 2 frames from dart:async-patch and package:stack_trace)
+
+The test description was:
+  Navigation and task layout 768.0 zh at 1.4 text scale
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:10 +4 -6: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 zh at 1.4 text scale [E]
+  Test failed. See exception logs above.
+  The test description was: Navigation and task layout 768.0 zh at 1.4 text scale
+  
+00:10 +4 -6: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 en at 1.4 text scale
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.first (dart:core/iterable.dart:663:7)
+#1      _FirstFinderMixin.filter (package:flutter_test/src/finders.dart:1383:28)
+#3      Iterable.single (dart:core/iterable.dart:694:13)
+#4      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#5      tap (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:153:41)
+#6      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:436:17)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 2 frames from dart:async-patch and package:stack_trace)
+
+The test description was:
+  Navigation and task layout 768.0 en at 1.4 text scale
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:11 +4 -7: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 en at 1.4 text scale [E]
+  Test failed. See exception logs above.
+  The test description was: Navigation and task layout 768.0 en at 1.4 text scale
+  
+00:11 +4 -7: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Capture navigation, manufacturer, booth tasks, editor shortcut and account screenshots
+00:11 +4 ~1 -7: loading D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart
+00:11 +4 ~1 -7: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor auth on an older backend reports an upgrade and retains local favorites
+00:11 +5 ~1 -7: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Guest collection persists across restart, language and endpoint changes
+00:12 +6 ~1 -7: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Guest merge is acknowledged before cleanup and syncs across two devices
+00:12 +7 ~1 -7: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Offline operations survive restart and a lost acknowledgment cannot resurrect a canceled item
+00:12 +8 ~1 -7: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Switching accounts during an in-flight request never sends the first account queue with a new token
+00:12 +9 ~1 -7: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: A replacement session waits for the old sync and then retries with its own token
+00:12 +10 ~1 -7: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Resolution distinguishes network failure, unavailable content and an older server
+00:12 +11 ~1 -7: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: A failed account login does not expire the existing visitor session
+00:12 +12 ~1 -7: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Returning from a main tab goes home before exiting
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TypeWidgetFinder:<Found 0 widgets with type "IndustrialHomeScreen": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart:379:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart line 379
+The test description was:
+  Returning from a main tab goes home before exiting
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:14 +12 ~1 -8: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Returning from a main tab goes home before exiting [E]
+  Test failed. See exception logs above.
+  The test description was: Returning from a main tab goes home before exiting
+  
+00:14 +12 ~1 -8: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; favorites is available from My
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.first (dart:core/iterable.dart:663:7)
+#1      _FirstFinderMixin.filter (package:flutter_test/src/finders.dart:1383:28)
+#3      Iterable.single (dart:core/iterable.dart:694:13)
+#4      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#5      tap (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:153:41)
+#6      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart:403:17)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 2 frames from dart:async-patch and package:stack_trace)
+
+The test description was:
+  Card and detail buttons share state without opening the card; favorites is available from My
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:15 +12 ~1 -9: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; favorites is available from My [E]
+  Test failed. See exception logs above.
+  The test description was: Card and detail buttons share state without opening the card; favorites is available from My
+  
+00:15 +12 ~1 -9: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor registration merges favorites and visitors see a manufacturer login instead of management
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.first (dart:core/iterable.dart:663:7)
+#1      _FirstFinderMixin.filter (package:flutter_test/src/finders.dart:1383:28)
+#3      Iterable.single (dart:core/iterable.dart:694:13)
+#4      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#5      tap (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:153:41)
+#6      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart:446:17)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 2 frames from dart:async-patch and package:stack_trace)
+
+The test description was:
+  Visitor registration merges favorites and visitors see a manufacturer login instead of management
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:16 +12 ~1 -10: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor registration merges favorites and visitors see a manufacturer login instead of management [E]
+  Test failed. See exception logs above.
+  The test description was: Visitor registration merges favorites and visitors see a manufacturer login instead of management
+  
+00:16 +12 ~1 -10: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 360.0 zh supports large text and independent manufacturer/product tabs
+00:16 +13 ~1 -10: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 360.0 en supports large text and independent manufacturer/product tabs
+00:17 +14 ~1 -10: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 390.0 zh supports large text and independent manufacturer/product tabs
+00:17 +15 ~1 -10: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 390.0 en supports large text and independent manufacturer/product tabs
+00:17 +16 ~1 -10: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 768.0 zh supports large text and independent manufacturer/product tabs
+00:17 +17 ~1 -10: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 768.0 en supports large text and independent manufacturer/product tabs
+00:18 +18 ~1 -10: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor login at 360px zh with large text
+00:18 +19 ~1 -10: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor login at 360px en with large text
+00:18 +20 ~1 -10: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Capture favorites UI evidence
+00:18 +20 ~2 -10: loading D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart
+00:19 +20 ~2 -10: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Sparse portal hides empty sections and empty resource navigation
+00:19 +21 ~2 -10: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Homepage banner omits platform photo and retains vendor cover in its card
+00:20 +22 ~2 -10: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Manual representatives retain choices on version conflict, reorder and clear
+00:21 +23 ~2 -10: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Registration continues original cloud save and does not store passwords
+00:22 +24 ~2 -10: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Top-level category sends parent zero and selects returned category
+00:22 +25 ~2 -10: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Portal validations use Unicode limits and preserve unknown profile fields
+00:22 +26 ~2 -10: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Upload failure retains files, retry skips successful files and submit failure keeps content ID
+00:23 +27 ~2 -10: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Session expiry preserves owner; signing in to another account does not carry editor data
+00:23 +28 ~2 -10: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Resource editor preserves files on expiry and exits after account change
+00:24 +29 ~2 -10: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Portal layout and image failures at phone/tablet sizes, bilingual and large text
+00:24 +30 ~2 -10: Some tests failed.
+
+Failing tests:
+  D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: First booth creation returns to the existing shell and reloads the new booth
+  D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 en at 1.4 text scale
+  D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 zh at 1.4 text scale
+  D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 en at 1.4 text scale
+  ... and 6 more

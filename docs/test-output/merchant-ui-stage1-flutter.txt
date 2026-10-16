@@ -1,0 +1,66 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart
+00:00 +0: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Company login opens the four-section workspace with account-wide counts
+00:00 +1: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Company login opens the four-section workspace with account-wide counts
+00:00 +2: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Company login opens the four-section workspace with account-wide counts
+00:00 +3: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Company login opens the four-section workspace with account-wide counts
+00:00 +4: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Company login opens the four-section workspace with account-wide counts
+00:00 +5: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Company login opens the four-section workspace with account-wide counts
+00:00 +6: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Company login opens the four-section workspace with account-wide counts
+00:00 +7: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Company login opens the four-section workspace with account-wide counts
+00:00 +8: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Company login opens the four-section workspace with account-wide counts
+00:01 +9: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:02 +10: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:02 +11: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:02 +12: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:03 +13: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; favorites is available from My
+00:04 +14: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; favorites is available from My
+00:04 +15: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Account menu confirms logout, retains drafts and resets the workspace for another account
+00:05 +16: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor registration merges favorites and visitors see a manufacturer login instead of management
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.first (dart:core/iterable.dart:663:7)
+#1      _FirstFinderMixin.filter (package:flutter_test/src/finders.dart:1383:28)
+#3      Iterable.single (dart:core/iterable.dart:694:13)
+#4      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#5      tap (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:153:41)
+#6      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart:451:17)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 2 frames from dart:async-patch and package:stack_trace)
+
+The test description was:
+  Visitor registration merges favorites and visitors see a manufacturer login instead of management
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:05 +16 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:05 +16 -1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor registration merges favorites and visitors see a manufacturer login instead of management [E]
+  Test failed. See exception logs above.
+  The test description was: Visitor registration merges favorites and visitors see a manufacturer login instead of management
+  
+00:06 +17 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:06 +18 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:07 +19 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:07 +20 -1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 390.0 en supports large text and independent manufacturer/product tabs
+00:07 +21 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: First booth creation returns to the existing shell and reloads the new booth
+00:07 +22 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: First booth creation returns to the existing shell and reloads the new booth
+00:07 +23 -1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 768.0 en supports large text and independent manufacturer/product tabs
+00:08 +24 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 zh at 1.4 text scale
+00:08 +25 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 zh at 1.4 text scale
+00:08 +26 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 zh at 1.4 text scale
+00:08 +26 ~1 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 zh at 1.4 text scale
+00:08 +27 ~1 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 en at 1.4 text scale
+00:09 +28 ~1 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 zh at 1.4 text scale
+00:09 +29 ~1 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 en at 1.4 text scale
+00:09 +30 ~1 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 zh at 1.4 text scale
+00:10 +31 ~1 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 en at 1.4 text scale
+00:10 +32 ~1 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Capture navigation, manufacturer, booth tasks, editor shortcut and account screenshots
+00:10 +32 ~2 -1: Some tests failed.
+
+Failing tests:
+  D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor registration merges favorites and visitors see a manufacturer login instead of management

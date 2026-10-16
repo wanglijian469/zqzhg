@@ -1,0 +1,22 @@
+{
+  "verifiedAt": "2026-10-11T13:15:26.573Z",
+  "base": "http://127.0.0.1:8080",
+  "counts": {
+    "product_pending": 0,
+    "product_public": 19,
+    "product_total": 19,
+    "vendor_pending": 0,
+    "vendor_public": 1,
+    "vendor_total": 1
+  },
+  "vendor": "河北冀农农机具有限公司",
+  "productOwnership": "PASS",
+  "publishedComparisons": "PASS",
+  "modelAndParentCategoryFilters": "PASS",
+  "accounts": "PASS",
+  "auditLogCount": 47,
+  "systemStatus": "PASS",
+  "privateAPIs": "PASS",
+  "deepRoutes": "PASS",
+  "productionBusinessWrites": 0
+}

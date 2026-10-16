@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-10-11T04:36:54.107Z",
+  "health": {
+    "sms_provider": "development",
+    "status": "ok"
+  },
+  "home": {
+    "products": [],
+    "vendor_count": 0,
+    "vendors": []
+  }
+}

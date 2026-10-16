@@ -1,0 +1,2 @@
+PASS: home desktop/mobile; Android and iOS download page; download QR decoded; real manufacturer login and 19-product counts; search and edit-return; mobile layouts without horizontal overflow; 6 domestic + 3 overseas channels; canonical share URL; poster QR decoded; no page errors.
+No production content was saved, submitted or taken offline.

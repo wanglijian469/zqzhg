@@ -1,0 +1,1 @@
+PASS: deployed company portal and about page, desktop/mobile, existing page parameter and anchor, visible selection, public images and no browser errors.

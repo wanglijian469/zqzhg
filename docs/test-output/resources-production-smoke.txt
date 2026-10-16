@@ -1,0 +1,14 @@
+{
+  "local_health": "ok",
+  "lan_health": "ok",
+  "products": 19,
+  "resources": {
+    "catalog": 0,
+    "video": 0
+  },
+  "apk_status": 200,
+  "apk_bytes": [
+    "78041396"
+  ],
+  "canonical": "http://172.27.35.2:8080/v/jinong"
+}

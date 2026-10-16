@@ -1,0 +1,41 @@
+=== RUN   TestResourceBrowserFixture
+[GIN] 2026/10/13 - 15:07:57 | 201 | 126.13ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/13 - 15:07:57 | 201 |   8.05ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/13 - 15:07:57 | 200 |   3.86ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/13 - 15:07:57 | 200 |   6.41ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/13 - 15:07:57 | 200 |   3.71ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/13 - 15:07:57 | 200 |   4.36ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+[GIN] 2026/10/13 - 15:07:58 | 201 |   9.99ms |       192.0.2.1 | POST     "/api/v1/merchant/media"
+[GIN] 2026/10/13 - 15:07:58 | 201 |   8.37ms |       192.0.2.1 | POST     "/api/v1/merchant/media"
+[GIN] 2026/10/13 - 15:07:58 | 201 |   4.63ms |       192.0.2.1 | POST     "/api/v1/merchant/resource-media?kind=pdf"
+[GIN] 2026/10/13 - 15:07:58 | 202 |   2.58ms |       192.0.2.1 | POST     "/api/v1/merchant/resource-media?kind=video"
+[GIN] 2026/10/13 - 15:08:02 | 201 |  11.14ms |       192.0.2.1 | POST     "/api/v1/merchant/resources"
+[GIN] 2026/10/13 - 15:08:02 | 200 |   7.52ms |       192.0.2.1 | POST     "/api/v1/merchant/resources/1/submit"
+[GIN] 2026/10/13 - 15:08:02 | 200 |    5.1ms |       192.0.2.1 | POST     "/api/v1/admin/resource-revisions/1/review"
+[GIN] 2026/10/13 - 15:08:02 | 201 |   8.22ms |       192.0.2.1 | POST     "/api/v1/merchant/resources"
+[GIN] 2026/10/13 - 15:08:02 | 200 |   7.15ms |       192.0.2.1 | POST     "/api/v1/merchant/resources/2/submit"
+[GIN] 2026/10/13 - 15:08:02 | 200 |   6.98ms |       192.0.2.1 | POST     "/api/v1/admin/resource-revisions/2/review"
+
+2026/10/13 15:08:02 [31;1mD:/workspace-main/codex-zqzt/server/resources.go:213 [35;1mrecord not found
+[0m[33m[0.019ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/13 15:08:02 [31;1mD:/workspace-main/codex-zqzt/server/resources.go:213 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/13 - 15:08:02 | 201 |   6.99ms |       192.0.2.1 | POST     "/api/v1/merchant/resources"
+
+2026/10/13 15:08:02 [31;1mD:/workspace-main/codex-zqzt/server/resources.go:213 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/13 15:08:02 [31;1mD:/workspace-main/codex-zqzt/server/resources.go:213 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/13 - 15:08:02 | 200 |   6.71ms |       192.0.2.1 | POST     "/api/v1/merchant/resources/3/submit"
+
+2026/10/13 15:08:02 [31;1mD:/workspace-main/codex-zqzt/server/resources.go:213 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/13 15:08:02 [31;1mD:/workspace-main/codex-zqzt/server/resources.go:213 [35;1mrecord not found
+[0m[33m[0.522ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/13 - 15:08:02 | 200 |   7.12ms |       192.0.2.1 | POST     "/api/v1/admin/resource-revisions/3/review"
+--- PASS: TestResourceBrowserFixture (5.81s)
+PASS
+ok  	zqzt/exhibition	7.478s

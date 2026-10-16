@@ -1,0 +1,1 @@
+PASS: five artifacts match sizes and SHA-256, versions identify web/backend/Android separately, source includes entry and tests without environment credentials or signing keys.

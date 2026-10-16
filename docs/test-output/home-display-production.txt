@@ -1,0 +1,14 @@
+{
+  "website": "1.5.8",
+  "backend": "1.5.8",
+  "android": "1.5.2+19",
+  "schema_migrations": 7,
+  "local_and_lan_health": 200,
+  "hero_default_unconfigured": true,
+  "production_configuration_not_changed": true,
+  "business_snapshot_unchanged": true,
+  "isolated_fixtures_absent": true,
+  "new_bundle_served": true,
+  "new_backend_hash_verified": true,
+  "original_apk_download_hash_verified": true
+}

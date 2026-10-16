@@ -1,0 +1,5 @@
+
+2026/10/14 12:18:11 [32mD:/workspace-main/codex-zqzt/server/resources_browser_test.go:106 [33mSLOW SQL >= 200ms
+[0m[31;1m[208.928ms] [33m[rows:23][35m DROP DATABASE `zqzt_exhibition_test_resource_browser_1791948440866950100`[0m
+PASS
+ok  	zqzt/exhibition	2.223s

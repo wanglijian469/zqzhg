@@ -1,0 +1,4 @@
+package: name='com.zqzt.dalunongji' versionCode='17' versionName='1.5.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+sdkVersion:'24'
+targetSdkVersion:'36'
+application-label:'大陆农机'

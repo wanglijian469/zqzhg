@@ -1,0 +1,584 @@
+{
+  "passed": true,
+  "cases": 80,
+  "widths": [
+    360,
+    390,
+    430,
+    1440
+  ],
+  "languages": [
+    "zh",
+    "en"
+  ],
+  "syntheticTextScales": [
+    1,
+    1.4,
+    2
+  ],
+  "fixturesOnly": true,
+  "productionWrites": false,
+  "routeAndScrollRestoration": true,
+  "checks": [
+    {
+      "name": "dashboard",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 360,
+      "lang": "zh",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 360,
+      "lang": "zh",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 360,
+      "lang": "zh",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 360,
+      "lang": "zh",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 360,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 360,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 360,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 360,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 360,
+      "lang": "en",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 360,
+      "lang": "en",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 360,
+      "lang": "en",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 360,
+      "lang": "en",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 390,
+      "lang": "zh",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 390,
+      "lang": "zh",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 390,
+      "lang": "zh",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 390,
+      "lang": "zh",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 390,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 390,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 390,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 390,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 390,
+      "lang": "en",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 390,
+      "lang": "en",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 390,
+      "lang": "en",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 390,
+      "lang": "en",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 430,
+      "lang": "zh",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 430,
+      "lang": "zh",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 430,
+      "lang": "zh",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 430,
+      "lang": "zh",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 430,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 430,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 430,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 430,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.4,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 430,
+      "lang": "en",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 430,
+      "lang": "en",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 430,
+      "lang": "en",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 430,
+      "lang": "en",
+      "scale": 2,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 1440,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 1440,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 1440,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 1440,
+      "lang": "zh",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "dashboard",
+      "width": 1440,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "products",
+      "width": 1440,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "showroom",
+      "width": 1440,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "promotion",
+      "width": 1440,
+      "lang": "en",
+      "scale": 1,
+      "horizontalOverflow": false
+    }
+  ]
+}

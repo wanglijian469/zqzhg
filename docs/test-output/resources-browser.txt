@@ -1,0 +1,2 @@
+PASS: five fixed sections; exhibit default; company facts; H.264 video metadata, play, seek and pause-on-close; PDF.js render and original download; image catalog next page; mobile contact layout; real video upload/progress, async processing, cloud draft, submission, authenticated admin preview and independent approval; image catalog reorder, cover update and approval.
+All mutations used the isolated zqzt_exhibition_test_resource_browser_* database and media directory.

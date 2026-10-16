@@ -1,0 +1,3 @@
+List of devices attached
+
+Android emulator executable is not installed; no runnable AVD is available.

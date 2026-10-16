@@ -1,0 +1,14 @@
+{
+  "version": "1.5.2+19",
+  "local_health": 200,
+  "lan_health": 200,
+  "migrations_and_counts": "version\r\n1\r\n2\r\n3\r\n4\r\n5\r\n6\r\ncategory_suggestions\r\n0\r\ncategory_aliases\r\n0\r\nbusiness_records\r\n21",
+  "jinong_public_products": 19,
+  "apk": {
+    "http_status": 200,
+    "bytes": 78549652,
+    "sha256": "031fe2a13b7b6a4fb9b772846f0be4e3b762a196b709ee3769ea40aae521abc0"
+  },
+  "website_routes": "200",
+  "production_business_mutations": "none during acceptance"
+}

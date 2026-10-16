@@ -1,0 +1,39 @@
+
+>       spec resource 0x7f050038 com.zqzt.dalunongji:color/ic_launcher_background: flags=0x00000000
+        config (default):
+          resource 0x7f050012 com.zqzt.dalunongji:color/abc_tint_btn_checkable: t=0x03 d=0x00000026 (s=0x0008 r=0x00)
+          resource 0x7f050013 com.zqzt.dalunongji:color/abc_tint_default: t=0x03 d=0x00000027 (s=0x0008 r=0x00)
+>         resource 0x7f050038 com.zqzt.dalunongji:color/ic_launcher_background: t=0x1d d=0xff007846 (s=0x0008 r=0x00)
+      type 5 configCount=1 entryCount=132
+        INVALID TYPE CONFIG FOR RESOURCE 0x7f060000
+        INVALID TYPE CONFIG FOR RESOURCE 0x7f060001
+>       spec resource 0x7f070065 com.zqzt.dalunongji:drawable/ic_launcher_artwork: flags=0x00000000
+>       spec resource 0x7f070066 com.zqzt.dalunongji:drawable/ic_launcher_foreground: flags=0x00000000
+        INVALID TYPE CONFIG FOR RESOURCE 0x7f070067
+        spec resource 0x7f070068 com.zqzt.dalunongji:drawable/launch_background: flags=0x00000000
+        config (default):
+>         resource 0x7f070066 com.zqzt.dalunongji:drawable/ic_launcher_foreground: t=0x03 d=0x00000019 (s=0x0008 r=0x00)
+          resource 0x7f070068 com.zqzt.dalunongji:drawable/launch_background: t=0x03 d=0x00000021 (s=0x0008 r=0x00)
+        config watch:
+          resource 0x7f070013 com.zqzt.dalunongji:drawable/abc_dialog_material_background: t=0x03 d=0x00000042 (s=0x0008 r=0x00)
+>         resource 0x7f070065 com.zqzt.dalunongji:drawable/ic_launcher_artwork: t=0x03 d=0x00000116 (s=0x0008 r=0x00)
+      type 7 configCount=1 entryCount=229
+        spec resource 0x7f080000 com.zqzt.dalunongji:id/ALT: flags=0x00000000
+        spec resource 0x7f080001 com.zqzt.dalunongji:id/CTRL: flags=0x00000000
+>       spec resource 0x7f0c0000 com.zqzt.dalunongji:mipmap/ic_launcher: flags=0x00000500
+        config mdpi:
+>         resource 0x7f0c0000 com.zqzt.dalunongji:mipmap/ic_launcher: t=0x03 d=0x0000004a (s=0x0008 r=0x00)
+        config hdpi:
+>         resource 0x7f0c0000 com.zqzt.dalunongji:mipmap/ic_launcher: t=0x03 d=0x00000099 (s=0x0008 r=0x00)
+        config xhdpi:
+>         resource 0x7f0c0000 com.zqzt.dalunongji:mipmap/ic_launcher: t=0x03 d=0x000000a5 (s=0x0008 r=0x00)
+        config xxhdpi:
+>         resource 0x7f0c0000 com.zqzt.dalunongji:mipmap/ic_launcher: t=0x03 d=0x000000dc (s=0x0008 r=0x00)
+        config xxxhdpi:
+>         resource 0x7f0c0000 com.zqzt.dalunongji:mipmap/ic_launcher: t=0x03 d=0x0000010b (s=0x0008 r=0x00)
+        config anydpi-v26:
+>         resource 0x7f0c0000 com.zqzt.dalunongji:mipmap/ic_launcher: t=0x03 d=0x00000115 (s=0x0008 r=0x00)
+      type 12 configCount=86 entryCount=51
+        INVALID TYPE CONFIG FOR RESOURCE 0x7f0d0000
+        INVALID TYPE CONFIG FOR RESOURCE 0x7f0d0001
+

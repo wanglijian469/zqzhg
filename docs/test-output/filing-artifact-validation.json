@@ -1,0 +1,21 @@
+{
+  "sourceArtworkPixelIdenticalInAPK": true,
+  "allFiveLegacyIconsPixelIdenticalInAPK": true,
+  "matchedResources": {
+    "mobile\\android\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png": "res/9w.png",
+    "mobile\\android\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png": "res/FS.png",
+    "mobile\\android\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png": "res/RJ.png",
+    "supplied original artwork": "res/fJ.png",
+    "mobile\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png": "res/o-.png",
+    "mobile\\android\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png": "res/yn.png"
+  },
+  "nativeArchitectures": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86_64"
+  ],
+  "compiledEndpointVerified": true,
+  "localDownloadCopiesMatch": true,
+  "androidDeviceInstallTested": false,
+  "websiteBackendVersion": "1.5.13"
+}

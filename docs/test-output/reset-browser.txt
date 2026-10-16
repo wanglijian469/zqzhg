@@ -1,0 +1,1 @@
+PASS: both admin reset entries, cancellation, random/manual reset, old password and two sessions revoked, whitespace preserved, no browser persistence, clipboard fallback, 360/390/768/1440/1920px, Chinese and English. Only isolated test accounts were changed; passwords masked in screenshots.

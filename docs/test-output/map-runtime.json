@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-11T14:26:35.492Z",
+  "service": "PASS",
+  "public_map_config": "PASS",
+  "referrer_policy": "PASS",
+  "jinong_address": "河北省邢台市宁晋县大陆村镇赵平邱北村",
+  "public_products": 19,
+  "pagination": "12+7",
+  "spa_routes": "PASS",
+  "baidu_map_enabled": false,
+  "production_vendor_writes": 0,
+  "actual_map_and_geocoding": "pending: no browser AK",
+  "browser_visual_check": "pending: browser tool rejected tab binding by URL policy"
+}

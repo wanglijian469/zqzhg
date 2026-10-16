@@ -1,0 +1,10 @@
+Analyzing mobile...                                             
+
+   info - Use a function declaration rather than a variable assignment to bind a function to a name. Try rewriting the closure assignment as a function declaration - lib\app_navigation.dart:16:27 - prefer_function_declarations_over_variables
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\merchant_experience.dart:104:44 - prefer_interpolation_to_compose_strings
+  error - The named parameter 'photos' is required, but there's no corresponding argument. Try adding the required argument - lib\merchant_experience.dart:111:37 - missing_required_argument
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\merchant_experience.dart:224:50 - prefer_interpolation_to_compose_strings
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\merchant_experience.dart:370:37 - prefer_interpolation_to_compose_strings
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\merchant_experience.dart:384:31 - prefer_interpolation_to_compose_strings
+
+6 issues found. (ran in 15.4s)

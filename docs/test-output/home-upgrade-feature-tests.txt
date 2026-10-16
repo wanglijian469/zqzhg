@@ -1,0 +1,28 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart
+00:00 +0: Categories use actual hall and parent identifiers without inventing entries
+00:00 +1: Home sends two reads; initial search sends one filtered request; state survives tabs and language
+00:02 +2: Directory debounces typing and submit does not repeat the same query
+00:02 +3: Home errors preserve search and category; retry and pull refresh fetch fresh content
+00:02 +4: Manufacturer name, photo and contact retain server showroom slug; favorite is independent
+00:02 +5: Product rows align at 360dp with square contained photos and real model field
+00:02 +6: Home caps recommendations at six each and does not request per-card details
+00:03 +7: Manufacturer image priority reuses supplied media and products, then logo
+00:03 +8: Home and directory fit 360.0 zh scale 1.0
+00:03 +9: Home and directory fit 360.0 zh scale 1.4
+00:04 +10: Home and directory fit 360.0 zh scale 2.0
+00:04 +11: Home and directory fit 360.0 en scale 1.0
+00:05 +12: Home and directory fit 360.0 en scale 1.4
+00:05 +13: Home and directory fit 360.0 en scale 2.0
+00:05 +14: Home and directory fit 390.0 zh scale 1.0
+00:05 +15: Home and directory fit 390.0 zh scale 1.4
+00:06 +16: Home and directory fit 390.0 zh scale 2.0
+00:06 +17: Home and directory fit 390.0 en scale 1.0
+00:06 +18: Home and directory fit 390.0 en scale 1.4
+00:06 +19: Home and directory fit 390.0 en scale 2.0
+00:07 +20: Home and directory fit 412.0 zh scale 1.0
+00:07 +21: Home and directory fit 412.0 zh scale 1.4
+00:07 +22: Home and directory fit 412.0 zh scale 2.0
+00:07 +23: Home and directory fit 412.0 en scale 1.0
+00:08 +24: Home and directory fit 412.0 en scale 1.4
+00:08 +25: Home and directory fit 412.0 en scale 2.0
+00:08 +26: All tests passed!

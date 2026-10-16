@@ -1,0 +1,13 @@
+
+> zqzt-exhibition-web@1.5.8 test
+> vitest run src/home-display.test.tsx
+
+
+ RUN  v5.0.3 D:/workspace-main/codex-zqzt/web
+
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  17:05:42
+   Duration  4.91s (environment 38%, tests 37%, transform 13%, import 12%)
+

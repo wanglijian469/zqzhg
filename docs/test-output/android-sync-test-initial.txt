@@ -1,0 +1,38 @@
+Resolving dependencies...
+Downloading packages...
+  archive 4.5.1 (4.5.2 available)
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  hooks 2.0.2 (2.2.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.3 (1.19.0 available)
+  objective_c 9.5.0 (9.6.2 available)
+  petitparser 7.0.2 (7.1.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  test_api 0.7.12 (0.7.15 available)
+  vector_math 2.4.0 (2.4.3 available)
+  xml 7.0.1 (7.1.0 available)
+Got dependencies!
+12 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/app_test.dart
+00:00 +0: D:/workspace-main/codex-zqzt/mobile/test/app_test.dart: Language switching preserves the private local booth draft
+00:01 +1: D:/workspace-main/codex-zqzt/mobile/test/app_test.dart: An API endpoint change signs out and keeps drafts scoped to their source
+00:01 +2: loading D:/workspace-main/codex-zqzt/mobile/test/industrial_ui_test.dart
+00:02 +2: D:/workspace-main/codex-zqzt/mobile/test/industrial_ui_test.dart: Product photos preserve equipment and industrial theme is blue
+00:02 +3: D:/workspace-main/codex-zqzt/mobile/test/industrial_ui_test.dart: Product browsing reuses the public endpoint and keeps keyword on return
+00:03 +4: D:/workspace-main/codex-zqzt/mobile/test/industrial_ui_test.dart: Brand hero and exhibit cards adapt to narrow screens and large text
+00:03 +5: D:/workspace-main/codex-zqzt/mobile/test/industrial_ui_test.dart: Render native UI screenshot evidence from published company data
+00:03 +5 ~1: loading D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart
+00:03 +5 ~1: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Company login opens the four-section workspace with account-wide counts
+00:05 +6 ~1: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Profile edits retain existing contacts and unedited fields
+00:05 +7 ~1: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Native QR and poster contain the canonical URL without private filters
+00:05 +8 ~1: loading D:/workspace-main/codex-zqzt/mobile/test/onboarding_test.dart
+00:06 +8 ~1: D:/workspace-main/codex-zqzt/mobile/test/onboarding_test.dart: Shared rules distinguish Unicode characters and UTF8 bytes
+00:06 +9 ~1: D:/workspace-main/codex-zqzt/mobile/test/onboarding_test.dart: Guest onboarding explains saving and identifies fields before login
+00:08 +10 ~1: loading D:/workspace-main/codex-zqzt/mobile/test/resources_experience_test.dart
+00:09 +10 ~1: D:/workspace-main/codex-zqzt/mobile/test/resources_experience_test.dart: Showroom defaults to portal, hides empty resource tabs and preserves product search
+00:10 +11 ~1: D:/workspace-main/codex-zqzt/mobile/test/resources_experience_test.dart: Resource draft recovery retains uploaded IDs and files awaiting retry
+00:10 +12 ~1: D:/workspace-main/codex-zqzt/mobile/test/resources_experience_test.dart: A processing video preview waits instead of opening a broken player
+00:10 +13 ~1: D:/workspace-main/codex-zqzt/mobile/test/resources_experience_test.dart: Multipart upload reports monotonic progress including the final byte
+00:10 +14 ~1: All tests passed!

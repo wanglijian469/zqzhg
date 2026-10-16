@@ -1,0 +1,1 @@
+ALTER TABLE contents ADD COLUMN showroom_slug VARCHAR(64) NULL UNIQUE;

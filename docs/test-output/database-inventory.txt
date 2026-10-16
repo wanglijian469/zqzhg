@@ -1,0 +1,55 @@
+mysql_version
+5.7.18
+TABLE_SCHEMA	TABLE_NAME
+dlc	admin_users
+dlc	banners
+dlc	categories
+dlc	menus
+dlc	products
+dlc	site_configs
+dlc	tags
+dlc	vendors
+dlc	vendor_tags
+dl_nongji_parts	admin_users
+dl_nongji_parts	analytics_events
+dl_nongji_parts	app_sessions
+dl_nongji_parts	auth_sessions
+dl_nongji_parts	banners
+dl_nongji_parts	buyer_profiles
+dl_nongji_parts	capture_documents
+dl_nongji_parts	capture_packages
+dl_nongji_parts	capture_product_crops
+dl_nongji_parts	capture_results
+dl_nongji_parts	categories
+dl_nongji_parts	contact_access_logs
+dl_nongji_parts	content_pages
+dl_nongji_parts	content_revisions
+dl_nongji_parts	friend_links
+dl_nongji_parts	media_assets
+dl_nongji_parts	menus
+dl_nongji_parts	operation_logs
+dl_nongji_parts	products
+dl_nongji_parts	product_submissions
+dl_nongji_parts	product_suppliers
+dl_nongji_parts	product_supplier_price_histories
+dl_nongji_parts	schema_migrations
+dl_nongji_parts	scrape_client_blocks
+dl_nongji_parts	scrape_risk_events
+dl_nongji_parts	seo_redirects
+dl_nongji_parts	site_configs
+dl_nongji_parts	static_build_jobs
+dl_nongji_parts	static_page_builds
+dl_nongji_parts	tags
+dl_nongji_parts	user_notifications
+dl_nongji_parts	vendors
+dl_nongji_parts	vendor_categories
+dl_nongji_parts	vendor_category_assignments
+dl_nongji_parts	vendor_invitations
+dl_nongji_parts	vendor_media
+dl_nongji_parts	vendor_posts
+dl_nongji_parts	vendor_submissions
+dl_nongji_parts	vendor_tags
+dl_nongji_parts	vendor_work_drafts
+dl_nongji_parts	watermark_build_jobs
+administrators	manufacturers	products	media	categories	migrations
+1	0	0	0	2	1

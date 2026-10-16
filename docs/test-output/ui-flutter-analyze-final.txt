@@ -1,0 +1,10 @@
+Analyzing codex-zqzt...                                         
+
+  error - The named parameter 'compact' isn't defined. Try correcting the name to an existing named parameter's name, or defining a named parameter with the name 'compact' - mobile\lib\industrial_ui.dart:124:42 - undefined_named_parameter
+  error - The named parameter 'kind' isn't defined. Try correcting the name to an existing named parameter's name, or defining a named parameter with the name 'kind' - mobile\lib\industrial_ui.dart:325:55 - undefined_named_parameter
+  error - The named parameter 'kind' isn't defined. Try correcting the name to an existing named parameter's name, or defining a named parameter with the name 'kind' - mobile\lib\industrial_ui.dart:598:62 - undefined_named_parameter
+  error - The getter 'kind' isn't defined for the type 'BrowseScreen'. Try importing the library that defines 'kind', correcting the name to the name of an existing getter, or defining a getter or field named 'kind' - mobile\lib\main.dart:503:20 - undefined_getter
+  error - The getter 'kind' isn't defined for the type 'BrowseScreen'. Try importing the library that defines 'kind', correcting the name to the name of an existing getter, or defining a getter or field named 'kind' - mobile\lib\main.dart:584:33 - undefined_getter
+  error - The getter 'kind' isn't defined for the type 'BrowseScreen'. Try importing the library that defines 'kind', correcting the name to the name of an existing getter, or defining a getter or field named 'kind' - mobile\lib\main.dart:595:28 - undefined_getter
+
+6 issues found. (ran in 20.2s)

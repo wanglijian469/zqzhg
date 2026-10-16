@@ -1,0 +1,1278 @@
+=== RUN   TestAdminOperationsOwnershipAuditAndFilters
+[GIN] 2026/10/15 - 17:18:15 | 200 |    3.1ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   3.41ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:15 | 201 |  56.53ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:15 | 200 |  53.02ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   2.88ms |       192.0.2.1 | GET      "/api/v1/merchant/contents/1"
+[GIN] 2026/10/15 - 17:18:15 | 409 |   1.59ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:15 | 400 |  54.41ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:15 | 201 |   5.05ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:15 | 409 |   1.04ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   1.42ms |       192.0.2.1 | GET      "/api/v1/admin/accounts?unassigned=1"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   1.03ms |       192.0.2.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/15 - 17:18:15 | 201 |   6.73ms |       192.0.2.1 | POST     "/api/v1/admin/vendors/1/products"
+[GIN] 2026/10/15 - 17:18:15 | 201 |   5.25ms |       192.0.2.1 | POST     "/api/v1/admin/contents/3/media"
+
+2026/10/15 17:18:15 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[1.598ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:15 | 200 |   8.82ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/3/draft"
+[GIN] 2026/10/15 - 17:18:15 | 409 |   1.55ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/3/draft"
+[GIN] 2026/10/15 - 17:18:15 | 400 |   3.67ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/3/draft"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   3.08ms |       192.0.2.1 | POST     "/api/v1/admin/contents/3/submit"
+[GIN] 2026/10/15 - 17:18:15 | 409 |   1.54ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/3/draft"
+[GIN] 2026/10/15 - 17:18:15 | 400 |   1.02ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/4/review"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   3.07ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/4/review"
+
+2026/10/15 17:18:15 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.513ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:15 | 200 |   5.24ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/3/draft"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/admin/contents/3/submit"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   3.09ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/5/review"
+[GIN] 2026/10/15 - 17:18:15 | 404 |   2.05ms |       192.0.2.1 | GET      "/api/v1/public/products/3"
+[GIN] 2026/10/15 - 17:18:15 | 400 |   2.06ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/3/featured"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   2.05ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   5.76ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   1.57ms |       192.0.2.1 | GET      "/api/v1/public/products/3"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   2.05ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/3/featured"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   2.56ms |       192.0.2.1 | GET      "/api/v1/admin/contents/3"
+
+2026/10/15 17:18:15 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:15 | 200 |   4.72ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/3/draft"
+[GIN] 2026/10/15 - 17:18:15 | 200 |    3.1ms |       192.0.2.1 | POST     "/api/v1/admin/contents/3/submit"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   1.03ms |       192.0.2.1 | GET      "/api/v1/public/products/3"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   1.53ms |       192.0.2.1 | GET      "/api/v1/admin/contents/1"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   6.32ms |       192.0.2.1 | GET      "/api/v1/admin/contents?kind=product&q=ADMIN-550&category_id=1&vendor_id=1&region_id=1&status=pending&public_state=public&featured=1&page_size=1"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   1.53ms |       192.0.2.1 | GET      "/api/v1/admin/contents?kind=product&q=ADMIN-550&category_id=1&vendor_id=1&region_id=1&status=pending&public_state=public&featured=1&page_size=1&page=2"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   2.69ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/offline"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   2.05ms |       192.0.2.1 | GET      "/api/v1/admin/contents?kind=product&q=ADMIN-550&category_id=1&vendor_id=1&region_id=1&status=pending&public_state=public&featured=1&page_size=1"
+[GIN] 2026/10/15 - 17:18:15 | 400 |   1.54ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/3/featured"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   2.62ms |       192.0.2.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   2.08ms |       192.0.2.1 | POST     "/api/v1/admin/categories"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   1.56ms |       192.0.2.1 | POST     "/api/v1/admin/regions"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   2.61ms |       192.0.2.1 | GET      "/api/v1/admin/accounts"
+[GIN] 2026/10/15 - 17:18:15 | 401 |       0s |       192.0.2.1 | GET      "/api/v1/admin/accounts"
+[GIN] 2026/10/15 - 17:18:15 | 403 |    526µs |       192.0.2.1 | GET      "/api/v1/admin/accounts"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   1.57ms |       192.0.2.1 | GET      "/api/v1/admin/operation-logs"
+[GIN] 2026/10/15 - 17:18:15 | 401 |       0s |       192.0.2.1 | GET      "/api/v1/admin/operation-logs"
+[GIN] 2026/10/15 - 17:18:15 | 403 |    511µs |       192.0.2.1 | GET      "/api/v1/admin/operation-logs"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   1.02ms |       192.0.2.1 | GET      "/api/v1/admin/system"
+[GIN] 2026/10/15 - 17:18:15 | 401 |       0s |       192.0.2.1 | GET      "/api/v1/admin/system"
+[GIN] 2026/10/15 - 17:18:15 | 403 |   1.03ms |       192.0.2.1 | GET      "/api/v1/admin/system"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   2.56ms |       192.0.2.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/15 - 17:18:15 | 401 |       0s |       192.0.2.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/15 - 17:18:15 | 403 |  518.7µs |       192.0.2.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/15 - 17:18:15 | 200 |   2.07ms |       192.0.2.1 | GET      "/api/v1/admin/contents/1"
+[GIN] 2026/10/15 - 17:18:15 | 401 |       0s |       192.0.2.1 | GET      "/api/v1/admin/contents/1"
+[GIN] 2026/10/15 - 17:18:15 | 403 |   1.03ms |       192.0.2.1 | GET      "/api/v1/admin/contents/1"
+
+2026/10/15 17:18:15 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[216.348ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055894132316000`[0m
+--- PASS: TestAdminOperationsOwnershipAuditAndFilters (1.55s)
+=== RUN   TestAdminQuotaAndCategoryCycle
+[GIN] 2026/10/15 - 17:18:16 | 201 |   58.2ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:16 | 409 |    6.9ms |       192.0.2.1 | POST     "/api/v1/admin/vendors/1/products"
+[GIN] 2026/10/15 - 17:18:16 | 200 |   2.24ms |       192.0.2.1 | POST     "/api/v1/admin/categories"
+[GIN] 2026/10/15 - 17:18:16 | 400 |   1.07ms |       192.0.2.1 | PUT      "/api/v1/admin/categories/1"
+[GIN] 2026/10/15 - 17:18:16 | 401 |       0s |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:16 | 200 |   2.11ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:16 | 200 |   2.19ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:16 | 403 |   1.05ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+
+2026/10/15 17:18:16 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[207.203ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055895677657900`[0m
+--- PASS: TestAdminQuotaAndCategoryCycle (1.14s)
+=== RUN   TestAliyunRPCPercentEncoding
+--- PASS: TestAliyunRPCPercentEncoding (0.00s)
+=== RUN   TestAliyunSMSRequestAndErrors
+=== RUN   TestAliyunSMSRequestAndErrors/accepted
+=== RUN   TestAliyunSMSRequestAndErrors/provider_limit
+=== RUN   TestAliyunSMSRequestAndErrors/http_failure
+=== RUN   TestAliyunSMSRequestAndErrors/invalid_response
+=== RUN   TestAliyunSMSRequestAndErrors/network_failure
+--- PASS: TestAliyunSMSRequestAndErrors (0.00s)
+    --- PASS: TestAliyunSMSRequestAndErrors/accepted (0.00s)
+    --- PASS: TestAliyunSMSRequestAndErrors/provider_limit (0.00s)
+    --- PASS: TestAliyunSMSRequestAndErrors/http_failure (0.00s)
+    --- PASS: TestAliyunSMSRequestAndErrors/invalid_response (0.00s)
+    --- PASS: TestAliyunSMSRequestAndErrors/network_failure (0.00s)
+=== RUN   TestAliyunSMSRequiresCompleteConfiguration
+=== RUN   TestAliyunSMSRequiresCompleteConfiguration/ALIYUN_ACCESS_KEY_ID
+=== RUN   TestAliyunSMSRequiresCompleteConfiguration/ALIYUN_ACCESS_KEY_SECRET
+=== RUN   TestAliyunSMSRequiresCompleteConfiguration/ALIYUN_SMS_SIGN_NAME
+=== RUN   TestAliyunSMSRequiresCompleteConfiguration/ALIYUN_SMS_TEMPLATE_CODE
+--- PASS: TestAliyunSMSRequiresCompleteConfiguration (0.00s)
+    --- PASS: TestAliyunSMSRequiresCompleteConfiguration/ALIYUN_ACCESS_KEY_ID (0.00s)
+    --- PASS: TestAliyunSMSRequiresCompleteConfiguration/ALIYUN_ACCESS_KEY_SECRET (0.00s)
+    --- PASS: TestAliyunSMSRequiresCompleteConfiguration/ALIYUN_SMS_SIGN_NAME (0.00s)
+    --- PASS: TestAliyunSMSRequiresCompleteConfiguration/ALIYUN_SMS_TEMPLATE_CODE (0.00s)
+=== RUN   TestAliyunVerificationLoginFlow
+[GIN] 2026/10/15 - 17:18:17 | 200 |   3.61ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:17 | 401 |    1.7ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:17 | 200 |   3.53ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:17 | 200 |   2.72ms |       192.0.2.1 | GET      "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:17 | 401 |  504.1µs |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:17 | 429 |   1.17ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:17 | 503 |  558.5µs |       192.0.2.1 | POST     "/api/v1/auth/sms"
+
+2026/10/15 17:18:17 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:177 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `sms_codes` WHERE phone = '13900000007' ORDER BY `sms_codes`.`phone` LIMIT 1 FOR UPDATE
+[GIN] 2026/10/15 - 17:18:17 | 401 |   1.03ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+    aliyun_sms_test.go:149: Aliyun request/login integration verified without external SMS: no code leakage, single-use login, cooldown and failed-delivery rollback
+
+2026/10/15 17:18:17 [32mD:/workspace-main/codex-zqzt/server/aliyun_sms_test.go:108 [33mSLOW SQL >= 200ms
+[0m[31;1m[203.814ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055896821886500`[0m
+--- PASS: TestAliyunVerificationLoginFlow (0.95s)
+=== RUN   TestMerchantRootCategoriesScopePublishAndNormalization
+[GIN] 2026/10/15 - 17:18:18 | 401 |       0s |       192.0.2.1 | POST     "/api/v1/merchant/categories"
+[GIN] 2026/10/15 - 17:18:18 | 201 |   4.54ms |       192.0.2.1 | POST     "/api/v1/merchant/categories"
+[GIN] 2026/10/15 - 17:18:18 | 201 |      2ms |       192.0.2.1 | POST     "/api/v1/merchant/categories"
+[GIN] 2026/10/15 - 17:18:18 | 201 |      3ms |       192.0.2.1 | POST     "/api/v1/merchant/categories"
+[GIN] 2026/10/15 - 17:18:18 | 200 |   3.59ms |       192.0.2.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/15 - 17:18:18 | 200 |   1.07ms |       192.0.2.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/15 - 17:18:18 | 200 |   1.55ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy"
+
+2026/10/15 17:18:18 [31;1mD:/workspace-main/codex-zqzt/server/category_suggestions.go:74 [35;1mrecord not found
+[0m[33m[0.003ms] [34;1m[rows:0][0m SELECT * FROM `categories` WHERE `categories`.`id` = 999999 ORDER BY `categories`.`id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:18 | 400 |   1.56ms |       192.0.2.1 | POST     "/api/v1/merchant/categories"
+[GIN] 2026/10/15 - 17:18:18 | 400 |   1.54ms |       192.0.2.1 | POST     "/api/v1/merchant/categories"
+[GIN] 2026/10/15 - 17:18:18 | 201 |   3.08ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:18 | 201 |   3.65ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:18 | 200 |    3.1ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:18 | 200 |   3.59ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/15 - 17:18:18 | 200 |    2.6ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/15 - 17:18:18 | 200 |   2.61ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+[GIN] 2026/10/15 - 17:18:18 | 200 |   4.33ms |       192.0.2.1 | GET      "/api/v1/public/products?category_id=3"
+[GIN] 2026/10/15 - 17:18:18 | 200 |   2.06ms |       192.0.2.1 | POST     "/api/v1/admin/category-suggestions/3/normalize"
+[GIN] 2026/10/15 - 17:18:18 | 200 |   1.03ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy"
+[GIN] 2026/10/15 - 17:18:18 | 201 |   3.07ms |       192.0.2.1 | POST     "/api/v1/merchant/categories"
+[GIN] 2026/10/15 - 17:18:18 | 200 |   1.54ms |       192.0.2.1 | POST     "/api/v1/admin/category-suggestions/5/normalize"
+[GIN] 2026/10/15 - 17:18:18 | 200 |   4.11ms |       192.0.2.1 | POST     "/api/v1/admin/category-suggestions/4/normalize"
+[GIN] 2026/10/15 - 17:18:18 | 200 |    2.1ms |       192.0.2.1 | POST     "/api/v1/admin/category-suggestions/3/normalize"
+[GIN] 2026/10/15 - 17:18:18 | 200 |   1.53ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy"
+
+2026/10/15 17:18:18 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[206.300ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055897774997600`[0m
+--- PASS: TestMerchantRootCategoriesScopePublishAndNormalization (1.18s)
+=== RUN   TestProductionSMSModes
+--- PASS: TestProductionSMSModes (0.00s)
+=== RUN   TestDisabledSMSDoesNotIssueOrConsumeCodes
+[GIN] 2026/10/15 - 17:18:18 | 503 |       0s |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:18 | 503 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone"
+--- PASS: TestDisabledSMSDoesNotIssueOrConsumeCodes (0.00s)
+=== RUN   TestPortalFieldLimitsAndLegacyMerge
+--- PASS: TestPortalFieldLimitsAndLegacyMerge (0.00s)
+=== RUN   TestPortalReviewImagesIsolationAndOldClient
+[GIN] 2026/10/15 - 17:18:19 | 200 |   2.98ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:19 | 200 |   3.59ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:19 | 200 |   1.91ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:19 | 200 |    1.8ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:19 | 400 |   2.03ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+
+2026/10/15 17:18:19 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[1.695ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:19 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:19 | 201 |   7.45ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:19 | 404 |   6.32ms |       192.0.2.1 | GET      "/api/v1/media/1"
+[GIN] 2026/10/15 - 17:18:19 | 404 |   2.19ms |       192.0.2.1 | GET      "/api/v1/media/1"
+
+2026/10/15 17:18:19 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.521ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:19 | 200 | 202.47ms |       192.0.2.1 | GET      "/api/v1/media/1"
+[GIN] 2026/10/15 - 17:18:19 | 200 |   3.84ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:19 | 200 |    5.2ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+
+2026/10/15 17:18:19 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:19 | 200 |   1.04ms |       192.0.2.1 | GET      "/api/v1/media/1"
+
+2026/10/15 17:18:19 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:19 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:19 | 200 |   4.74ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+
+2026/10/15 17:18:19 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:19 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:19 | 200 |   3.64ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:19 | 200 |   2.58ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+
+2026/10/15 17:18:19 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:26 [35;1mrecord not found
+[0m[33m[1.408ms] [34;1m[rows:0][0m SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:19 | 200 |   4.53ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+[GIN] 2026/10/15 - 17:18:19 | 409 |   1.11ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:20 | 200 |   2.58ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/3/review"
+[GIN] 2026/10/15 - 17:18:20 | 200 |   2.04ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:20 | 200 |   2.06ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:20 | 200 |   3.58ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/4/review"
+[GIN] 2026/10/15 - 17:18:20 | 404 |   1.04ms |       192.0.2.1 | GET      "/api/v1/media/1"
+[GIN] 2026/10/15 - 17:18:20 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/offline"
+[GIN] 2026/10/15 - 17:18:20 | 404 |       0s |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+
+2026/10/15 17:18:20 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[211.715ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055898956480000`[0m
+--- PASS: TestPortalReviewImagesIsolationAndOldClient (1.27s)
+=== RUN   TestVisitorRegistrationAndFavoritePermissions
+[GIN] 2026/10/15 - 17:18:21 | 201 |  54.01ms |       192.0.2.1 | POST     "/api/v1/auth/visitor/register"
+[GIN] 2026/10/15 - 17:18:21 | 200 |  51.29ms |       192.0.2.1 | POST     "/api/v1/auth/visitor"
+
+2026/10/15 17:18:21 [31;1mD:/workspace-main/codex-zqzt/server/merchant_login.go:84 [35;1mrecord not found
+[0m[33m[0.519ms] [34;1m[rows:0][0m SELECT * FROM `accounts` WHERE login_name = '普通访客' AND role = 'merchant' ORDER BY `accounts`.`id` LIMIT 1 FOR UPDATE
+[GIN] 2026/10/15 - 17:18:21 | 401 |   50.9ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/15 - 17:18:21 | 409 |  52.45ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/15 - 17:18:21 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/visitor/register"
+[GIN] 2026/10/15 - 17:18:21 | 403 |   1.57ms |       192.0.2.1 | GET      "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:21 | 403 |    510µs |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:21 | 403 |  540.9µs |       192.0.2.1 | POST     "/api/v1/merchant/media"
+[GIN] 2026/10/15 - 17:18:21 | 403 |   1.05ms |       192.0.2.1 | GET      "/api/v1/admin/accounts"
+[GIN] 2026/10/15 - 17:18:21 | 401 |       0s |       192.0.2.1 | GET      "/api/v1/favorites"
+[GIN] 2026/10/15 - 17:18:21 | 200 |   2.63ms |       192.0.2.1 | GET      "/api/v1/favorites"
+
+2026/10/15 17:18:21 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[212.285ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055900229970200`[0m
+--- PASS: TestVisitorRegistrationAndFavoritePermissions (1.22s)
+=== RUN   TestFavoriteDeduplicationAccountIsolationAndBatchRollback
+
+2026/10/15 17:18:22 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:191 [35;1mrecord not found
+[0m[33m[2.000ms] [34;1m[rows:0][0m SELECT * FROM `favorite_operations` WHERE account_id=2 AND operation_id='deviceA_1' ORDER BY `favorite_operations`.`account_id` LIMIT 1
+
+2026/10/15 17:18:22 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:204 [35;1mrecord not found
+[0m[33m[1.840ms] [34;1m[rows:0][0m SELECT * FROM `favorites` WHERE account_id=2 AND kind='vendor' AND content_id=42 ORDER BY `favorites`.`account_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:22 | 200 |   6.86ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:22 | 200 |   1.07ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+
+2026/10/15 17:18:22 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:191 [35;1mrecord not found
+[0m[33m[0.990ms] [34;1m[rows:0][0m SELECT * FROM `favorite_operations` WHERE account_id=2 AND operation_id='deviceB_1' ORDER BY `favorite_operations`.`account_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:22 | 200 |   3.24ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:22 | 200 |   1.27ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:22 | 200 |   1.55ms |       192.0.2.1 | GET      "/api/v1/favorites"
+
+2026/10/15 17:18:22 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:191 [35;1mrecord not found
+[0m[33m[0.024ms] [34;1m[rows:0][0m SELECT * FROM `favorite_operations` WHERE account_id=2 AND operation_id='deviceA_2' ORDER BY `favorite_operations`.`account_id` LIMIT 1
+
+2026/10/15 17:18:22 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:191 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `favorite_operations` WHERE account_id=2 AND operation_id='deviceA_3' ORDER BY `favorite_operations`.`account_id` LIMIT 1
+
+2026/10/15 17:18:22 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:204 [35;1mrecord not found
+[0m[33m[0.518ms] [34;1m[rows:0][0m SELECT * FROM `favorites` WHERE account_id=2 AND kind='product' AND content_id=43 ORDER BY `favorites`.`account_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:22 | 200 |   3.13ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:22 | 200 |   1.04ms |       192.0.2.1 | GET      "/api/v1/favorites"
+[GIN] 2026/10/15 - 17:18:22 | 200 |   3.09ms |       192.0.2.1 | GET      "/api/v1/favorites?kind=vendor&page_size=1"
+
+2026/10/15 17:18:22 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:191 [35;1mrecord not found
+[0m[33m[0.518ms] [34;1m[rows:0][0m SELECT * FROM `favorite_operations` WHERE account_id=2 AND operation_id='new_in_failed_batch' ORDER BY `favorite_operations`.`account_id` LIMIT 1
+
+2026/10/15 17:18:22 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:204 [35;1mrecord not found
+[0m[33m[0.503ms] [34;1m[rows:0][0m SELECT * FROM `favorites` WHERE account_id=2 AND kind='vendor' AND content_id=99 ORDER BY `favorites`.`account_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:22 | 409 |   3.18ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:22 | 200 |   3.59ms |       192.0.2.1 | GET      "/api/v1/favorites"
+[GIN] 2026/10/15 - 17:18:22 | 400 |   1.04ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:22 | 400 |    520µs |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:22 | 400 |  514.1µs |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:22 | 400 |  516.1µs |       192.0.2.1 | GET      "/api/v1/favorites?kind=resource"
+
+2026/10/15 17:18:22 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[215.061ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055901448879400`[0m
+--- PASS: TestFavoriteDeduplicationAccountIsolationAndBatchRollback (1.04s)
+=== RUN   TestFavoriteResolutionNeverExposesDraftsOrWithdrawnParents
+[GIN] 2026/10/15 - 17:18:23 | 200 |   4.03ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:23 | 200 |   3.48ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:23 | 200 |  55.39ms |       192.0.2.1 | POST     "/api/v1/auth/admin"
+[GIN] 2026/10/15 - 17:18:23 | 201 |   4.29ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:23 | 201 |   6.38ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:23 | 201 |   3.11ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:23 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:23 | 200 |   4.61ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/15 - 17:18:23 | 200 |   2.08ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/15 - 17:18:23 | 200 |   2.71ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+[GIN] 2026/10/15 - 17:18:23 | 200 |   4.11ms |       192.0.2.1 | POST     "/api/v1/public/favorites/resolve"
+[GIN] 2026/10/15 - 17:18:23 | 200 |   2.57ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:23 | 200 |   1.53ms |       192.0.2.1 | POST     "/api/v1/public/favorites/resolve"
+[GIN] 2026/10/15 - 17:18:23 | 200 |   2.06ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/offline"
+[GIN] 2026/10/15 - 17:18:23 | 200 |   1.02ms |       192.0.2.1 | POST     "/api/v1/public/favorites/resolve"
+
+2026/10/15 17:18:23 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:191 [35;1mrecord not found
+[0m[33m[1.535ms] [34;1m[rows:0][0m SELECT * FROM `favorite_operations` WHERE account_id=2 AND operation_id='merchant_favorite' ORDER BY `favorite_operations`.`account_id` LIMIT 1
+
+2026/10/15 17:18:23 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:204 [35;1mrecord not found
+[0m[33m[1.611ms] [34;1m[rows:0][0m SELECT * FROM `favorites` WHERE account_id=2 AND kind='vendor' AND content_id=1 ORDER BY `favorites`.`account_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:23 | 200 |   4.69ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:23 | 200 |   2.05ms |       192.0.2.1 | GET      "/api/v1/favorites"
+
+2026/10/15 17:18:23 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[211.366ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055902485874400`[0m
+--- PASS: TestFavoriteResolutionNeverExposesDraftsOrWithdrawnParents (1.11s)
+=== RUN   TestConcurrentFavoriteRetriesExecuteOnce
+
+2026/10/15 17:18:24 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:191 [35;1mrecord not found
+[0m[33m[2.000ms] [34;1m[rows:0][0m SELECT * FROM `favorite_operations` WHERE account_id=2 AND operation_id='same_operation' ORDER BY `favorite_operations`.`account_id` LIMIT 1
+
+2026/10/15 17:18:24 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:204 [35;1mrecord not found
+[0m[33m[2.506ms] [34;1m[rows:0][0m SELECT * FROM `favorites` WHERE account_id=2 AND kind='product' AND content_id=123 ORDER BY `favorites`.`account_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:24 | 200 |   7.56ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:24 | 200 |    9.1ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:24 | 200 |  10.13ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:24 | 200 |  11.66ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:24 | 200 |   13.2ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:24 | 200 |  14.23ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:24 | 200 |  15.78ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/15 - 17:18:24 | 200 |   16.8ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+
+2026/10/15 17:18:24 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[214.392ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055903593045400`[0m
+--- PASS: TestConcurrentFavoriteRetriesExecuteOnce (1.16s)
+=== RUN   TestHomeDisplayImagePublicationPermissionsAndRollback
+[GIN] 2026/10/15 - 17:18:25 | 401 |       0s |       192.0.2.1 | GET      "/api/v1/admin/home-display"
+[GIN] 2026/10/15 - 17:18:25 | 403 |    1.3ms |       192.0.2.1 | GET      "/api/v1/admin/home-display"
+[GIN] 2026/10/15 - 17:18:25 | 403 |  723.5µs |       192.0.2.1 | PUT      "/api/v1/admin/home-display"
+[GIN] 2026/10/15 - 17:18:25 | 403 |      1ms |       192.0.2.1 | POST     "/api/v1/admin/home-display/media"
+[GIN] 2026/10/15 - 17:18:25 | 400 |  538.4µs |       192.0.2.1 | POST     "/api/v1/admin/home-display/media"
+[GIN] 2026/10/15 - 17:18:25 | 200 |   3.06ms |       192.0.2.1 | GET      "/api/v1/admin/home-display"
+[GIN] 2026/10/15 - 17:18:25 | 201 |   5.16ms |       192.0.2.1 | POST     "/api/v1/admin/home-display/media"
+[GIN] 2026/10/15 - 17:18:25 | 404 |   6.86ms |       192.0.2.1 | GET      "/api/v1/media/1"
+
+2026/10/15 17:18:25 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[1.538ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:25 | 200 |   4.19ms |       192.0.2.1 | GET      "/api/v1/media/1"
+
+2026/10/15 17:18:25 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:25 | 200 |   2.14ms |       192.0.2.1 | HEAD     "/api/v1/media/1"
+[GIN] 2026/10/15 - 17:18:25 | 201 |   3.84ms |       192.0.2.1 | POST     "/api/v1/merchant/media"
+[GIN] 2026/10/15 - 17:18:25 | 400 |   1.69ms |       192.0.2.1 | PUT      "/api/v1/admin/home-display"
+[GIN] 2026/10/15 - 17:18:25 | 200 |   1.63ms |       192.0.2.1 | PUT      "/api/v1/admin/home-display"
+
+2026/10/15 17:18:25 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.549ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:25 | 200 |   1.11ms |       192.0.2.1 | GET      "/api/v1/media/1"
+
+2026/10/15 17:18:25 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.525ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:25 | 200 |   2.17ms |       192.0.2.1 | HEAD     "/api/v1/media/1"
+
+2026/10/15 17:18:25 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.520ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:25 | 200 |   1.57ms |       192.0.2.1 | GET      "/api/v1/media/1?thumb=1"
+
+2026/10/15 17:18:25 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:25 | 200 |   1.54ms |       192.0.2.1 | HEAD     "/api/v1/media/1?thumb=1"
+[GIN] 2026/10/15 - 17:18:25 | 200 |   1.04ms |       192.0.2.1 | GET      "/api/v1/public/home"
+[GIN] 2026/10/15 - 17:18:25 | 409 |   1.06ms |       192.0.2.1 | PUT      "/api/v1/admin/home-display"
+[GIN] 2026/10/15 - 17:18:25 | 201 |   4.21ms |       192.0.2.1 | POST     "/api/v1/admin/home-display/media"
+[GIN] 2026/10/15 - 17:18:25 | 200 |   2.05ms |       192.0.2.1 | PUT      "/api/v1/admin/home-display"
+[GIN] 2026/10/15 - 17:18:25 | 404 |   1.59ms |       192.0.2.1 | GET      "/api/v1/media/1"
+
+2026/10/15 17:18:25 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:25 | 200 |   2.82ms |       192.0.2.1 | GET      "/api/v1/media/1"
+
+2026/10/15 17:18:25 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:25 | 200 |    2.1ms |       192.0.2.1 | HEAD     "/api/v1/media/1"
+
+2026/10/15 17:18:25 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:25 | 200 |   1.03ms |       192.0.2.1 | GET      "/api/v1/media/3"
+
+2026/10/15 17:18:25 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:25 | 200 |   1.09ms |       192.0.2.1 | HEAD     "/api/v1/media/3"
+[GIN] 2026/10/15 - 17:18:25 | 200 |   2.69ms |       192.0.2.1 | PUT      "/api/v1/admin/home-display"
+[GIN] 2026/10/15 - 17:18:25 | 404 |   1.03ms |       192.0.2.1 | GET      "/api/v1/media/3"
+[GIN] 2026/10/15 - 17:18:25 | 500 |    4.2ms |       192.0.2.1 | POST     "/api/v1/admin/home-display/media"
+
+2026/10/15 17:18:25 [34;1mD:/workspace-main/codex-zqzt/server/home_display_test.go:66
+[0m[35m[warn] [0mremoving callback `home_upload_rollback` from D:/workspace-main/codex-zqzt/server/home_display_test.go:66
+
+2026/10/15 17:18:25 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[208.039ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055904755071000`[0m
+--- PASS: TestHomeDisplayImagePublicationPermissionsAndRollback (1.07s)
+=== RUN   TestFeaturedVendorLimitConcurrentAndPublicSnapshots
+[GIN] 2026/10/15 - 17:18:26 | 201 |  56.03ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:26 | 200 |   3.44ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:26 | 200 |   5.01ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/15 - 17:18:26 | 201 |  53.75ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:26 | 200 |   3.09ms |       192.0.2.1 | POST     "/api/v1/admin/contents/2/submit"
+[GIN] 2026/10/15 - 17:18:26 | 200 |   2.75ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+[GIN] 2026/10/15 - 17:18:26 | 201 |  55.92ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:26 | 200 |   3.66ms |       192.0.2.1 | POST     "/api/v1/admin/contents/3/submit"
+[GIN] 2026/10/15 - 17:18:26 | 200 |   3.69ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/3/review"
+[GIN] 2026/10/15 - 17:18:26 | 201 |  55.12ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:26 | 200 |   2.98ms |       192.0.2.1 | POST     "/api/v1/admin/contents/4/submit"
+[GIN] 2026/10/15 - 17:18:26 | 200 |   3.48ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/4/review"
+[GIN] 2026/10/15 - 17:18:26 | 201 |  55.33ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:26 | 200 |   2.68ms |       192.0.2.1 | POST     "/api/v1/admin/contents/5/submit"
+[GIN] 2026/10/15 - 17:18:26 | 200 |   3.21ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/5/review"
+[GIN] 2026/10/15 - 17:18:26 | 201 |  55.79ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:26 | 200 |   3.41ms |       192.0.2.1 | POST     "/api/v1/admin/contents/6/submit"
+[GIN] 2026/10/15 - 17:18:26 | 200 |   3.31ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/6/review"
+[GIN] 2026/10/15 - 17:18:27 | 201 |  56.11ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:27 | 200 |    2.4ms |       192.0.2.1 | POST     "/api/v1/admin/contents/7/submit"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   3.59ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/7/review"
+[GIN] 2026/10/15 - 17:18:27 | 201 |  56.54ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.05ms |       192.0.2.1 | POST     "/api/v1/admin/contents/8/submit"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   4.39ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/8/review"
+[GIN] 2026/10/15 - 17:18:27 | 201 |  56.28ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.36ms |       192.0.2.1 | POST     "/api/v1/admin/contents/9/submit"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   4.33ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/9/review"
+[GIN] 2026/10/15 - 17:18:27 | 201 |  55.83ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:27 | 200 |    2.7ms |       192.0.2.1 | POST     "/api/v1/admin/contents/10/submit"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   3.73ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/10/review"
+[GIN] 2026/10/15 - 17:18:27 | 201 |  56.32ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:27 | 200 |    2.7ms |       192.0.2.1 | POST     "/api/v1/admin/contents/11/submit"
+[GIN] 2026/10/15 - 17:18:27 | 200 |    3.2ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/11/review"
+[GIN] 2026/10/15 - 17:18:27 | 201 |  56.35ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   3.09ms |       192.0.2.1 | POST     "/api/v1/admin/contents/12/submit"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   3.63ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/12/review"
+[GIN] 2026/10/15 - 17:18:27 | 201 |  55.86ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/admin/contents/13/submit"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   3.61ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/13/review"
+[GIN] 2026/10/15 - 17:18:27 | 201 |  55.86ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.03ms |       192.0.2.1 | POST     "/api/v1/admin/contents/14/submit"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   3.81ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/14/review"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.61ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/1/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.14ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/2/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.06ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/3/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.56ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/4/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.05ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/5/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.56ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/6/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.06ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/7/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.65ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/8/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.76ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/9/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.05ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/10/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.56ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/11/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |    3.1ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/13/featured"
+[GIN] 2026/10/15 - 17:18:27 | 409 |   7.72ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/12/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   1.07ms |       192.0.2.1 | GET      "/api/v1/admin/home-display"
+[GIN] 2026/10/15 - 17:18:27 | 409 |   2.05ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/14/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   3.59ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   6.19ms |       192.0.2.1 | GET      "/api/v1/public/home"
+[GIN] 2026/10/15 - 17:18:27 | 200 |    6.3ms |       192.0.2.1 | GET      "/api/v1/public/home"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   2.09ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/1/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   1.53ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/14/featured"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   3.29ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/offline"
+[GIN] 2026/10/15 - 17:18:27 | 200 |   4.78ms |       192.0.2.1 | GET      "/api/v1/public/home"
+
+2026/10/15 17:18:27 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[208.643ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055905828470900`[0m
+--- PASS: TestFeaturedVendorLimitConcurrentAndPublicSnapshots (1.95s)
+=== RUN   TestHomeDisplayInterruptedMigrationAndConcurrentVersion
+[GIN] 2026/10/15 - 17:18:28 | 200 |   2.28ms |       192.0.2.1 | PUT      "/api/v1/admin/home-display"
+[GIN] 2026/10/15 - 17:18:28 | 409 |    5.7ms |       192.0.2.1 | PUT      "/api/v1/admin/home-display"
+
+2026/10/15 17:18:28 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[212.232ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055907778505000`[0m
+--- PASS: TestHomeDisplayInterruptedMigrationAndConcurrentVersion (1.05s)
+=== RUN   TestThousandProductsAndConcurrentLastSlot
+[GIN] 2026/10/15 - 17:18:29 | 200 |   2.99ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:29 | 200 |   2.61ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:29 | 201 |   5.18ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:29 | 201 |   8.29ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:29 | 409 |  10.98ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:29 | 409 |   3.16ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:29 | 200 |   4.59ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1001/draft"
+[GIN] 2026/10/15 - 17:18:29 | 200 |   2.04ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:29 | 200 |   2.73ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:29 | 201 |   2.04ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:29 | 201 |   3.11ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+
+2026/10/15 17:18:30 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[204.298ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055908829618300`[0m
+--- PASS: TestThousandProductsAndConcurrentLastSlot (1.26s)
+=== RUN   TestVendorImportAtomicAndIdempotent
+
+2026/10/15 17:18:30 [31;1mD:/workspace-main/codex-zqzt/server/import.go:76 [35;1mrecord not found
+[0m[33m[0.571ms] [34;1m[rows:0][0m SELECT * FROM `contents` WHERE kind = 'vendor' AND owner_id = 2 ORDER BY `contents`.`id` LIMIT 1
+
+2026/10/15 17:18:30 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[1.494ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:30 [31;1mD:/workspace-main/codex-zqzt/server/import.go:76 [35;1mrecord not found
+[0m[33m[0.512ms] [34;1m[rows:0][0m SELECT * FROM `contents` WHERE kind = 'vendor' AND owner_id = 3 ORDER BY `contents`.`id` LIMIT 1
+
+2026/10/15 17:18:30 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:30 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.513ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:30 | 200 |   4.15ms |       192.0.2.1 | GET      "/api/v1/public/vendors/2"
+
+2026/10/15 17:18:30 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.016ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:30 | 200 |   1.55ms |       192.0.2.1 | GET      "/api/v1/media/2"
+
+2026/10/15 17:18:30 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:30 | 200 |   1.03ms |       192.0.2.1 | GET      "/api/v1/media/3"
+
+2026/10/15 17:18:31 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[211.873ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055910089348900`[0m
+--- PASS: TestVendorImportAtomicAndIdempotent (1.08s)
+=== RUN   TestBusinessAndMediaIsolation
+[GIN] 2026/10/15 - 17:18:32 | 200 |  53.01ms |       192.0.2.1 | POST     "/api/v1/auth/admin"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.86ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   1.67ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   1.93ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   1.77ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   1.12ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:32 | 429 |  515.8µs |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:32 | 401 |   1.02ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:32 | 401 |  523.7µs |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:32 | 401 |  528.9µs |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:32 | 401 |   1.12ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:32 | 401 |  581.7µs |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:32 | 401 |   1.03ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   3.59ms |       192.0.2.1 | GET      "/api/v1/public/home"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   1.04ms |       192.0.2.1 | GET      "/api/v1/public/vendors?q=农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农农"
+[GIN] 2026/10/15 - 17:18:32 | 201 |   3.64ms |       192.0.2.1 | POST     "/api/v1/merchant/media"
+[GIN] 2026/10/15 - 17:18:32 | 201 |   4.77ms |       192.0.2.1 | POST     "/api/v1/merchant/media"
+[GIN] 2026/10/15 - 17:18:32 | 201 |   4.12ms |       192.0.2.1 | POST     "/api/v1/merchant/media"
+[GIN] 2026/10/15 - 17:18:32 | 404 |   6.15ms |       192.0.2.1 | GET      "/api/v1/media/1"
+[GIN] 2026/10/15 - 17:18:32 | 404 |   2.58ms |       192.0.2.1 | GET      "/api/v1/media/1"
+
+2026/10/15 17:18:32 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[1.535ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:32 | 200 |   3.85ms |       192.0.2.1 | GET      "/api/v1/media/1"
+
+2026/10/15 17:18:32 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:32 | 201 |    3.7ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:32 | 403 |  540.2µs |       192.0.2.1 | GET      "/api/v1/merchant/contents/1"
+[GIN] 2026/10/15 - 17:18:32 | 404 |  513.5µs |       192.0.2.1 | GET      "/api/v1/public/vendors/1"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.67ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:32 | 409 |   1.64ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   1.62ms |       192.0.2.1 | POST     "/api/v1/admin/categories"
+[GIN] 2026/10/15 - 17:18:32 | 400 |   1.17ms |       192.0.2.1 | PUT      "/api/v1/admin/categories/2"
+
+2026/10/15 17:18:32 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:32 | 201 |    6.8ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.63ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.62ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+[GIN] 2026/10/15 - 17:18:32 | 404 |  514.1µs |       192.0.2.1 | GET      "/api/v1/public/products/2"
+[GIN] 2026/10/15 - 17:18:32 | 200 |    1.6ms |       192.0.2.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   5.76ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.07ms |       192.0.2.1 | GET      "/api/v1/merchant/contents/2"
+
+2026/10/15 17:18:32 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.514ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:32 | 200 |   1.03ms |       192.0.2.1 | GET      "/api/v1/media/1"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   1.57ms |       192.0.2.1 | GET      "/api/v1/public/products/2"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   6.26ms |       192.0.2.1 | GET      "/api/v1/public/vendors?q=component&category_id=2"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   1.55ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy"
+[GIN] 2026/10/15 - 17:18:32 | 200 |    3.6ms |       192.0.2.1 | GET      "/api/v1/public/vendors?region_id=1&category_id=2&q=component"
+
+2026/10/15 17:18:32 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:32 | 200 |   3.15ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:32 | 409 |   1.02ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.06ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.32ms |       192.0.2.1 | GET      "/api/v1/public/vendors/1"
+[GIN] 2026/10/15 - 17:18:32 | 404 |    1.4ms |       192.0.2.1 | GET      "/api/v1/media/2"
+
+2026/10/15 17:18:32 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.559ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:32 | 200 |   1.26ms |       192.0.2.1 | GET      "/api/v1/media/1"
+[GIN] 2026/10/15 - 17:18:32 | 400 |  516.8µs |       192.0.2.1 | POST     "/api/v1/admin/revisions/3/review"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.58ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/3/review"
+[GIN] 2026/10/15 - 17:18:32 | 409 |   1.54ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/3/review"
+[GIN] 2026/10/15 - 17:18:32 | 400 |   1.54ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+
+2026/10/15 17:18:32 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.57ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.57ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   3.71ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/4/review"
+
+2026/10/15 17:18:32 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[0.009ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:32 | 200 |   1.02ms |       192.0.2.1 | GET      "/api/v1/media/2"
+
+2026/10/15 17:18:32 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.511ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.57ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.63ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   2.14ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/offline"
+[GIN] 2026/10/15 - 17:18:32 | 409 |   6.64ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/5/review"
+[GIN] 2026/10/15 - 17:18:32 | 404 |       0s |       192.0.2.1 | GET      "/api/v1/public/vendors/1"
+[GIN] 2026/10/15 - 17:18:32 | 404 |   2.14ms |       192.0.2.1 | GET      "/api/v1/public/products/2"
+[GIN] 2026/10/15 - 17:18:32 | 404 |   6.67ms |       192.0.2.1 | GET      "/api/v1/media/1"
+[GIN] 2026/10/15 - 17:18:32 | 404 |   2.18ms |       192.0.2.1 | GET      "/api/v1/media/2"
+
+2026/10/15 17:18:32 [31;1mD:/workspace-main/codex-zqzt/server/public.go:294 [35;1mrecord not found
+[0m[33m[0.535ms] [34;1m[rows:0][0m SELECT * FROM `categories` WHERE `categories`.`id` = 99999 ORDER BY `categories`.`id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:32 | 400 |   3.78ms |       192.0.2.1 | POST     "/api/v1/admin/categories"
+[GIN] 2026/10/15 - 17:18:32 | 200 |   1.09ms |       192.0.2.1 | POST     "/api/v1/auth/logout"
+
+2026/10/15 17:18:32 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:42 [35;1mrecord not found
+[0m[33m[0.509ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = 'f56696ba12d713e8b53c67911dd6893cca141a1fe8e6067ea7488ee8edc98705' AND expires_at > '2026-10-15 09:18:32.166' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/15 - 17:18:32 | 401 |  509.4µs |       192.0.2.1 | GET      "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:36 | 404 |   2.16ms |       192.0.2.1 | GET      "/api/v1/public/vendors/1"
+[GIN] 2026/10/15 - 17:18:36 | 404 |   2.01ms |       192.0.2.1 | GET      "/api/v1/public/products/2"
+[GIN] 2026/10/15 - 17:18:36 | 404 |   8.37ms |       192.0.2.1 | GET      "/api/v1/media/2"
+
+2026/10/15 17:18:36 [31;1mD:/workspace-main/codex-zqzt/server/media.go:175 [35;1mrecord not found
+[0m[33m[1.135ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:36 | 200 |   6.98ms |       192.0.2.1 | GET      "/api/v1/media/2"
+[GIN] 2026/10/15 - 17:18:36 | 200 |   2.65ms |       192.0.2.1 | GET      "/api/v1/admin/contents/1"
+    integration_test.go:290: Backup and restore verified: checksums, populated isolated database, 3 images and 3 thumbnails restored byte-for-byte, revision and audit counts, restored API and media permissions
+
+2026/10/15 17:18:36 [32mD:/workspace-main/codex-zqzt/server/integration_test.go:291 [33mSLOW SQL >= 200ms
+[0m[31;1m[214.714ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_restore_1792055914553`[0m
+
+2026/10/15 17:18:36 [32mD:/workspace-main/codex-zqzt/server/integration_test.go:68 [33mSLOW SQL >= 200ms
+[0m[31;1m[217.510ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055911172446800`[0m
+--- PASS: TestBusinessAndMediaIsolation (5.41s)
+=== RUN   TestMerchantDashboardFiltersAndPublication
+[GIN] 2026/10/15 - 17:18:37 | 200 |   2.98ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   4.04ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   1.68ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:37 | 200 |    2.1ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.15ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   3.73ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   4.68ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   7.24ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   4.19ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.08ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.58ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |    3.6ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   4.27ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.58ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.09ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.07ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   4.18ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.61ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   4.13ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |    3.6ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.68ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.59ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.07ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.58ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.24ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   4.11ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.07ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.07ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |   3.08ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 201 |    4.7ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   3.07ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/2/draft"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   2.63ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/3/submit"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   2.58ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/4/submit"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/4/review"
+[GIN] 2026/10/15 - 17:18:37 | 200 |    3.5ms |       192.0.2.1 | GET      "/api/v1/merchant/dashboard"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   1.13ms |       192.0.2.1 | GET      "/api/v1/merchant/dashboard"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   2.68ms |       192.0.2.1 | GET      "/api/v1/merchant/contents?kind=product&q=MATCH&page=2"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   2.98ms |       192.0.2.1 | GET      "/api/v1/merchant/contents?kind=product&q=MATCH&status=pending&public_state=public"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   2.66ms |       192.0.2.1 | GET      "/api/v1/merchant/contents?kind=product&q=MATCH&status=pending&public_state=unpublished"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   1.02ms |       192.0.2.1 | GET      "/api/v1/merchant/contents?kind=product&q=不存在"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   1.03ms |       192.0.2.1 | GET      "/api/v1/merchant/contents?kind=product&q=MATCH"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   2.57ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/offline"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   1.53ms |       192.0.2.1 | GET      "/api/v1/merchant/dashboard"
+[GIN] 2026/10/15 - 17:18:37 | 200 |   1.02ms |       192.0.2.1 | GET      "/api/v1/merchant/contents?kind=product&public_state=public"
+[GIN] 2026/10/15 - 17:18:37 | 401 |       0s |       192.0.2.1 | GET      "/api/v1/merchant/dashboard"
+
+2026/10/15 17:18:37 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[207.208ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055916579983900`[0m
+--- PASS: TestMerchantDashboardFiltersAndPublication (1.15s)
+=== RUN   TestAppDownloadConfigDoesNotEncodeLoopback
+[GIN] 2026/10/15 - 17:18:38 | 200 |       0s |       192.0.2.1 | GET      "/api/v1/public/app"
+[GIN] 2026/10/15 - 17:18:38 | 200 |       0s |       192.0.2.1 | GET      "/api/v1/public/app"
+
+2026/10/15 17:18:38 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[219.736ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055917727993200`[0m
+--- PASS: TestAppDownloadConfigDoesNotEncodeLoopback (1.00s)
+=== RUN   TestNamedMerchantLoginOwnershipAndEditing
+[GIN] 2026/10/15 - 17:18:39 | 201 |   5.23ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:39 | 201 |   6.29ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:39 | 200 |  52.93ms |       192.0.2.1 | POST     "/api/v1/auth/admin"
+[GIN] 2026/10/15 - 17:18:39 | 200 |   2.07ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:39 | 200 |   5.23ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/15 - 17:18:39 | 200 |   2.99ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/15 - 17:18:39 | 200 |   3.48ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+
+2026/10/15 17:18:39 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:42 [35;1mrecord not found
+[0m[33m[1.000ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = 'b955183e24fd80cdddb3877f5c426c9c0f2d3f78df3ecf1fa5a7456eb9bd01cc' AND expires_at > '2026-10-15 09:18:39.752' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/15 - 17:18:39 | 401 |      1ms |       192.0.2.1 | GET      "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:39 | 401 |  49.57ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+
+2026/10/15 17:18:39 [31;1mD:/workspace-main/codex-zqzt/server/merchant_login.go:84 [35;1mrecord not found
+[0m[33m[0.546ms] [34;1m[rows:0][0m SELECT * FROM `accounts` WHERE login_name = 'admin' AND role = 'merchant' ORDER BY `accounts`.`id` LIMIT 1 FOR UPDATE
+[GIN] 2026/10/15 - 17:18:39 | 401 |  53.68ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+
+2026/10/15 17:18:39 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:233 [35;1mrecord not found
+[0m[33m[0.415ms] [34;1m[rows:0][0m SELECT * FROM `accounts` WHERE username = '测试企业专用账号' AND role = 'admin' ORDER BY `accounts`.`id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:39 | 401 |  414.7µs |       192.0.2.1 | POST     "/api/v1/auth/admin"
+[GIN] 2026/10/15 - 17:18:39 | 200 |  52.01ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/15 - 17:18:39 | 200 |   2.75ms |       192.0.2.1 | GET      "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:39 | 403 |  518.5µs |       192.0.2.1 | GET      "/api/v1/admin/contents"
+[GIN] 2026/10/15 - 17:18:39 | 200 |   2.45ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:39 | 200 |   3.05ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:39 | 201 |   2.18ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:39 | 403 |  584.9µs |       192.0.2.1 | GET      "/api/v1/merchant/contents/3"
+[GIN] 2026/10/15 - 17:18:39 | 200 |    3.3ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:39 | 200 |   3.68ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/2/draft"
+[GIN] 2026/10/15 - 17:18:39 | 200 |   2.67ms |       192.0.2.1 | GET      "/api/v1/public/products/2"
+[GIN] 2026/10/15 - 17:18:39 | 200 |  52.31ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/15 - 17:18:39 | 200 |   1.69ms |       192.0.2.1 | POST     "/api/v1/auth/logout"
+
+2026/10/15 17:18:39 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:42 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = '3906b7b9e61d31a52bfbe09c7d150c24605bf7cdcfb477aad9cf59736934094d' AND expires_at > '2026-10-15 09:18:39.99' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/15 - 17:18:39 | 401 |  546.6µs |       192.0.2.1 | GET      "/api/v1/merchant/contents"
+
+2026/10/15 17:18:40 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[221.803ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055918730540100`[0m
+--- PASS: TestNamedMerchantLoginOwnershipAndEditing (1.49s)
+=== RUN   TestMerchantRegistrationAndExistingLogin
+[GIN] 2026/10/15 - 17:18:41 | 201 |  53.83ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/15 - 17:18:41 | 403 |  980.3µs |       192.0.2.1 | GET      "/api/v1/admin/accounts"
+[GIN] 2026/10/15 - 17:18:41 | 201 |   4.65ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:41 | 200 |   3.16ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:41 | 200 |  51.95ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/15 - 17:18:41 | 200 |   1.75ms |       192.0.2.1 | GET      "/api/v1/merchant/contents/1"
+[GIN] 2026/10/15 - 17:18:41 | 401 |  50.73ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/15 - 17:18:41 | 409 |  51.36ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+
+2026/10/15 17:18:41 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[234.097ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055920216424300`[0m
+--- PASS: TestMerchantRegistrationAndExistingLogin (1.41s)
+=== RUN   TestMerchantRegistrationBoundariesRateAndRollback
+[GIN] 2026/10/15 - 17:18:42 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/15 - 17:18:42 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/15 - 17:18:42 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/15 - 17:18:42 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/15 - 17:18:42 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/15 - 17:18:42 | 429 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/15 - 17:18:42 | 201 |  54.36ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/15 - 17:18:42 | 201 |  53.59ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/15 - 17:18:42 | 500 |  51.21ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+
+2026/10/15 17:18:42 [34;1mD:/workspace-main/codex-zqzt/server/merchant_register_test.go:79
+[0m[35m[warn] [0mremoving callback `registration_rollback` from D:/workspace-main/codex-zqzt/server/merchant_register_test.go:79
+
+2026/10/15 17:18:42 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[212.513ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055921630744100`[0m
+--- PASS: TestMerchantRegistrationBoundariesRateAndRollback (1.15s)
+=== RUN   TestConcurrentMerchantRegistrationUniqueName
+[GIN] 2026/10/15 - 17:18:43 | 201 |  52.55ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/15 - 17:18:43 | 409 |  53.06ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+
+2026/10/15 17:18:43 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[210.996ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055922778240000`[0m
+--- PASS: TestConcurrentMerchantRegistrationUniqueName (1.05s)
+=== RUN   TestOnboardingFieldIssues
+--- PASS: TestOnboardingFieldIssues (0.00s)
+=== RUN   TestCategoryMigrationRestartsPartialDDL
+
+2026/10/15 17:18:44 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[202.494ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055923831324700`[0m
+--- PASS: TestCategoryMigrationRestartsPartialDDL (1.04s)
+=== RUN   TestCompanyCategorySuggestionsAndAliases
+[GIN] 2026/10/15 - 17:18:45 | 201 |   3.99ms |       192.0.2.1 | POST     "/api/v1/merchant/categories"
+[GIN] 2026/10/15 - 17:18:45 | 201 |   3.09ms |       192.0.2.1 | POST     "/api/v1/merchant/categories"
+[GIN] 2026/10/15 - 17:18:45 | 200 |   4.11ms |       192.0.2.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/15 - 17:18:45 | 200 |   2.09ms |       192.0.2.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/15 - 17:18:45 | 200 |   2.08ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy"
+[GIN] 2026/10/15 - 17:18:45 | 201 |   4.22ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:45 | 400 |   1.57ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:45 | 200 |   2.69ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:45 | 200 |   4.03ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/15 - 17:18:45 | 200 |   4.94ms |       192.0.2.1 | GET      "/api/v1/public/vendors?category_id=3"
+[GIN] 2026/10/15 - 17:18:45 | 201 |   4.12ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:45 | 200 |   2.65ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/15 - 17:18:45 | 200 |    3.6ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+[GIN] 2026/10/15 - 17:18:45 | 200 |   3.57ms |       192.0.2.1 | POST     "/api/v1/admin/category-suggestions/3/normalize"
+[GIN] 2026/10/15 - 17:18:45 | 200 |    2.7ms |       192.0.2.1 | GET      "/api/v1/public/products?category_id=3"
+[GIN] 2026/10/15 - 17:18:45 | 200 |    3.1ms |       192.0.2.1 | GET      "/api/v1/public/products?category_id=2"
+
+2026/10/15 17:18:45 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:26 [35;1mrecord not found
+[0m[33m[1.546ms] [34;1m[rows:0][0m SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:45 | 200 |   9.34ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+[GIN] 2026/10/15 - 17:18:45 | 201 |   3.09ms |       192.0.2.1 | POST     "/api/v1/merchant/categories"
+[GIN] 2026/10/15 - 17:18:45 | 200 |   3.06ms |       192.0.2.1 | POST     "/api/v1/admin/category-suggestions/4/normalize"
+[GIN] 2026/10/15 - 17:18:45 | 200 |   1.62ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy"
+[GIN] 2026/10/15 - 17:18:45 | 200 |   1.54ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy"
+
+2026/10/15 17:18:46 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[367.995ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055924868450200`[0m
+--- PASS: TestCompanyCategorySuggestionsAndAliases (1.24s)
+=== RUN   TestAdminBrandImagesOutsideGalleryQuota
+[GIN] 2026/10/15 - 17:18:46 | 201 |  58.02ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:46 | 201 |    6.3ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:46 | 201 |   5.47ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:46 | 201 |    3.9ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:46 | 201 |   4.19ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:46 | 201 |   4.65ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:46 | 201 |   4.11ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:46 | 201 |   3.69ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:46 | 201 |   4.68ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:46 | 201 |   3.06ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:46 | 201 |   4.61ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:47 | 201 |   4.21ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:47 | 201 |   3.08ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:47 | 201 |   5.23ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+[GIN] 2026/10/15 - 17:18:47 | 201 |   3.08ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[1.620ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.516ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=4 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=5 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=6 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=7 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=8 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=9 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.514ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=10 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.511ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=11 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.514ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=12 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.516ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=13 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.514ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=14 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:47 | 200 |  16.53ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:47 | 404 |   6.63ms |       192.0.2.1 | GET      "/api/v1/media/13"
+[GIN] 2026/10/15 - 17:18:47 | 200 |   3.82ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:47 | 200 |   4.91ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+[GIN] 2026/10/15 - 17:18:47 | 201 |   4.91ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/media"
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.513ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.514ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=4 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=5 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=6 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=7 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=8 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=9 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=10 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=11 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=12 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=15 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=14 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:47 | 200 |   13.4ms |       192.0.2.1 | PUT      "/api/v1/admin/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:47 | 200 |   2.55ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/submit"
+
+2026/10/15 17:18:47 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:26 [35;1mrecord not found
+[0m[33m[1.033ms] [34;1m[rows:0][0m SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:47 | 200 |   4.78ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+
+2026/10/15 17:18:47 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[208.506ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055926112594800`[0m
+--- PASS: TestAdminBrandImagesOutsideGalleryQuota (1.18s)
+=== RUN   TestPasswordResetPermissionsSessionsAndOwnership
+[GIN] 2026/10/15 - 17:18:48 | 201 |  56.02ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:48 | 201 |      6ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:48 | 201 |   4.19ms |       192.0.2.1 | POST     "/api/v1/merchant/media"
+
+2026/10/15 17:18:48 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[1.531ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:48 | 200 |   6.14ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:48 | 401 |       0s |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:48 | 403 |  533.3µs |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:48 | 404 |  50.63ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/1/password-reset"
+[GIN] 2026/10/15 - 17:18:48 | 404 |  51.87ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/999999/password-reset"
+[GIN] 2026/10/15 - 17:18:48 | 400 |  50.95ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/4/password-reset"
+[GIN] 2026/10/15 - 17:18:48 | 200 |   2.39ms |       192.0.2.1 | GET      "/api/v1/admin/accounts?account_id=3"
+[GIN] 2026/10/15 - 17:18:48 | 400 |  899.2µs |       192.0.2.1 | GET      "/api/v1/admin/accounts?account_id=not-a-number"
+[GIN] 2026/10/15 - 17:18:48 | 200 |  52.97ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+
+2026/10/15 17:18:48 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:42 [35;1mrecord not found
+[0m[33m[0.253ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = '7d3e58c8974a1f9c810f5fee13cf87bf3dcfb7960648f3069fe33f572052eba3' AND expires_at > '2026-10-15 09:18:48.373' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/15 - 17:18:48 | 401 |  252.6µs |       192.0.2.1 | GET      "/api/v1/merchant/contents/1"
+
+2026/10/15 17:18:48 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:42 [35;1mrecord not found
+[0m[33m[0.532ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = 'a96b9d29e21618eac103350ef93e3840825579c05b0ab164ddca8169faea9eae' AND expires_at > '2026-10-15 09:18:48.373' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/15 - 17:18:48 | 401 |  532.2µs |       192.0.2.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/15 - 17:18:48 | 401 |  52.64ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/15 - 17:18:48 | 200 |  55.61ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/15 - 17:18:48 | 200 |   2.13ms |       192.0.2.1 | GET      "/api/v1/merchant/contents/2"
+
+2026/10/15 17:18:48 [31;1mD:/workspace-main/codex-zqzt/server/admin.go:309 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `contents` WHERE kind='vendor' AND owner_id=4 ORDER BY `contents`.`id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:48 | 200 |   3.12ms |       192.0.2.1 | GET      "/api/v1/admin/accounts"
+[GIN] 2026/10/15 - 17:18:48 | 200 |    532µs |       192.0.2.1 | GET      "/api/v1/admin/operation-logs"
+
+2026/10/15 17:18:48 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[210.555ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055927292014000`[0m
+--- PASS: TestPasswordResetPermissionsSessionsAndOwnership (1.47s)
+=== RUN   TestManualPasswordResetBytesAndRollback
+[GIN] 2026/10/15 - 17:18:49 | 201 |  57.53ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:49 | 400 |   1.53ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:49 | 400 |  810.1µs |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:49 | 400 |   1.05ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:49 | 400 |   1.11ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:49 | 400 |  520.4µs |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:49 | 400 |    512µs |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:49 | 200 |  56.35ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:49 | 200 |  53.01ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:49 | 200 |     54ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:49 | 200 |   56.1ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:50 | 500 |  53.01ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/15 - 17:18:50 | 200 |   1.59ms |       192.0.2.1 | GET      "/api/v1/merchant/contents"
+
+2026/10/15 17:18:50 [34;1mD:/workspace-main/codex-zqzt/server/password_reset_test.go:150
+[0m[35m[warn] [0mremoving callback `reset_audit_failure` from D:/workspace-main/codex-zqzt/server/password_reset_test.go:150
+
+2026/10/15 17:18:50 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[204.293ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055928757304500`[0m
+--- PASS: TestManualPasswordResetBytesAndRollback (1.49s)
+=== RUN   TestPasswordResetSerializesConcurrentLogin
+[GIN] 2026/10/15 - 17:18:51 | 201 |   57.1ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/15 - 17:18:51 | 200 | 204.08ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/15 - 17:18:51 | 200 | 154.11ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+
+2026/10/15 17:18:51 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:42 [35;1mrecord not found
+[0m[33m[0.515ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = '5e59fdfde53d333c852c65b80ea28e9f0f512acfb49cc80fe926fbb40ee3b4eb' AND expires_at > '2026-10-15 09:18:51.303' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/15 - 17:18:51 | 401 |  514.8µs |       192.0.2.1 | GET      "/api/v1/merchant/contents"
+
+2026/10/15 17:18:51 [34;1mD:/workspace-main/codex-zqzt/server/password_reset_test.go:206
+[0m[35m[warn] [0mremoving callback `pause_company_session` from D:/workspace-main/codex-zqzt/server/password_reset_test.go:206
+
+2026/10/15 17:18:51 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[386.262ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055930250560300`[0m
+--- PASS: TestPasswordResetSerializesConcurrentLogin (1.44s)
+=== RUN   TestPublicProductBrowse
+[GIN] 2026/10/15 - 17:18:52 | 200 |  52.01ms |       192.0.2.1 | POST     "/api/v1/auth/admin"
+[GIN] 2026/10/15 - 17:18:52 | 200 |    2.2ms |       192.0.2.1 | POST     "/api/v1/admin/categories"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.39ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.17ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:52 | 201 |   3.85ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:52 | 201 |   6.07ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.14ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.72ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+[GIN] 2026/10/15 - 17:18:52 | 200 |      3ms |       192.0.2.1 | GET      "/api/v1/public/products"
+[GIN] 2026/10/15 - 17:18:52 | 200 |    3.3ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   4.64ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/15 - 17:18:52 | 201 |   3.62ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.09ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/3/submit"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   3.17ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/3/review"
+[GIN] 2026/10/15 - 17:18:52 | 201 |   3.62ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:52 | 201 |   3.13ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.62ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/5/submit"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   1.01ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   1.55ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:52 | 201 |   2.76ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.59ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/6/submit"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   3.58ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/6/review"
+[GIN] 2026/10/15 - 17:18:52 | 201 |   3.09ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/7/submit"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.62ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/7/review"
+[GIN] 2026/10/15 - 17:18:52 | 200 |    3.6ms |       192.0.2.1 | GET      "/api/v1/public/products"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.03ms |       192.0.2.1 | GET      "/api/v1/public/products?q=TEST-440"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   3.09ms |       192.0.2.1 | GET      "/api/v1/public/products?q=plough&category_id=1&region_id=1"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.56ms |       192.0.2.1 | GET      "/api/v1/public/products?q=翻转犁&category_id=3&region_id=1"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.05ms |       192.0.2.1 | GET      "/api/v1/public/products?region_id=1"
+[GIN] 2026/10/15 - 17:18:52 | 200 |  516.6µs |       192.0.2.1 | GET      "/api/v1/public/products?q=not-matching-model"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.65ms |       192.0.2.1 | GET      "/api/v1/public/products?region_id=1&page_size=1"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   1.53ms |       192.0.2.1 | GET      "/api/v1/public/products?region_id=1&page_size=1&page=2"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.56ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.57ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.56ms |       192.0.2.1 | GET      "/api/v1/public/products?region_id=1"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.05ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/3/offline"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.11ms |       192.0.2.1 | GET      "/api/v1/public/products?region_id=1"
+[GIN] 2026/10/15 - 17:18:52 | 200 |   2.72ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/offline"
+[GIN] 2026/10/15 - 17:18:52 | 200 |    518µs |       192.0.2.1 | GET      "/api/v1/public/products?region_id=1"
+[GIN] 2026/10/15 - 17:18:52 | 404 |  515.8µs |       192.0.2.1 | GET      "/api/v1/public/products/2"
+
+2026/10/15 17:18:52 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[217.941ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055931693643900`[0m
+--- PASS: TestPublicProductBrowse (1.16s)
+=== RUN   TestResourceBrowserFixture
+    resources_browser_test.go:22: browser fixture is opt-in
+--- SKIP: TestResourceBrowserFixture (0.00s)
+=== RUN   TestCleanupResourceBrowserFixture
+    resources_browser_test.go:90: fixture cleanup is opt-in
+--- SKIP: TestCleanupResourceBrowserFixture (0.00s)
+=== RUN   TestResourcesIndependentReviewAndVisibility
+[GIN] 2026/10/15 - 17:18:53 | 201 |      4ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:53 | 201 |   6.99ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   1.65ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   7.21ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   2.59ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+[GIN] 2026/10/15 - 17:18:53 | 201 |   5.28ms |       192.0.2.1 | POST     "/api/v1/merchant/media"
+[GIN] 2026/10/15 - 17:18:53 | 201 |   3.59ms |       192.0.2.1 | POST     "/api/v1/merchant/resource-media?kind=pdf"
+[GIN] 2026/10/15 - 17:18:53 | 400 |   2.93ms |       192.0.2.1 | POST     "/api/v1/merchant/resource-media?kind=pdf"
+[GIN] 2026/10/15 - 17:18:53 | 400 |   3.51ms |       192.0.2.1 | POST     "/api/v1/merchant/resource-media?kind=pdf"
+[GIN] 2026/10/15 - 17:18:53 | 400 |   4.07ms |       192.0.2.1 | POST     "/api/v1/merchant/resources"
+[GIN] 2026/10/15 - 17:18:53 | 201 |   6.07ms |       192.0.2.1 | POST     "/api/v1/merchant/resources"
+
+2026/10/15 17:18:53 [31;1mD:/workspace-main/codex-zqzt/server/resources.go:545 [35;1mrecord not found
+[0m[33m[2.834ms] [34;1m[rows:0][0m SELECT resources.* FROM `resources` JOIN resource_revisions pr ON pr.id=resources.published_revision_id WHERE (resources.visible=1 AND pr.status='approved' AND EXISTS (SELECT 1 FROM contents v JOIN revisions vr ON vr.id=v.published_revision_id WHERE v.id=resources.vendor_id AND v.kind='vendor' AND v.visible=1 AND vr.status='approved') AND (pr.product_id=0 OR EXISTS (SELECT 1 FROM contents p JOIN revisions pvr ON pvr.id=p.published_revision_id WHERE p.id=pr.product_id AND p.kind='product' AND p.vendor_id=resources.vendor_id AND p.visible=1 AND pvr.status='approved'))) AND resources.id=1 ORDER BY `resources`.`id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:53 | 404 |   2.83ms |       192.0.2.1 | GET      "/api/v1/public/resources/1"
+[GIN] 2026/10/15 - 17:18:53 | 403 |    1.7ms |       192.0.2.1 | GET      "/api/v1/merchant/resources/1"
+[GIN] 2026/10/15 - 17:18:53 | 200 |    5.4ms |       192.0.2.1 | POST     "/api/v1/merchant/resources/1/submit"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   3.81ms |       192.0.2.1 | POST     "/api/v1/admin/resource-revisions/1/review"
+[GIN] 2026/10/15 - 17:18:53 | 200 |    1.1ms |       192.0.2.1 | GET      "/api/v1/public/resources/1"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   4.95ms |       192.0.2.1 | PUT      "/api/v1/merchant/resources/1/draft"
+[GIN] 2026/10/15 - 17:18:53 | 200 |    2.8ms |       192.0.2.1 | POST     "/api/v1/merchant/resources/1/submit"
+[GIN] 2026/10/15 - 17:18:53 | 409 |   1.58ms |       192.0.2.1 | PUT      "/api/v1/merchant/resources/1/draft"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   1.16ms |       192.0.2.1 | GET      "/api/v1/public/resources/1"
+[GIN] 2026/10/15 - 17:18:53 | 400 |    614µs |       192.0.2.1 | POST     "/api/v1/admin/resource-revisions/2/review"
+[GIN] 2026/10/15 - 17:18:53 | 200 |    2.1ms |       192.0.2.1 | POST     "/api/v1/admin/resource-revisions/2/review"
+[GIN] 2026/10/15 - 17:18:53 | 400 |   2.77ms |       192.0.2.1 | PUT      "/api/v1/merchant/resources/1/draft"
+
+2026/10/15 17:18:53 [31;1mD:/workspace-main/codex-zqzt/server/resources.go:213 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:53 | 201 |   3.33ms |       192.0.2.1 | POST     "/api/v1/merchant/resources"
+
+2026/10/15 17:18:53 [31;1mD:/workspace-main/codex-zqzt/server/resources.go:213 [35;1mrecord not found
+[0m[33m[0.519ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:53 | 200 |   3.82ms |       192.0.2.1 | POST     "/api/v1/merchant/resources/2/submit"
+
+2026/10/15 17:18:53 [31;1mD:/workspace-main/codex-zqzt/server/resources.go:213 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:53 | 200 |   3.59ms |       192.0.2.1 | POST     "/api/v1/admin/resource-revisions/3/review"
+[GIN] 2026/10/15 - 17:18:53 | 409 |   1.53ms |       192.0.2.1 | POST     "/api/v1/merchant/resources"
+[GIN] 2026/10/15 - 17:18:53 | 400 |   1.53ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:53 | 206 |   3.58ms |       192.0.2.1 | GET      "/api/v1/media/2"
+[GIN] 2026/10/15 - 17:18:53 | 206 |   1.54ms |       192.0.2.1 | HEAD     "/api/v1/media/2"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   2.62ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/offline"
+
+2026/10/15 17:18:53 [31;1mD:/workspace-main/codex-zqzt/server/resources.go:545 [35;1mrecord not found
+[0m[33m[0.513ms] [34;1m[rows:0][0m SELECT resources.* FROM `resources` JOIN resource_revisions pr ON pr.id=resources.published_revision_id WHERE (resources.visible=1 AND pr.status='approved' AND EXISTS (SELECT 1 FROM contents v JOIN revisions vr ON vr.id=v.published_revision_id WHERE v.id=resources.vendor_id AND v.kind='vendor' AND v.visible=1 AND vr.status='approved') AND (pr.product_id=0 OR EXISTS (SELECT 1 FROM contents p JOIN revisions pvr ON pvr.id=p.published_revision_id WHERE p.id=pr.product_id AND p.kind='product' AND p.vendor_id=resources.vendor_id AND p.visible=1 AND pvr.status='approved'))) AND resources.id=1 ORDER BY `resources`.`id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:53 | 404 |  513.4µs |       192.0.2.1 | GET      "/api/v1/public/resources/1"
+[GIN] 2026/10/15 - 17:18:53 | 404 |   1.53ms |       192.0.2.1 | GET      "/api/v1/media/2"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   1.02ms |       192.0.2.1 | GET      "/api/v1/public/resources/2"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/offline"
+
+2026/10/15 17:18:53 [31;1mD:/workspace-main/codex-zqzt/server/resources.go:545 [35;1mrecord not found
+[0m[33m[0.502ms] [34;1m[rows:0][0m SELECT resources.* FROM `resources` JOIN resource_revisions pr ON pr.id=resources.published_revision_id WHERE (resources.visible=1 AND pr.status='approved' AND EXISTS (SELECT 1 FROM contents v JOIN revisions vr ON vr.id=v.published_revision_id WHERE v.id=resources.vendor_id AND v.kind='vendor' AND v.visible=1 AND vr.status='approved') AND (pr.product_id=0 OR EXISTS (SELECT 1 FROM contents p JOIN revisions pvr ON pvr.id=p.published_revision_id WHERE p.id=pr.product_id AND p.kind='product' AND p.vendor_id=resources.vendor_id AND p.visible=1 AND pvr.status='approved'))) AND resources.id=2 ORDER BY `resources`.`id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:53 | 404 |    512µs |       192.0.2.1 | GET      "/api/v1/public/resources/2"
+[GIN] 2026/10/15 - 17:18:53 | 404 |   1.02ms |       192.0.2.1 | GET      "/api/v1/media/1"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   1.03ms |       192.0.2.1 | GET      "/api/v1/merchant/resources?kind=catalog"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   3.08ms |       192.0.2.1 | POST     "/api/v1/merchant/resources/1/offline"
+[GIN] 2026/10/15 - 17:18:53 | 409 |   2.12ms |       192.0.2.1 | POST     "/api/v1/admin/resource-revisions/2/review"
+[GIN] 2026/10/15 - 17:18:53 | 200 |   2.08ms |       192.0.2.1 | GET      "/api/v1/merchant/resources/1/history"
+--- PASS: TestResourcesIndependentReviewAndVisibility (1.12s)
+=== RUN   TestResourceMigrationRecoversPartialTables
+
+2026/10/15 17:18:55 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[200.130ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055933973235100`[0m
+--- PASS: TestResourceMigrationRecoversPartialTables (1.10s)
+=== RUN   TestVideoWorkerProcessingRetryAndRecovery
+[GIN] 2026/10/15 - 17:18:55 | 201 |   3.78ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:56 | 202 |   4.34ms |       192.0.2.1 | POST     "/api/v1/merchant/resource-media?kind=video"
+[GIN] 2026/10/15 - 17:18:56 | 201 |   7.04ms |       192.0.2.1 | POST     "/api/v1/merchant/resources"
+[GIN] 2026/10/15 - 17:18:56 | 409 |   2.17ms |       192.0.2.1 | POST     "/api/v1/merchant/resources/1/submit"
+[GIN] 2026/10/15 - 17:18:58 | 200 |   1.62ms |       192.0.2.1 | GET      "/api/v1/merchant/resource-media/1"
+[GIN] 2026/10/15 - 17:18:58 | 200 |    4.3ms |       192.0.2.1 | POST     "/api/v1/merchant/resources/1/submit"
+[GIN] 2026/10/15 - 17:18:58 | 206 |   5.34ms |       192.0.2.1 | GET      "/api/v1/media/1"
+[GIN] 2026/10/15 - 17:18:58 | 202 |   2.43ms |       192.0.2.1 | POST     "/api/v1/merchant/resource-media?kind=video"
+[GIN] 2026/10/15 - 17:18:58 | 201 |   4.68ms |       192.0.2.1 | POST     "/api/v1/merchant/resources"
+[GIN] 2026/10/15 - 17:18:58 | 409 |   2.05ms |       192.0.2.1 | POST     "/api/v1/merchant/resources/2/submit"
+[GIN] 2026/10/15 - 17:18:58 | 200 |   1.71ms |       192.0.2.1 | GET      "/api/v1/merchant/resource-media/2"
+[GIN] 2026/10/15 - 17:18:58 | 200 |   2.71ms |       192.0.2.1 | POST     "/api/v1/merchant/resources/2/submit"
+[GIN] 2026/10/15 - 17:18:58 | 206 |   2.34ms |       192.0.2.1 | GET      "/api/v1/media/2"
+[GIN] 2026/10/15 - 17:18:58 | 202 |   2.34ms |       192.0.2.1 | POST     "/api/v1/merchant/resource-media?kind=video"
+[GIN] 2026/10/15 - 17:18:58 | 200 |   1.59ms |       192.0.2.1 | GET      "/api/v1/merchant/resource-media/3"
+[GIN] 2026/10/15 - 17:18:58 | 200 |   1.63ms |       192.0.2.1 | POST     "/api/v1/merchant/resource-media/3/retry"
+[GIN] 2026/10/15 - 17:18:58 | 200 |   1.05ms |       192.0.2.1 | GET      "/api/v1/merchant/resource-media/3"
+[GIN] 2026/10/15 - 17:18:58 | 400 |   2.18ms |       192.0.2.1 | POST     "/api/v1/merchant/resource-media?kind=video"
+
+2026/10/15 17:18:58 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[216.772ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055935069110300`[0m
+--- PASS: TestVideoWorkerProcessingRetryAndRecovery (3.80s)
+=== RUN   TestShowroomRepresentativesIsolationVersionsAndVisibility
+[GIN] 2026/10/15 - 17:18:59 | 200 |   2.62ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   2.09ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   1.54ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   2.05ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:18:59 | 401 |       0s |       192.0.2.1 | GET      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 403 |  515.8µs |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+
+2026/10/15 17:18:59 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:66 [35;1mrecord not found
+[0m[33m[0.518ms] [34;1m[rows:0][0m SELECT * FROM `contents` WHERE kind='vendor' AND owner_id=3 ORDER BY `contents`.`id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:59 | 409 |   1.03ms |       192.0.2.1 | GET      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 201 |   7.29ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   2.58ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   5.21ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/15 - 17:18:59 | 201 |    3.8ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   2.59ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   4.09ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+[GIN] 2026/10/15 - 17:18:59 | 201 |   3.07ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/3/submit"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   3.65ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/3/review"
+[GIN] 2026/10/15 - 17:18:59 | 201 |   4.07ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:59 | 200 |    3.1ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/4/submit"
+[GIN] 2026/10/15 - 17:18:59 | 200 |    2.6ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/4/review"
+[GIN] 2026/10/15 - 17:18:59 | 201 |   3.61ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   5.22ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/5/submit"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   4.14ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/5/review"
+[GIN] 2026/10/15 - 17:18:59 | 201 |   3.58ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   5.33ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/6/submit"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   3.07ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/6/review"
+[GIN] 2026/10/15 - 17:18:59 | 201 |   5.17ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:18:59 | 200 |    3.1ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/7/submit"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   5.26ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/7/review"
+[GIN] 2026/10/15 - 17:18:59 | 201 |   3.67ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+
+2026/10/15 17:18:59 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:26 [35;1mrecord not found
+[0m[33m[1.538ms] [34;1m[rows:0][0m SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/15 17:18:59 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:26 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:59 | 200 |   7.19ms |       192.0.2.1 | GET      "/api/v1/merchant/showroom-display"
+
+2026/10/15 17:18:59 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:26 [35;1mrecord not found
+[0m[33m[0.512ms] [34;1m[rows:0][0m SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/15 - 17:18:59 | 200 |    9.3ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+[GIN] 2026/10/15 - 17:18:59 | 409 |  526.8µs |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 400 |  529.5µs |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 400 |   2.09ms |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 400 |   3.07ms |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   6.54ms |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 409 |   2.06ms |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   6.68ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   4.19ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/5/draft"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/5/submit"
+[GIN] 2026/10/15 - 17:18:59 | 200 |    6.8ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   8.42ms |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 200 |    3.1ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/4/offline"
+[GIN] 2026/10/15 - 17:18:59 | 200 |    6.8ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   3.65ms |       192.0.2.1 | GET      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 400 |   2.14ms |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   6.68ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+[GIN] 2026/10/15 - 17:18:59 | 200 |    4.2ms |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   4.63ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   4.83ms |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   2.05ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/offline"
+[GIN] 2026/10/15 - 17:18:59 | 404 |  578.8µs |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+[GIN] 2026/10/15 - 17:18:59 | 200 |   2.06ms |       192.0.2.1 | GET      "/api/v1/merchant/showroom-display"
+--- PASS: TestShowroomRepresentativesIsolationVersionsAndVisibility (1.20s)
+=== RUN   TestShowroomDisplayConcurrentRollbackAndMigration
+[GIN] 2026/10/15 - 17:19:00 | 200 |      3ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:19:00 | 200 |   3.97ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:19:00 | 201 |   5.59ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:19:00 | 200 |   5.75ms |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:19:00 | 409 |    7.3ms |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+[GIN] 2026/10/15 - 17:19:00 | 500 |   2.58ms |       192.0.2.1 | PUT      "/api/v1/merchant/showroom-display"
+
+2026/10/15 17:19:00 [34;1mD:/workspace-main/codex-zqzt/server/showroom_display_test.go:149
+[0m[35m[warn] [0mremoving callback `display_log_failure` from D:/workspace-main/codex-zqzt/server/showroom_display_test.go:149
+[GIN] 2026/10/15 - 17:19:00 | 200 |   1.61ms |       192.0.2.1 | GET      "/api/v1/merchant/showroom-display"
+--- PASS: TestShowroomDisplayConcurrentRollbackAndMigration (1.00s)
+=== RUN   TestShowroomProfileAndPublication
+[GIN] 2026/10/15 - 17:19:01 | 200 |  51.99ms |       192.0.2.1 | POST     "/api/v1/auth/admin"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   3.02ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   2.94ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   1.06ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   1.61ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:19:01 | 201 |   4.35ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:19:01 | 404 |  513.5µs |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+[GIN] 2026/10/15 - 17:19:01 | 403 |  514.4µs |       192.0.2.1 | PUT      "/api/v1/admin/vendors/1/showroom-slug"
+[GIN] 2026/10/15 - 17:19:01 | 400 |    511µs |       192.0.2.1 | PUT      "/api/v1/admin/vendors/1/showroom-slug"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   2.05ms |       192.0.2.1 | PUT      "/api/v1/admin/vendors/1/showroom-slug"
+[GIN] 2026/10/15 - 17:19:01 | 409 |   1.03ms |       192.0.2.1 | PUT      "/api/v1/admin/vendors/1/showroom-slug"
+[GIN] 2026/10/15 - 17:19:01 | 201 |   2.64ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:19:01 | 409 |   2.61ms |       192.0.2.1 | PUT      "/api/v1/admin/vendors/2/showroom-slug"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   2.05ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   5.15ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+
+2026/10/15 17:19:01 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:26 [35;1mrecord not found
+[0m[33m[0.510ms] [34;1m[rows:0][0m SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/15 - 17:19:01 | 200 |   8.22ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/sample"
+
+2026/10/15 17:19:01 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:26 [35;1mrecord not found
+[0m[33m[0.512ms] [34;1m[rows:0][0m SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/15 - 17:19:01 | 200 |   3.64ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   1.55ms |       192.0.2.1 | GET      "/api/v1/public/vendors/1"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   2.56ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   2.55ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   2.05ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:19:01 | 409 |   1.59ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+
+2026/10/15 17:19:01 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:26 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/15 - 17:19:01 | 200 |   4.17ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/sample"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   1.02ms |       192.0.2.1 | GET      "/v/sample"
+[GIN] 2026/10/15 - 17:19:01 | 200 |   2.57ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/offline"
+[GIN] 2026/10/15 - 17:19:01 | 404 |  514.4µs |       192.0.2.1 | GET      "/api/v1/public/showrooms/sample"
+[GIN] 2026/10/15 - 17:19:01 | 404 |  515.6µs |       192.0.2.1 | GET      "/v/sample"
+
+2026/10/15 17:19:02 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[351.224ms] [33m[rows:25][35m DROP DATABASE `zqzt_exhibition_test_1792055941065784500`[0m
+--- PASS: TestShowroomProfileAndPublication (1.26s)
+=== RUN   TestShowroomMediaAndThousandProductCatalog
+[GIN] 2026/10/15 - 17:19:03 | 200 |      3ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/15 - 17:19:03 | 200 |   3.47ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/15 - 17:19:03 | 400 |   1.11ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+
+2026/10/15 17:19:03 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[1.081ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/15 - 17:19:03 | 201 |   8.55ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/15 - 17:19:03 | 200 |  50.65ms |       192.0.2.1 | POST     "/api/v1/auth/admin"
+[GIN] 2026/10/15 - 17:19:03 | 200 |   3.27ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/15 - 17:19:03 | 200 |   6.83ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+
+2026/10/15 17:19:03 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:26 [35;1mrecord not found
+[0m[33m[1.639ms] [34;1m[rows:0][0m SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/15 - 17:19:03 | 200 |   21.4ms |       192.0.2.1 | GET      "/api/v1/public/showrooms/v-1"
+[GIN] 2026/10/15 - 17:19:03 | 200 |  12.19ms |       192.0.2.1 | GET      "/api/v1/public/products?vendor_id=1&category_id=1&page_size=12&page=1"
+[GIN] 2026/10/15 - 17:19:03 | 200 |  12.96ms |       192.0.2.1 | GET      "/api/v1/public/products?vendor_id=1&category_id=1&page_size=12&page=2"
+[GIN] 2026/10/15 - 17:19:03 | 200 |    8.3ms |       192.0.2.1 | GET      "/api/v1/public/products?vendor_id=1&category_id=1&page_size=12&page=84"
+[GIN] 2026/10/15 - 17:19:03 | 200 |   3.08ms |       192.0.2.1 | POST     "/api/v1/admin/contents/1/offline"
+[GIN] 2026/10/15 - 17:19:03 | 200 |   1.04ms |       192.0.2.1 | GET      "/api/v1/public/products?vendor_id=1"
+--- PASS: TestShowroomMediaAndThousandProductCatalog (1.77s)
+PASS
+ok  	zqzt/exhibition	52.941s

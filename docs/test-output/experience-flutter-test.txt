@@ -1,0 +1,8 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/app_test.dart
+00:00 +0: D:/workspace-main/codex-zqzt/mobile/test/app_test.dart: Language switching preserves the private local booth draft
+00:01 +1: D:/workspace-main/codex-zqzt/mobile/test/app_test.dart: An API endpoint change signs out and keeps drafts scoped to their source
+00:01 +2: loading D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart
+00:01 +2: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Company login opens the four-section workspace with account-wide counts
+00:03 +3: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Profile edits retain existing contacts and unedited fields
+00:03 +4: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Native QR and poster contain the canonical URL without private filters
+00:03 +5: All tests passed!

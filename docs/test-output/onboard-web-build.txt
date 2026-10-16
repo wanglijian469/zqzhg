@@ -1,0 +1,20 @@
+
+> zqzt-exhibition-web@1.5.1 prebuild
+> node ../scripts/prepare-pdf-assets.mjs
+
+
+> zqzt-exhibition-web@1.5.1 build
+> tsc -b && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 3044 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                         0.59 kB │ gzip:   0.44 kB
+dist/assets/pdf-worker-PC57fB-y.js  1,524.21 kB
+dist/assets/index-DDB26JI3.css         78.13 kB │ gzip:  16.16 kB
+dist/assets/index-CQDgN9a7.js         259.68 kB │ gzip:  95.86 kB
+dist/assets/index-MGU46-2Y.js         494.60 kB │ gzip: 157.90 kB
+dist/assets/pdf-CL8ynlU4.js           495.58 kB │ gzip: 151.29 kB
+✓ built in 11.85s

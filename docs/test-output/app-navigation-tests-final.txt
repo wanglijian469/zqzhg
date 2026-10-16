@@ -1,0 +1,13 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart
+00:00 +0: Four destinations retain independent searches, filters, page and scroll after details
+00:02 +1: Home search selects an existing destination and applies the new query
+00:02 +2: Account menu confirms logout, retains drafts and resets the workspace for another account
+00:03 +3: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:04 +4: Navigation and task layout 360.0 zh at 1.4 text scale
+00:05 +5: Navigation and task layout 360.0 en at 1.4 text scale
+00:05 +6: Navigation and task layout 390.0 zh at 1.4 text scale
+00:06 +7: Navigation and task layout 390.0 en at 1.4 text scale
+00:06 +8: Navigation and task layout 768.0 zh at 1.4 text scale
+00:06 +9: Navigation and task layout 768.0 en at 1.4 text scale
+00:07 +10: Capture navigation, manufacturer, booth tasks, editor shortcut and account screenshots
+00:07 +10 ~1: All tests passed!

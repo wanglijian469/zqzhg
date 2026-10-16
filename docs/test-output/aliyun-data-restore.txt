@@ -1,0 +1,37 @@
+{
+  "createdAt": "2026-10-15T04:02:24.782343+00:00",
+  "sourceDatabase": "zqzt_exhibition",
+  "schemaAndData": true,
+  "excludedData": [
+    "sessions",
+    "sms_codes"
+  ],
+  "mediaFiles": 250,
+  "restoreTest": "passed: new isolated database, all table counts and password hashes match",
+  "containsPrivateData": true,
+  "tableCounts": {
+    "accounts": "5",
+    "categories": "8",
+    "category_aliases": "0",
+    "category_suggestions": "2",
+    "contents": "38",
+    "halls": "1",
+    "home_display_media": "1",
+    "home_display_settings": "1",
+    "media": "125",
+    "media_metadata": "1",
+    "media_references": "132",
+    "operation_logs": "143",
+    "regions": "1",
+    "resource_media_references": "10",
+    "resource_review_logs": "4",
+    "resource_revisions": "2",
+    "resources": "2",
+    "review_logs": "89",
+    "revisions": "46",
+    "schema_migrations": "8",
+    "sessions": "0",
+    "showroom_display_settings": "0",
+    "sms_codes": "0"
+  }
+}

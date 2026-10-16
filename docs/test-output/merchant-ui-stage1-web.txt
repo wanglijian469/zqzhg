@@ -1,0 +1,9 @@
+
+ RUN  v5.0.3 D:/workspace-main/codex-zqzt/web
+
+
+ Test Files  3 passed (3)
+      Tests  19 passed (19)
+   Start at  13:53:26
+   Duration  17.08s (tests 62%, environment 21%, transform 9%, import 8%)
+

@@ -1,0 +1,13 @@
+
+> zqzt-exhibition-web@1.5.9 test
+> vitest run src/vendor-list.test.tsx
+
+
+ RUN  v5.0.3 D:/workspace-main/codex-zqzt/web
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  18:15:09
+   Duration  4.33s (environment 41%, tests 29%, transform 16%, import 14%)
+

@@ -1,0 +1,13 @@
+
+> zqzt-exhibition-web@1.5.10 test
+> vitest run src/merchant-workspace.test.tsx
+
+
+ RUN  v5.0.3 D:/workspace-main/codex-zqzt/web
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  12:10:23
+   Duration  5.92s (tests 49%, environment 29%, transform 12%, import 10%)
+

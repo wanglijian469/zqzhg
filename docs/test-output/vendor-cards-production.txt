@@ -1,0 +1,12 @@
+{
+  "website": "1.5.9",
+  "backend": "1.5.8",
+  "android": "1.5.2+19",
+  "local_and_lan_health": 200,
+  "brand_card_bundle_served": true,
+  "business_and_home_settings_unchanged": true,
+  "no_new_migration": true,
+  "no_fixture_records_in_production": true,
+  "backend_unchanged": true,
+  "original_apk_download_hash_verified": true
+}

@@ -1,0 +1,8 @@
+{
+  "url": "http://172.27.35.2:8080/downloads/dalunongji.apk",
+  "status": 200,
+  "bytes": [
+    "78353052"
+  ],
+  "sha256": "0923cc89ce0a0f97896eb553521f3441be6af5d76ae1c4e460ef0ac11e1cb97e"
+}

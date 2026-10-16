@@ -1,0 +1,71 @@
+{
+  "version": "1.5.13",
+  "websiteVersion": "1.5.13",
+  "backendVersion": "1.5.13",
+  "androidVersion": "1.5.13+21",
+  "applicationId": "com.zqzt.dalunongji",
+  "apiBaseUrl": "http://39.97.250.244:8089",
+  "signingCertificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+  "apkSHA256": "0b3525c065b71c4ea5e6a9063180df2bf457c5b366eba2fa559f34cc55413da3",
+  "createdAt": "2026-10-15T04:07:58.852018+00:00",
+  "linuxArchitectures": [
+    "amd64",
+    "arm64"
+  ],
+  "databaseMode": "existing MySQL, new isolated database",
+  "smsProvider": "disabled until real Aliyun SMS credentials are configured",
+  "videoTools": "uses existing FFmpeg/FFprobe or tries configured system repositories",
+  "remoteDeploymentTested": false,
+  "androidDeviceValidation": {
+    "cleanInstall": false,
+    "inPlaceUpgrade": false,
+    "camera": false,
+    "nativeSharing": false,
+    "nativeMediaPlayback": false
+  },
+  "files": [
+    {
+      "file": "android/dalunongji-1.5.13+21.apk",
+      "bytes": 79121953,
+      "sha256": "0b3525c065b71c4ea5e6a9063180df2bf457c5b366eba2fa559f34cc55413da3"
+    },
+    {
+      "file": "zqzt-aliyun-v1.5.13-linux.tar.gz",
+      "bytes": 60385707,
+      "sha256": "ce96f2ca0b1537e31b04156302373e04817838e1534a806263bf9b10c4cf86b0"
+    },
+    {
+      "file": "private/zqzt-data-20261015.tar.gz",
+      "bytes": 29291607,
+      "sha256": "86745e451be38394bcafd0529ca453b062d74389de9ce16d15004f197504aa57"
+    },
+    {
+      "file": "dalunongji-android-v1.5.13-deploy.zip",
+      "bytes": 37228780,
+      "sha256": "ecd5c9055648b4fd00adcd5acbf66a4eabae6d67b1091462b9900dacc37eccbb"
+    },
+    {
+      "file": "zqzt-exhibition-v1.5.13-source.zip",
+      "bytes": 81604191,
+      "sha256": "d30d49dd984adddd086b8c4cc00021830e94dbab2f544306b7e0411b7c42eb15"
+    },
+    {
+      "file": "zqzt-deploy-v1.5.13-fix1.tar.gz",
+      "bytes": 18142,
+      "sha256": "8fab38719f238782f873e2333ed665b49eb2a665c03cc7f68a60bc143bd3eacc"
+    },
+    {
+      "file": "zqzt-aliyun-v1.5.13-fix1-linux.tar.gz",
+      "bytes": 60383046,
+      "sha256": "04733ac0a3ef703f17b07836943ad4b9d16e4df20fe331b961ef57d782739d40"
+    },
+    {
+      "file": "zqzt-exhibition-v1.5.13-fix1-source.zip",
+      "bytes": 81610061,
+      "sha256": "7fefcaeca178853f54d89d120348e3e5a6362c16ae7c0e36e899bb790f3f16b7"
+    }
+  ],
+  "installerRevision": "1.5.13-fix1",
+  "preferredLinuxPackage": "zqzt-aliyun-v1.5.13-fix1-linux.tar.gz",
+  "installerPatch": "zqzt-deploy-v1.5.13-fix1.tar.gz"
+}

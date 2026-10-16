@@ -1,0 +1,29 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart
+00:00 +0: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Guest collection persists across restart, language and endpoint changes
+00:00 +1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Guest merge is acknowledged before cleanup and syncs across two devices
+00:00 +2: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Offline operations survive restart and a lost acknowledgment cannot resurrect a canceled item
+00:00 +3: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Switching accounts during an in-flight request never sends the first account queue with a new token
+00:00 +4: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Resolution distinguishes network failure, unavailable content and an older server
+00:00 +5: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; the third destination is favorites
+00:02 +6: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor registration merges favorites and visitors see a manufacturer login instead of management
+00:03 +7: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 360.0 zh supports large text and independent manufacturer/product tabs
+00:04 +8: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 360.0 en supports large text and independent manufacturer/product tabs
+00:04 +9: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 390.0 zh supports large text and independent manufacturer/product tabs
+00:04 +10: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 390.0 en supports large text and independent manufacturer/product tabs
+00:04 +11: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 768.0 zh supports large text and independent manufacturer/product tabs
+00:04 +12: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 768.0 en supports large text and independent manufacturer/product tabs
+00:05 +13: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Capture favorites UI evidence
+00:05 +13 ~1: loading D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart
+00:05 +13 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:08 +14 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Home search selects an existing destination and applies the new query
+00:08 +15 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Account menu confirms logout, retains drafts and resets the workspace for another account
+00:09 +16 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:11 +17 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: First booth creation returns to the existing shell and reloads the new booth
+00:11 +18 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 zh at 1.4 text scale
+00:12 +19 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 en at 1.4 text scale
+00:13 +20 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 zh at 1.4 text scale
+00:13 +21 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 en at 1.4 text scale
+00:13 +22 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 zh at 1.4 text scale
+00:14 +23 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 en at 1.4 text scale
+00:14 +24 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Capture navigation, manufacturer, booth tasks, editor shortcut and account screenshots
+00:14 +24 ~2: All tests passed!

@@ -1,0 +1,68 @@
+{
+  "version": "1.5.12",
+  "websiteVersion": "1.5.11",
+  "backendVersion": "1.5.11",
+  "androidVersion": "1.5.12+20",
+  "createdAt": "2026-10-14T10:19:52.098Z",
+  "files": [
+    {
+      "file": "server/windows/exhibition.exe",
+      "bytes": 42045440,
+      "sha256": "1e270341c0aa7aff25ced73b18b5533300a5314f4e403794c80ba9f884cc729c"
+    },
+    {
+      "file": "server/linux/exhibition",
+      "bytes": 41752277,
+      "sha256": "ea0c713bebea4915fbe6aa19fb907ca9229b0e45af1cc5435e14e422082a2bfd"
+    },
+    {
+      "file": "zqzt-exhibition-v1.5.11-source.zip",
+      "bytes": 81684938,
+      "sha256": "0a741fb73c768eb5226a55332a71ebd0975f33b55405d0a36d82c00fee957e1e"
+    },
+    {
+      "file": "zqzt-exhibition-v1.5.11-deploy.zip",
+      "bytes": 161618755,
+      "sha256": "5bfe6fa0ca29cbd6fa7ceec8e37c13275fc78e8f45c35e0f81e4c2372278ab17"
+    },
+    {
+      "file": "android/dalunongji.apk",
+      "bytes": 79106804,
+      "sha256": "c11414bc5837ebbd3e833e3324a64efdadc893eabb5f451b2bcb0c74d83b1d89"
+    },
+    {
+      "file": "android/dalunongji-1.5.12+20.apk",
+      "bytes": 79106804,
+      "sha256": "c11414bc5837ebbd3e833e3324a64efdadc893eabb5f451b2bcb0c74d83b1d89"
+    },
+    {
+      "file": "zqzt-exhibition-v1.5.12-source.zip",
+      "bytes": 81714835,
+      "sha256": "c2961f6565026fe3377b2598a2eb4f6d3edf48bb32eccabdfa6b14844c7365f9"
+    },
+    {
+      "file": "dalunongji-android-v1.5.12-deploy.zip",
+      "bytes": 38439577,
+      "sha256": "dd3f45eea4c20f704eb2d880840c1c807282fa3d4ea560e59239e14959970011"
+    }
+  ],
+  "androidRelease": {
+    "androidVersion": "1.5.12+20",
+    "websiteVersion": "1.5.11",
+    "backendVersion": "1.5.11",
+    "applicationId": "com.zqzt.dalunongji",
+    "apiBaseUrl": "http://172.27.35.2:8080",
+    "signingCertificate": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+    "sha256": "c11414bc5837ebbd3e833e3324a64efdadc893eabb5f451b2bcb0c74d83b1d89",
+    "createdAt": "2026-10-14T10:19:52.098Z",
+    "deviceValidation": {
+      "connectedDevices": 0,
+      "configuredEmulators": 0,
+      "cleanInstall": "not_tested",
+      "inPlaceUpgrade": "not_tested",
+      "camera": "not_tested",
+      "nativeSharing": "not_tested",
+      "nativeVideoPdfPlayback": "not_tested"
+    }
+  }
+}

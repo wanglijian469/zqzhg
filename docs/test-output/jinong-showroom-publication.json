@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-11T12:09:02.063Z",
+  "vendor_id": 1,
+  "old_revision": 1,
+  "new_revision": 22,
+  "slug": "jinong",
+  "contacts": 8,
+  "product_count": 19,
+  "new_products": 0,
+  "new_media": 0,
+  "steps": [
+    "save_draft",
+    "verify_old_public",
+    "submit",
+    "verify_old_public",
+    "approve",
+    "verify_new_public"
+  ]
+}

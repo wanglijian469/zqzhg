@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "androidVersion": "1.5.16+24",
+  "backendVersion": "1.5.16",
+  "artifactHashesChecked": 5,
+  "apkCopiesChecked": 5,
+  "archiveEntriesChecked": 24,
+  "previousApksPreserved": true,
+  "forbiddenFilesIncluded": [],
+  "remoteDeployment": false
+}

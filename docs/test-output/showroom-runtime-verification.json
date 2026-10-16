@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-11T14:22:55.941Z",
+  "vendor_id": 1,
+  "public_products": 19,
+  "unique_images": 54,
+  "original_and_thumbnail_checks": 108,
+  "search_model": "PASS",
+  "parent_category": "PASS",
+  "pagination": "PASS",
+  "old_urls": "PASS",
+  "metadata": "PASS",
+  "artifacts": [
+    {
+      "file": "jinong-qr.png",
+      "width": 400,
+      "height": 400,
+      "qr": "http://localhost:8080/v/jinong"
+    },
+    {
+      "file": "jinong-poster.png",
+      "width": 900,
+      "height": 1356,
+      "qr": "http://localhost:8080/v/jinong"
+    }
+  ],
+  "production_test_vendors_created": 0
+}

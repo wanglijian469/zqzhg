@@ -1,0 +1,13 @@
+
+> zqzt-exhibition-web@1.4.0 build
+> tsc -b && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 1743 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.59 kB │ gzip:   0.43 kB
+dist/assets/index-LZ3Brm1-.css   42.65 kB │ gzip:   9.27 kB
+dist/assets/index-hiBkFYIw.js   419.83 kB │ gzip: 133.34 kB
+✓ built in 2.92s

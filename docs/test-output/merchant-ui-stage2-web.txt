@@ -1,0 +1,1788 @@
+
+ RUN  v5.0.3 D:/workspace-main/codex-zqzt/web
+
+ ❯ src/showroom.test.tsx (4 tests | 1 failed) 3750ms
+   × shares the canonical company URL without filters and provides manual copy fallback 467ms
+ ❯ src/category-picker.test.tsx (5 tests | 2 failed) 7027ms
+   × creates and immediately selects top-level business and product categories with parent_id zero 1397ms
+   × reuses an existing suggestion and its official parent without creating duplicate options 1047ms
+ ❯ src/app.test.tsx (7 tests | 2 failed) 7698ms
+   ❯ Browser workflows (7)
+     × signs in with a company account and loads its existing booth for editing 1648ms
+     × requires an explicit confirmation before an administrator takes content offline 1353ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app.test.tsx > Browser workflows > signs in with a company account and loads its existing booth for editing
+TestingLibraryElementError: Unable to find role="heading" and name "工作台"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="merchant-workspace"
+    >
+      <aside
+        aria-label="厂商工作台"
+        class="workspace-sidebar"
+      >
+        <a
+          class="workspace-brand"
+          data-discover="true"
+          href="/merchant"
+        >
+          <span>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-tractor"
+              fill="none"
+              height="26"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="26"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20"
+              />
+              <path
+                d="M16 18h-5"
+              />
+              <path
+                d="M18 5a1 1 0 0 0-1 1v5.573"
+              />
+              <path
+                d="M3 4h8.129a1 1 0 0 1 .99.863L13 11.246"
+              />
+              <path
+                d="M4 11V4"
+              />
+              <path
+                d="M7 15h.01"
+              />
+              <path
+                d="M8 10.1V4"
+              />
+              <circle
+                cx="18"
+                cy="18"
+                r="2"
+              />
+              <circle
+                cx="7"
+                cy="15"
+                r="5"
+              />
+            </svg>
+          </span>
+          <b>
+            中企展馆
+            <small>
+              厂商工作台
+            </small>
+          </b>
+        </a>
+        <button
+          aria-label="关闭"
+          class="workspace-drawer-close"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+        </button>
+        <p
+          class="workspace-nav-label"
+        >
+          企业管理
+        </p>
+        <nav>
+          <a
+            aria-current="page"
+            class="active"
+            data-discover="true"
+            href="/merchant"
+            title="工作台"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-layout-dashboard"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="9"
+                rx="1"
+                width="7"
+                x="3"
+                y="3"
+              />
+              <rect
+                height="5"
+                rx="1"
+                width="7"
+                x="14"
+                y="3"
+              />
+              <rect
+                height="9"
+                rx="1"
+                width="7"
+                x="14"
+                y="12"
+              />
+              <rect
+                height="5"
+                rx="1"
+                width="7"
+                x="3"
+                y="16"
+              />
+            </svg>
+            <span>
+              工作台
+            </span>
+          </a>
+          <a
+            class=""
+            data-discover="true"
+            href="/merchant/booth"
+            title="展厅管理"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-building2 lucide-building-2"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 12h4"
+            ...
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="merchant-workspace"
+    >
+      <aside
+        aria-label="厂商工作台"
+        class="workspace-sidebar"
+      >
+        <a
+          class="workspace-brand"
+          data-discover="true"
+          href="/merchant"
+        >
+          <span>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-tractor"
+              fill="none"
+              height="26"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="26"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20"
+              />
+              <path
+                d="M16 18h-5"
+              />
+              <path
+                d="M18 5a1 1 0 0 0-1 1v5.573"
+              />
+              <path
+                d="M3 4h8.129a1 1 0 0 1 .99.863L13 11.246"
+              />
+              <path
+                d="M4 11V4"
+              />
+              <path
+                d="M7 15h.01"
+              />
+              <path
+                d="M8 10.1V4"
+              />
+              <circle
+                cx="18"
+                cy="18"
+                r="2"
+              />
+              <circle
+                cx="7"
+                cy="15"
+                r="5"
+              />
+            </svg>
+          </span>
+          <b>
+            中企展馆
+            <small>
+              厂商工作台
+            </small>
+          </b>
+        </a>
+        <button
+          aria-label="关闭"
+          class="workspace-drawer-close"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+        </button>
+        <p
+          class="workspace-nav-label"
+        >
+          企业管理
+        </p>
+        <nav>
+          <a
+            aria-current="page"
+            class="active"
+            data-discover="true"
+            href="/merchant"
+            title="工作台"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-layout-dashboard"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="9"
+                rx="1"
+                width="7"
+                x="3"
+                y="3"
+              />
+              <rect
+                height="5"
+                rx="1"
+                width="7"
+                x="14"
+                y="3"
+              />
+              <rect
+                height="9"
+                rx="1"
+                width="7"
+                x="14"
+                y="12"
+              />
+              <rect
+                height="5"
+                rx="1"
+                width="7"
+                x="3"
+                y="16"
+              />
+            </svg>
+            <span>
+              工作台
+            </span>
+          </a>
+          <a
+            class=""
+            data-discover="true"
+            href="/merchant/booth"
+            title="展厅管理"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-building2 lucide-building-2"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 12h4"
+            ...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/app.test.tsx:154:18
+    152|     await user.type(screen.getByLabelText('密码',{exact:true}),'Test-Mer…
+    153|     await user.click(screen.getByRole('button',{name:'登录'}));
+    154|     await screen.findByRole('heading',{name:'工作台'});
+       |                  ^
+    155|     expect(sessionStorage.getItem('zqzt.merchant.id')).toBe('123');
+    156|     await user.click((await screen.findAllByRole('link',{name:'完善展厅'})…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/app.test.tsx > Browser workflows > requires an explicit confirmation before an administrator takes content offline
+TestingLibraryElementError: Unable to find an element with the text: 未公开. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="admin-app "
+    >
+      <aside
+        aria-hidden="false"
+        aria-label="运营工作台"
+        class="admin-sidebar"
+      >
+        <a
+          class="admin-brand"
+          data-discover="true"
+          href="/admin/dashboard"
+        >
+          <span>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-tractor"
+              fill="none"
+              height="25"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="25"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20"
+              />
+              <path
+                d="M16 18h-5"
+              />
+              <path
+                d="M18 5a1 1 0 0 0-1 1v5.573"
+              />
+              <path
+                d="M3 4h8.129a1 1 0 0 1 .99.863L13 11.246"
+              />
+              <path
+                d="M4 11V4"
+              />
+              <path
+                d="M7 15h.01"
+              />
+              <path
+                d="M8 10.1V4"
+              />
+              <circle
+                cx="18"
+                cy="18"
+                r="2"
+              />
+              <circle
+                cx="7"
+                cy="15"
+                r="5"
+              />
+            </svg>
+          </span>
+          <b>
+            中企展馆
+            <small>
+              运营工作台
+            </small>
+          </b>
+        </a>
+        <button
+          aria-label="关闭"
+          class="admin-drawer-close icon-button"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+        </button>
+        <nav
+          class="admin-navigation"
+        >
+          <div
+            class="admin-nav-group"
+          >
+            <p>
+              概览
+            </p>
+            <a
+              class=""
+              data-discover="true"
+              href="/admin/dashboard"
+              title="工作台"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-layout-dashboard"
+                fill="none"
+                height="18"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="18"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="9"
+                  rx="1"
+                  width="7"
+                  x="3"
+                  y="3"
+                />
+                <rect
+                  height="5"
+                  rx="1"
+                  width="7"
+                  x="14"
+                  y="3"
+                />
+                <rect
+                  height="9"
+                  rx="1"
+                  width="7"
+                  x="14"
+                  y="12"
+                />
+                <rect
+                  height="5"
+                  rx="1"
+                  width="7"
+                  x="3"
+                  y="16"
+                />
+              </svg>
+              <span>
+                工作台
+              </span>
+            </a>
+          </div>
+          <div
+            class="admin-nav-group"
+          >
+            <p>
+              业务管理
+            </p>
+            <a
+              class=""
+              data-discover="true"
+              href="/admin/vendors"
+              title="厂商管理"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-building2 lucide-building-2"
+                fill="none"
+                height="18"
+                stroke="currentColor"
+      ...
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="admin-app "
+    >
+      <aside
+        aria-hidden="false"
+        aria-label="运营工作台"
+        class="admin-sidebar"
+      >
+        <a
+          class="admin-brand"
+          data-discover="true"
+          href="/admin/dashboard"
+        >
+          <span>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-tractor"
+              fill="none"
+              height="25"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="25"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20"
+              />
+              <path
+                d="M16 18h-5"
+              />
+              <path
+                d="M18 5a1 1 0 0 0-1 1v5.573"
+              />
+              <path
+                d="M3 4h8.129a1 1 0 0 1 .99.863L13 11.246"
+              />
+              <path
+                d="M4 11V4"
+              />
+              <path
+                d="M7 15h.01"
+              />
+              <path
+                d="M8 10.1V4"
+              />
+              <circle
+                cx="18"
+                cy="18"
+                r="2"
+              />
+              <circle
+                cx="7"
+                cy="15"
+                r="5"
+              />
+            </svg>
+          </span>
+          <b>
+            中企展馆
+            <small>
+              运营工作台
+            </small>
+          </b>
+        </a>
+        <button
+          aria-label="关闭"
+          class="admin-drawer-close icon-button"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+        </button>
+        <nav
+          class="admin-navigation"
+        >
+          <div
+            class="admin-nav-group"
+          >
+            <p>
+              概览
+            </p>
+            <a
+              class=""
+              data-discover="true"
+              href="/admin/dashboard"
+              title="工作台"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-layout-dashboard"
+                fill="none"
+                height="18"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="18"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="9"
+                  rx="1"
+                  width="7"
+                  x="3"
+                  y="3"
+                />
+                <rect
+                  height="5"
+                  rx="1"
+                  width="7"
+                  x="14"
+                  y="3"
+                />
+                <rect
+                  height="9"
+                  rx="1"
+                  width="7"
+                  x="14"
+                  y="12"
+                />
+                <rect
+                  height="5"
+                  rx="1"
+                  width="7"
+                  x="3"
+                  y="16"
+                />
+              </svg>
+              <span>
+                工作台
+              </span>
+            </a>
+          </div>
+          <div
+            class="admin-nav-group"
+          >
+            <p>
+              业务管理
+            </p>
+            <a
+              class=""
+              data-discover="true"
+              href="/admin/vendors"
+              title="厂商管理"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-building2 lucide-building-2"
+                fill="none"
+                height="18"
+                stroke="currentColor"
+      ...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/app.test.tsx:188:25
+    186|     expect(offline).toBe(true);
+    187|     expect(fetchMock.mock.calls.filter(([url])=>url.includes('/offline…
+    188|     expect(await screen.findByText('未公开',{exact:true})).toBeTruthy();
+       |                         ^
+    189|   });
+    190| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/category-picker.test.tsx > creates and immediately selects top-level business and product categories with parent_id zero
+TestingLibraryElementError: Unable to find role="link" and name "编辑"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="merchant-workspace"
+    >
+      <aside
+        aria-label="厂商工作台"
+        class="workspace-sidebar"
+      >
+        <a
+          class="workspace-brand"
+          data-discover="true"
+          href="/merchant"
+        >
+          <span>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-tractor"
+              fill="none"
+              height="26"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="26"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20"
+              />
+              <path
+                d="M16 18h-5"
+              />
+              <path
+                d="M18 5a1 1 0 0 0-1 1v5.573"
+              />
+              <path
+                d="M3 4h8.129a1 1 0 0 1 .99.863L13 11.246"
+              />
+              <path
+                d="M4 11V4"
+              />
+              <path
+                d="M7 15h.01"
+              />
+              <path
+                d="M8 10.1V4"
+              />
+              <circle
+                cx="18"
+                cy="18"
+                r="2"
+              />
+              <circle
+                cx="7"
+                cy="15"
+                r="5"
+              />
+            </svg>
+          </span>
+          <b>
+            中企展馆
+            <small>
+              厂商工作台
+            </small>
+          </b>
+        </a>
+        <button
+          aria-label="关闭"
+          class="workspace-drawer-close"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+        </button>
+        <p
+          class="workspace-nav-label"
+        >
+          企业管理
+        </p>
+        <nav>
+          <a
+            class=""
+            data-discover="true"
+            href="/merchant"
+            title="工作台"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-layout-dashboard"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="9"
+                rx="1"
+                width="7"
+                x="3"
+                y="3"
+              />
+              <rect
+                height="5"
+                rx="1"
+                width="7"
+                x="14"
+                y="3"
+              />
+              <rect
+                height="9"
+                rx="1"
+                width="7"
+                x="14"
+                y="12"
+              />
+              <rect
+                height="5"
+                rx="1"
+                width="7"
+                x="3"
+                y="16"
+              />
+            </svg>
+            <span>
+              工作台
+            </span>
+          </a>
+          <a
+            aria-current="page"
+            class="active"
+            data-discover="true"
+            href="/merchant/booth"
+            title="展厅管理"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-building2 lucide-building-2"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 12h4"
+            ...
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="merchant-workspace"
+    >
+      <aside
+        aria-label="厂商工作台"
+        class="workspace-sidebar"
+      >
+        <a
+          class="workspace-brand"
+          data-discover="true"
+          href="/merchant"
+        >
+          <span>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-tractor"
+              fill="none"
+              height="26"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="26"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20"
+              />
+              <path
+                d="M16 18h-5"
+              />
+              <path
+                d="M18 5a1 1 0 0 0-1 1v5.573"
+              />
+              <path
+                d="M3 4h8.129a1 1 0 0 1 .99.863L13 11.246"
+              />
+              <path
+                d="M4 11V4"
+              />
+              <path
+                d="M7 15h.01"
+              />
+              <path
+                d="M8 10.1V4"
+              />
+              <circle
+                cx="18"
+                cy="18"
+                r="2"
+              />
+              <circle
+                cx="7"
+                cy="15"
+                r="5"
+              />
+            </svg>
+          </span>
+          <b>
+            中企展馆
+            <small>
+              厂商工作台
+            </small>
+          </b>
+        </a>
+        <button
+          aria-label="关闭"
+          class="workspace-drawer-close"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+        </button>
+        <p
+          class="workspace-nav-label"
+        >
+          企业管理
+        </p>
+        <nav>
+          <a
+            class=""
+            data-discover="true"
+            href="/merchant"
+            title="工作台"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-layout-dashboard"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="9"
+                rx="1"
+                width="7"
+                x="3"
+                y="3"
+              />
+              <rect
+                height="5"
+                rx="1"
+                width="7"
+                x="14"
+                y="3"
+              />
+              <rect
+                height="9"
+                rx="1"
+                width="7"
+                x="14"
+                y="12"
+              />
+              <rect
+                height="5"
+                rx="1"
+                width="7"
+                x="3"
+                y="16"
+              />
+            </svg>
+            <span>
+              工作台
+            </span>
+          </a>
+          <a
+            aria-current="page"
+            class="active"
+            data-discover="true"
+            href="/merchant/booth"
+            title="展厅管理"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-building2 lucide-building-2"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 12h4"
+            ...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/category-picker.test.tsx:41:101
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/category-picker.test.tsx > reuses an existing suggestion and its official parent without creating duplicate options
+TestingLibraryElementError: Unable to find role="link" and name "编辑"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="merchant-workspace"
+    >
+      <aside
+        aria-label="厂商工作台"
+        class="workspace-sidebar"
+      >
+        <a
+          class="workspace-brand"
+          data-discover="true"
+          href="/merchant"
+        >
+          <span>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-tractor"
+              fill="none"
+              height="26"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="26"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20"
+              />
+              <path
+                d="M16 18h-5"
+              />
+              <path
+                d="M18 5a1 1 0 0 0-1 1v5.573"
+              />
+              <path
+                d="M3 4h8.129a1 1 0 0 1 .99.863L13 11.246"
+              />
+              <path
+                d="M4 11V4"
+              />
+              <path
+                d="M7 15h.01"
+              />
+              <path
+                d="M8 10.1V4"
+              />
+              <circle
+                cx="18"
+                cy="18"
+                r="2"
+              />
+              <circle
+                cx="7"
+                cy="15"
+                r="5"
+              />
+            </svg>
+          </span>
+          <b>
+            中企展馆
+            <small>
+              厂商工作台
+            </small>
+          </b>
+        </a>
+        <button
+          aria-label="关闭"
+          class="workspace-drawer-close"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+        </button>
+        <p
+          class="workspace-nav-label"
+        >
+          企业管理
+        </p>
+        <nav>
+          <a
+            class=""
+            data-discover="true"
+            href="/merchant"
+            title="工作台"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-layout-dashboard"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="9"
+                rx="1"
+                width="7"
+                x="3"
+                y="3"
+              />
+              <rect
+                height="5"
+                rx="1"
+                width="7"
+                x="14"
+                y="3"
+              />
+              <rect
+                height="9"
+                rx="1"
+                width="7"
+                x="14"
+                y="12"
+              />
+              <rect
+                height="5"
+                rx="1"
+                width="7"
+                x="3"
+                y="16"
+              />
+            </svg>
+            <span>
+              工作台
+            </span>
+          </a>
+          <a
+            aria-current="page"
+            class="active"
+            data-discover="true"
+            href="/merchant/booth"
+            title="展厅管理"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-building2 lucide-building-2"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 12h4"
+            ...
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="merchant-workspace"
+    >
+      <aside
+        aria-label="厂商工作台"
+        class="workspace-sidebar"
+      >
+        <a
+          class="workspace-brand"
+          data-discover="true"
+          href="/merchant"
+        >
+          <span>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-tractor"
+              fill="none"
+              height="26"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="26"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20"
+              />
+              <path
+                d="M16 18h-5"
+              />
+              <path
+                d="M18 5a1 1 0 0 0-1 1v5.573"
+              />
+              <path
+                d="M3 4h8.129a1 1 0 0 1 .99.863L13 11.246"
+              />
+              <path
+                d="M4 11V4"
+              />
+              <path
+                d="M7 15h.01"
+              />
+              <path
+                d="M8 10.1V4"
+              />
+              <circle
+                cx="18"
+                cy="18"
+                r="2"
+              />
+              <circle
+                cx="7"
+                cy="15"
+                r="5"
+              />
+            </svg>
+          </span>
+          <b>
+            中企展馆
+            <small>
+              厂商工作台
+            </small>
+          </b>
+        </a>
+        <button
+          aria-label="关闭"
+          class="workspace-drawer-close"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-x"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6 6 18"
+            />
+            <path
+              d="m6 6 12 12"
+            />
+          </svg>
+        </button>
+        <p
+          class="workspace-nav-label"
+        >
+          企业管理
+        </p>
+        <nav>
+          <a
+            class=""
+            data-discover="true"
+            href="/merchant"
+            title="工作台"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-layout-dashboard"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="9"
+                rx="1"
+                width="7"
+                x="3"
+                y="3"
+              />
+              <rect
+                height="5"
+                rx="1"
+                width="7"
+                x="14"
+                y="3"
+              />
+              <rect
+                height="9"
+                rx="1"
+                width="7"
+                x="14"
+                y="12"
+              />
+              <rect
+                height="5"
+                rx="1"
+                width="7"
+                x="3"
+                y="16"
+              />
+            </svg>
+            <span>
+              工作台
+            </span>
+          </a>
+          <a
+            aria-current="page"
+            class="active"
+            data-discover="true"
+            href="/merchant/booth"
+            title="展厅管理"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-building2 lucide-building-2"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 12h4"
+            ...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/category-picker.test.tsx:78:63
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/showroom.test.tsx > shares the canonical company URL without filters and provides manual copy fallback
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "下载二维码"
+
+Here are the accessible roles:
+
+  button:
+
+  Name "关闭":
+  <button
+    aria-label="关闭"
+    class="modal-close icon-button"
+  />
+
+  --------------------------------------------------heading:
+
+  Name "测试企业（不入库）":
+  <h2 />
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  <p />
+
+  Name "":
+  <p />
+
+  Name "":
+  <p />
+
+  --------------------------------------------------
+  textbox:
+
+  Name "展厅地址":
+  <input
+    readonly=""
+    value="https://showroom.example/v/sample"
+  />
+
+  --------------------------------------------------
+  button:
+
+  Name "分享企业展厅":
+  <button
+    class="button share-primary"
+  />
+
+  Name "复制地址":
+  <button
+    class="button secondary"
+  />
+
+  Name "展厅二维码":
+  <button
+    class="button secondary"
+  />
+
+  Name "保存宣传海报":
+  <button
+    class="button secondary"
+  />
+
+  Name "复制宣传文案":
+  <button
+    class="button secondary"
+  />
+
+  Name "微信好友":
+  <button
+    aria-pressed="true"
+  />
+
+  Name "朋友圈":
+  <button
+    aria-pressed="false"
+  />
+
+  Name "企业微信":
+  <button
+    aria-pressed="false"
+  />
+
+  Name "钉钉":
+  <button
+    aria-pressed="false"
+  />
+
+  Name "WhatsApp":
+  <button
+    aria-pressed="false"
+  />
+
+  --------------------------------------------------
+  group:
+
+  Name "":
+  <details
+    class="share-more"
+  />
+
+  --------------------------------------------------
+  link:
+
+  Name "QQ":
+  <a
+    href="https://connect.qq.com/widget/shareqq/index.html?url=https%3A%2F%2Fshowroom.example%2Fv%2Fsample&title=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89&summary=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89"
+    rel="noreferrer"
+    target="_blank"
+  />
+
+  Name "QQ空间":
+  <a
+    href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https%3A%2F%2Fshowroom.example%2Fv%2Fsample&title=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89&summary=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89"
+    rel="noreferrer"
+    target="_blank"
+  />
+
+  Name "Telegram":
+  <a
+    href="https://t.me/share/url?url=https%3A%2F%2Fshowroom.example%2Fv%2Fsample&text=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89"
+    rel="noreferrer"
+    target="_blank"
+  />
+
+  Name "邮件":
+  <a
+    href="mailto:?subject=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89&body=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89%0Ahttps%3A%2F%2Fshowroom.example%2Fv%2Fsample"
+    rel="noreferrer"
+    target="_blank"
+  />
+
+  --------------------------------------------------
+  status:
+
+  Name "":
+  <p
+    class="notice"
+    role="status"
+  />
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+<div
+  aria-modal="true"
+  class="modal"
+  role="dialog"
+>
+  <button
+    aria-label="关闭"
+    class="modal-close icon-button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-x"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M18 6 6 18"
+      />
+      <path
+        d="m6 6 12 12"
+      />
+    </svg>
+  </button>
+  <div
+    class="compact-share"
+  >
+    <div
+      class="share-company-preview"
+    >
+      <div>
+        <h2>
+          测试企业（不入库）
+        </h2>
+        <p>
+          真实资料测试
+        </p>
+      </div>
+    </div>
+    <label>
+      展厅地址
+      <input
+        readonly=""
+        value="https://showroom.example/v/sample"
+      />
+    </label>
+    <button
+      class="button share-primary"
+    >
+      分享企业展厅
+    </button>
+    <div
+      class="share-auxiliary"
+    >
+      <button
+        class="button secondary"
+      >
+        复制地址
+      </button>
+      <button
+        class="button secondary"
+      >
+        展厅二维码
+      </button>
+      <button
+        class="button secondary"
+      >
+        保存宣传海报
+      </button>
+    </div>
+    <details
+      class="share-more"
+    >
+      <summary>
+        宣传文案与分享指引
+      </summary>
+      <p>
+        复制文案和展厅链接，打开对应应用，粘贴给客户或群聊；也可保存海报后发送。
+      </p>
+      <button
+        class="button secondary"
+      >
+        复制宣传文案
+      </button>
+      <div
+        class="share-channel-grid"
+      >
+        <button
+          aria-pressed="true"
+        >
+          微信好友
+        </button>
+        <button
+          aria-pressed="false"
+        >
+          朋友圈
+        </button>
+        <a
+          href="https://connect.qq.com/widget/shareqq/index.html?url=https%3A%2F%2Fshowroom.example%2Fv%2Fsample&title=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89&summary=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89"
+          rel="noreferrer"
+          target="_blank"
+        >
+          QQ
+        </a>
+        <a
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https%3A%2F%2Fshowroom.example%2Fv%2Fsample&title=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89&summary=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89"
+          rel="noreferrer"
+          target="_blank"
+        >
+          QQ空间
+        </a>
+        <button
+          aria-pressed="false"
+        >
+          企业微信
+        </button>
+        <button
+          aria-pressed="false"
+        >
+          钉钉
+        </button>
+        <button
+          aria-pressed="false"
+        >
+          WhatsApp
+        </button>
+        <a
+          href="https://t.me/share/url?url=https%3A%2F%2Fshowroom.example%2Fv%2Fsample&text=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Telegram
+        </a>
+        <a
+          href="mailto:?subject=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89&body=%E6%B5%8B%E8%AF%95%E4%BC%81%E4%B8%9A%EF%BC%88%E4%B8%8D%E5%85%A5%E5%BA%93%EF%BC%89%0Ahttps%3A%2F%2Fshowroom.example%2Fv%2Fsample"
+          rel="noreferrer"
+          target="_blank"
+        >
+          邮件
+        </a>
+      </div>
+      <p>
+        复制文案和展厅链接，打开对应应用，粘贴给客户或群聊；也可保存海报后发送。
+      </p>
+    </details>
+    <p
+      class="notice"
+      role="status"
+    >
+      自动复制失败，请选中地址手动复制。
+    </p>
+  </div>
+</div>
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/showroom.test.tsx:43:23
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  3 failed | 10 passed (13)
+      Tests  5 failed | 67 passed (72)
+   Start at  13:55:16
+   Duration  23.77s (tests 40%, environment 37%, import 15%, transform 8%)
+

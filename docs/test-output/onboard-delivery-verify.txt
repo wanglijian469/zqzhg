@@ -1,0 +1,1 @@
+PASS: all 5 deliverables match manifest SHA-256 and size; source contains migration and guide; no environment credentials or signing keys included.

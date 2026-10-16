@@ -1,0 +1,1 @@
+PASS: 1.5.1 manifest sizes and SHA-256; source excludes environment and signing secrets; deployment contains UI documentation/screenshots, PDF runtime and current APK.

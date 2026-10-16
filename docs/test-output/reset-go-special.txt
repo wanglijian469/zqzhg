@@ -1,0 +1,73 @@
+=== RUN   TestPasswordResetPermissionsSessionsAndOwnership
+[GIN] 2026/10/13 - 10:07:14 | 201 | 157.27ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/13 - 10:07:14 | 201 |   6.38ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/13 - 10:07:14 | 201 |   5.04ms |       192.0.2.1 | POST     "/api/v1/merchant/media"
+
+2026/10/13 10:07:14 [31;1mD:/workspace-main/codex-zqzt/server/content.go:111 [35;1mrecord not found
+[0m[33m[1.623ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/13 - 10:07:14 | 200 |   5.76ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/13 - 10:07:14 | 401 |       0s |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/13 - 10:07:14 | 403 |  538.8µs |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+
+2026/10/13 10:07:14 [31;1mD:/workspace-main/codex-zqzt/server/password_reset.go:45 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `accounts` WHERE id=1 AND role='merchant' ORDER BY `accounts`.`id` LIMIT 1 FOR UPDATE
+[GIN] 2026/10/13 - 10:07:14 | 404 |  52.89ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/1/password-reset"
+
+2026/10/13 10:07:14 [31;1mD:/workspace-main/codex-zqzt/server/password_reset.go:45 [35;1mrecord not found
+[0m[33m[0.990ms] [34;1m[rows:0][0m SELECT * FROM `accounts` WHERE id=999999 AND role='merchant' ORDER BY `accounts`.`id` LIMIT 1 FOR UPDATE
+[GIN] 2026/10/13 - 10:07:14 | 404 |  51.28ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/999999/password-reset"
+[GIN] 2026/10/13 - 10:07:14 | 400 |  53.02ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/4/password-reset"
+[GIN] 2026/10/13 - 10:07:14 | 200 |   2.12ms |       192.0.2.1 | GET      "/api/v1/admin/accounts?account_id=3"
+[GIN] 2026/10/13 - 10:07:14 | 400 |    1.1ms |       192.0.2.1 | GET      "/api/v1/admin/accounts?account_id=not-a-number"
+[GIN] 2026/10/13 - 10:07:14 | 200 |  55.19ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+
+2026/10/13 10:07:14 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:42 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = '48f9054383bafe7667e899ed241669132c813c237b2a8e1deb35076a58cfba5d' AND expires_at > '2026-10-13 02:07:14.347' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/13 - 10:07:14 | 401 |       0s |       192.0.2.1 | GET      "/api/v1/merchant/contents/1"
+
+2026/10/13 10:07:14 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:42 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = 'eea015f744b121a4a6b188693cc72e80a1e3927c101eabd6d86d384697a69901' AND expires_at > '2026-10-13 02:07:14.347' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/13 - 10:07:14 | 401 |  514.5µs |       192.0.2.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/13 - 10:07:14 | 401 |   50.3ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/13 - 10:07:14 | 200 |  50.83ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/13 - 10:07:14 | 200 |   1.28ms |       192.0.2.1 | GET      "/api/v1/merchant/contents/2"
+
+2026/10/13 10:07:14 [31;1mD:/workspace-main/codex-zqzt/server/admin.go:309 [35;1mrecord not found
+[0m[33m[1.090ms] [34;1m[rows:0][0m SELECT * FROM `contents` WHERE kind='vendor' AND owner_id=4 ORDER BY `contents`.`id` LIMIT 1
+[GIN] 2026/10/13 - 10:07:14 | 200 |   4.17ms |       192.0.2.1 | GET      "/api/v1/admin/accounts"
+[GIN] 2026/10/13 - 10:07:14 | 404 |       0s |       192.0.2.1 | GET      "/api/v1/admin/logs"
+    password_reset_test.go:101: GET /admin/logs: wanted 200 got 404 {"error":{"code":"not_found"}}
+--- FAIL: TestPasswordResetPermissionsSessionsAndOwnership (1.40s)
+=== RUN   TestManualPasswordResetBytesAndRollback
+[GIN] 2026/10/13 - 10:07:15 | 201 |  56.05ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/13 - 10:07:15 | 400 |   1.06ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/13 - 10:07:15 | 400 |   1.07ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/13 - 10:07:15 | 400 |  534.9µs |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/13 - 10:07:15 | 400 |   1.04ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/13 - 10:07:15 | 400 |  519.2µs |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/13 - 10:07:15 | 400 |  520.3µs |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/13 - 10:07:15 | 200 |  51.47ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/13 - 10:07:15 | 200 |  53.99ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/13 - 10:07:15 | 200 |  53.99ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/13 - 10:07:15 | 200 |  54.99ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/13 - 10:07:15 | 500 |  52.01ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/13 - 10:07:15 | 200 |   1.57ms |       192.0.2.1 | GET      "/api/v1/merchant/contents"
+
+2026/10/13 10:07:15 [34;1mD:/workspace-main/codex-zqzt/server/password_reset_test.go:150
+[0m[35m[warn] [0mremoving callback `reset_audit_failure` from D:/workspace-main/codex-zqzt/server/password_reset_test.go:150
+--- PASS: TestManualPasswordResetBytesAndRollback (1.41s)
+=== RUN   TestPasswordResetSerializesConcurrentLogin
+[GIN] 2026/10/13 - 10:07:16 | 201 |  56.29ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/13 - 10:07:17 | 200 | 200.14ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/13 - 10:07:17 | 200 |  153.8ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+
+2026/10/13 10:07:17 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:42 [35;1mrecord not found
+[0m[33m[0.574ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = '793bb4200594a189c39802bafe0caf42741f99f1e7a1f9f753bd375e77e5eec7' AND expires_at > '2026-10-13 02:07:17.021' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/13 - 10:07:17 | 401 |  573.5µs |       192.0.2.1 | GET      "/api/v1/merchant/contents"
+
+2026/10/13 10:07:17 [34;1mD:/workspace-main/codex-zqzt/server/password_reset_test.go:206
+[0m[35m[warn] [0mremoving callback `pause_company_session` from D:/workspace-main/codex-zqzt/server/password_reset_test.go:206
+--- PASS: TestPasswordResetSerializesConcurrentLogin (1.11s)
+FAIL
+FAIL	zqzt/exhibition	5.887s
+FAIL

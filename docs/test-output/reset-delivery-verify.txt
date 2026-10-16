@@ -1,0 +1,1 @@
+PASS: 5 deliverables match manifest; running Windows binary matches release; APK remains 1.5.2+19; source includes feature and guide without credentials or signing keys.

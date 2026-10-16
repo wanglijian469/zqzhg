@@ -1,0 +1,1 @@
+PASS: guest/registered enterprise and new/existing product entries; cancelled/completed login retains text, selected category and pending photo; isolated portal Enter only creates categories; failed input retry; instant selection; official parent reuse; duplicate deduplication; public and foreign isolation; mobile/desktop and bilingual UI. No production business mutations.

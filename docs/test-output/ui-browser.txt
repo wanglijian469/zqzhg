@@ -1,0 +1,1 @@
+PASS: all five sizes, real published images, single manufacturer layout, 3 representative exhibits, fixed sections, deep link parameters, English, product detail return, download and admin login.

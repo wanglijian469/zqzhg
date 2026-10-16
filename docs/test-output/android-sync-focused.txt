@@ -1,0 +1,11 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart
+00:00 +0: Sparse portal hides empty sections and empty resource navigation
+00:00 +1: Homepage uses platform image rather than manufacturer cover
+00:01 +2: Manual representatives retain choices on version conflict, reorder and clear
+00:02 +3: Registration continues original cloud save and does not store passwords
+00:03 +4: Top-level category sends parent zero and selects returned category
+00:03 +5: Portal validations use Unicode limits and preserve unknown profile fields
+00:03 +6: Upload failure retains files, retry skips successful files and submit failure keeps content ID
+00:04 +7: Session expiry preserves owner; signing in to another account does not carry editor data
+00:04 +8: Portal layout and image failures at phone/tablet sizes, bilingual and large text
+00:05 +9: All tests passed!

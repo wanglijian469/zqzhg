@@ -1,0 +1,1 @@
+PASS: production public manufacturer cards use the configured published covers and canonical contact links; screenshot saved; no login or business writes.

@@ -1,0 +1,13 @@
+{
+  "platform": "Windows runtime; Linux executables are cross-compiled and not run here",
+  "productionStartupWithDatabaseScopedAccount": "passed",
+  "restoredSnapshot": "passed",
+  "publicPages": [
+    "/",
+    "/admin",
+    "/app"
+  ],
+  "publicMediaResponsesChecked": 190,
+  "appDownloadOrigin": "http://39.97.250.244:8089",
+  "disabledSMSEndpoints": "503 sms_disabled"
+}

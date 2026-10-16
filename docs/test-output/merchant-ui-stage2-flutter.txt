@@ -1,0 +1,298 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart
+00:00 +0: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:01 +1: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:01 +2: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:01 +3: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:01 +4: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:01 +5: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:01 +6: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:01 +7: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:01 +8: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:03 +9: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:04 +10: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:04 +11: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:04 +12: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:04 +13: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:05 +14: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:06 +15: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:07 +15: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Shared failures can be retried and an account switch clears company data
+══╡ EXCEPTION CAUGHT BY GESTURE ╞═══════════════════════════════════════════════════════════════════
+The following assertion was thrown while handling a gesture:
+setState() callback argument returned a Future.
+The setState() method on _AsyncPaneState#8cd9a was called with a closure or method that returned a
+Future. Maybe it is marked as "async".
+Instead of performing asynchronous work inside a call to setState(), first execute the work (without
+updating the widget state), and then synchronously update the state inside a call to setState().
+
+When the exception was thrown, this was the stack:
+#0      State.setState.<anonymous closure> (package:flutter/src/widgets/framework.dart:1204:9)
+#1      State.setState (package:flutter/src/widgets/framework.dart:1220:6)
+#2      _AsyncPaneState.build.<anonymous closure>.<anonymous closure> (package:dalunongji/main.dart:398:34)
+#3      _InkResponseState.handleTap (package:flutter/src/material/ink_well.dart:1224:21)
+#4      GestureRecognizer.invokeCallback (package:flutter/src/gestures/recognizer.dart:362:24)
+#5      TapGestureRecognizer.handleTapUp (package:flutter/src/gestures/tap.dart:758:11)
+#6      BaseTapGestureRecognizer._checkUp (package:flutter/src/gestures/tap.dart:383:5)
+#7      BaseTapGestureRecognizer.acceptGesture (package:flutter/src/gestures/tap.dart:353:7)
+#8      GestureArenaManager.sweep (package:flutter/src/gestures/arena.dart:173:27)
+#9      GestureBinding.handleEvent (package:flutter/src/gestures/binding.dart:542:20)
+#10     GestureBinding.dispatchEvent (package:flutter/src/gestures/binding.dart:508:22)
+#11     RendererBinding.dispatchEvent (package:flutter/src/rendering/binding.dart:473:11)
+#12     GestureBinding._handlePointerEventImmediately (package:flutter/src/gestures/binding.dart:447:7)
+#13     GestureBinding.handlePointerEvent (package:flutter/src/gestures/binding.dart:404:5)
+#14     TestWidgetsFlutterBinding.handlePointerEventForSource.<anonymous closure> (package:flutter_test/src/binding.dart:1571:42)
+#15     TestWidgetsFlutterBinding.withPointerEventSource (package:flutter_test/src/binding.dart:1581:11)
+#16     TestWidgetsFlutterBinding.handlePointerEventForSource (package:flutter_test/src/binding.dart:1571:5)
+#17     WidgetTester.sendEventToBinding.<anonymous closure> (package:flutter_test/src/widget_tester.dart:869:15)
+#20     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#21     WidgetTester.sendEventToBinding (package:flutter_test/src/widget_tester.dart:868:27)
+#22     TestGesture.up.<anonymous closure> (package:flutter_test/src/test_pointer.dart:587:26)
+#25     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#26     TestGesture.up (package:flutter_test/src/test_pointer.dart:580:27)
+#27     WidgetController.tapAt.<anonymous closure> (package:flutter_test/src/controller.dart:1155:21)
+<asynchronous suspension>
+#28     TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#29     tap (file:///D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart:155:3)
+<asynchronous suspension>
+#30     main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart:74:17)
+<asynchronous suspension>
+#31     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#32     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 5 frames from dart:async and package:stack_trace)
+
+Handler: "onTap"
+Recognizer:
+  TapGestureRecognizer#1e498
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "原账号企业": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart:74:58)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart line 74
+The test description was:
+  Shared failures can be retried and an account switch clears company data
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (2) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +15 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:07 +15 -1: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Shared failures can be retried and an account switch clears company data [E]
+  Test failed. See exception logs above.
+  The test description was: Shared failures can be retried and an account switch clears company data
+  
+00:07 +16 -1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; favorites is available from My
+00:07 +17 -1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; favorites is available from My
+00:08 +18 -1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; favorites is available from My
+00:08 +19 -1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; favorites is available from My
+00:08 +20 -1: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 360.0 zh scale 1.0
+00:09 +21 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Account menu confirms logout, retains drafts and resets the workspace for another account
+00:09 +22 -1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Account menu confirms logout, retains drafts and resets the workspace for another account
+00:09 +23 -1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor registration merges favorites and visitors see a manufacturer login instead of management
+00:10 +23 -1: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 360.0 zh scale 2.0
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 14 pixels on the right.>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart:101:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart line 101
+The test description was:
+  Manufacturer screens 360.0 zh scale 2.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:10 +23 -2: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor registration merges favorites and visitors see a manufacturer login instead of management
+00:10 +23 -2: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 360.0 zh scale 2.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Manufacturer screens 360.0 zh scale 2.0
+  
+00:10 +24 -2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:10 +25 -2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:11 +26 -2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:11 +26 -2: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 360.0 en scale 1.4
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 49 pixels on the right.>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart:101:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart line 101
+The test description was:
+  Manufacturer screens 360.0 en scale 1.4
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:11 +26 -3: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:11 +26 -3: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 360.0 en scale 1.4 [E]
+  Test failed. See exception logs above.
+  The test description was: Manufacturer screens 360.0 en scale 1.4
+  
+00:11 +27 -3: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:11 +27 -3: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 360.0 en scale 2.0
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 182 pixels on the right.>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart:101:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart line 101
+The test description was:
+  Manufacturer screens 360.0 en scale 2.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:11 +27 -4: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:11 +27 -4: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 360.0 en scale 2.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Manufacturer screens 360.0 en scale 2.0
+  
+00:12 +28 -4: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:12 +29 -4: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:12 +30 -4: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:12 +31 -4: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 390.0 zh scale 1.4
+00:12 +32 -4: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 768.0 zh supports large text and independent manufacturer/product tabs
+00:12 +33 -4: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: First booth creation returns to the existing shell and reloads the new booth
+00:12 +34 -4: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: First booth creation returns to the existing shell and reloads the new booth
+00:13 +35 -4: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: First booth creation returns to the existing shell and reloads the new booth
+00:13 +36 -4: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: First booth creation returns to the existing shell and reloads the new booth
+00:13 +37 -4: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: First booth creation returns to the existing shell and reloads the new booth
+00:13 +38 -4: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 390.0 en scale 1.4
+00:13 +39 -4: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 390.0 en scale 1.4
+00:13 +39 ~1 -4: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 390.0 en scale 1.4
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 19 pixels on the right.>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart:101:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart line 101
+The test description was:
+  Manufacturer screens 390.0 en scale 1.4
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:13 +39 ~1 -5: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 zh at 1.4 text scale
+00:13 +39 ~1 -5: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 390.0 en scale 1.4 [E]
+  Test failed. See exception logs above.
+  The test description was: Manufacturer screens 390.0 en scale 1.4
+  
+00:13 +40 ~1 -5: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 390.0 en scale 2.0
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 152 pixels on the right.>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart:101:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart line 101
+The test description was:
+  Manufacturer screens 390.0 en scale 2.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:14 +40 ~1 -6: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 en at 1.4 text scale
+00:14 +40 ~1 -6: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 390.0 en scale 2.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Manufacturer screens 390.0 en scale 2.0
+  
+00:14 +41 ~1 -6: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 en at 1.4 text scale
+00:14 +42 ~1 -6: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 430.0 zh scale 1.4
+00:14 +43 ~1 -6: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 zh at 1.4 text scale
+00:14 +44 ~1 -6: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 zh at 1.4 text scale
+00:15 +45 ~1 -6: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 430.0 en scale 1.0
+00:15 +46 ~1 -6: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 en at 1.4 text scale
+00:15 +47 ~1 -6: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 en at 1.4 text scale
+00:15 +48 ~1 -6: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 430.0 en scale 2.0
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 112 pixels on the right.>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart:101:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart line 101
+The test description was:
+  Manufacturer screens 430.0 en scale 2.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:15 +48 ~1 -7: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 zh at 1.4 text scale
+00:15 +48 ~1 -7: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 430.0 en scale 2.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Manufacturer screens 430.0 en scale 2.0
+  
+00:15 +48 ~2 -7: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 zh at 1.4 text scale
+00:16 +49 ~2 -7: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 en at 1.4 text scale
+00:16 +50 ~2 -7: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Capture navigation, manufacturer, booth tasks, editor shortcut and account screenshots
+00:16 +50 ~3 -7: Some tests failed.
+
+Failing tests:
+  D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 360.0 en scale 1.4
+  D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 360.0 en scale 2.0
+  D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 360.0 zh scale 2.0
+  D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: Manufacturer screens 390.0 en scale 1.4
+  ... and 3 more

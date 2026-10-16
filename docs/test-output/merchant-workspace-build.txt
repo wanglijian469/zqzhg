@@ -1,0 +1,17 @@
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 3054 modules transformed.
+rendering chunks...
+computing gzip size...
+../.local/merchant-workspace-web-v1510/index.html                         0.59 kB │ gzip:   0.43 kB
+../.local/merchant-workspace-web-v1510/assets/pdf-worker-PC57fB-y.js  1,524.21 kB
+../.local/merchant-workspace-web-v1510/assets/index-YblvIiwJ.css        107.23 kB │ gzip:  21.29 kB
+../.local/merchant-workspace-web-v1510/assets/index-BW4NuOAT.js         259.68 kB │ gzip:  95.86 kB
+../.local/merchant-workspace-web-v1510/assets/pdf-CL8ynlU4.js           495.58 kB │ gzip: 151.29 kB
+../.local/merchant-workspace-web-v1510/assets/index-azs0fITJ.js         557.29 kB │ gzip: 176.48 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 11.81s

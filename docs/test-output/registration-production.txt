@@ -1,0 +1,10 @@
+{
+  "website": "1.5.5",
+  "backend": "1.5.5",
+  "android": "1.5.2+19",
+  "local_and_lan_health": 200,
+  "new_registration_entries_in_served_bundle": true,
+  "business_categories_accounts_reviews_media_unchanged": true,
+  "backend_binary_updated_and_verified": true,
+  "apk_unchanged_and_download_verified": true
+}

@@ -1,0 +1,51 @@
+{
+  "icons": [
+    {
+      "file": "mobile\\android\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png",
+      "size": [
+        72,
+        72
+      ],
+      "allPixelsOpaque": true
+    },
+    {
+      "file": "mobile\\android\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png",
+      "size": [
+        48,
+        48
+      ],
+      "allPixelsOpaque": true
+    },
+    {
+      "file": "mobile\\android\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png",
+      "size": [
+        96,
+        96
+      ],
+      "allPixelsOpaque": true
+    },
+    {
+      "file": "mobile\\android\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png",
+      "size": [
+        144,
+        144
+      ],
+      "allPixelsOpaque": true
+    },
+    {
+      "file": "mobile\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png",
+      "size": [
+        192,
+        192
+      ],
+      "allPixelsOpaque": true
+    }
+  ],
+  "nativeArchitectures": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86_64"
+  ],
+  "compiledEndpointVerifiedInEachArchitecture": true,
+  "signingCertificateMatchedPriorRelease": true
+}

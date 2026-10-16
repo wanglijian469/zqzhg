@@ -1,0 +1,26 @@
+{
+  "versions": {
+    "android": "1.5.12+20",
+    "website": "1.5.11",
+    "backend": "1.5.11"
+  },
+  "filesChecked": 8,
+  "sourceFiles": 451,
+  "forbiddenFilesIncluded": [],
+  "downloads": [
+    {
+      "base": "http://127.0.0.1:8080",
+      "health": 200,
+      "download": 200,
+      "bytes": 79106804,
+      "sha256": "c11414bc5837ebbd3e833e3324a64efdadc893eabb5f451b2bcb0c74d83b1d89"
+    },
+    {
+      "base": "http://172.27.35.2:8080",
+      "health": 200,
+      "download": 200,
+      "bytes": 79106804,
+      "sha256": "c11414bc5837ebbd3e833e3324a64efdadc893eabb5f451b2bcb0c74d83b1d89"
+    }
+  ]
+}

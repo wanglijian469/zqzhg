@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+const file='docs/openapi.json';const spec=JSON.parse(fs.readFileSync(file,'utf8'));
+const integer={type:'integer',minimum:0};
+const result=schema=>({'200':{description:'Success',content:{'application/json':{schema}}}});
+const products={type:'object',required:['total','public','draft','pending','rejected'],properties:Object.fromEntries(['total','public','draft','pending','rejected'].map(k=>[k,integer]))};
+spec.info.version='1.4.9';
+spec.components.schemas.MerchantDashboard={type:'object',required:['products'],properties:{products}};
+spec.paths['/merchant/dashboard']={get:{summary:'Account-wide product counts; publication includes the parent booth gate',tags:['merchant'],security:[{bearerAuth:[]}],responses:{...result({$ref:'#/components/schemas/MerchantDashboard'}),401:spec.paths['/merchant/contents'].get.responses['401']}}};
+const get=spec.paths['/merchant/contents'].get;get.summary='Current private revisions, scoped to the signed-in manufacturer';
+get.parameters=(get.parameters||[]).filter(p=>!['q','public_state'].includes(p.name));get.parameters.push({name:'q',in:'query',description:'Search current revision names, descriptions and keywords; combined with kind, status and pagination',schema:{type:'string',maxLength:200}},{name:'public_state',in:'query',description:'Actual public access, including parent booth visibility',schema:{type:'string',enum:['public','unpublished']}});
+spec.paths['/public/app']={get:{summary:'Android download and phone-accessible QR destination; no iOS build available',tags:['public'],responses:result({type:'object',required:['android_url','qr_url','base_url','ios_available'],properties:{android_url:{type:'string'},qr_url:{type:'string',description:'Empty for a loopback origin; use APP_DOWNLOAD_BASE_URL or PUBLIC_BASE_URL'},base_url:{type:'string'},ios_available:{type:'boolean',enum:[false]}}})}};
+fs.writeFileSync(file,JSON.stringify(spec,null,2)+'\n');

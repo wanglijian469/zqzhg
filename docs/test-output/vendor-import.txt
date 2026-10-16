@@ -1,0 +1,26 @@
+=== RUN   TestThousandProductsAndConcurrentLastSlot
+[GIN] 2026/10/11 - 17:19:42 | 200 |      4ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/11 - 17:19:42 | 200 |   4.83ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/11 - 17:19:42 | 201 |   5.57ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/11 - 17:19:42 | 201 |   5.15ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/11 - 17:19:42 | 409 |   7.49ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/11 - 17:19:42 | 409 |   2.57ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/11 - 17:19:42 | 200 |   4.68ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1001/draft"
+[GIN] 2026/10/11 - 17:19:42 | 200 |   2.04ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/11 - 17:19:42 | 200 |   2.57ms |       192.0.2.1 | POST     "/api/v1/auth/phone"
+[GIN] 2026/10/11 - 17:19:42 | 201 |   2.58ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/11 - 17:19:42 | 201 |   3.08ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+--- PASS: TestThousandProductsAndConcurrentLastSlot (0.69s)
+=== RUN   TestVendorImportAtomicAndIdempotent
+
+2026/10/11 17:19:42 [31;1mD:/workspace-main/codex-zqzt/server/import.go:76 [35;1mrecord not found
+[0m[33m[2.005ms] [34;1m[rows:0][0m SELECT * FROM `contents` WHERE kind = 'vendor' AND owner_id = 2 ORDER BY `contents`.`id` LIMIT 1
+
+2026/10/11 17:19:42 [31;1mD:/workspace-main/codex-zqzt/server/import.go:76 [35;1mrecord not found
+[0m[33m[0.026ms] [34;1m[rows:0][0m SELECT * FROM `contents` WHERE kind = 'vendor' AND owner_id = 3 ORDER BY `contents`.`id` LIMIT 1
+[GIN] 2026/10/11 - 17:19:42 | 200 |   3.28ms |       192.0.2.1 | GET      "/api/v1/public/vendors/2"
+[GIN] 2026/10/11 - 17:19:43 | 200 | 198.75ms |       192.0.2.1 | GET      "/api/v1/media/2"
+[GIN] 2026/10/11 - 17:19:43 | 200 |   1.58ms |       192.0.2.1 | GET      "/api/v1/media/3"
+--- PASS: TestVendorImportAtomicAndIdempotent (0.73s)
+PASS
+ok  	zqzt/exhibition	4.208s

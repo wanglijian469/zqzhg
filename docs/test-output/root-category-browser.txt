@@ -1,0 +1,1 @@
+PASS: real isolated top-level business/product creation, default and explicit selection, instant selection, deduplication, pending visibility, administrator approval as root, desktop/mobile and English. No production category mutations.

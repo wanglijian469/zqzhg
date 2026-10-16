@@ -1,0 +1,29 @@
+=== RUN   TestMerchantRegistrationAndExistingLogin
+[GIN] 2026/10/13 - 13:59:08 | 201 | 172.68ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/13 - 13:59:08 | 403 |  998.8µs |       192.0.2.1 | GET      "/api/v1/admin/accounts"
+[GIN] 2026/10/13 - 13:59:08 | 201 |   5.14ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/13 - 13:59:08 | 200 |   3.99ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/13 - 13:59:08 | 200 |  50.53ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/13 - 13:59:08 | 200 |   3.22ms |       192.0.2.1 | GET      "/api/v1/merchant/contents/1"
+[GIN] 2026/10/13 - 13:59:08 | 401 |  52.36ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/13 - 13:59:08 | 409 |   48.8ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+--- PASS: TestMerchantRegistrationAndExistingLogin (1.39s)
+=== RUN   TestMerchantRegistrationBoundariesRateAndRollback
+[GIN] 2026/10/13 - 13:59:09 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/13 - 13:59:09 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/13 - 13:59:09 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/13 - 13:59:09 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/13 - 13:59:09 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/13 - 13:59:09 | 429 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/13 - 13:59:09 | 201 |  51.14ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/13 - 13:59:09 | 201 |  63.16ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/13 - 13:59:09 | 500 |  52.24ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+
+2026/10/13 13:59:09 [34;1mD:/workspace-main/codex-zqzt/server/merchant_register_test.go:79
+[0m[35m[warn] [0mremoving callback `registration_rollback` from D:/workspace-main/codex-zqzt/server/merchant_register_test.go:79
+
+2026/10/13 13:59:09 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[201.405ms] [33m[rows:20][35m DROP DATABASE `zqzt_exhibition_test_1791871148745198200`[0m
+--- PASS: TestMerchantRegistrationBoundariesRateAndRollback (1.13s)
+PASS
+ok  	zqzt/exhibition	4.475s

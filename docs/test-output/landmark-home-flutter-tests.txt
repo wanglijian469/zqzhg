@@ -1,0 +1,122 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart
+00:00 +0: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Sparse portal hides empty sections and empty resource navigation
+00:00 +1: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Homepage landmark uses platform media and vendor cards keep their own covers
+00:01 +2: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Manual representatives retain choices on version conflict, reorder and clear
+00:02 +3: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Registration continues original cloud save and does not store passwords
+00:03 +4: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Top-level category sends parent zero and selects returned category
+00:03 +5: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Portal validations use Unicode limits and preserve unknown profile fields
+00:03 +6: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Upload failure retains files, retry skips successful files and submit failure keeps content ID
+00:04 +7: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Session expiry preserves owner; signing in to another account does not carry editor data
+00:05 +8: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Resource editor preserves files on expiry and exits after account change
+00:05 +9: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Portal layout and image failures at phone/tablet sizes, bilingual and large text
+00:05 +10: loading D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart
+00:06 +10: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:09 +11: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Home search selects an existing destination and applies the new query
+00:09 +12: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Account menu confirms logout, retains drafts and resets the workspace for another account
+00:10 +13: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Booth task shortcuts locate forms, restore drafts and keep pending versions read-only
+00:12 +14: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: First booth creation returns to the existing shell and reloads the new booth
+00:12 +15: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 zh at 1.4 text scale
+00:13 +16: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 360.0 en at 1.4 text scale
+00:13 +17: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 zh at 1.4 text scale
+00:14 +18: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 390.0 en at 1.4 text scale
+00:14 +19: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 zh at 1.4 text scale
+00:15 +20: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Navigation and task layout 768.0 en at 1.4 text scale
+00:15 +21: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Capture navigation, manufacturer, booth tasks, editor shortcut and account screenshots
+00:15 +21 ~1: loading D:/workspace-main/codex-zqzt/mobile/test/app_test.dart
+00:16 +21 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_test.dart: Language switching preserves the private local booth draft
+00:17 +22 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_test.dart: An API endpoint change signs out and keeps drafts scoped to their source
+00:17 +23 ~1: loading D:/workspace-main/codex-zqzt/mobile/test/cloud_endpoint_test.dart
+00:18 +23 ~1: D:/workspace-main/codex-zqzt/mobile/test/cloud_endpoint_test.dart: Cloud upgrade migrates old endpoint once, clears old session and preserves old drafts
+00:18 +24 ~1: D:/workspace-main/codex-zqzt/mobile/test/cloud_endpoint_test.dart: Cloud upgrade preserves explicit custom endpoints and their sessions
+00:18 +25 ~1: loading D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart
+00:19 +25 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Brand and hall share a row; home has no category entries; preview never queries business data
+00:21 +26 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Preview can initialize without a public home request and opening directories stays lazy
+00:21 +27 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Returning to agriculture retains directory query, category, page and scroll
+00:22 +28 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: A late agricultural response cannot appear in the preview hall
+00:22 +29 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Banner reuses and refreshes backend image ID, with branded error and absent-image fallbacks
+00:22 +30 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 360.0 zh scale 1.0
+00:23 +31 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 360.0 zh scale 1.4
+00:23 +32 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 360.0 zh scale 2.0
+00:23 +33 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 360.0 en scale 1.0
+00:24 +34 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 360.0 en scale 1.4
+00:24 +35 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 360.0 en scale 2.0
+00:24 +36 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 390.0 zh scale 1.0
+00:24 +37 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 390.0 zh scale 1.4
+00:25 +38 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 390.0 zh scale 2.0
+00:25 +39 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 390.0 en scale 1.0
+00:25 +40 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 390.0 en scale 1.4
+00:25 +41 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 390.0 en scale 2.0
+00:26 +42 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 412.0 zh scale 1.0
+00:26 +43 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 412.0 zh scale 1.4
+00:26 +44 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 412.0 zh scale 2.0
+00:26 +45 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 412.0 en scale 1.0
+00:27 +46 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 412.0 en scale 1.4
+00:27 +47 ~1: D:/workspace-main/codex-zqzt/mobile/test/exhibition_halls_test.dart: Hall menu and preview fit 412.0 en scale 2.0
+00:27 +48 ~1: loading D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart
+00:28 +48 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor auth on an older backend reports an upgrade and retains local favorites
+00:28 +49 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Guest collection persists across restart, language and endpoint changes
+00:28 +50 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Guest merge is acknowledged before cleanup and syncs across two devices
+00:28 +51 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Offline operations survive restart and a lost acknowledgment cannot resurrect a canceled item
+00:28 +52 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Switching accounts during an in-flight request never sends the first account queue with a new token
+00:28 +53 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: A replacement session waits for the old sync and then retries with its own token
+00:28 +54 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Resolution distinguishes network failure, unavailable content and an older server
+00:28 +55 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: A failed account login does not expire the existing visitor session
+00:28 +56 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Returning from a main tab goes home before exiting
+00:29 +57 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; favorites is available from My
+00:31 +58 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor registration merges favorites and visitors see a manufacturer login instead of management
+00:32 +59 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 360.0 zh supports large text and independent manufacturer/product tabs
+00:32 +60 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 360.0 en supports large text and independent manufacturer/product tabs
+00:33 +61 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 390.0 zh supports large text and independent manufacturer/product tabs
+00:33 +62 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 390.0 en supports large text and independent manufacturer/product tabs
+00:33 +63 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 768.0 zh supports large text and independent manufacturer/product tabs
+00:33 +64 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Favorites 768.0 en supports large text and independent manufacturer/product tabs
+00:34 +65 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor login at 360px zh with large text
+00:34 +66 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Visitor login at 360px en with large text
+00:34 +67 ~1: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Capture favorites UI evidence
+00:34 +67 ~2: loading D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_capture_test.dart
+00:34 +67 ~2: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_capture_test.dart: Capture home upgrade evidence
+00:34 +67 ~3: loading D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart
+00:35 +67 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Product specifications use supplied parameters without inventing model fields
+00:35 +68 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home sends one read; initial search sends one filtered request; state survives tabs and language
+00:37 +69 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Directory debounces typing and submit does not repeat the same query
+00:37 +70 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home errors preserve search and banner; retry and pull refresh fetch fresh content
+00:37 +71 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Manufacturer name, photo and contact retain server showroom slug; favorite is independent
+00:38 +72 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Product rows align at 360dp with square contained photos and real model field
+00:38 +73 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home caps recommendations at six each and does not request per-card details
+00:39 +74 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Manufacturer image priority reuses supplied media and products, then logo
+00:39 +75 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 360.0 zh scale 1.0
+00:39 +76 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 360.0 zh scale 1.4
+00:39 +77 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 360.0 zh scale 2.0
+00:40 +78 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 360.0 en scale 1.0
+00:40 +79 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 360.0 en scale 1.4
+00:40 +80 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 360.0 en scale 2.0
+00:41 +81 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 390.0 zh scale 1.0
+00:41 +82 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 390.0 zh scale 1.4
+00:41 +83 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 390.0 zh scale 2.0
+00:42 +84 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 390.0 en scale 1.0
+00:42 +85 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 390.0 en scale 1.4
+00:42 +86 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 390.0 en scale 2.0
+00:42 +87 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 412.0 zh scale 1.0
+00:43 +88 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 412.0 zh scale 1.4
+00:43 +89 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 412.0 zh scale 2.0
+00:43 +90 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 412.0 en scale 1.0
+00:43 +91 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 412.0 en scale 1.4
+00:44 +92 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home and directory fit 412.0 en scale 2.0
+00:44 +93 ~3: loading D:/workspace-main/codex-zqzt/mobile/test/industrial_ui_test.dart
+00:45 +93 ~3: D:/workspace-main/codex-zqzt/mobile/test/industrial_ui_test.dart: Product photos preserve equipment and industrial theme is blue
+00:45 +94 ~3: D:/workspace-main/codex-zqzt/mobile/test/industrial_ui_test.dart: Product browsing reuses the public endpoint and keeps keyword on return
+00:46 +95 ~3: D:/workspace-main/codex-zqzt/mobile/test/industrial_ui_test.dart: Brand hero and exhibit cards adapt to narrow screens and large text
+00:46 +96 ~3: D:/workspace-main/codex-zqzt/mobile/test/industrial_ui_test.dart: Render native UI screenshot evidence from published company data
+00:46 +96 ~4: loading D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart
+00:47 +96 ~4: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Company login opens the four-section workspace with account-wide counts
+00:48 +97 ~4: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Profile edits retain existing contacts and unedited fields
+00:48 +98 ~4: D:/workspace-main/codex-zqzt/mobile/test/merchant_experience_test.dart: Native QR and poster contain the canonical URL without private filters
+00:48 +99 ~4: loading D:/workspace-main/codex-zqzt/mobile/test/onboarding_test.dart
+00:49 +99 ~4: D:/workspace-main/codex-zqzt/mobile/test/onboarding_test.dart: Shared rules distinguish Unicode characters and UTF8 bytes
+00:49 +100 ~4: D:/workspace-main/codex-zqzt/mobile/test/onboarding_test.dart: Guest onboarding explains saving and identifies fields before login
+00:51 +101 ~4: loading D:/workspace-main/codex-zqzt/mobile/test/resources_experience_test.dart
+00:51 +101 ~4: D:/workspace-main/codex-zqzt/mobile/test/resources_experience_test.dart: Showroom defaults to portal, hides empty resource tabs and preserves product search
+00:53 +102 ~4: D:/workspace-main/codex-zqzt/mobile/test/resources_experience_test.dart: Resource draft recovery retains uploaded IDs and files awaiting retry
+00:53 +103 ~4: D:/workspace-main/codex-zqzt/mobile/test/resources_experience_test.dart: A processing video preview waits instead of opening a broken player
+00:53 +104 ~4: D:/workspace-main/codex-zqzt/mobile/test/resources_experience_test.dart: Multipart upload reports monotonic progress including the final byte
+00:53 +105 ~4: All tests passed!

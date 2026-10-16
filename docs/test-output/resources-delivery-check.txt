@@ -1,0 +1,1 @@
+PASS: all five delivery file sizes and SHA-256 match manifest; source excludes environment credentials and signing keys; deploy includes PDF runtime license/assets and FFmpeg setup. LAN health ok.

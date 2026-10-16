@@ -1,0 +1,4 @@
+ffmpeg version 9.0.2-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers
+ffprobe version 9.0.2-essentials_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers
+FFMPEG_PATH=D:\workspace-main\codex-zqzt\.tools\ffmpeg\bin\ffmpeg.exe
+FFPROBE_PATH=D:\workspace-main\codex-zqzt\.tools\ffmpeg\bin\ffprobe.exe

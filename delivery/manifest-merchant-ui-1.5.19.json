@@ -1,0 +1,126 @@
+{
+  "Version": "1.5.19",
+  "AndroidVersion": "1.5.19+27",
+  "ApplicationID": "com.zqzt.dalunongji",
+  "API": "http://39.97.250.244:8089",
+  "MinimumAndroidAPI": 24,
+  "TargetAndroidAPI": 36,
+  "Architectures": [
+    "armeabi-v7a",
+    "arm64-v8a",
+    "x86_64"
+  ],
+  "ReleaseOriginalCertificateVerified": true,
+  "Artifacts": [
+    {
+      "Variant": "release",
+      "Path": "delivery/android/dalunongji-1.5.19+27.apk",
+      "CertificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+      "Bytes": 80541485,
+      "SHA256": "03a7b1dbca9242e9bc0fff3f6e2d1004aa09129b00f8e21d6bedc5d25b881db7"
+    },
+    {
+      "Variant": "debug",
+      "Path": "delivery/android/dalunongji-1.5.19+27-debug.apk",
+      "CertificateSHA256": "b1e5cd42d95352f10dc2cdb746232c1e77c01b5acc3b85bb316c5f25d9b142cd",
+      "Bytes": 235245238,
+      "SHA256": "20809428586237f69b97bcd5ed20c5a9c5cd04bb453568f55fb39870cda104c2"
+    },
+    {
+      "Variant": "web",
+      "Path": "delivery/merchant-ui-1.5.19/web-dist.zip",
+      "Bytes": 3074721,
+      "SHA256": "e6abdbb933deb276c3fa2c1d6fbf582f959241ab0cbb17e939ebd2ab9ea091a8"
+    },
+    {
+      "Variant": "backend-linux-amd64",
+      "Path": "delivery/merchant-ui-1.5.19/exhibition-linux-amd64",
+      "Bytes": 41787187,
+      "SHA256": "6b5c88dc930b1689569cf2630851a9f59898ba65ee59dd75f5a4374678ae8a6e"
+    }
+  ],
+  "Checks": {
+    "FlutterAnalyze": "passed, no issues",
+    "FlutterTests": "130 passed; 5 optional captures skipped; current captures executed separately",
+    "WebTests": "79 passed in 14 files",
+    "Browser": "80 combinations passed, including route and actual scroll restoration",
+    "BackendTests": "full suite passed with isolated MySQL test databases",
+    "DebugBuild": "passed",
+    "ReleaseBuild": "passed",
+    "WebProductionBuild": "passed",
+    "LinuxAmd64Build": "passed",
+    "ConnectedAndroidDevice": false,
+    "AndroidInstallRunAndUpgrade": "not tested",
+    "NativeShareAndSaveOnDevice": "not tested",
+    "ProductionHTTPSShareDomain": "not provided",
+    "WebsiteAndBackendDeployment": "not performed",
+    "ProductionBusinessWrites": false,
+    "DatabaseSchemaChanged": false,
+    "NewDependencies": false
+  },
+  "BackendChange": "Existing manufacturer product q search additionally matches parameters; public/admin search and API shape unchanged.",
+  "UnsupportedActions": [
+    "delete",
+    "direct republish without review"
+  ],
+  "SourceSHA256": [
+    {
+      "Path": "mobile/lib/main.dart",
+      "SHA256": "acde8ccbb172d433602259f0731f14950830e2dcac8058ab13871199f5c62ba8"
+    },
+    {
+      "Path": "mobile/lib/merchant_workspace.dart",
+      "SHA256": "6c625da006e2d97587cb78d079cf3edfc0ceb79e78dd58dd29d7b782940b6aaa"
+    },
+    {
+      "Path": "mobile/lib/merchant_products.dart",
+      "SHA256": "5ae00243ed27d8ee96e210889f16fde5d800a36e944fba65906573f79169f609"
+    },
+    {
+      "Path": "mobile/lib/merchant_experience.dart",
+      "SHA256": "ab9a6b4a362d2ad42323e44279700a62e0560db0db2bfea5c6b5682a60455681"
+    },
+    {
+      "Path": "mobile/lib/app_navigation.dart",
+      "SHA256": "e0aa8cc8be1d641458a813568933b7b40eecb4e94355bec9f075e8c89f3a9ff7"
+    },
+    {
+      "Path": "mobile/lib/favorites.dart",
+      "SHA256": "ad78412f4afd8b3bb3b67691dd91afe04619d5d78d0e5f95ecb416011e48b72d"
+    },
+    {
+      "Path": "mobile/assets/i18n/zh.json",
+      "SHA256": "4543bfd376ba63fb4172e5e66aa10b5f5ec9efcdeae4042cd66b19b7199dddad"
+    },
+    {
+      "Path": "mobile/assets/i18n/en.json",
+      "SHA256": "2150eff1693fcd729230950f41a725f6814813a76886fef6a3db5cd2a551e3e1"
+    },
+    {
+      "Path": "web/src/merchant-console.tsx",
+      "SHA256": "027ea90fd8f1e383e92ae8fbffab9831d09b7d0f13aafdeab1da04d940f169ec"
+    },
+    {
+      "Path": "web/src/merchant-workspace.css",
+      "SHA256": "a9660e37ba539cdb233cf682d5328aa4f57d905224c8689292b450cc67c945fe"
+    },
+    {
+      "Path": "web/src/company-profile.tsx",
+      "SHA256": "c5ced5cdd32d23d78e8e19237a149341ab2ae5396a0335ad44c628ee3d599179"
+    },
+    {
+      "Path": "web/src/main.tsx",
+      "SHA256": "849621f99359b0ba8b16f6019f12d9ac2ccbbb2ea72ff8f40359642fee9b3deb"
+    },
+    {
+      "Path": "web/src/merchant-messages.ts",
+      "SHA256": "ac57653bd4748d2e96ebc093f0effe8273b23a563acf9d3f139a08c6232b06ec"
+    },
+    {
+      "Path": "server/content.go",
+      "SHA256": "f3b9bf2740a3dec3a1d2d5d08d54a7713172b24683c018af69cc9d375ced6cb2"
+    }
+  ],
+  "Report": "docs/MERCHANT_UI_1.5.19.md",
+  "GeneratedAt": "2026-10-16T06:23:00.7745144Z"
+}

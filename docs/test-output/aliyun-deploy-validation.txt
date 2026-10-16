@@ -1,0 +1,13 @@
+Version: 1.5.13
+CPU: amd64
+Public URL: http://39.97.250.244:8089
+Listen: 0.0.0.0:8089
+Existing MySQL: 127.0.0.1:3306
+New database: zqzt_exhibition_cloud
+Install: /opt/zqzt
+Migration: /d/workspace-main/codex-zqzt/deploy/linux/migration
+ERROR: Use a database name starting with zqzt_exhibition_.
+ERROR: This installer is for the existing MySQL on this ECS instance.
+ERROR: Invalid port.
+ERROR: Public URL must be an HTTP(S) origin without a path.
+Installer validation passed

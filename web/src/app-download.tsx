@@ -1,0 +1,11 @@
+import {useEffect,useState} from 'react';
+import {Link} from 'react-router-dom';
+import {Smartphone,Download} from 'lucide-react';
+import {useLanguage,useLoad,ErrorState,Loading} from './main';
+import {qrDataURL} from './showroom-share';
+export function AppDownloadLinks(){const {t}=useLanguage();return <div className="app-download-links"><Link className="button" to="/app#android"><Download size={18}/>{t('androidDownload')}</Link><Link className="button secondary" to="/app#ios"><Smartphone size={18}/>{t('iosSoon')}</Link></div>}
+export function AppDownload(){
+ const {t}=useLanguage();const r=useLoad<{android_url:string;qr_url:string;base_url:string}>('/public/app');const [qr,setQR]=useState('');const [failed,setFailed]=useState(false);
+ useEffect(()=>{let active=true;setQR('');setFailed(false);if(r.data?.qr_url)qrDataURL(r.data.qr_url).then(v=>{if(active)setQR(v)}).catch(()=>{if(active)setFailed(true)});return()=>{active=false}},[r.data?.qr_url]);
+ return <div className="container section"><div className="page-heading"><span className="eyebrow">{t('downloadApp')}</span><h1>{t('appTitle')}</h1><p>{t('appIntro')}</p></div>{r.error?<ErrorState code={r.error} retry={r.reload}/>:!r.data?<Loading/>:<div className="download-grid"><section id="android" className="download-card"><Smartphone size={36}/><h2>Android</h2><a className="button" href={r.data.android_url} download="dalunongji.apk"><Download size={18}/>{t('downloadPackage')}</a><p>{t('installHelp')}</p>{['localhost','127.0.0.1','[::1]'].includes(location.hostname)&&<p className="notice">{t('loopbackDownload')}</p>}{r.data.qr_url?<><p className="muted">{t('lanShare')}</p><a className="text-link download-address" href={r.data.base_url+'/app'}>{r.data.base_url}/app</a>{qr&&<figure><img src={qr} alt={t('scanDownload')} width="220" height="220"/><figcaption>{t('scanDownload')}</figcaption></figure>}{failed&&<ErrorState code="posterFailed" retry={r.reload}/>}</>:<p className="notice">{t('missingLAN')}</p>}</section><section id="ios" className="download-card"><Smartphone size={36}/><h2>iOS</h2><span className="badge">{t('iosSoon')}</span><p>{t('iosHint')}</p><Link className="button secondary" to="/join">{t('useWeb')}</Link></section></div>}</div>
+}

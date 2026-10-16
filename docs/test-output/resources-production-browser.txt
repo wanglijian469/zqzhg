@@ -1,0 +1,1 @@
+PASS: production migration 1-5; original 19-product showroom; fixed sections and honest empty multimedia states; mobile contact; app download page. Production was read only.

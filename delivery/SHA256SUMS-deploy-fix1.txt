@@ -1,0 +1,3 @@
+8fab38719f238782f873e2333ed665b49eb2a665c03cc7f68a60bc143bd3eacc  zqzt-deploy-v1.5.13-fix1.tar.gz
+04733ac0a3ef703f17b07836943ad4b9d16e4df20fe331b961ef57d782739d40  zqzt-aliyun-v1.5.13-fix1-linux.tar.gz
+7fefcaeca178853f54d89d120348e3e5a6362c16ae7c0e36e899bb790f3f16b7  zqzt-exhibition-v1.5.13-fix1-source.zip

@@ -1,0 +1,4 @@
+=== RUN   TestCleanupResourceBrowserFixture
+--- PASS: TestCleanupResourceBrowserFixture (0.17s)
+PASS
+ok  	zqzt/exhibition	2.008s

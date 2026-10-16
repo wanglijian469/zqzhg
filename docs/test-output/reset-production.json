@@ -1,0 +1,10 @@
+{
+  "website_server_version": "1.5.3",
+  "android_version": "1.5.2+19",
+  "local_health": 200,
+  "lan_health": 200,
+  "anonymous_reset": 401,
+  "real_account_21_password_and_ownership_unchanged": true,
+  "business_records_and_schema_unchanged": true,
+  "apk_download_matches_existing": true
+}

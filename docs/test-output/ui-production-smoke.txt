@@ -1,0 +1,9 @@
+{
+  "health": "ok",
+  "products": 19,
+  "canonical": "http://172.27.35.2:8080/v/jinong",
+  "resources": {
+    "catalog": 0,
+    "video": 0
+  }
+}

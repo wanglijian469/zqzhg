@@ -1,0 +1,42 @@
+Picked up JAVA_TOOL_OPTIONS: -Djava.io.tmpdir=D:\workspace-main\codex-zqzt\.tools\tmp
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.conscrypt.NativeLibraryUtil in an unnamed module (file:/D:/workspace-main/codex-zqzt/.tools/android-sdk/build-tools/36.0.0/lib/apksigner.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=ZQZT Dalu Nongji, O=ZQZT, C=CN
+Signer #1 certificate SHA-256 digest: 85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585
+Signer #1 certificate SHA-1 digest: 715c7449fbeba35af5de452b4e9b034c9046afb9
+Signer #1 certificate MD5 digest: 682510e0800e605fe2905125d7d20415
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 2048
+Signer #1 public key SHA-256 digest: 8e845bced459997966895f85746478b6d57f97e9394fe8fc9448d47cc2094a62
+Signer #1 public key SHA-1 digest: 7ef102bd6120638a23af203fe77ca6696057cf05
+Signer #1 public key MD5 digest: 8e4f24fb325151fb54fd4c99e8b0545b
+-----BEGIN CERTIFICATE-----
+MIIDEzCCAfugAwIBAgIII+UxZaRQ700wDQYJKoZIhvcNAQEMBQAwNzELMAkGA1UE
+BhMCQ04xDTALBgNVBAoTBFpRWlQxGTAXBgNVBAMTEFpRWlQgRGFsdSBOb25namkw
+IBcNMjYxMDExMDM1OTM3WhgPMjA1NDAyMjYwMzU5MzdaMDcxCzAJBgNVBAYTAkNO
+MQ0wCwYDVQQKEwRaUVpUMRkwFwYDVQQDExBaUVpUIERhbHUgTm9uZ2ppMIIBIjAN
+BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsKeOCqyCHP+HrxLRyKv+14VAYY1h
+C4jhLQ5hCbI9yUWB9m593kKp87P6xBjUlVYB1+sSlKZBpN/PcMklK4+K27M1Eo4b
+0GXiENU3NaE7rkOuz092xt9VHpBu5WYEPi1uQPylofOqu4UyOg7yZKPzfw6nfjzy
+847OOYBolgJnS9DqddP5w+dv/Y2WOEsp51E/OtpH6AzoTSYXbYHOiz4ZaapcjCIu
+XNy2bDrllkVjlajI6uNIjyk/UJUuAaNvaPtu99w+CXN2Usv1Rh8s7B52NinYBLDy
+e7CQspLyxoQMKArR3ZvBWUNz8a2dj/SX7S68AVVWEJ5LsHsmnqNlcDmo2wIDAQAB
+oyEwHzAdBgNVHQ4EFgQUWLTqfJH++bO5s5m6XdHxtinJHSgwDQYJKoZIhvcNAQEM
+BQADggEBADOM2HVowNMjmf7rfbUE/v2h9KIXu48zfYj9504drTntsEwpFrYAr2Eu
+Hb8xls8Dly0ooaIl4vfUqbt6wjDkYaSaEvrTsqxg8rGtu3thGi/Z2Ix3e70LcVZG
+FjiBlGvk3eLgl8aksSg+QFfz7q0TN8Br59W7Sy64OxbnBt8j4PVBRjPhMlkdc5Ys
+rd13DRV5hcmk7H5lgmO754teWsAj68GK/4jxhwqwf3IcKgEwAwPZn9Tq+jvFU8MC
+vGE4khmCPW18FnrbrwIgWSli3+4JIUW5alS0SZdEVeQweVhoFL6M+4gy1J0XVei2
+dkjPfRI9+NUfcEgr1t27ZRMl+DQzVf0=
+-----END CERTIFICATE-----

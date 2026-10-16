@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS home_display_settings (
+ id BIGINT UNSIGNED PRIMARY KEY, hero_media_id BIGINT UNSIGNED NOT NULL DEFAULT 0,
+ version BIGINT UNSIGNED NOT NULL DEFAULT 1, updated_by BIGINT UNSIGNED NOT NULL DEFAULT 0,
+ updated_at DATETIME(3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT IGNORE INTO home_display_settings(id,hero_media_id,version,updated_by,updated_at) VALUES(1,0,1,0,UTC_TIMESTAMP(3));
+CREATE TABLE IF NOT EXISTS home_display_media (
+ media_id BIGINT UNSIGNED PRIMARY KEY, created_at DATETIME(3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

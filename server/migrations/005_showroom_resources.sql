@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS resources (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, owner_id BIGINT UNSIGNED NOT NULL,
+ vendor_id BIGINT UNSIGNED NOT NULL, kind VARCHAR(16) NOT NULL,
+ draft_revision_id BIGINT UNSIGNED NOT NULL DEFAULT 0, published_revision_id BIGINT UNSIGNED NOT NULL DEFAULT 0,
+ epoch BIGINT UNSIGNED NOT NULL DEFAULT 0, visible BOOLEAN NOT NULL DEFAULT FALSE,
+ created_at DATETIME(3) NOT NULL, updated_at DATETIME(3) NOT NULL,
+ INDEX idx_resource_vendor(vendor_id,kind), INDEX idx_resource_owner(owner_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS resource_revisions (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, resource_id BIGINT UNSIGNED NOT NULL,
+ base_epoch BIGINT UNSIGNED NOT NULL, product_id BIGINT UNSIGNED NOT NULL DEFAULT 0,
+ title VARCHAR(200) NOT NULL, title_en VARCHAR(200) NOT NULL DEFAULT '', purpose VARCHAR(32) NOT NULL DEFAULT '',
+ payload LONGTEXT NOT NULL, status VARCHAR(16) NOT NULL, review_note VARCHAR(1000) NOT NULL DEFAULT '',
+ created_at DATETIME(3) NOT NULL, updated_at DATETIME(3) NOT NULL,
+ INDEX idx_resource_revision(resource_id), INDEX idx_resource_review(status), INDEX idx_resource_product(product_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS resource_media_references (
+ revision_id BIGINT UNSIGNED NOT NULL, media_id BIGINT UNSIGNED NOT NULL,
+ PRIMARY KEY(revision_id,media_id), INDEX idx_resource_media(media_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS resource_review_logs (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, resource_id BIGINT UNSIGNED NOT NULL,
+ revision_id BIGINT UNSIGNED NOT NULL, actor_id BIGINT UNSIGNED NOT NULL,
+ action VARCHAR(32) NOT NULL, note VARCHAR(1000) NOT NULL DEFAULT '', created_at DATETIME(3) NOT NULL,
+ INDEX idx_resource_history(resource_id,created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS media_metadata (
+ media_id BIGINT UNSIGNED PRIMARY KEY, kind VARCHAR(16) NOT NULL, state VARCHAR(16) NOT NULL,
+ size BIGINT NOT NULL, source_path VARCHAR(255) NOT NULL DEFAULT '',
+ duration DOUBLE NOT NULL DEFAULT 0, width INT NOT NULL DEFAULT 0, height INT NOT NULL DEFAULT 0,
+ page_count INT NOT NULL DEFAULT 0, error VARCHAR(100) NOT NULL DEFAULT '',
+ updated_at DATETIME(3) NOT NULL, INDEX idx_media_job(state,media_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

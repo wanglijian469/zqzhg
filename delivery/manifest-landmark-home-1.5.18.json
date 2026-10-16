@@ -1,0 +1,49 @@
+{
+  "Version": "1.5.18+26",
+  "ApplicationID": "com.zqzt.dalunongji",
+  "API": "http://39.97.250.244:8089",
+  "MinimumAndroidAPI": 24,
+  "TargetAndroidAPI": 36,
+  "Architectures": [
+    "armeabi-v7a",
+    "arm64-v8a",
+    "x86_64"
+  ],
+  "ReleaseOriginalCertificateVerified": true,
+  "Packages": [
+    {
+      "Variant": "release",
+      "Path": "delivery/android/dalunongji-1.5.18+26.apk",
+      "Bytes": 80442373,
+      "SHA256": "5968f3eb02ea2f2e74addaea1ad2789317c51e7e2d103b45217c3fb0876d6d9b",
+      "CertificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585"
+    },
+    {
+      "Variant": "debug",
+      "Path": "delivery/android/dalunongji-1.5.18+26-debug.apk",
+      "Bytes": 197665525,
+      "SHA256": "146f9500a6132447ac13625de8749009793048949625411870ab3a878e82a94a",
+      "CertificateSHA256": "b1e5cd42d95352f10dc2cdb746232c1e77c01b5acc3b85bb316c5f25d9b142cd"
+    }
+  ],
+  "ExhibitionHalls": {
+    "Default": "agriculture",
+    "CablesPreview": "coming soon; no backend ID or business data",
+    "SessionOnlySelection": true,
+    "OtherLiveHalls": "require hall-scoped backend queries before activation"
+  },
+  "Checks": {
+    "DebugBuild": "passed",
+    "FlutterAnalyze": "passed",
+    "DeviceInstallAndRun": "not tested",
+    "RealDataScreenshots": "passed",
+    "BackendOrProductionDatabaseChanged": false,
+    "LivePublicData": "4 vendors, 6 displayed products, 61 media including original landmark verified",
+    "ReleaseBuild": "passed",
+    "FlutterFullSuite": "105 passed; 4 optional screenshot tests skipped",
+    "WebsiteDeployment": "not performed",
+    "ConnectedAndroidDevice": false
+  },
+  "Report": "docs/LANDMARK_HOME_1.5.18.md",
+  "GeneratedAt": "2026-10-16T03:57:36.8264925Z"
+}

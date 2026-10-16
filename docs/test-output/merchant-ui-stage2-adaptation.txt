@@ -1,0 +1,27 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart
+00:00 +0: My company and independent workspace share the vendor request across language and routes
+00:02 +1: Products debounce, preserve independent review and visibility filters and avoid identical submissions
+00:02 +2: A delayed old search response is never rendered after a newer query
+00:02 +3: Shared failures can be retried and an account switch clears company data
+00:03 +4: Product sharing reads only the public revision and configured canonical origin
+00:03 +5: Share bridge failure offers a selectable real link and no unpublished data
+00:03 +6: Manufacturer screens 360.0 zh scale 1.0
+00:03 +7: Manufacturer screens 360.0 zh scale 1.4
+00:04 +8: Manufacturer screens 360.0 zh scale 2.0
+00:04 +9: Manufacturer screens 360.0 en scale 1.0
+00:04 +10: Manufacturer screens 360.0 en scale 1.4
+00:05 +11: Manufacturer screens 360.0 en scale 2.0
+00:05 +12: Manufacturer screens 390.0 zh scale 1.0
+00:05 +13: Manufacturer screens 390.0 zh scale 1.4
+00:05 +14: Manufacturer screens 390.0 zh scale 2.0
+00:06 +15: Manufacturer screens 390.0 en scale 1.0
+00:06 +16: Manufacturer screens 390.0 en scale 1.4
+00:06 +17: Manufacturer screens 390.0 en scale 2.0
+00:06 +18: Manufacturer screens 430.0 zh scale 1.0
+00:07 +19: Manufacturer screens 430.0 zh scale 1.4
+00:07 +20: Manufacturer screens 430.0 zh scale 2.0
+00:07 +21: Manufacturer screens 430.0 en scale 1.0
+00:07 +22: Manufacturer screens 430.0 en scale 1.4
+00:08 +23: Manufacturer screens 430.0 en scale 2.0
+00:08 +24: Capture current manufacturer interfaces (test fixtures only)
+00:08 +24 ~1: All tests passed!

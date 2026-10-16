@@ -1,0 +1,100 @@
+{
+  "CheckedAt": "2026-10-16T03:51:23.1904945Z",
+  "BaseUrl": "http://39.97.250.244:8089",
+  "ReadOnly": true,
+  "HeroMediaID": 123,
+  "FeaturedVendors": 4,
+  "FeaturedProducts": 8,
+  "CategoryNames": [
+    "农业机械",
+    "农机配件",
+    "耕整地机械",
+    "翻转犁",
+    "驱动耙",
+    "液压油缸",
+    "齿轮"
+  ],
+  "MediaVerified": 61,
+  "Checks": [
+    {
+      "Kind": "vendor",
+      "ID": 37,
+      "Name": "宁晋县宇浩农机厂",
+      "Slug": "v-37",
+      "HomeMatchesDetail": true,
+      "ShowroomMatchesDetail": true
+    },
+    {
+      "Kind": "vendor",
+      "ID": 27,
+      "Name": "邢台市威力达齿轮制造有限公司",
+      "Slug": "v-27",
+      "HomeMatchesDetail": true,
+      "ShowroomMatchesDetail": true
+    },
+    {
+      "Kind": "vendor",
+      "ID": 21,
+      "Name": "河北丹顿液压科技有限公司",
+      "Slug": "v-21",
+      "HomeMatchesDetail": true,
+      "ShowroomMatchesDetail": true
+    },
+    {
+      "Kind": "vendor",
+      "ID": 1,
+      "Name": "河北冀农农机具有限公司",
+      "Slug": "jinong",
+      "HomeMatchesDetail": true,
+      "ShowroomMatchesDetail": true
+    },
+    {
+      "Kind": "product",
+      "ID": 2,
+      "Name": "液压翻转犁1LF-440",
+      "HomeMatchesDetail": true,
+      "VendorID": 1,
+      "HasContact": true
+    },
+    {
+      "Kind": "product",
+      "ID": 3,
+      "Name": "3米驱动耙",
+      "HomeMatchesDetail": true,
+      "VendorID": 1,
+      "HasContact": true
+    },
+    {
+      "Kind": "product",
+      "ID": 4,
+      "Name": "液压翻转犁1LF-170",
+      "HomeMatchesDetail": true,
+      "VendorID": 1,
+      "HasContact": true
+    },
+    {
+      "Kind": "product",
+      "ID": 5,
+      "Name": "液压翻转犁1LF-230",
+      "HomeMatchesDetail": true,
+      "VendorID": 1,
+      "HasContact": true
+    },
+    {
+      "Kind": "product",
+      "ID": 6,
+      "Name": "液压翻转犁1LF-260",
+      "HomeMatchesDetail": true,
+      "VendorID": 1,
+      "HasContact": true
+    },
+    {
+      "Kind": "product",
+      "ID": 7,
+      "Name": "液压翻转犁1LF-325",
+      "HomeMatchesDetail": true,
+      "VendorID": 1,
+      "HasContact": true
+    }
+  ]
+}

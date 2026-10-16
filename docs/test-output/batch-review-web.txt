@@ -1,0 +1,13 @@
+
+> zqzt-exhibition-web@1.5.7 test
+> vitest run
+
+
+ RUN  v5.0.3 D:/workspace-main/codex-zqzt/web
+
+
+ Test Files  9 passed (9)
+      Tests  47 passed (47)
+   Start at  15:21:19
+   Duration  17.79s (tests 47%, environment 32%, import 13%, transform 7%)
+

@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "androidVersion": "1.5.15+23",
+  "sha256": "cd75a8b1a2b4e3dfed58f303a384332decbe760952bc73d944d15c74bdddca3b",
+  "signingCertificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+  "localCopiesChecked": [
+    "delivery/android/dalunongji-1.5.15+23.apk",
+    "delivery/android/dalunongji.apk",
+    "web/public/downloads/dalunongji.apk",
+    "web/dist/downloads/dalunongji.apk",
+    "delivery/web/dist/downloads/dalunongji.apk"
+  ],
+  "previousVersionedApksPreserved": true,
+  "remoteDeployment": false
+}

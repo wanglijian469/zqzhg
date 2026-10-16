@@ -1,0 +1,1 @@
+PASS: isolated admin and merchant shared editors, upload failure/local preview/retry, required-field focus, captions and gallery ordering, portal preview, cloud save and review isolation, rich and sparse portals, dynamic six/three navigation tabs, full-image certificate/lightbox captions, category label, old-link fallback, image failure, bilingual and five viewport sizes.

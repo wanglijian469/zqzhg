@@ -1,0 +1,1 @@
+PASS: company account workspace desktop/mobile; product management; long company name; failed cover/logo; empty homepage. Only session login changed server state; business data was read only.

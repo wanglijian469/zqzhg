@@ -1,0 +1,4 @@
+
+2026/10/11 17:13:01 [31;1mD:/workspace-main/codex-zqzt/server/import.go:76 [35;1mrecord not found
+[0m[33m[1.301ms] [34;1m[rows:0][0m SELECT * FROM `contents` WHERE kind = 'vendor' AND owner_id = 2 ORDER BY `contents`.`id` LIMIT 1
+{"vendor_id":1,"products":19,"images":54,"already_imported":false}

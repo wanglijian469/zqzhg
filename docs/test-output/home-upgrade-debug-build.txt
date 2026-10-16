@@ -1,0 +1,347 @@
+Picked up JAVA_TOOL_OPTIONS: -Djava.io.tmpdir=D:\workspace-main\codex-zqzt\.tools\tmp
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by net.rubygrapefruit.platform.internal.NativeLibraryLoader in an unnamed module (file:/D:/workspace-main/codex-zqzt/.tools/gradle/wrapper/dists/gradle-9.3.1-bin/23ovyewtku6u96viwx3xl3oks/gradle-9.3.1/lib/native-platform-0.22-milestone-29.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.3.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :gradle:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle:compileKotlin UP-TO-DATE
+> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy NO-SOURCE
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+
+> Configure project :app
+WARNING: The option setting 'android.builtInKotlin=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.newDsl=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+w: [33m[1mDeprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':app' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :android_file_picker
+w: [33m[1mDeprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':android_file_picker' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :flutter_plugin_android_lifecycle
+w: [33m[1mDeprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':flutter_plugin_android_lifecycle' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :image_picker_android
+w: [33m[1mDeprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':image_picker_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :jni
+w: [33m[1mDeprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':jni' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :jni_flutter
+w: [33m[1mDeprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':jni_flutter' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :shared_preferences_android
+w: [33m[1mDeprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':shared_preferences_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :url_launcher_android
+w: [33m[1mDeprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':url_launcher_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :video_player_android
+w: [33m[1mDeprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':video_player_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+
+> Task :android_file_picker:preBuild UP-TO-DATE
+> Task :android_file_picker:preDebugBuild UP-TO-DATE
+> Task :android_file_picker:checkDebugAarMetadata
+> Task :android_file_picker:mergeDebugJniLibFolders
+> Task :android_file_picker:mergeDebugNativeLibs NO-SOURCE
+> Task :android_file_picker:stripDebugDebugSymbols NO-SOURCE
+> Task :android_file_picker:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :android_file_picker:copyDebugJniLibsProjectAndLocalJars
+> Task :android_file_picker:generateDebugResources
+> Task :android_file_picker:packageDebugResources
+> Task :android_file_picker:processDebugNavigationResources
+> Task :android_file_picker:extractDeepLinksForAarDebug
+> Task :android_file_picker:generateDebugAssets UP-TO-DATE
+> Task :android_file_picker:mergeDebugAssets
+> Task :android_file_picker:javaPreCompileDebug
+> Task :android_file_picker:prepareDebugArtProfile
+> Task :android_file_picker:prepareLintJarForPublish UP-TO-DATE
+> Task :app:DebugMinSdkCheck
+> Task :app:validateCompileSdkVersion
+> Task :android_file_picker:writeDebugAarMetadata
+> Task :app:preBuild
+> Task :app:preDebugBuild
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:cleanMergeDebugAssets UP-TO-DATE
+> Task :android_file_picker:parseDebugLocalResources
+
+> Task :android_file_picker:processDebugManifest
+package="com.mr.flutter.plugin.filepicker" found in source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\android_file_picker-2.0.1\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="com.mr.flutter.plugin.filepicker" from the source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\android_file_picker-2.0.1\android\src\main\AndroidManifest.xml.
+
+> Task :app:compileFlutterBuildDebug
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :flutter_plugin_android_lifecycle:generateDebugAssets UP-TO-DATE
+> Task :flutter_plugin_android_lifecycle:preBuild UP-TO-DATE
+> Task :flutter_plugin_android_lifecycle:preDebugBuild UP-TO-DATE
+> Task :flutter_plugin_android_lifecycle:mergeDebugAssets
+> Task :image_picker_android:generateDebugAssets UP-TO-DATE
+> Task :image_picker_android:preBuild UP-TO-DATE
+> Task :image_picker_android:preDebugBuild UP-TO-DATE
+> Task :image_picker_android:mergeDebugAssets
+> Task :jni:generateDebugAssets UP-TO-DATE
+> Task :jni:preBuild UP-TO-DATE
+> Task :jni:preDebugBuild UP-TO-DATE
+> Task :jni:mergeDebugAssets
+> Task :jni_flutter:generateDebugAssets UP-TO-DATE
+> Task :jni_flutter:preBuild UP-TO-DATE
+> Task :jni_flutter:preDebugBuild UP-TO-DATE
+> Task :jni_flutter:mergeDebugAssets
+> Task :shared_preferences_android:generateDebugAssets UP-TO-DATE
+> Task :shared_preferences_android:preBuild UP-TO-DATE
+> Task :shared_preferences_android:preDebugBuild UP-TO-DATE
+> Task :shared_preferences_android:mergeDebugAssets
+> Task :url_launcher_android:generateDebugAssets UP-TO-DATE
+> Task :url_launcher_android:preBuild UP-TO-DATE
+> Task :url_launcher_android:preDebugBuild UP-TO-DATE
+> Task :url_launcher_android:mergeDebugAssets
+> Task :video_player_android:generateDebugAssets UP-TO-DATE
+> Task :video_player_android:preBuild UP-TO-DATE
+> Task :video_player_android:preDebugBuild UP-TO-DATE
+> Task :android_file_picker:generateDebugRFile
+> Task :video_player_android:mergeDebugAssets
+> Task :app:mergeDebugAssets
+> Task :app:copyFlutterAssetsDebug
+> Task :app:generateDebugResources
+> Task :app:packageDebugResources
+> Task :flutter_plugin_android_lifecycle:processDebugNavigationResources
+> Task :image_picker_android:processDebugNavigationResources
+> Task :jni:processDebugNavigationResources
+> Task :jni_flutter:processDebugNavigationResources
+> Task :shared_preferences_android:processDebugNavigationResources
+> Task :url_launcher_android:processDebugNavigationResources
+> Task :video_player_android:processDebugNavigationResources
+> Task :app:processDebugNavigationResources
+> Task :flutter_plugin_android_lifecycle:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :flutter_plugin_android_lifecycle:generateDebugResources
+> Task :app:parseDebugLocalResources
+> Task :flutter_plugin_android_lifecycle:packageDebugResources
+> Task :app:generateDebugRFile
+> Task :image_picker_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :flutter_plugin_android_lifecycle:javaPreCompileDebug
+> Task :flutter_plugin_android_lifecycle:parseDebugLocalResources
+> Task :image_picker_android:generateDebugResources
+> Task :flutter_plugin_android_lifecycle:generateDebugRFile
+> Task :image_picker_android:packageDebugResources
+> Task :flutter_plugin_android_lifecycle:compileDebugKotlin NO-SOURCE
+> Task :flutter_plugin_android_lifecycle:compileDebugJavaWithJavac
+> Task :jni:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :image_picker_android:javaPreCompileDebug
+> Task :image_picker_android:parseDebugLocalResources
+> Task :jni:generateDebugResources
+> Task :flutter_plugin_android_lifecycle:bundleLibCompileToJarDebug
+> Task :image_picker_android:generateDebugRFile
+> Task :jni:packageDebugResources
+> Task :jni_flutter:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :jni:javaPreCompileDebug
+> Task :jni:parseDebugLocalResources
+> Task :jni_flutter:generateDebugResources
+> Task :jni:generateDebugRFile
+> Task :jni_flutter:packageDebugResources
+> Task :jni:compileDebugKotlin NO-SOURCE
+> Task :jni:compileDebugJavaWithJavac
+> Task :jni:bundleLibCompileToJarDebug
+> Task :shared_preferences_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :jni_flutter:javaPreCompileDebug
+> Task :jni_flutter:parseDebugLocalResources
+> Task :shared_preferences_android:generateDebugResources
+> Task :jni_flutter:generateDebugRFile
+> Task :shared_preferences_android:packageDebugResources
+> Task :jni_flutter:compileDebugKotlin NO-SOURCE
+> Task :jni_flutter:compileDebugJavaWithJavac
+> Task :jni_flutter:bundleLibCompileToJarDebug
+> Task :url_launcher_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared_preferences_android:javaPreCompileDebug
+> Task :shared_preferences_android:parseDebugLocalResources
+> Task :url_launcher_android:generateDebugBuildConfig
+> Task :shared_preferences_android:generateDebugRFile
+> Task :url_launcher_android:generateDebugResources
+> Task :url_launcher_android:packageDebugResources
+> Task :url_launcher_android:parseDebugLocalResources
+> Task :url_launcher_android:javaPreCompileDebug
+> Task :video_player_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :url_launcher_android:generateDebugRFile
+> Task :video_player_android:generateDebugResources
+> Task :video_player_android:packageDebugResources
+> Task :video_player_android:javaPreCompileDebug
+> Task :video_player_android:parseDebugLocalResources
+> Task :app:javaPreCompileDebug
+> Task :video_player_android:generateDebugRFile
+> Task :flutter_plugin_android_lifecycle:bundleLibRuntimeToJarDebug
+> Task :jni_flutter:bundleLibRuntimeToJarDebug
+> Task :app:desugarDebugFileDependencies
+> Task :jni:bundleLibRuntimeToJarDebug
+> Task :android_file_picker:mapDebugSourceSetPaths
+> Task :flutter_plugin_android_lifecycle:writeDebugAarMetadata
+> Task :android_file_picker:compileDebugLibraryResources
+> Task :image_picker_android:writeDebugAarMetadata
+> Task :jni:writeDebugAarMetadata
+> Task :jni_flutter:writeDebugAarMetadata
+> Task :shared_preferences_android:writeDebugAarMetadata
+> Task :url_launcher_android:writeDebugAarMetadata
+> Task :video_player_android:writeDebugAarMetadata
+> Task :app:mapDebugSourceSetPaths
+> Task :app:checkDebugAarMetadata
+> Task :app:compileDebugNavigationResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :android_file_picker:extractDeepLinksDebug
+> Task :app:extractDeepLinksDebug
+> Task :flutter_plugin_android_lifecycle:extractDeepLinksDebug
+> Task :image_picker_android:extractDeepLinksDebug
+
+> Task :flutter_plugin_android_lifecycle:processDebugManifest
+package="io.flutter.plugins.flutter_plugin_android_lifecycle" found in source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.35\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="io.flutter.plugins.flutter_plugin_android_lifecycle" from the source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.35\android\src\main\AndroidManifest.xml.
+
+> Task :jni:extractDeepLinksDebug
+
+> Task :image_picker_android:processDebugManifest
+package="io.flutter.plugins.imagepicker" found in source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\image_picker_android-0.8.13+25\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="io.flutter.plugins.imagepicker" from the source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\image_picker_android-0.8.13+25\android\src\main\AndroidManifest.xml.
+
+> Task :jni_flutter:extractDeepLinksDebug
+
+> Task :jni:processDebugManifest
+package="com.github.dart_lang.jni" found in source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\jni-1.1.0\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="com.github.dart_lang.jni" from the source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\jni-1.1.0\android\src\main\AndroidManifest.xml.
+
+> Task :shared_preferences_android:extractDeepLinksDebug
+> Task :url_launcher_android:extractDeepLinksDebug
+
+> Task :shared_preferences_android:processDebugManifest
+package="io.flutter.plugins.sharedpreferences" found in source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\shared_preferences_android-2.4.28\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="io.flutter.plugins.sharedpreferences" from the source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\shared_preferences_android-2.4.28\android\src\main\AndroidManifest.xml.
+
+> Task :app:compressDebugAssets
+> Task :video_player_android:extractDeepLinksDebug
+
+> Task :url_launcher_android:processDebugManifest
+package="io.flutter.plugins.urllauncher" found in source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\url_launcher_android-6.3.33\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="io.flutter.plugins.urllauncher" from the source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\url_launcher_android-6.3.33\android\src\main\AndroidManifest.xml.
+
+> Task :jni_flutter:processDebugManifest
+package="com.github.dart_lang.jni_flutter" found in source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\jni_flutter-1.0.4+1\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="com.github.dart_lang.jni_flutter" from the source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\jni_flutter-1.0.4+1\android\src\main\AndroidManifest.xml.
+
+> Task :flutter_plugin_android_lifecycle:mapDebugSourceSetPaths
+
+> Task :video_player_android:processDebugManifest
+package="io.flutter.plugins.videoplayer" found in source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\video_player_android-2.12.2\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="io.flutter.plugins.videoplayer" from the source AndroidManifest.xml: D:\workspace-main\codex-zqzt\.tools\pub-cache\hosted\pub.dev\video_player_android-2.12.2\android\src\main\AndroidManifest.xml.
+
+> Task :app:mergeDebugResources
+> Task :app:processDebugMainManifest
+> Task :app:outputDebugAppLinkSettings
+> Task :app:processDebugManifest
+> Task :flutter_plugin_android_lifecycle:compileDebugLibraryResources
+> Task :image_picker_android:mapDebugSourceSetPaths
+> Task :image_picker_android:compileDebugLibraryResources
+> Task :jni:mapDebugSourceSetPaths
+> Task :jni:compileDebugLibraryResources
+> Task :jni_flutter:mapDebugSourceSetPaths
+> Task :jni_flutter:compileDebugLibraryResources
+> Task :app:processDebugManifestForPackage
+> Task :shared_preferences_android:mapDebugSourceSetPaths
+> Task :shared_preferences_android:compileDebugLibraryResources
+> Task :url_launcher_android:mapDebugSourceSetPaths
+> Task :url_launcher_android:compileDebugLibraryResources
+> Task :video_player_android:mapDebugSourceSetPaths
+> Task :video_player_android:compileDebugLibraryResources
+> Task :flutter_plugin_android_lifecycle:processDebugJavaRes NO-SOURCE
+> Task :jni:processDebugJavaRes NO-SOURCE
+> Task :jni_flutter:processDebugJavaRes NO-SOURCE
+
+> Task :android_file_picker:compileDebugKotlin
+w: file:///D:/workspace-main/codex-zqzt/.tools/pub-cache/hosted/pub.dev/android_file_picker-2.0.1/android/src/main/kotlin/com/mr/flutter/plugin/filepicker/FilePickerDelegate.kt:78:89 Elvis operator (?:) always returns the left operand of non-nullable type 'Uri'.
+w: file:///D:/workspace-main/codex-zqzt/.tools/pub-cache/hosted/pub.dev/android_file_picker-2.0.1/android/src/main/kotlin/com/mr/flutter/plugin/filepicker/FilePickerPlugin.kt:151:49 Unnecessary safe call on a non-null receiver of type 'HashMap<*, *>'.
+w: file:///D:/workspace-main/codex-zqzt/.tools/pub-cache/hosted/pub.dev/android_file_picker-2.0.1/android/src/main/kotlin/com/mr/flutter/plugin/filepicker/FilePickerPlugin.kt:152:38 Unnecessary safe call on a non-null receiver of type 'HashMap<*, *>'.
+w: file:///D:/workspace-main/codex-zqzt/.tools/pub-cache/hosted/pub.dev/android_file_picker-2.0.1/android/src/main/kotlin/com/mr/flutter/plugin/filepicker/FilePickerPlugin.kt:153:60 Unnecessary safe call on a non-null receiver of type 'HashMap<*, *>'.
+w: file:///D:/workspace-main/codex-zqzt/.tools/pub-cache/hosted/pub.dev/android_file_picker-2.0.1/android/src/main/kotlin/com/mr/flutter/plugin/filepicker/FilePickerPlugin.kt:164:70 Unchecked cast of 'Any?' to 'ArrayList<String>?'.
+w: file:///D:/workspace-main/codex-zqzt/.tools/pub-cache/hosted/pub.dev/android_file_picker-2.0.1/android/src/main/kotlin/com/mr/flutter/plugin/filepicker/FileUtils.kt:638:45 'enum entry WEBP: Bitmap.CompressFormat' is deprecated. Deprecated in Java.
+w: file:///D:/workspace-main/codex-zqzt/.tools/pub-cache/hosted/pub.dev/android_file_picker-2.0.1/android/src/main/kotlin/com/mr/flutter/plugin/filepicker/FileUtils.kt:646:35 'enum entry WEBP: Bitmap.CompressFormat' is deprecated. Deprecated in Java.
+
+> Task :url_launcher_android:compileDebugKotlin
+
+> Task :shared_preferences_android:compileDebugKotlin
+w: file:///D:/workspace-main/codex-zqzt/.tools/pub-cache/hosted/pub.dev/shared_preferences_android-2.4.28/android/src/main/kotlin/io/flutter/plugins/sharedpreferences/SharedPreferencesPlugin.kt:450:52 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+
+> Task :image_picker_android:compileDebugKotlin
+> Task :video_player_android:compileDebugKotlin
+> Task :app:processDebugResources
+> Task :app:checkDebugDuplicateClasses
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Gradle build daemon has been stopped: stop command received
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.

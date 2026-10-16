@@ -1,0 +1,2 @@
+package: name='com.zqzt.dalunongji' versionCode='19' versionName='1.5.2' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+sdkVersion:'24'
