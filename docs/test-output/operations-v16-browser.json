@@ -1,0 +1,26 @@
+{
+  "version": "1.6.0",
+  "verifiedAt": "2026-10-17T01:49:25.365Z",
+  "isolated": true,
+  "checks": {
+    "firstPartyWebAnalytics": true,
+    "csvExport": true,
+    "operatorIsolationAndRevocation": true,
+    "storageMigrationAndRange": true,
+    "encryptedBackupDownload": true,
+    "isolatedRestore": true,
+    "cutoverAndSessionRevocation": true,
+    "rollback": true,
+    "browserErrors": false,
+    "realOSS": "not_run_missing_isolated_bucket"
+  },
+  "screenshots": [
+    "docs/screenshots/operations-v16/analytics-desktop.png",
+    "docs/screenshots/operations-v16/operators-desktop.png",
+    "docs/screenshots/operations-v16/operator-denied.png",
+    "docs/screenshots/operations-v16/storage-migration.png",
+    "docs/screenshots/operations-v16/backup-history.png",
+    "docs/screenshots/operations-v16/restore-confirmation.png",
+    "docs/screenshots/operations-v16/backup-mobile.png"
+  ]
+}

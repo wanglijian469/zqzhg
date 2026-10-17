@@ -40,6 +40,7 @@ Json product() => {
 
 Future<AppModel> fixture({
   bool signed = true,
+  bool analyticsEnabled = false,
   List<Uri>? calls,
   Json? vendor,
   Future<http.Response?> Function(http.Request)? intercept,
@@ -57,6 +58,7 @@ Future<AppModel> fixture({
           jsonDecode(File('assets/i18n/$lang.json').readAsStringSync()),
         ),
     },
+    analyticsEnabled: analyticsEnabled,
     client: MockClient((r) async {
       calls?.add(r.url);
       final override = await intercept?.call(r);

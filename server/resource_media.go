@@ -83,7 +83,7 @@ func (a *App) uploadResourceMedia(c *gin.Context) {
 	defer src.Close()
 	key := randomToken()
 	path := key + extension
-	full := filepath.Join(a.Config.MediaDir, path)
+	full := a.workPath(path)
 	f, e := os.OpenFile(full, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
 	if e != nil {
 		fail(c, 500, "internal_error")
@@ -97,6 +97,9 @@ func (a *App) uploadResourceMedia(c *gin.Context) {
 		return
 	}
 	media := Media{OwnerID: actor(c).ID, Path: path}
+	if owner, ok := c.Get("upload_owner_id"); ok {
+		media.OwnerID = owner.(uint64)
+	}
 	meta := MediaMetadata{Kind: kind, Size: n, State: "ready"}
 	status := 201
 	if kind == "pdf" {
@@ -113,12 +116,23 @@ func (a *App) uploadResourceMedia(c *gin.Context) {
 		media.ThumbPath = key + "-cover.jpg"
 		status = 202
 	}
+	defer os.Remove(full)
+	if e = a.storeWorkFile(c.Request.Context(), path, full); e != nil {
+		fail(c, 503, "storage_unavailable")
+		return
+	}
 	e = a.DB.Transaction(func(tx *gorm.DB) error {
 		if e := tx.Create(&media).Error; e != nil {
 			return e
 		}
 		meta.MediaID = media.ID
-		return tx.Create(&meta).Error
+		if e := tx.Create(&meta).Error; e != nil {
+			return e
+		}
+		if target, ok := c.Get("upload_resource_id"); ok {
+			return recordOperation(tx, actor(c).ID, "media", media.ID, "media_uploaded", fmt.Sprintf("resource=%d", target.(uint64)))
+		}
+		return recordOperation(tx, actor(c).ID, "media", media.ID, "media_uploaded", "")
 	})
 	if e != nil {
 		os.Remove(full)
@@ -133,7 +147,7 @@ func (a *App) resourceMediaStatus(c *gin.Context) {
 		fail(c, 404, "not_found")
 		return
 	}
-	if actor(c).ID != m.OwnerID && actor(c).Role != "admin" {
+	if !a.canReadPrivateMedia(actor(c), m) {
 		fail(c, 404, "not_found")
 		return
 	}
@@ -145,7 +159,7 @@ func (a *App) resourceMediaStatus(c *gin.Context) {
 }
 func (a *App) retryResourceMedia(c *gin.Context) {
 	var m Media
-	if a.DB.First(&m, id(c)).Error != nil || m.OwnerID != actor(c).ID {
+	if a.DB.First(&m, id(c)).Error != nil || !a.canReadPrivateMedia(actor(c), m) {
 		fail(c, 404, "not_found")
 		return
 	}
@@ -154,7 +168,7 @@ func (a *App) retryResourceMedia(c *gin.Context) {
 		fail(c, 409, "invalid_request")
 		return
 	}
-	if _, e := os.Stat(filepath.Join(a.Config.MediaDir, meta.SourcePath)); e != nil {
+	if _, e := a.objectRecord(meta.SourcePath); e != nil {
 		fail(c, 400, "invalid_media")
 		return
 	}
@@ -181,6 +195,14 @@ func (a *App) startMediaWorker(ctx context.Context) {
 	}()
 }
 func (a *App) processNextVideo(parent context.Context) bool {
+	r := a.operations()
+	if r.maintenance.Load() || r.pauseWrites.Load() {
+		return false
+	}
+	r.gate.RLock()
+	defer r.gate.RUnlock()
+	r.writes.RLock()
+	defer r.writes.RUnlock()
 	var meta MediaMetadata
 	job := a.DB.Where("kind='video' AND state='queued'").Order("media_id").Limit(1).Find(&meta)
 	if job.Error != nil || job.RowsAffected == 0 {
@@ -205,11 +227,14 @@ func (a *App) processNextVideo(parent context.Context) bool {
 			os.Remove(workCover)
 		}
 		a.DB.Model(&meta).Updates(map[string]any{"state": "failed", "error": code})
-		os.Remove(filepath.Join(a.Config.MediaDir, m.Path))
-		os.Remove(filepath.Join(a.Config.MediaDir, m.ThumbPath))
+		os.Remove(a.workPath(m.Path))
+		os.Remove(a.workPath(m.ThumbPath))
 	}
-	input := filepath.Join(a.Config.MediaDir, meta.SourcePath)
-	if _, e := os.Stat(input); e != nil {
+	input, inputErr := a.materializeObject(ctx, meta.SourcePath)
+	if inputErr == nil {
+		defer os.Remove(input)
+	}
+	if inputErr != nil {
 		failure("invalid_media")
 		return true
 	}
@@ -245,8 +270,8 @@ func (a *App) processNextVideo(parent context.Context) bool {
 		failure("video_limit_exceeded")
 		return true
 	}
-	target := filepath.Join(a.Config.MediaDir, m.Path)
-	workVideo = filepath.Join(a.Config.MediaDir, randomToken()+"-work.mp4")
+	target := a.workPath(m.Path)
+	workVideo = a.workPath(randomToken() + "-work.mp4")
 	long := settingInt("VIDEO_MAX_EDGE", 1280)
 	filter := fmt.Sprintf("scale=w='min(iw,%d)':h='min(ih,%d)':force_original_aspect_ratio=decrease:force_divisible_by=2,setsar=1", long, long)
 	e = exec.CommandContext(ctx, videoTool("ffmpeg"), "-nostdin", "-y", "-v", "error", "-protocol_whitelist", "file,pipe", "-f", "mov", "-i", input, "-map", "0:v:0", "-map", "0:a:0?", "-vf", filter, "-c:v", "libx264", "-preset", "fast", "-crf", "23", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", "-map_metadata", "-1", workVideo).Run()
@@ -254,8 +279,8 @@ func (a *App) processNextVideo(parent context.Context) bool {
 		failure("video_processing_failed")
 		return true
 	}
-	cover := filepath.Join(a.Config.MediaDir, m.ThumbPath)
-	workCover = filepath.Join(a.Config.MediaDir, randomToken()+"-work.jpg")
+	cover := a.workPath(m.ThumbPath)
+	workCover = a.workPath(randomToken() + "-work.jpg")
 	e = exec.CommandContext(ctx, videoTool("ffmpeg"), "-nostdin", "-y", "-v", "error", "-i", workVideo, "-frames:v", "1", "-vf", "scale=480:480:force_original_aspect_ratio=decrease", workCover).Run()
 	if e != nil {
 		failure("video_processing_failed")
@@ -272,6 +297,16 @@ func (a *App) processNextVideo(parent context.Context) bool {
 	st, e := os.Stat(target)
 	if e != nil {
 		failure("video_processing_failed")
+		return true
+	}
+	defer os.Remove(target)
+	defer os.Remove(cover)
+	if e = a.storeWorkFile(ctx, m.Path, target); e != nil {
+		failure("storage_unavailable")
+		return true
+	}
+	if e = a.storeWorkFile(ctx, m.ThumbPath, cover); e != nil {
+		failure("storage_unavailable")
 		return true
 	}
 	scale := min(1.0, float64(long)/float64(max(w, h)))

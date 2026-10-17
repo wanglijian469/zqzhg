@@ -61,7 +61,7 @@ func loadOwned(tx *gorm.DB, contentID uint64, who Account, lock bool) (Content, 
 		q = q.Clauses(clause.Locking{Strength: "UPDATE"})
 	}
 	e := q.First(&content, contentID).Error
-	if e == nil && who.Role != "admin" && content.OwnerID != who.ID {
+	if e == nil && !platformAccount(who) && content.OwnerID != who.ID {
 		e = fmt.Errorf("forbidden")
 	}
 	return content, e
@@ -235,7 +235,7 @@ func (a *App) saveDraft(c *gin.Context) {
 		if e = makeDraft(tx, &content, req.Data); e != nil {
 			return e
 		}
-		if who.Role == "admin" {
+		if platformAccount(who) {
 			return recordOperation(tx, who.ID, content.Kind, content.ID, "draft_saved", "")
 		}
 		return nil
@@ -391,7 +391,7 @@ func (a *App) privateDetail(c *gin.Context) {
 		return
 	}
 	items := []View{a.privateView(content, r)}
-	if actor(c).Role == "admin" {
+	if platformAccount(actor(c)) {
 		if e = a.adminEnrich(items); e != nil {
 			dbFail(c, e)
 			return
@@ -415,6 +415,15 @@ func page(c *gin.Context) (int, int) {
 func (a *App) listContents(c *gin.Context, admin bool) {
 	p, n := page(c)
 	q := a.DB.Model(&Content{}).Joins("JOIN revisions dr ON dr.id = contents.draft_revision_id")
+	if admin && actor(c).Role == "operator" {
+		kinds := []string{}
+		for _, kind := range []string{"vendor", "product"} {
+			if a.hasPermission(actor(c), kind+".read") {
+				kinds = append(kinds, kind)
+			}
+		}
+		q = q.Where("contents.kind IN ?", kinds)
+	}
 	if !admin {
 		q = q.Where("contents.owner_id = ?", actor(c).ID)
 	}

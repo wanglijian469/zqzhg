@@ -16,6 +16,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+part 'analytics.dart';
 part 'form_rules.dart';
 part 'onboarding.dart';
 part 'industrial_ui.dart';
@@ -49,11 +50,13 @@ class ApiFailure implements Exception {
 class AppModel extends ChangeNotifier {
   late final MerchantDataStore merchant = MerchantDataStore(this);
   late final FavoritesStore favorites = FavoritesStore(this);
+  late final AppAnalytics analytics = AppAnalytics(this);
   VoidCallback? openMerchant;
   VoidCallback? openHome;
   void favoritesChanged() => notifyListeners();
   final SharedPreferences prefs;
   final http.Client client;
+  final bool analyticsEnabled;
   final Map<String, Json> resources;
   late String language;
   late String baseUrl;
@@ -86,8 +89,13 @@ class AppModel extends ChangeNotifier {
     return request;
   }
 
-  AppModel(this.prefs, this.resources, {http.Client? client})
-    : client = client ?? http.Client() {
+  AppModel(
+    this.prefs,
+    this.resources, {
+    http.Client? client,
+    bool? analyticsEnabled,
+  }) : analyticsEnabled = analyticsEnabled ?? Platform.isAndroid,
+       client = client ?? http.Client() {
     language = prefs.getString('language') ?? 'zh';
     const compiledBase = String.fromEnvironment(
       'API_BASE_URL',
@@ -283,6 +291,7 @@ class ExhibitionApp extends StatelessWidget {
       animation: model,
       builder: (context, _) => MaterialApp(
         title: '大陆农机',
+        navigatorObservers: [analyticsRoutes],
         debugShowCheckedModeBanner: false,
         locale: Locale(model.language),
         supportedLocales: const [Locale('zh'), Locale('en')],
@@ -516,6 +525,7 @@ class Contact extends StatelessWidget {
             icon: const Icon(Icons.phone),
             onPressed: () async {
               try {
+                analyticsContact(context, 'contact_phone');
                 if (!await launchUrl(Uri(scheme: 'tel', path: phone))) {
                   throw ApiFailure('network_error');
                 }
@@ -531,6 +541,7 @@ class Contact extends StatelessWidget {
             child: OutlinedButton.icon(
               icon: const Icon(Icons.copy),
               onPressed: () async {
+                analyticsContact(context, 'contact_wechat');
                 await Clipboard.setData(ClipboardData(text: wechat));
                 if (context.mounted) {
                   ScaffoldMessenger.of(
@@ -711,86 +722,94 @@ class _DetailScreenState extends State<DetailScreen> {
           builder: (result) {
             final item = asMap(result['item']);
             final data = asMap(item['data']);
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (widget.kind == 'vendor')
-                  OutlinedButton.icon(
-                    onPressed: () => push(
-                      context,
-                      ShowroomPromotion(
-                        slug: item['showroom_slug'] ?? 'v-${item['id']}',
+            return AnalyticsScreen(
+              page: '/products/${widget.id}',
+              kind: 'product',
+              id: widget.id,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (widget.kind == 'vendor')
+                    OutlinedButton.icon(
+                      onPressed: () => push(
+                        context,
+                        ShowroomPromotion(
+                          slug: item['showroom_slug'] ?? 'v-${item['id']}',
+                        ),
                       ),
+                      icon: const Icon(Icons.share_outlined),
+                      label: Text(m.t('shareShowroom')),
                     ),
-                    icon: const Icon(Icons.share_outlined),
-                    label: Text(m.t('shareShowroom')),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FavoriteButton(item: {...item, 'kind': widget.kind}),
                   ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FavoriteButton(item: {...item, 'kind': widget.kind}),
-                ),
-                dataDetails(context, data, widget.kind),
-                if (widget.kind == 'product')
-                  ExpansionTile(
-                    title: Text(
-                      '${m.t('shortVideos')} / ${m.t('electronicCatalogs')}',
+                  dataDetails(context, data, widget.kind),
+                  if (widget.kind == 'product')
+                    ExpansionTile(
+                      title: Text(
+                        '${m.t('shortVideos')} / ${m.t('electronicCatalogs')}',
+                      ),
+                      children: [NativeResourceList(productID: widget.id)],
                     ),
-                    children: [NativeResourceList(productID: widget.id)],
-                  ),
-                space(24),
-                Contact(
-                  data: widget.kind == 'vendor'
-                      ? data
-                      : asMap(result['vendor']['data']),
-                ),
-                if (result['vendor'] != null) ...[
-                  space(),
-                  ListTile(
-                    leading: const Icon(Icons.storefront),
-                    title: Text(
-                      m.content(asMap(result['vendor']['data']), 'name'),
-                    ),
-                    trailing: const Icon(Icons.arrow_forward),
-                    onTap: () => push(
-                      context,
-                      DetailScreen(id: result['vendor']['id'], kind: 'vendor'),
-                    ),
-                  ),
-                ],
-                if (result['products'] != null) ...[
                   space(24),
-                  Text(
-                    m.t('products'),
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                  Contact(
+                    data: widget.kind == 'vendor'
+                        ? data
+                        : asMap(result['vendor']['data']),
+                  ),
+                  if (result['vendor'] != null) ...[
+                    space(),
+                    ListTile(
+                      leading: const Icon(Icons.storefront),
+                      title: Text(
+                        m.content(asMap(result['vendor']['data']), 'name'),
+                      ),
+                      trailing: const Icon(Icons.arrow_forward),
+                      onTap: () => push(
+                        context,
+                        DetailScreen(
+                          id: result['vendor']['id'],
+                          kind: 'vendor',
+                        ),
+                      ),
                     ),
-                  ),
-                  ...rows(
-                    result['products']['items'],
-                  ).map((p) => ItemTile(item: p)),
-                  if (rows(result['products']['items']).isEmpty)
-                    message(context, m.t('emptyProducts')),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        onPressed: page > 1
-                            ? () => setState(() => page--)
-                            : null,
-                        child: Text(m.t('previous')),
+                  ],
+                  if (result['products'] != null) ...[
+                    space(24),
+                    Text(
+                      m.t('products'),
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text('$page'),
-                      TextButton(
-                        onPressed: page * 20 < result['products']['total']
-                            ? () => setState(() => page++)
-                            : null,
-                        child: Text(m.t('next')),
-                      ),
-                    ],
-                  ),
+                    ),
+                    ...rows(
+                      result['products']['items'],
+                    ).map((p) => ItemTile(item: p)),
+                    if (rows(result['products']['items']).isEmpty)
+                      message(context, m.t('emptyProducts')),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: page > 1
+                              ? () => setState(() => page--)
+                              : null,
+                          child: Text(m.t('previous')),
+                        ),
+                        Text('$page'),
+                        TextButton(
+                          onPressed: page * 20 < result['products']['total']
+                              ? () => setState(() => page++)
+                              : null,
+                          child: Text(m.t('next')),
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
-              ],
+              ),
             );
           },
         ),

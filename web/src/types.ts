@@ -13,7 +13,7 @@ export interface Item {showroom_slug?:string;id: number; kind: 'vendor' | 'produ
 export interface AdminAccount {id:number;username:string;login_name:string|null;vendor_id:number;vendor_name:string;product_count:number;password_login:boolean;phone_login:boolean;created_at:string}
 export interface PasswordResetResult {account_id:number;login_name:string;password:string;revoked_sessions:number}
 export interface Operation {id:number;actor_id:number;actor_name?:string;target_kind:string;target_id:number;action:string;note:string;created_at:string}
-export interface AdminDashboard {counts:Record<string,number>;recent_operations:Operation[];account:{id:number;username:string}}
+export interface AdminDashboard {counts:Record<string,number>;recent_operations:Operation[];account:{id:number;username:string;role?:string;permissions?:string[]}}
 export interface AdminSystem {service:string;environment:string;database_ok:boolean;media_ok:boolean;media_files:number;media_bytes:number;sms_provider:string;aliyun_configured:boolean;checked_at:string;product_limit:number}
 export interface Collection<T> {items:T[];total:number;page:number;page_size:number}
 export interface Taxonomy {aliases?:{source_id:number;target_id:number}[];halls: {id: number; name: string; name_en: string}[]; categories: {id: number;suggestion_status?:string;owner_id?:number;reference_count?:number;vendor_name?:string; product_count?:number;parent_id: number; hall_id: number; name: string; name_en: string; enabled: boolean; sort_order: number}[]; regions: {id: number; name: string; name_en: string; enabled: boolean}[]}

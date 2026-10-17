@@ -44,6 +44,12 @@ func (a *App) readAccount(c *gin.Context) (Account, error) {
 	}
 	var account Account
 	e := a.DB.First(&account, s.AccountID).Error
+	if e == nil && account.Role == "operator" {
+		var op PlatformOperator
+		if a.DB.First(&op, "account_id=? AND enabled=1", account.ID).Error != nil {
+			return Account{}, fmt.Errorf("unauthorized")
+		}
+	}
 	return account, e
 }
 func (a *App) requireAuth(role string) gin.HandlerFunc {
@@ -53,7 +59,7 @@ func (a *App) requireAuth(role string) gin.HandlerFunc {
 			fail(c, 401, "unauthorized")
 			return
 		}
-		if role != "" && account.Role != role {
+		if role != "" && account.Role != role && !(role == "platform" && platformAccount(account)) {
 			fail(c, 403, "forbidden")
 			return
 		}
@@ -209,11 +215,19 @@ func (a *App) phoneLogin(c *gin.Context) {
 		fail(c, 401, "invalid_code")
 		return
 	}
+	if account.Role == "operator" {
+		var op PlatformOperator
+		if a.DB.First(&op, "account_id=? AND enabled=1", account.ID).Error != nil {
+			fail(c, 401, "invalid_credentials")
+			return
+		}
+	}
 	session, e := a.newSession(account)
 	if e != nil {
 		fail(c, 500, "internal_error")
 		return
 	}
+	session["account"] = a.accountJSON(account)
 	c.JSON(200, session)
 }
 func (a *App) adminLogin(c *gin.Context) {
@@ -230,15 +244,23 @@ func (a *App) adminLogin(c *gin.Context) {
 		return
 	}
 	var account Account
-	if a.DB.Where("username = ? AND role = ?", req.Username, "admin").First(&account).Error != nil || bcrypt.CompareHashAndPassword([]byte(account.PasswordHash), []byte(req.Password)) != nil {
+	if a.DB.Where("username = ? AND role IN ?", req.Username, []string{"admin", "operator"}).First(&account).Error != nil || bcrypt.CompareHashAndPassword([]byte(account.PasswordHash), []byte(req.Password)) != nil {
 		fail(c, 401, "invalid_credentials")
 		return
+	}
+	if account.Role == "operator" {
+		var op PlatformOperator
+		if a.DB.First(&op, "account_id=? AND enabled=1", account.ID).Error != nil {
+			fail(c, 401, "invalid_credentials")
+			return
+		}
 	}
 	session, e := a.newSession(account)
 	if e != nil {
 		fail(c, 500, "internal_error")
 		return
 	}
+	session["account"] = a.accountJSON(account)
 	c.JSON(200, session)
 }
 func (a *App) logout(c *gin.Context) {

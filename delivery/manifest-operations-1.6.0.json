@@ -1,0 +1,55 @@
+{
+  "version": "1.6.0",
+  "androidVersion": "1.6.0+28",
+  "createdAt": "2026-10-17T01:54:39.856Z",
+  "applicationID": "com.zqzt.dalunongji",
+  "originalCertificateVerified": true,
+  "certificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+  "backendSchema": 10,
+  "artifacts": [
+    {
+      "path": "delivery/android/dalunongji-1.6.0+28.apk",
+      "bytes": 80688941,
+      "sha256": "1f2e24ea0803a28c22e4169a5d4f2e9d263c6e9bc8b7af912e176798c71dbf40"
+    },
+    {
+      "path": "delivery/zqzt-operations-v1.6.0-linux.tar.gz",
+      "bytes": 122039102,
+      "sha256": "d838463ecbbc91c1c5c98f1f1df2305929fb5b026f628bde7c2044cfc4f7551a"
+    },
+    {
+      "path": "delivery/operations-1.6.0/server/exhibition-linux-amd64",
+      "bytes": 44136319,
+      "sha256": "cc6fa671426ccc9167d8c2974d4da25f0602c408ca27e0ac18bd747a0a8f8297"
+    },
+    {
+      "path": "delivery/operations-1.6.0/server/exhibition-linux-arm64",
+      "bytes": 41054386,
+      "sha256": "46c73cebfb4c9ea761760691c8827295db556636fc691ab67e660e2d59a5c1ad"
+    }
+  ],
+  "validation": {
+    "goMySQL": "passed",
+    "goVet": "passed",
+    "webTests": 86,
+    "flutterTests": 132,
+    "flutterSkipped": 5,
+    "flutterAnalyze": "passed",
+    "officialOSSProtocol": "passed",
+    "browser": {
+      "firstPartyWebAnalytics": true,
+      "csvExport": true,
+      "operatorIsolationAndRevocation": true,
+      "storageMigrationAndRange": true,
+      "encryptedBackupDownload": true,
+      "isolatedRestore": true,
+      "cutoverAndSessionRevocation": true,
+      "rollback": true,
+      "browserErrors": false,
+      "realOSS": "not_run_missing_isolated_bucket"
+    },
+    "realOSS": "NOT_RUN: isolated bucket not supplied"
+  },
+  "privateFilesIncluded": [],
+  "deploymentPerformed": false
+}

@@ -11,6 +11,7 @@ let statuses:Record<number,string>;let failures:Record<number,string>;let held:(
 const fetchMock=vi.fn(async(url:string,options?:RequestInit):Promise<Response>=>{
  const match=url.match(/\/admin\/revisions\/(\d+)\/review$/);
  if(match){const id=Number(match[1]);const input=JSON.parse(options?.body as string);if(hold){hold=false;return new Promise(resolve=>{held=resolve})}if(failures[id]==='network_error')throw Error('disconnected');if(failures[id])return response({error:{code:failures[id]}},409);statuses[id]=input.decision==='approve'?'approved':'rejected';return response({ok:true})}
+ if(url.includes('/admin/dashboard'))return response({counts:{},recent_operations:[],account:{id:1,username:'admin',role:'admin',permissions:[]}});
  if(url.includes('/taxonomy'))return response({categories:[],regions:[],halls:[]});
  if(url.includes('/admin/contents?')){const q=new URL(url,'http://localhost').searchParams;const kind=q.get('kind')||'product';const page=Number(q.get('page')||1);const ids=page===1?[1,2,3,4]:[5,6];const items=ids.map(id=>({id,revision_id:id+10,kind,status:statuses[id+10]||'pending',vendor_id:90,vendor:{name:'验收厂家'},data:{...emptyData,name:'审核内容'+id,region_name:'河北',main_products:'机械',phone:'0319-1234567'}})).filter(i=>!q.get('status')||i.status===q.get('status'));return response({items,total:40,page,page_size:20})}
  return response({ok:true});

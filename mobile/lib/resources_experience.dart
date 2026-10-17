@@ -53,204 +53,215 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
             4,
           ];
           if (!available.contains(tab)) tab = 5;
-          return NestedScrollView(
-            headerSliverBuilder: (context, scrolled) => [
-              SliverToBoxAdapter(
-                child: NativeBrandHero(
-                  favoriteAction: FavoriteButton(
-                    item: {...item, 'kind': 'vendor'},
-                    onDark: true,
-                  ),
-                  data: data,
-                  onContact: () => setState(() => tab = 4),
-                  onShare: () =>
-                      push(context, ShowroomPromotion(slug: widget.slug)),
-                ),
-              ),
-              SliverPersistentHeader(
-                pinned: true,
-                delegate: ShowroomTabsHeader(
-                  height: 64 * MediaQuery.textScalerOf(context).scale(12) / 12,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (final i in available)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: ChoiceChip(
-                              label: Text(
-                                m.t(
-                                  [
-                                    'companyIntro',
-                                    'exhibits',
-                                    'shortVideos',
-                                    'electronicCatalogs',
-                                    'showroomContact',
-                                    'portalHome',
-                                  ][i],
-                                ),
-                              ),
-                              selected: tab == i,
-                              onSelected: (_) => setState(() => tab = i),
-                            ),
-                          ),
-                      ],
+          return AnalyticsScreen(
+            page: '/v/${widget.slug}',
+            kind: 'vendor',
+            id: item['id'] as int,
+            child: NestedScrollView(
+              headerSliverBuilder: (context, scrolled) => [
+                SliverToBoxAdapter(
+                  child: NativeBrandHero(
+                    favoriteAction: FavoriteButton(
+                      item: {...item, 'kind': 'vendor'},
+                      onDark: true,
                     ),
-                  ),
-                ),
-              ),
-            ],
-            body: ListView(
-              padding: const EdgeInsets.all(20),
-              children: [
-                if (tab == 5 || tab == 0)
-                  CompanyPortalBody(
                     data: data,
-                    result: result,
-                    compact: tab == 5,
-                    onTab: (v) => setState(() => tab = v),
+                    onContact: () => setState(() => tab = 4),
+                    onShare: () =>
+                        push(context, ShowroomPromotion(slug: widget.slug)),
                   ),
-                if (tab == 1) ...[
-                  if (rows(result['representative_products']).isNotEmpty) ...[
-                    Text(
-                      m.t('representativeProducts'),
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    ExhibitGrid(items: rows(result['representative_products'])),
-                  ],
-                  TextField(
-                    controller: search,
-                    decoration: InputDecoration(
-                      labelText: m.t('showroomKeyword'),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: () => setState(() {
-                          query = search.text;
-                          page = 1;
-                        }),
+                ),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: ShowroomTabsHeader(
+                    height:
+                        64 * MediaQuery.textScalerOf(context).scale(12) / 12,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          for (final i in available)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                              ),
+                              child: ChoiceChip(
+                                label: Text(
+                                  m.t(
+                                    [
+                                      'companyIntro',
+                                      'exhibits',
+                                      'shortVideos',
+                                      'electronicCatalogs',
+                                      'showroomContact',
+                                      'portalHome',
+                                    ][i],
+                                  ),
+                                ),
+                                selected: tab == i,
+                                onSelected: (_) => setState(() => tab = i),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                    onSubmitted: (v) => setState(() {
-                      query = v;
-                      page = 1;
-                    }),
                   ),
-                  space(),
-                  DropdownButtonFormField<int>(
-                    initialValue: category,
-                    isExpanded: true,
-                    decoration: InputDecoration(labelText: m.t('category')),
-                    items: [
-                      DropdownMenuItem(
-                        value: 0,
-                        child: Text(m.t('allCategories')),
+                ),
+              ],
+              body: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  if (tab == 5 || tab == 0)
+                    CompanyPortalBody(
+                      data: data,
+                      result: result,
+                      compact: tab == 5,
+                      onTab: (v) => setState(() => tab = v),
+                    ),
+                  if (tab == 1) ...[
+                    if (rows(result['representative_products']).isNotEmpty) ...[
+                      Text(
+                        m.t('representativeProducts'),
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      for (final c in cats)
+                      ExhibitGrid(
+                        items: rows(result['representative_products']),
+                      ),
+                    ],
+                    TextField(
+                      controller: search,
+                      decoration: InputDecoration(
+                        labelText: m.t('showroomKeyword'),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () => setState(() {
+                            query = search.text;
+                            page = 1;
+                          }),
+                        ),
+                      ),
+                      onSubmitted: (v) => setState(() {
+                        query = v;
+                        page = 1;
+                      }),
+                    ),
+                    space(),
+                    DropdownButtonFormField<int>(
+                      initialValue: category,
+                      isExpanded: true,
+                      decoration: InputDecoration(labelText: m.t('category')),
+                      items: [
                         DropdownMenuItem(
-                          value: c['id'],
-                          child: Text(
-                            '${m.content(c, 'name')} (${c['product_count'] ?? 0})',
-                            overflow: TextOverflow.ellipsis,
+                          value: 0,
+                          child: Text(m.t('allCategories')),
+                        ),
+                        for (final c in cats)
+                          DropdownMenuItem(
+                            value: c['id'],
+                            child: Text(
+                              '${m.content(c, 'name')} (${c['product_count'] ?? 0})',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                      ],
+                      onChanged: (v) => setState(() {
+                        category = v ?? 0;
+                        page = 1;
+                      }),
+                    ),
+                    space(),
+                    AsyncPane(
+                      identity:
+                          '${m.baseUrl}:${item['id']}:$query:$category:$page',
+                      load: () => m.api(
+                        '/public/products?${Uri(queryParameters: {'vendor_id': '${item['id']}', 'q': query, 'category_id': category == 0 ? '' : '$category', 'page': '$page', 'page_size': '12'}).query}',
+                      ),
+                      builder: (products) => Column(
+                        children: [
+                          Text('${products['total']} ${m.t('productCount')}'),
+                          ExhibitGrid(items: rows(products['items'])),
+                          if (rows(products['items']).isEmpty)
+                            message(context, m.t('noProductResults')),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: page > 1
+                                    ? () => setState(() => page--)
+                                    : null,
+                                child: Text(m.t('previous')),
+                              ),
+                              Text('$page'),
+                              TextButton(
+                                onPressed:
+                                    page * 12 < (products['total'] as num)
+                                    ? () => setState(() => page++)
+                                    : null,
+                                child: Text(m.t('next')),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  if (tab == 2)
+                    NativeResourceList(
+                      key: const ValueKey('videos'),
+                      vendorID: item['id'],
+                      kind: 'video',
+                    ),
+                  if (tab == 3)
+                    NativeResourceList(
+                      key: const ValueKey('catalogs'),
+                      vendorID: item['id'],
+                      kind: 'catalog',
+                    ),
+                  if (tab == 4) ...[
+                    Text(
+                      m.t('showroomContact'),
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    space(),
+                    Contact(data: data),
+                    if ((data['address'] ?? '').toString().isNotEmpty)
+                      ListTile(
+                        title: Text(m.t('companyAddress')),
+                        subtitle: Text(data['address']),
+                      ),
+                    if ((profile['contact_name'] ?? '').toString().isNotEmpty)
+                      ListTile(
+                        title: Text(m.t('contactName')),
+                        subtitle: Text(profile['contact_name']),
+                      ),
+                    if ((profile['website'] ?? '').toString().isNotEmpty)
+                      TextButton(
+                        onPressed: () => launchUrl(
+                          Uri.parse(profile['website']),
+                          mode: LaunchMode.externalApplication,
+                        ),
+                        child: Text(profile['website']),
+                      ),
+                    for (final c in rows(profile['contacts']))
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(14),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${c['area']} · ${c['name']}'),
+                              Contact(data: c),
+                            ],
                           ),
                         ),
-                    ],
-                    onChanged: (v) => setState(() {
-                      category = v ?? 0;
-                      page = 1;
-                    }),
-                  ),
-                  space(),
-                  AsyncPane(
-                    identity:
-                        '${m.baseUrl}:${item['id']}:$query:$category:$page',
-                    load: () => m.api(
-                      '/public/products?${Uri(queryParameters: {'vendor_id': '${item['id']}', 'q': query, 'category_id': category == 0 ? '' : '$category', 'page': '$page', 'page_size': '12'}).query}',
-                    ),
-                    builder: (products) => Column(
-                      children: [
-                        Text('${products['total']} ${m.t('productCount')}'),
-                        ExhibitGrid(items: rows(products['items'])),
-                        if (rows(products['items']).isEmpty)
-                          message(context, m.t('noProductResults')),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton(
-                              onPressed: page > 1
-                                  ? () => setState(() => page--)
-                                  : null,
-                              child: Text(m.t('previous')),
-                            ),
-                            Text('$page'),
-                            TextButton(
-                              onPressed: page * 12 < (products['total'] as num)
-                                  ? () => setState(() => page++)
-                                  : null,
-                              child: Text(m.t('next')),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-                if (tab == 2)
-                  NativeResourceList(
-                    key: const ValueKey('videos'),
-                    vendorID: item['id'],
-                    kind: 'video',
-                  ),
-                if (tab == 3)
-                  NativeResourceList(
-                    key: const ValueKey('catalogs'),
-                    vendorID: item['id'],
-                    kind: 'catalog',
-                  ),
-                if (tab == 4) ...[
-                  Text(
-                    m.t('showroomContact'),
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  space(),
-                  Contact(data: data),
-                  if ((data['address'] ?? '').toString().isNotEmpty)
-                    ListTile(
-                      title: Text(m.t('companyAddress')),
-                      subtitle: Text(data['address']),
-                    ),
-                  if ((profile['contact_name'] ?? '').toString().isNotEmpty)
-                    ListTile(
-                      title: Text(m.t('contactName')),
-                      subtitle: Text(profile['contact_name']),
-                    ),
-                  if ((profile['website'] ?? '').toString().isNotEmpty)
-                    TextButton(
-                      onPressed: () => launchUrl(
-                        Uri.parse(profile['website']),
-                        mode: LaunchMode.externalApplication,
                       ),
-                      child: Text(profile['website']),
-                    ),
-                  for (final c in rows(profile['contacts']))
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(14),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('${c['area']} · ${c['name']}'),
-                            Contact(data: c),
-                          ],
-                        ),
-                      ),
-                    ),
+                  ],
+                  space(24),
                 ],
-                space(24),
-              ],
+              ),
             ),
           );
         },
@@ -635,6 +646,7 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
     with WidgetsBindingObserver {
   VideoPlayerController? video;
   String error = '';
+  bool reportedView = false;
   int page = 0;
   final pdfController = PdfViewerController();
   bool loading = false;
@@ -647,6 +659,15 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (!reportedView && !widget.private) {
+      reportedView = true;
+      final id = (widget.item['id'] as num?)?.toInt() ?? 0;
+      if (id > 0) {
+        ModelScope.of(
+          context,
+        ).analytics.page('/resources/$id', kind: 'resource', id: id);
+      }
+    }
     if (widget.item['kind'] == 'video' &&
         video == null &&
         (widget.item['file']?['state'] == null ||

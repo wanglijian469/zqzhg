@@ -1,0 +1,44 @@
+{
+  "version": "1.6.0",
+  "verifiedAt": "2026-10-17T01:54:24.036Z",
+  "goMySQL": {
+    "command": "RUN_MYSQL_TESTS=1 go test -timeout 300s ./...",
+    "result": "ok  \tzqzt/exhibition\t68.510s"
+  },
+  "goFinalFocused": {
+    "result": "ok  \tzqzt/exhibition\t11.097s"
+  },
+  "goVet": {
+    "passed": true
+  },
+  "web": {
+    "testFiles": 16,
+    "testsPassed": 86,
+    "buildPassed": true
+  },
+  "flutter": {
+    "analyzePassed": true,
+    "testsPassed": 132,
+    "testsSkipped": 5
+  },
+  "android": {
+    "versionName": "1.6.0",
+    "versionCode": 28,
+    "applicationID": "com.zqzt.dalunongji",
+    "minSdk": 24,
+    "targetSdk": 36,
+    "architectures": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "originalCertificateVerified": true,
+    "certificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585"
+  },
+  "officialSDKHTTPContract": true,
+  "realOSS": {
+    "run": false,
+    "reason": "No administrator-provided isolated private bucket credentials."
+  },
+  "productionDeployment": false
+}

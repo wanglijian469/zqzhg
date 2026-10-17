@@ -96,14 +96,14 @@ func (a *App) scopedCategories(who Account, public bool) []ScopedCategory {
 		if public && (!cat.Enabled || (s.CategoryID > 0 && s.Status != "approved")) {
 			continue
 		}
-		if !public && who.Role != "admin" && s.CategoryID > 0 && s.Status != "approved" && s.OwnerID != who.ID {
+		if !public && !platformAccount(who) && s.CategoryID > 0 && s.Status != "approved" && s.OwnerID != who.ID {
 			continue
 		}
 		r := ScopedCategory{Category: cat}
 		if !public {
 			sCopy := s
 			r.Status = sCopy.Status
-			if who.Role == "admin" {
+			if platformAccount(who) {
 				r.OwnerID = s.OwnerID
 				a.DB.Model(&Content{}).Joins("JOIN revisions r ON r.id=contents.draft_revision_id OR r.id=contents.published_revision_id").Where("r.category_id=?", cat.ID).Distinct("contents.id").Count(&r.ReferenceCount)
 				if s.OwnerID > 0 {

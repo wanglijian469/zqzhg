@@ -7,7 +7,27 @@ class AppShell extends StatefulWidget {
   State<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
+class _AppShellState extends State<AppShell>
+    with WidgetsBindingObserver, RouteAware {
+  PageRoute<dynamic>? analyticsRoute;
+  void recordPage() {
+    if (model == null ||
+        model!.isHallPreview ||
+        selected > 2 ||
+        analyticsRoute?.isCurrent != true) {
+      return;
+    }
+    model!.analytics.page(
+      selected == 0
+          ? "/"
+          : selected == 1
+          ? "/browse"
+          : "/browse/products",
+    );
+  }
+
+  @override
+  void didPopNext() => recordPage();
   int selected = 0;
   final initialQueries = <int, String>{};
   final initialCategories = <int, int?>{};
@@ -46,23 +66,34 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       next.favorites.activate();
     }
     if (!next.isHallPreview) visited.add(selected);
+    final route = ModalRoute.of(context);
+    if (route is PageRoute<dynamic> && analyticsRoute != route) {
+      analyticsRoutes.unsubscribe(this);
+      analyticsRoute = route;
+      analyticsRoutes.subscribe(this, route);
+      recordPage();
+    }
   }
 
   @override
   void dispose() {
     if (model?.openMerchant == merchantCallback) model?.openMerchant = null;
     if (model?.openHome == homeCallback) model?.openHome = null;
+    analyticsRoutes.unsubscribe(this);
+    model?.analytics.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   void select(int index) {
+    final changed = selected != index;
     setState(() {
       selected = index;
       if (!(model?.isHallPreview ?? false) || index == 0 || index == 3) {
         visited.add(index);
       }
     });
+    if (changed) recordPage();
   }
 
   void browse(String kind, {String? query, int? category}) {

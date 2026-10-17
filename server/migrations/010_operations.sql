@@ -1,0 +1,39 @@
+CREATE TABLE IF NOT EXISTS platform_operators (
+ account_id BIGINT UNSIGNED PRIMARY KEY,
+ display_name VARCHAR(100) NOT NULL DEFAULT '',
+ enabled BOOLEAN NOT NULL DEFAULT TRUE,
+ permissions TEXT NOT NULL,
+ updated_at DATETIME(3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS system_settings (
+ setting_key VARCHAR(100) PRIMARY KEY, value LONGTEXT NOT NULL,
+ updated_at DATETIME(3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS storage_profiles (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ name VARCHAR(100) NOT NULL, kind VARCHAR(16) NOT NULL,
+ local_root VARCHAR(1000) NOT NULL DEFAULT '', region VARCHAR(100) NOT NULL DEFAULT '',
+ endpoint VARCHAR(500) NOT NULL DEFAULT '', bucket VARCHAR(100) NOT NULL DEFAULT '',
+ prefix VARCHAR(200) NOT NULL DEFAULT '', credentials LONGTEXT NOT NULL,
+ created_at DATETIME(3) NOT NULL, updated_at DATETIME(3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS stored_objects (
+ object_key VARCHAR(255) PRIMARY KEY, store_id BIGINT UNSIGNED NOT NULL DEFAULT 0,
+ size BIGINT NOT NULL, sha256 CHAR(64) NOT NULL, updated_at DATETIME(3) NOT NULL,
+ INDEX idx_object_store(store_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS analytics_events (
+ event_id CHAR(36) PRIMARY KEY, visitor_hash CHAR(64) NOT NULL, session_hash CHAR(64) NOT NULL,
+ source VARCHAR(16) NOT NULL, event_name VARCHAR(32) NOT NULL, page VARCHAR(100) NOT NULL DEFAULT '',
+ target_kind VARCHAR(16) NOT NULL DEFAULT '', target_id BIGINT UNSIGNED NOT NULL DEFAULT 0,
+ keyword VARCHAR(100) NOT NULL DEFAULT '', referrer VARCHAR(255) NOT NULL DEFAULT '',
+ device VARCHAR(16) NOT NULL DEFAULT '', occurred_at DATETIME(3) NOT NULL,
+ INDEX idx_analytics_time(occurred_at,source), INDEX idx_analytics_target(target_kind,target_id,occurred_at),
+ INDEX idx_analytics_visitor(visitor_hash,occurred_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS analytics_daily (
+ day DATE NOT NULL, source VARCHAR(16) NOT NULL,
+ pv BIGINT NOT NULL, uv BIGINT NOT NULL, visits BIGINT NOT NULL,
+ contacts BIGINT NOT NULL, searches BIGINT NOT NULL,
+ PRIMARY KEY(day,source)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -237,6 +237,9 @@ func (a *App) adminEnrich(items []View) error {
 func (a *App) adminDashboard(c *gin.Context) {
 	counts := map[string]int64{}
 	for _, kind := range []string{"vendor", "product"} {
+		if actor(c).Role == "operator" && !a.hasPermission(actor(c), kind+".read") {
+			continue
+		}
 		var total, pending, public int64
 		if e := a.DB.Model(&Content{}).Where("kind=?", kind).Count(&total).Error; e != nil {
 			dbFail(c, e)
@@ -255,11 +258,16 @@ func (a *App) adminDashboard(c *gin.Context) {
 		counts[kind+"_public"] = public
 	}
 	var logs []OperationLog
-	if e := a.DB.Order("id DESC").Limit(8).Find(&logs).Error; e != nil {
+	if e := a.DB.Where(func() string {
+		if a.hasPermission(actor(c), "audit.read") {
+			return "1=1"
+		}
+		return "1=0"
+	}()).Order("id DESC").Limit(8).Find(&logs).Error; e != nil {
 		dbFail(c, e)
 		return
 	}
-	c.JSON(200, gin.H{"counts": counts, "recent_operations": logs, "account": gin.H{"id": actor(c).ID, "username": actor(c).Username}})
+	c.JSON(200, gin.H{"counts": counts, "recent_operations": logs, "account": a.accountJSON(actor(c))})
 }
 
 type AdminAccountView struct {
@@ -375,7 +383,16 @@ func (a *App) adminLogs(c *gin.Context) {
 	}
 	items := []gin.H{}
 	for _, log := range logs {
-		items = append(items, gin.H{"id": log.ID, "actor_id": log.ActorID, "actor_name": names[log.ActorID], "target_kind": log.TargetKind, "target_id": log.TargetID, "action": log.Action, "note": log.Note, "created_at": log.CreatedAt})
+		actorName := names[log.ActorID]
+		if log.TargetKind == "job" {
+			var snapshot struct {
+				ActorName string `json:"actor_name"`
+			}
+			if json.Unmarshal([]byte(log.Note), &snapshot) == nil && snapshot.ActorName != "" {
+				actorName = snapshot.ActorName
+			}
+		}
+		items = append(items, gin.H{"id": log.ID, "actor_id": log.ActorID, "actor_name": actorName, "target_kind": log.TargetKind, "target_id": log.TargetID, "action": log.Action, "note": log.Note, "created_at": log.CreatedAt})
 	}
 	c.JSON(200, gin.H{"items": items, "total": total, "page": p, "page_size": n})
 }

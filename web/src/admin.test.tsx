@@ -108,9 +108,9 @@ describe('Administrator console', () => {
         expect(reject.disabled).toBe(false);
     });
     it('renders extension explanations without executable actions or fake data', async () => {
-        mount('/admin/extensions/analytics');
-        await screen.findByRole('heading', { name: '访问分析', level: 2 });
-        expect(screen.getByText('启用前需接入统计来源，并确定隐私规则、指标口径及保留期限。')).toBeTruthy();
+        mount('/admin/extensions/capture');
+        await screen.findByRole('heading', { name: '数据采集', level: 2 });
+        expect(document.querySelector('.admin-extension-page')).toBeTruthy();
         expect(document.querySelector('.admin-extension-page button')).toBeNull();
         expect((document.querySelector('.admin-extension-menu') as HTMLDetailsElement).open).toBe(false);
     });

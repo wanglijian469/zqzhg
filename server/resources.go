@@ -135,7 +135,7 @@ func loadResource(tx *gorm.DB, rid uint64, who Account, lock bool) (Resource, er
 		q = q.Clauses(clause.Locking{Strength: "UPDATE"})
 	}
 	e := q.First(&r, rid).Error
-	if e == nil && who.Role != "admin" && who.ID != r.OwnerID {
+	if e == nil && !platformAccount(who) && who.ID != r.OwnerID {
 		e = fmt.Errorf("forbidden")
 	}
 	return r, e
@@ -569,5 +569,24 @@ func (a *App) resourceRoutes(pub, merchant, admin *gin.RouterGroup) {
 	merchant.POST("/resource-media", a.uploadResourceMedia)
 	merchant.GET("/resource-media/:id", a.resourceMediaStatus)
 	merchant.POST("/resource-media/:id/retry", a.retryResourceMedia)
+	admin.GET("/resource-media/:id", a.resourceMediaStatus)
+	admin.POST("/resource-media/:id/retry", a.retryResourceMedia)
+	for _, path := range []string{"media", "resource-media"} {
+		isImage := path == "media"
+		admin.POST("/resources/:id/"+path, func(c *gin.Context) {
+			r, e := loadResource(a.DB, id(c), actor(c), false)
+			if e != nil {
+				dbFail(c, e)
+				return
+			}
+			c.Set("upload_owner_id", r.OwnerID)
+			c.Set("upload_resource_id", r.ID)
+			if isImage {
+				a.upload(c)
+			} else {
+				a.uploadResourceMedia(c)
+			}
+		})
+	}
 	admin.POST("/resource-revisions/:id/review", a.reviewResource)
 }

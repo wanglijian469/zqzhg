@@ -2,8 +2,8 @@
   "openapi": "3.0.3",
   "info": {
     "title": "中企展馆 · 大陆农机",
-    "version": "1.5.19",
-    "description": "Published snapshots only. Draft and pending content and media require ownership or administrator access. Error messages are localized by clients using error.code. Resource snapshots have independent review and processing states; anonymous media access also requires a public parent showroom and linked product."
+    "version": "1.6.0",
+    "description": "Published snapshots only. Draft and pending content and media require ownership or administrator access. Error messages are localized by clients using error.code. Resource snapshots have independent review and processing states; anonymous media access also requires a public parent showroom and linked product. Platform operators use effective feature permissions. Administrator-only storage, persistent jobs and encrypted isolated recovery are provided. Anonymous analytics do not identify people."
   },
   "servers": [
     {
@@ -536,11 +536,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Current account status and effective permissions",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Account"
+                  "$ref": "#/components/schemas/PlatformAccount"
                 }
               }
             }
@@ -8019,6 +8019,1835 @@
           }
         }
       }
+    },
+    "/public/analytics/events": {
+      "post": {
+        "summary": "Receive deduplicated anonymous public events",
+        "description": "",
+        "tags": [
+          "Public analytics / transfer"
+        ],
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": "Persisted background job accepted; poll by job ID."
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "events"
+                ],
+                "properties": {
+                  "events": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "items": {
+                      "$ref": "#/components/schemas/AnalyticsEvent"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/analytics": {
+      "get": {
+        "summary": "Query range-unique metrics, daily trends and rankings",
+        "description": "analytics.read. Range UV is deduplicated across days; archived ranges return daily metrics only and null range UV/visits.",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "YYYY-MM-DD in Asia/Shanghai"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "YYYY-MM-DD in Asia/Shanghai"
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "web, android, or omitted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      }
+    },
+    "/admin/analytics/export": {
+      "get": {
+        "summary": "Export available summary, daily and ranking metrics as CSV",
+        "description": "analytics.export. UTF-8 BOM; formula-safe text; daily UV must not be summed as range UV.",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "YYYY-MM-DD in Asia/Shanghai"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "YYYY-MM-DD in Asia/Shanghai"
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "web, android, or omitted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      }
+    },
+    "/admin/permissions": {
+      "get": {
+        "summary": "Administrator-only feature permission catalog",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      }
+    },
+    "/admin/operators": {
+      "get": {
+        "summary": "List operators and effective grants",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create operator and return a one-time initial_password",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperatorInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/operators/{id}": {
+      "put": {
+        "summary": "Update operator and revoke all existing sessions immediately",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperatorInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/operators/{id}/password-reset": {
+      "post": {
+        "summary": "Generate one-time password and revoke old sessions",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/storage/profiles": {
+      "get": {
+        "summary": "List storage configuration with credentials_configured; never return secrets",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      },
+      "post": {
+        "summary": "Save encrypted storage credentials",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StorageProfileInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/storage/profiles/{id}": {
+      "put": {
+        "summary": "Update storage profile; referenced locations are immutable",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StorageProfileInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete unreferenced non-default configuration",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      }
+    },
+    "/admin/storage/profiles/{id}/test": {
+      "post": {
+        "summary": "Test private Bucket and read/write/SHA/delete",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/storage/profiles/{id}/activate": {
+      "post": {
+        "summary": "Test and activate for new uploads",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/storage/migrations": {
+      "post": {
+        "summary": "Copy and verify historical objects before switching each mapping",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": "Persisted background job accepted; poll by job ID."
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "source_id",
+                  "target_id"
+                ],
+                "properties": {
+                  "source_id": {
+                    "type": "integer"
+                  },
+                  "target_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/storage/cleanup": {
+      "post": {
+        "summary": "Explicitly clean verified unreferenced old migration copies",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "confirm"
+                ],
+                "properties": {
+                  "confirm": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/jobs": {
+      "get": {
+        "summary": "List durable host tasks",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      }
+    },
+    "/admin/jobs/{id}": {
+      "get": {
+        "summary": "Poll durable task progress",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      }
+    },
+    "/admin/jobs/{id}/retry": {
+      "post": {
+        "summary": "Administrator retry of an eligible task",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Persisted background job accepted; poll by job ID."
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/jobs/{id}/cancel": {
+      "post": {
+        "summary": "Administrator cancel of an eligible task",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/maintenance/{id}": {
+      "get": {
+        "summary": "Read only the corresponding task during maintenance",
+        "description": "Twenty-minute opaque task token. No business data or mutation permission.",
+        "tags": [
+          "Public analytics / transfer"
+        ],
+        "security": [
+          {
+            "maintenanceTicket": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Maintenance-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      }
+    },
+    "/admin/backups": {
+      "get": {
+        "summary": "List private backup catalog and policy",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create encrypted SQL, configuration and actual-media backup",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": "Persisted background job accepted; poll by job ID."
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/backups/policy": {
+      "put": {
+        "summary": "Configure disabled-by-default Beijing daily schedule",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BackupPolicy"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/backups/{id}/verify": {
+      "post": {
+        "summary": "Validate backup encryption, format and object checksums",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Persisted background job accepted; poll by job ID."
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/backups/{id}/restore": {
+      "post": {
+        "summary": "Restore into a new restricted-import database and private media directory",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Persisted background job accepted; poll by job ID."
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/backups/{id}/download-ticket": {
+      "post": {
+        "summary": "Issue two-minute HttpOnly session-bound download cookie",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/backup-download/{id}": {
+      "get": {
+        "summary": "Stream encrypted archive using download cookie",
+        "description": "Requires HttpOnly zqzt_backup_download cookie from the ticket endpoint and its still-valid administrator session. Never place ticket in a URL.",
+        "tags": [
+          "Public analytics / transfer"
+        ],
+        "security": [
+          {
+            "backupDownloadCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      }
+    },
+    "/admin/backups/{id}/download": {
+      "get": {
+        "summary": "Stream backup with administrator bearer token",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      }
+    },
+    "/admin/backups/imports": {
+      "post": {
+        "summary": "Begin large encrypted-archive import; return 8 MiB chunk size",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "size"
+                ],
+                "properties": {
+                  "size": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/backups/imports/{id}/chunks/{index}": {
+      "put": {
+        "summary": "Write exact sequential binary chunk; ordinary JSON limit does not apply",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "index",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/backups/imports/{id}/complete": {
+      "post": {
+        "summary": "Finalize immutable imported archive and SHA-256 catalog",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/restores/{id}/activate": {
+      "post": {
+        "summary": "Reauthenticate current and target administrator, then persist cutover job",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Persisted background job accepted; poll by job ID."
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "password"
+                ],
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "writeOnly": true
+                  },
+                  "restored_username": {
+                    "type": "string"
+                  },
+                  "restored_password": {
+                    "type": "string",
+                    "writeOnly": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/restores/rollback": {
+      "post": {
+        "summary": "Reauthenticate and switch back to retained previous target",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": "Persisted background job accepted; poll by job ID."
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "password"
+                ],
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "writeOnly": true
+                  },
+                  "restored_username": {
+                    "type": "string"
+                  },
+                  "restored_password": {
+                    "type": "string",
+                    "writeOnly": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/resources/{id}/media": {
+      "post": {
+        "summary": "resource.write: upload on behalf of the owning merchant",
+        "description": "Multipart file. resource-media accepts kind=video or pdf. Private draft previews remain scoped to uploader and authorized references.",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/resources/{id}/resource-media": {
+      "post": {
+        "summary": "resource.write: upload on behalf of the owning merchant",
+        "description": "Multipart file. resource-media accepts kind=video or pdf. Private draft previews remain scoped to uploader and authorized references.",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/resource-media/{id}": {
+      "get": {
+        "summary": "resource.read: private media processing status",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        }
+      }
+    },
+    "/admin/resource-media/{id}/retry": {
+      "post": {
+        "summary": "resource.write: retry failed media processing",
+        "description": "",
+        "tags": [
+          "Platform operations"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Session/ticket missing, disabled, expired or revoked"
+          },
+          "403": {
+            "description": "Effective permission missing or administrator role required"
+          },
+          "409": {
+            "description": "Job busy, resource in use, stale state or invalid transfer offset"
+          },
+          "503": {
+            "description": "Snapshot write pause or maintenance; retry business request after completion"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -8027,6 +9856,16 @@
         "type": "http",
         "scheme": "bearer",
         "description": "Opaque session token; 30 day expiration; revoked on logout"
+      },
+      "maintenanceTicket": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Maintenance-Token"
+      },
+      "backupDownloadCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "zqzt_backup_download"
       }
     },
     "schemas": {
@@ -9613,6 +11452,256 @@
           "operation_id",
           "favorited"
         ]
+      },
+      "PlatformAccount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "operator",
+              "merchant",
+              "visitor"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AnalyticsEvent": {
+        "type": "object",
+        "required": [
+          "event_id",
+          "visitor_id",
+          "session_id",
+          "source",
+          "event_name",
+          "page",
+          "occurred_at"
+        ],
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "visitor_id": {
+            "type": "string",
+            "description": "First-party anonymous ID; do not send account, phone or email."
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "web",
+              "android"
+            ]
+          },
+          "event_name": {
+            "type": "string",
+            "enum": [
+              "page_view",
+              "vendor_view",
+              "product_view",
+              "resource_view",
+              "search",
+              "contact_phone",
+              "contact_wechat"
+            ]
+          },
+          "page": {
+            "type": "string",
+            "description": "Normalized public path without query, credentials or fragment."
+          },
+          "target_kind": {
+            "type": "string",
+            "enum": [
+              "",
+              "vendor",
+              "product",
+              "resource"
+            ]
+          },
+          "target_id": {
+            "type": "integer"
+          },
+          "keyword": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "referrer": {
+            "type": "string",
+            "description": "Optional origin only; server retains hostname."
+          },
+          "device": {
+            "type": "string",
+            "enum": [
+              "mobile",
+              "desktop",
+              "tablet",
+              "unknown"
+            ]
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OperationJob": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "migration",
+              "backup",
+              "verify",
+              "restore",
+              "activate",
+              "rollback"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled",
+              "interrupted"
+            ]
+          },
+          "phase": {
+            "type": "string"
+          },
+          "progress": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "error": {
+            "type": "string"
+          },
+          "result": {
+            "type": "object"
+          }
+        }
+      },
+      "OperatorInput": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "StorageProfileInput": {
+        "type": "object",
+        "required": [
+          "name",
+          "kind"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "local",
+              "oss"
+            ]
+          },
+          "local_root": {
+            "type": "string",
+            "description": "Private absolute server directory."
+          },
+          "region": {
+            "type": "string"
+          },
+          "endpoint": {
+            "type": "string",
+            "description": "HTTPS Alibaba Cloud endpoint without path/query."
+          },
+          "bucket": {
+            "type": "string",
+            "description": "Private Bucket"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "access_key_id": {
+            "type": "string",
+            "description": "Write-only. Leave both credential fields empty to preserve.",
+            "writeOnly": true
+          },
+          "access_key_secret": {
+            "type": "string",
+            "writeOnly": true
+          }
+        }
+      },
+      "BackupPolicy": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": false
+          },
+          "time": {
+            "type": "string",
+            "default": "02:00"
+          },
+          "keep": {
+            "type": "integer",
+            "default": 7,
+            "minimum": 1,
+            "maximum": 90
+          },
+          "target_id": {
+            "type": "integer",
+            "default": 0
+          },
+          "timezone": {
+            "type": "string",
+            "enum": [
+              "Asia/Shanghai"
+            ]
+          }
+        }
       }
     }
   }

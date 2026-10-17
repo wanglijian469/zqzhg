@@ -18,6 +18,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -26,9 +27,11 @@ var migrations embed.FS
 
 type Config struct{ Env, Addr, MediaDir, WebDir, CORS, SMSProvider, PublicBaseURL string }
 type App struct {
-	DB     *gorm.DB
-	Config Config
-	SMS    SMSProvider
+	DB                *gorm.DB
+	Config            Config
+	SMS               SMSProvider
+	operationsOnce    sync.Once
+	operationsRuntime *OperationsRuntime
 }
 
 func env(key, fallback string) string {
@@ -172,7 +175,16 @@ func main() {
 	if cfg.Env == "production" && cfg.PublicBaseURL == "" {
 		log.Fatal("production requires PUBLIC_BASE_URL for external showroom sharing")
 	}
-	db, e := openDB(env("DB_NAME", "zqzt_exhibition"))
+	controlDir := controlDirectory(cfg.MediaDir)
+	target, targetError := bootstrapTarget(cfg.MediaDir, env("DB_NAME", "zqzt_exhibition"))
+	if targetError != nil {
+		log.Fatal("active data configuration could not be loaded")
+	}
+	if e := os.Setenv("OPERATIONS_DIR", controlDir); e != nil {
+		log.Fatal(e)
+	}
+	cfg.MediaDir = target.MediaDir
+	db, e := openDB(target.Database)
 	if e != nil {
 		log.Fatal(e)
 	}
@@ -214,6 +226,7 @@ func main() {
 		log.Fatal("unknown SMS_PROVIDER")
 	}
 	a.startMediaWorker(context.Background())
+	a.startOperations(context.Background())
 	srv := &http.Server{Addr: cfg.Addr, Handler: a.router(), ReadHeaderTimeout: 10 * time.Second, ReadTimeout: 15 * time.Minute, WriteTimeout: 15 * time.Minute, IdleTimeout: 60 * time.Second}
 	log.Printf("中企展馆 API listening on %s (%s)", cfg.Addr, cfg.Env)
 	log.Fatal(srv.ListenAndServe())
@@ -221,10 +234,10 @@ func main() {
 func (a *App) router() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
-	r.Use(gin.Logger(), gin.Recovery())
+	r.Use(gin.Logger(), gin.Recovery(), a.operationsGate())
 	r.SetTrustedProxies(nil)
 	r.Use(func(c *gin.Context) {
-		if strings.HasPrefix(c.Request.URL.Path, "/api/") && !strings.HasSuffix(c.Request.URL.Path, "/media") && !strings.HasSuffix(c.Request.URL.Path, "/resource-media") {
+		if strings.HasPrefix(c.Request.URL.Path, "/api/") && !strings.HasSuffix(c.Request.URL.Path, "/media") && !strings.HasSuffix(c.Request.URL.Path, "/resource-media") && !(strings.HasPrefix(c.Request.URL.Path, "/api/v1/admin/backups/imports/") && strings.Contains(c.Request.URL.Path, "/chunks/")) {
 			c.Request.Body = httpMaxBody(c, 1<<20)
 		}
 		c.Header("X-Content-Type-Options", "nosniff")
@@ -262,7 +275,7 @@ func (a *App) router() *gin.Engine {
 	api.POST("/auth/visitor/register", a.visitorRegister)
 	api.POST("/auth/admin", a.adminLogin)
 	auth := api.Group("/auth", a.requireAuth(""))
-	auth.GET("/me", func(c *gin.Context) { c.JSON(200, actor(c)) })
+	auth.GET("/me", func(c *gin.Context) { c.JSON(200, a.accountJSON(actor(c))) })
 	auth.POST("/logout", a.logout)
 	pub := api.Group("/public")
 	pub.GET("/showrooms/:slug", a.publicShowroom)
@@ -292,8 +305,14 @@ func (a *App) router() *gin.Engine {
 	merchant.POST("/media", a.upload)
 	merchant.GET("/taxonomy", a.allTaxonomy)
 	merchant.POST("/categories", a.suggestCategory)
-	admin := api.Group("/admin", a.requireAuth("admin"))
+	admin := api.Group("/admin", a.requireAuth("platform"), a.platformPolicy())
 	a.resourceRoutes(pub, merchant, admin)
+	a.operatorRoutes(admin)
+	a.jobRoutes(admin, api)
+	a.storageRoutes(admin)
+	a.analyticsRoutes(pub, admin)
+	a.backupRoutes(admin)
+	a.backupDownloadRoutes(admin, api)
 	admin.GET("/dashboard", a.adminDashboard)
 	admin.GET("/accounts", a.adminAccounts)
 	admin.POST("/accounts/:id/password-reset", a.adminPasswordReset)

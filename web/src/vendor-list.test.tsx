@@ -9,6 +9,7 @@ const response=(v:unknown,status=200)=>new Response(JSON.stringify(v),{status});
 const vendor={id:4,kind:'vendor',showroom_slug:'brand-test',owner_id:2,revision_id:8,status:'approved',visible:true,public_visible:true,featured:false,sort_order:0,data:{...emptyData,name:'完整企业名称',name_en:'Full company name',main_products:'液压设备',region_name:'河北',phone:'0319-1234567',media_ids:[1],company_profile:{cover_media_id:9,logo_media_id:10}},matching_products:[{id:20,kind:'product',data:{...emptyData,name:'测试产品',media_ids:[21]}}]};
 let vendors=[structuredClone(vendor)];let locked=false;let brokenMedia=false;const fetchMock=vi.fn(async(url:string,opts?:RequestInit):Promise<Response>=>{
  if(url.includes('/media/'))return brokenMedia&&url.includes('/9')?response({},404):new Response(new Blob(['image'],{type:'image/png'}));
+ if(url.includes('/admin/dashboard'))return response({counts:{},recent_operations:[],account:{id:1,username:'admin',role:'admin',permissions:[]}});
  if(url.includes('/taxonomy'))return response({halls:[],categories:[],regions:[]});if(url.includes('/history'))return response([]);if(url.includes('/admin/accounts'))return response({items:[],total:0});
  if(url.includes('/admin/contents?'))return response({items:vendors.map(v=>({...v,status:locked?'pending':'approved'})),total:1,page:1,page_size:20});
  if(url.endsWith('/admin/contents/4'))return response({...vendors[0],status:locked?'pending':'approved'});

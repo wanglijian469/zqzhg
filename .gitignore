@@ -36,3 +36,9 @@ node_modules/
 /delivery/server/
 /delivery/web/
 /delivery/**/exhibition-linux-*
+# V1.6 durable host control state contains encrypted secrets and private backups.
+.operations-*/
+*.zqbak
+*.tsbuildinfo
+/delivery/operations-1.6.0/
+/mobile/android/build/

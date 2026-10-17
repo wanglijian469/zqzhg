@@ -91,8 +91,8 @@ func (a *App) upload(c *gin.Context) {
 	}
 	path := key + extension
 	thumb := key + "-thumb" + extension
-	fullPath := filepath.Join(a.Config.MediaDir, path)
-	thumbPath := filepath.Join(a.Config.MediaDir, thumb)
+	fullPath := a.workPath(path)
+	thumbPath := a.workPath(thumb)
 	if e = writeImage(fullPath, scaled(img, 2048), outputFormat); e != nil {
 		fail(c, 500, "internal_error")
 		return
@@ -101,6 +101,16 @@ func (a *App) upload(c *gin.Context) {
 		os.Remove(fullPath)
 		os.Remove(thumbPath)
 		fail(c, 500, "internal_error")
+		return
+	}
+	defer os.Remove(fullPath)
+	defer os.Remove(thumbPath)
+	if e = a.storeWorkFile(c.Request.Context(), path, fullPath); e != nil {
+		fail(c, 503, "storage_unavailable")
+		return
+	}
+	if e = a.storeWorkFile(c.Request.Context(), thumb, thumbPath); e != nil {
+		fail(c, 503, "storage_unavailable")
 		return
 	}
 	media := Media{OwnerID: actor(c).ID, Path: path, ThumbPath: thumb}
@@ -116,6 +126,9 @@ func (a *App) upload(c *gin.Context) {
 				return e
 			}
 			return recordOperation(tx, actor(c).ID, "media", media.ID, "home_display_image_uploaded", "")
+		}
+		if target, ok := c.Get("upload_resource_id"); ok {
+			return recordOperation(tx, actor(c).ID, "media", media.ID, "media_uploaded", fmt.Sprintf("resource=%d", target.(uint64)))
 		}
 		if target, ok := c.Get("upload_content_id"); ok {
 			return recordOperation(tx, actor(c).ID, "media", media.ID, "media_uploaded", fmt.Sprintf("content=%d", target.(uint64)))
@@ -165,7 +178,7 @@ func (a *App) mediaRead(c *gin.Context) {
 	}
 	if count == 0 {
 		account, e := a.readAccount(c)
-		if e != nil || (account.Role != "admin" && account.ID != media.OwnerID) {
+		if e != nil || !a.canReadPrivateMedia(account, media) {
 			fail(c, 404, "not_found")
 			return
 		}
@@ -187,5 +200,5 @@ func (a *App) mediaRead(c *gin.Context) {
 	if c.Query("download") == "1" {
 		c.Header("Content-Disposition", "attachment; filename=\"catalog"+filepath.Ext(path)+"\"")
 	}
-	c.File(filepath.Join(a.Config.MediaDir, path))
+	a.serveObject(c, path)
 }

@@ -23,6 +23,17 @@ class _BrowseScreenState extends State<BrowseScreen> {
   final scroll = ScrollController();
   Timer? debounce;
   String? endpoint, requestKey;
+  String lastSearch = '';
+  void recordSearch() {
+    if (term.isEmpty || lastSearch == term) return;
+    lastSearch = term;
+    ModelScope.of(context).analytics.event(
+      'search',
+      widget.kind == 'product' ? '/browse/products' : '/browse',
+      keyword: term,
+    );
+  }
+
   late Future<dynamic> result;
   late Future<dynamic> taxonomy;
 
@@ -71,6 +82,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
     final key = '${m.baseUrl}:${widget.kind}:$params';
     if (!force && requestKey == key) return;
     requestKey = key;
+    recordSearch();
     result = m.api(
       '/public/${widget.kind == 'product' ? 'products' : 'vendors'}?$params',
     );
