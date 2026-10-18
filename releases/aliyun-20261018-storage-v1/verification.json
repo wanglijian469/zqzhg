@@ -1,0 +1,17 @@
+{
+  "release": "aliyun-20261018-storage-v1",
+  "sourceCommit": "eb4907f9d814536b24ea968c3b5ef53800646ef9",
+  "payloadFilesVerified": 247,
+  "sourceEntries": 1464,
+  "allChecksumsMatch": true,
+  "sourceCRCVerified": true,
+  "linuxExecutablePermissions": true,
+  "packagedBashSyntax": true,
+  "businessDataExcluded": true,
+  "productionDeployed": false,
+  "tests": {
+    "frontend": 135,
+    "backend": 80,
+    "upgradeHelper": 6
+  }
+}

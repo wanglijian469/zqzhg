@@ -1,0 +1,39 @@
+{
+  "release": "aliyun-20261018-storage-v1",
+  "createdAt": "2026-10-18T13:40:06.589938+00:00",
+  "repository": "https://github.com/wanglijian469/zqzhg",
+  "gitCommit": "eb4907f9d814536b24ea968c3b5ef53800646ef9",
+  "schema": 15,
+  "migration": "015_storage_settings.sql",
+  "linuxArchitectures": [
+    "amd64",
+    "arm64"
+  ],
+  "binarySHA256": {
+    "amd64": "5b33ed1ba9ea5908abcac5f691fddce60b469ed53115ad6d5501c4ba573c58af",
+    "arm64": "f46ee2bcbd4d9f22edf1749615aa711a7ccccfa01265d8ea2b8a240f587fa1bc"
+  },
+  "androidVersion": "1.7.0+29",
+  "apkSHA256": "5f0a35407fcb6dc2e9001fa4f1578ca7f63463a7ea6feece2ab18866dfe1441d",
+  "androidRebuilt": false,
+  "sourceSHA256": "045176545f3c7e13bd5ce470d222eb495815c175ea37e2937366f93e102a4c69",
+  "sourceArchive": "zqzg-aliyun-20261018-storage-v1-source.zip",
+  "tests": {
+    "frontend": 135,
+    "backend": 80,
+    "upgradeHelper": 6,
+    "goVet": true,
+    "bashSyntax": true
+  },
+  "productionDeployed": false,
+  "includesBusinessDatabase": false,
+  "includesPrivateMedia": false,
+  "includesCredentials": false,
+  "deploymentMode": "existing managed installation; private backup before additive migration; environment and key retained",
+  "unverified": [
+    "Actual ECS/Linux startup and systemd upgrade",
+    "NAS/OSS and production DNS/TLS/Nginx",
+    "Real mobile device native integration"
+  ],
+  "frontendIndexSHA256": "b70050c614b65e79d40be9af186416915aa9a7a0038c601d5967fe1a901e0335"
+}

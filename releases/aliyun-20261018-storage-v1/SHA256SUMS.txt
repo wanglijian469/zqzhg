@@ -1,0 +1,3 @@
+d569a5fb2de5de052ae2f00e62a46544e99cdf70d0b56e47e07d1fbd41645eca  zqzg-aliyun-20261018-storage-v1-linux.tar.gz
+045176545f3c7e13bd5ce470d222eb495815c175ea37e2937366f93e102a4c69  zqzg-aliyun-20261018-storage-v1-source.zip
+2a6a2817b9ced515be18973b0e4873d5492b43b3d0fe06a63e28b5a13e974692  manifest-aliyun-20261018-storage-v1.json
