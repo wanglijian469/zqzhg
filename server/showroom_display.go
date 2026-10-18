@@ -179,3 +179,35 @@ func (a *App) saveMerchantShowroomDisplay(c *gin.Context) {
 	}
 	a.merchantShowroomDisplay(c)
 }
+
+// showroomHomeProducts preserves the three-slot configuration and fills only the homepage.
+func (a *App) showroomHomeProducts(vendorID uint64, representatives []View) ([]View, error) {
+	settings, ids, err := a.displaySettings(vendorID)
+	if err != nil {
+		return nil, err
+	}
+	result := []View{}
+	if settings.Mode == "manual" && len(ids) == 0 {
+		return result, nil
+	}
+	seen := map[uint64]bool{}
+	for _, item := range representatives {
+		if !seen[item.ID] && len(result) < 8 {
+			result = append(result, item)
+			seen[item.ID] = true
+		}
+	}
+	q := a.publicQuery("product").Where("contents.vendor_id=?", vendorID)
+	if len(result) > 0 {
+		selected := []uint64{}
+		for id := range seen {
+			selected = append(selected, id)
+		}
+		q = q.Where("contents.id NOT IN ?", selected)
+	}
+	extras, err := a.publicViews(q.Order("contents.featured DESC, contents.sort_order ASC, contents.id DESC").Limit(8 - len(result)))
+	if err != nil {
+		return nil, err
+	}
+	return append(result, extras...), nil
+}

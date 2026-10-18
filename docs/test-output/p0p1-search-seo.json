@@ -1,0 +1,76 @@
+{
+  "checks": [
+    "350ms auto-search, IME suppression, replace navigation and page reset",
+    "Immediate Enter submission and back/forward restoration",
+    "Obsolete slow responses cannot overwrite current results",
+    "Independent product SEO and stale metadata cleanup on SPA navigation",
+    "No-script initial HTML title, description, alias canonical, pagination and robots",
+    "Real homepage recommendation limits and manufacturer summaries",
+    "Responsive homepage loading skeletons"
+  ],
+  "seo": [
+    {
+      "path": "/",
+      "title": "中企展馆 · 农业机械厅",
+      "canonical": "http://172.27.35.2:8080/",
+      "robots": "index,follow"
+    },
+    {
+      "path": "/browse?page=2",
+      "title": "找厂家 | 中企展馆 · 农业机械厅",
+      "canonical": "http://172.27.35.2:8080/browse?page=2",
+      "robots": "index,follow"
+    },
+    {
+      "path": "/browse/products?q=MODEL&region_id=1",
+      "title": "找产品 | 中企展馆 · 农业机械厅",
+      "canonical": "http://172.27.35.2:8080/browse/products?q=MODEL&region_id=1",
+      "robots": "noindex,follow"
+    },
+    {
+      "path": "/?hall=cable",
+      "title": "中企展馆 · 电线电缆厅",
+      "canonical": "http://172.27.35.2:8080/?hall=cable",
+      "robots": "noindex,follow"
+    },
+    {
+      "path": "/products/2",
+      "title": "液压翻转犁1LF-440 | 中企展馆 · 农业机械厅",
+      "canonical": "http://172.27.35.2:8080/products/2",
+      "robots": "index,follow"
+    },
+    {
+      "path": "/vendors/21?tab=products&page=2",
+      "title": "河北丹顿液压科技有限公司 · 液压油缸 | 中企展馆",
+      "canonical": "http://172.27.35.2:8080/v/v-21?page=2&tab=products",
+      "robots": "index,follow"
+    }
+  ],
+  "skeletons": [
+    {
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "recommendations": {
+    "manufacturers": 5,
+    "products": 12,
+    "perVendor": {
+      "1": 3,
+      "21": 3,
+      "27": 2,
+      "37": 1,
+      "39": 3
+    }
+  },
+  "productionWrites": false
+}

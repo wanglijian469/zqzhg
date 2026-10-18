@@ -1,3 +1,4 @@
+import 'legacy_hall_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dalunongji/main.dart';
@@ -22,9 +23,12 @@ void main() {
             jsonDecode(File('assets/i18n/$lang.json').readAsStringSync()),
           ),
       },
-      client:
-          client ??
-          MockClient((_) async => http.Response('{"items":[],"total":0}', 200)),
+      client: legacyHallClient(
+        client ??
+            MockClient(
+              (_) async => http.Response('{"items":[],"total":0}', 200),
+            ),
+      ),
     );
   }
 
@@ -81,52 +85,29 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(ChoiceChip), findsNWidgets(4));
-      expect(
-        (tester.widget<ChoiceChip>(
-          find.widgetWithText(ChoiceChip, '展厅首页'),
-        )).selected,
-        isTrue,
-      );
-      await tester.tap(find.widgetWithText(ChoiceChip, '展品'));
+      expect(find.byType(ChoiceChip), findsNWidgets(6));
+      final productTab = find.widgetWithText(ChoiceChip, '产品中心');
+      await tester.ensureVisible(productTab);
+      await tester.tap(productTab);
       await tester.pumpAndSettle();
-      await tester.scrollUntilVisible(
-        find.byType(DropdownButtonFormField<int>),
-        240,
-        scrollable: find
-            .descendant(
-              of: find.byType(NestedScrollView),
-              matching: find.byType(Scrollable),
-            )
-            .last,
-      );
+      expect(find.byType(NativeCompanyHero), findsNothing);
+      await tester.tap(find.byType(ExpansionTile));
       await tester.pumpAndSettle();
       await tester.tap(find.byType(DropdownButtonFormField<int>));
       await tester.pumpAndSettle();
-      expect(find.text('农业机械 (45)'), findsOneWidget);
+      expect(find.text('农业机械'), findsOneWidget);
       await tester.tap(find.text('全部分类').last);
       await tester.pumpAndSettle();
-      await tester.enterText(
-        find.widgetWithText(TextField, '产品名称 / 型号'),
-        '440',
-      );
-      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.enterText(find.byType(TextField).first, '440');
+      await tester.testTextInput.receiveAction(TextInputAction.search);
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(ChoiceChip, '企业介绍'));
-      await tester.pumpAndSettle();
-      await tester.scrollUntilVisible(
-        find.textContaining('生产线'),
-        180,
-        scrollable: find
-            .descendant(
-              of: find.byType(NestedScrollView),
-              matching: find.byType(Scrollable),
-            )
-            .last,
-      );
+      final about = find.widgetWithText(ChoiceChip, '企业介绍');
+      await tester.ensureVisible(about);
+      await tester.tap(about);
       await tester.pumpAndSettle();
       expect(find.textContaining('生产线'), findsOneWidget);
-      await tester.tap(find.widgetWithText(ChoiceChip, '展品'));
+      await tester.ensureVisible(productTab);
+      await tester.tap(productTab);
       await tester.pumpAndSettle();
       expect(find.text('440'), findsOneWidget);
       expect(calls.any((u) => u.queryParameters['q'] == '440'), isTrue);

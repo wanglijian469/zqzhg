@@ -1,0 +1,27 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+const root=path.resolve(import.meta.dirname,'..');process.chdir(root);
+const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+const layout=JSON.parse(fs.readFileSync('docs/test-output/web-mobile-browser.json','utf8'));
+const interactions=JSON.parse(fs.readFileSync('docs/test-output/web-mobile-interactions.json','utf8'));
+const pdf=JSON.parse(fs.readFileSync('docs/test-output/web-mobile-pdf.json','utf8'));
+const tests=fs.readFileSync('.local/web-mobile-tests.log','utf8');
+const build=fs.readFileSync('.local/web-mobile-build.log','utf8');
+if(layout.checks!==280||layout.errors.length||interactions.checks.length!==10||interactions.errors.length||pdf.results.length!==3||pdf.errors.length||!/Tests\s+101 passed/.test(tests)||!build.includes('built in'))throw Error('Validation is incomplete');
+for(const name of ['browser','interactions','pdf'])if(fs.statSync('docs/test-output/web-mobile-'+name+'.json').mtimeMs<fs.statSync('web/dist/index.html').mtimeMs)throw Error('Stale browser report: '+name);
+const apkHash='5f0a35407fcb6dc2e9001fa4f1578ca7f63463a7ea6feece2ab18866dfe1441d';
+for(const apk of ['delivery/android/dalunongji-1.7.0+29.apk','web/public/downloads/dalunongji.apk','web/dist/downloads/dalunongji.apk'])if(hash(apk)!==apkHash)throw Error('Existing APK changed');
+const output='delivery/web-mobile-20261017';fs.mkdirSync(output,{recursive:true});
+fs.cpSync('web/dist',output+'/dist',{recursive:true});
+fs.copyFileSync('docs/WEB_MOBILE_UPGRADE.md',output+'/README.md');
+fs.cpSync('docs/screenshots/web-mobile',output+'/screenshots',{recursive:true});
+fs.mkdirSync(output+'/validation',{recursive:true});
+for(const name of ['browser','interactions','pdf'])fs.copyFileSync('docs/test-output/web-mobile-'+name+'.json',output+'/validation/'+name+'.json');
+for(const name of ['tests','build'])fs.copyFileSync('.local/web-mobile-'+name+'.log',output+'/validation/'+name+'.log');
+const changed=JSON.parse(fs.readFileSync('.local/web-mobile-changed-files.json','utf8'));
+const extra=['scripts/verify-web-mobile.cjs','scripts/verify-web-mobile-interactions.cjs','scripts/verify-web-mobile-pdf.cjs','scripts/package-web-mobile.mjs','scripts/fixtures/mobile-reader.pdf'];
+for(const f of [...changed,...extra]){const target=path.join(output,'source-changes',f);fs.mkdirSync(path.dirname(target),{recursive:true});fs.copyFileSync(f,target);}
+fs.writeFileSync(output+'/manifest.json',JSON.stringify({release:'web-mobile-20261017',websitePackageVersion:JSON.parse(fs.readFileSync('web/package.json','utf8')).version,changes:changed,apiChanges:false,databaseChanges:false,backendBuildIncluded:false,androidChanged:false,androidApkSha256:apkHash,unitTests:101,browserLayouts:280,interactionGroups:10,isolatedPdfWidths:[375,768,1440],deviceValidation:false,productionDeployed:false,publicData:layout.publicData,statistics:'Browser QA intercepts analytics collection'},null,2)+'\n');
+const files=[];function scan(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())scan(p);else if(e.name!=='SHA256SUMS.txt')files.push([path.relative(output,p).replaceAll('\\','/'),hash(p)]);}}scan(output);
+fs.writeFileSync(output+'/SHA256SUMS.txt',files.sort().map(([p,h])=>h+'  '+p).join('\n')+'\n');console.log(JSON.stringify({directory:output,files:files.length,apkPreserved:true}));

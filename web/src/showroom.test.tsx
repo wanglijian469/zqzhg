@@ -1,3 +1,4 @@
+import {withHallFixture} from './hall-test-fixture';
 // @vitest-environment jsdom
 import React from 'react';
 import {afterEach,beforeEach,expect,it,vi} from 'vitest';
@@ -15,19 +16,19 @@ const vendor={id:1,kind:'vendor',showroom_slug:'sample',data:{...emptyData,name:
 const product={id:2,kind:'product',data:{...emptyData,name:'TEST-440翻转犁'},vendor:{id:1,name:vendor.data.name,showroom_slug:'sample'}};
 const fetcher=vi.fn(async(url:string)=>{
  let data;
- if(url.includes('/public/showrooms/'))data={item:vendor,canonical_url:'https://showroom.example/v/sample',product_count:19,categories:[{id:1,parent_id:0,name:'农业机械',name_en:'Machinery'}]};
+ if(url.includes('/public/showrooms/'))data={item:vendor,canonical_url:'https://showroom.example/v/sample',product_count:49,categories:[{id:1,parent_id:0,name:'农业机械',name_en:'Machinery'}]};
  else if(url.includes('/public/products/2'))data={item:product,vendor};
- else if(url.includes('/public/products?')){const query=new URL(url,'http://localhost').searchParams;data={items:query.get('q')==='missing'?[]:[product],total:19,page:Number(query.get('page')||1),page_size:12}}
+ else if(url.includes('/public/products?')){const query=new URL(url,'http://localhost').searchParams;data={items:query.get('q')==='missing'?[]:[product],total:49,page:Number(query.get('page')||1),page_size:24}}
  else if(url.includes('/taxonomy'))data={halls:[],regions:[],categories:[]};
  else throw new Error('Unexpected request '+url);
  return new Response(JSON.stringify(data));
 });
-beforeEach(()=>{localStorage.clear();sessionStorage.clear();vi.stubGlobal('fetch',fetcher);vi.stubGlobal('scrollTo',vi.fn());history.replaceState(null,'','/v/sample')});
+beforeEach(()=>{localStorage.clear();sessionStorage.clear();vi.stubGlobal('fetch',withHallFixture(fetcher));vi.stubGlobal('scrollTo',vi.fn());history.replaceState(null,'','/v/sample')});
 afterEach(()=>{cleanup();vi.unstubAllGlobals();fetcher.mockClear()});
 
 it('keeps showroom search, category, page and language across product details and refresh',async()=>{
  render(<BrowserRouter><App/></BrowserRouter>);const user=userEvent.setup();await screen.findByRole('heading',{name:vendor.data.name});
- expect(screen.queryByRole('link',{name:'首页'})).toBeNull();expect(screen.getAllByRole('tab')).toHaveLength(4);await user.click(screen.getByRole('tab',{name:'联系我们'}));expect(screen.getByRole('link',{name:'13800000002'}).getAttribute('href')).toBe('tel:13800000002');await user.click(screen.getByRole('tab',{name:'展品'}));
+ expect(screen.queryByRole('link',{name:'首页'})).toBeNull();expect(screen.getAllByRole('tab')).toHaveLength(6);await user.click(screen.getByRole('tab',{name:'联系企业'}));expect(screen.getByRole('link',{name:'13800000002'}).getAttribute('href')).toBe('tel:13800000002');await user.click(screen.getByRole('tab',{name:'产品中心'}));
  await user.type(screen.getByRole('textbox',{name:'产品名称 / 型号'}),'TEST');await user.selectOptions(screen.getByRole('combobox',{name:'产品分类'}),'1');await user.click(screen.getByRole('button',{name:'找产品'}));
  await user.click(await screen.findByRole('button',{name:'下一页'}));expect(location.search).toContain('page=2');
  await user.click(screen.getByRole('button',{name:'English'}));expect(location.pathname).toBe('/v/sample');
@@ -40,7 +41,7 @@ it('shares the canonical company URL without filters and provides manual copy fa
  history.replaceState(null,'','/v/sample?q=TEST&page=2');render(<BrowserRouter><App/></BrowserRouter>);const user=userEvent.setup();await screen.findByRole('heading',{name:vendor.data.name});
  await user.click(screen.getAllByRole('button',{name:'分享企业展厅'})[0]);const modal=screen.getByRole('dialog');expect((within(modal).getByRole('textbox',{name:'展厅地址'}) as HTMLInputElement).value).toBe('https://showroom.example/v/sample');
  vi.spyOn(navigator.clipboard,'writeText').mockRejectedValueOnce(new Error('clipboard denied'));await user.click(within(modal).getByRole('button',{name:'复制地址'}));expect(await within(modal).findByText('自动复制失败，请选中地址手动复制。')).toBeTruthy();
- expect(within(modal).getByRole('button',{name:'展厅二维码'})).toBeTruthy();expect(within(modal).getByRole('button',{name:'保存宣传海报'})).toBeTruthy();
+ expect(within(modal).getByRole('button',{name:'展厅二维码'})).toBeTruthy();expect(within(modal).getByRole('button',{name:'生成海报预览'})).toBeTruthy();
 });
 it('shows an empty result and excludes sections without company data',async()=>{
  history.replaceState(null,'','/v/sample?q=missing');render(<BrowserRouter><App/></BrowserRouter>);await screen.findByText('没有匹配的产品，请调整关键词或分类。');expect(screen.queryByRole('link',{name:'工厂与产品实拍'})).toBeNull();

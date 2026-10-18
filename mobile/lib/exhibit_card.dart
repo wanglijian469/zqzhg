@@ -61,8 +61,13 @@ class ExhibitSliver extends StatelessWidget {
 
 class ItemTile extends StatelessWidget {
   final Json item;
-  final bool compact;
-  const ItemTile({super.key, required this.item, this.compact = false});
+  final bool compact, showVendor;
+  const ItemTile({
+    super.key,
+    required this.item,
+    this.compact = false,
+    this.showVendor = true,
+  });
   @override
   Widget build(BuildContext context) {
     if (item['kind'] == 'vendor') return NativeVendorCard(item: item);
@@ -96,12 +101,12 @@ class ItemTile extends StatelessWidget {
                       ? Photo(
                           id: ids.first,
                           fallbackIDs: ids.skip(1).toList(),
-                          aspectRatio: 1,
+                          aspectRatio: 4 / 3,
                           fit: BoxFit.contain,
                           radius: 0,
                         )
                       : const AspectRatio(
-                          aspectRatio: 1,
+                          aspectRatio: 4 / 3,
                           child: Center(
                             child: Icon(
                               Icons.precision_manufacturing_outlined,
@@ -144,6 +149,13 @@ class ItemTile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
+                  if (m.productCategory(data).isNotEmpty)
+                    Text(
+                      m.productCategory(data),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   SizedBox(
                     height: scale.scale(12) * 1.5,
                     child: Text(
@@ -154,18 +166,19 @@ class ItemTile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  SizedBox(
-                    height: scale.scale(12) * 1.5 * 2,
-                    child: Text(
-                      [
-                        vendorName,
-                        region,
-                      ].where((s) => s.isNotEmpty).join(' · '),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodySmall,
+                  if (showVendor)
+                    SizedBox(
+                      height: scale.scale(12) * 1.5 * 2,
+                      child: Text(
+                        [
+                          vendorName,
+                          region,
+                        ].where((s) => s.isNotEmpty).join(' · '),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -219,7 +232,7 @@ class NativeVendorCard extends StatelessWidget {
           ),
         ];
         final style = ButtonStyle(
-          minimumSize: const WidgetStatePropertyAll(Size(44, 44)),
+          minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
           padding: const WidgetStatePropertyAll(
             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           ),

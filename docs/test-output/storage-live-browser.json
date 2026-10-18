@@ -1,0 +1,10 @@
+{
+  "homepage": true,
+  "products": true,
+  "width": 390,
+  "overflow": false,
+  "errors": [],
+  "readOnlyBusinessData": true,
+  "analyticsIntercepted": true,
+  "device": "Desktop Edge emulation; no real phone"
+}

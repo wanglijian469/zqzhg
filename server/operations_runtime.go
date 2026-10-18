@@ -502,7 +502,13 @@ func (a *App) operationsGate() gin.HandlerFunc {
 			fail(c, 503, "maintenance")
 			return
 		}
-		if (c.Request.Method != "GET" && c.Request.Method != "HEAD" && c.Request.Method != "OPTIONS") || strings.HasSuffix(path, "/analytics/export") || (strings.Contains(path, "/admin/backups/") && strings.HasSuffix(path, "/download")) {
+		if c.Request.Method == "DELETE" && strings.HasPrefix(path, "/api/v1/admin/media/") {
+			r.writes.Lock()
+			defer r.writes.Unlock()
+			c.Next()
+			return
+		}
+		if strings.HasSuffix(path, "/storage/usage") || path == "/api/v1/admin/storage/quotas" || (c.Request.Method != "GET" && c.Request.Method != "HEAD" && c.Request.Method != "OPTIONS") || strings.HasSuffix(path, "/analytics/export") || (strings.Contains(path, "/admin/backups/") && strings.HasSuffix(path, "/download")) {
 			if r.pauseWrites.Load() {
 				fail(c, 503, "snapshot_in_progress")
 				return
@@ -550,7 +556,11 @@ func (a *App) operationsTick() {
 	a.aggregateAnalytics()
 	a.scheduledBackup()
 }
-func (a *App) workPath(key string) string { return filepath.Join(a.operations().dir, "work", key) }
+func (a *App) workPath(key string) string {
+	path := a.mediaTempDir()
+	_ = os.MkdirAll(path, 0700)
+	return filepath.Join(path, key)
+}
 func fileSHA(path string) (string, int64, error) {
 	f, err := os.Open(path)
 	if err != nil {

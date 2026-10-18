@@ -1,3 +1,4 @@
+import {withHallFixture} from './hall-test-fixture';
 // @vitest-environment jsdom
 import {afterEach,beforeEach,expect,it,vi} from 'vitest';
 import {cleanup,fireEvent,render,screen,within,waitFor} from '@testing-library/react';
@@ -18,7 +19,7 @@ const fetchMock=vi.fn(async(url:string,options?:RequestInit):Promise<Response>=>
 });
 const mount=(path='/admin/products')=>{history.replaceState(null,'',path);render(<BrowserRouter><App/></BrowserRouter>)};
 const writes=()=>fetchMock.mock.calls.filter(([url])=>/\/revisions\/\d+\/review$/.test(url));
-beforeEach(()=>{statuses={11:'pending',12:'pending',13:'approved',14:'draft'};failures={};held=undefined;hold=false;fetchMock.mockClear();localStorage.clear();sessionStorage.clear();sessionStorage.setItem('zqzt.admin','admin-test-token');vi.stubGlobal('fetch',fetchMock);vi.stubGlobal('scrollTo',vi.fn())});
+beforeEach(()=>{statuses={11:'pending',12:'pending',13:'approved',14:'draft'};failures={};held=undefined;hold=false;fetchMock.mockClear();localStorage.clear();sessionStorage.clear();sessionStorage.setItem('zqzt.admin','admin-test-token');vi.stubGlobal('fetch',withHallFixture(fetchMock));vi.stubGlobal('scrollTo',vi.fn())});
 afterEach(()=>{held?.(response({ok:true}));cleanup();vi.unstubAllGlobals();localStorage.clear();sessionStorage.clear()});
 
 it('selects only pending items on the current page and clears selection on page/filter changes',async()=>{mount();await screen.findByRole('checkbox',{name:'选择审核 审核内容1 #1'});expect((screen.getByRole('checkbox',{name:'选择审核 审核内容3 #3'}) as HTMLInputElement).disabled).toBe(true);await userEvent.click(screen.getByRole('checkbox',{name:'全选本页待审核'}));expect(screen.getByText('已选 2 条记录')).toBeTruthy();await userEvent.click(screen.getByRole('button',{name:/下一页/}));await screen.findByRole('checkbox',{name:'选择审核 审核内容5 #5'});expect(screen.getByText('已选 0 条记录')).toBeTruthy();await userEvent.click(screen.getByRole('checkbox',{name:'全选本页待审核'}));await userEvent.selectOptions(screen.getByRole('combobox',{name:'审核状态'}),'pending');await screen.findByRole('checkbox',{name:'选择审核 审核内容1 #1'});expect(screen.getByText('已选 0 条记录')).toBeTruthy();expect(writes()).toHaveLength(0)});

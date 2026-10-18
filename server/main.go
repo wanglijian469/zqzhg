@@ -27,11 +27,17 @@ var migrations embed.FS
 
 type Config struct{ Env, Addr, MediaDir, WebDir, CORS, SMSProvider, PublicBaseURL string }
 type App struct {
-	DB                *gorm.DB
-	Config            Config
-	SMS               SMSProvider
-	operationsOnce    sync.Once
-	operationsRuntime *OperationsRuntime
+	uploadMu             sync.Mutex
+	DB                   *gorm.DB
+	Config               Config
+	SMS                  SMSProvider
+	replicaMu            sync.Mutex
+	replicaCache         map[string]verifiedReplica
+	storageFallbackReads uint64
+	guardOnce            sync.Once
+	guard                *publicGuard
+	operationsOnce       sync.Once
+	operationsRuntime    *OperationsRuntime
 }
 
 func env(key, fallback string) string {
@@ -125,6 +131,18 @@ func migrate(db *gorm.DB) error {
 			}
 			for _, stmt := range strings.Split(string(data), ";") {
 				if strings.TrimSpace(stmt) != "" {
+					if version >= 11 {
+						parts := strings.Fields(stmt)
+						if len(parts) > 5 && parts[0] == "ALTER" && db.Migrator().HasColumn(parts[2], parts[5]) {
+							continue
+						}
+						if len(parts) > 5 && parts[0] == "CREATE" && parts[1] == "UNIQUE" && parts[2] == "INDEX" && db.Migrator().HasIndex(strings.Trim(strings.SplitN(parts[5], "(", 2)[0], "`"), parts[3]) {
+							continue
+						}
+						if len(parts) > 3 && parts[0] == "CREATE" && parts[1] == "INDEX" && len(parts) > 4 && db.Migrator().HasIndex(strings.Trim(strings.SplitN(parts[4], "(", 2)[0], "`"), parts[2]) {
+							continue
+						}
+					}
 					if e = db.Exec(stmt).Error; e != nil {
 						return e
 					}
@@ -139,7 +157,7 @@ func migrate(db *gorm.DB) error {
 }
 func seed(db *gorm.DB) error {
 	return db.Transaction(func(tx *gorm.DB) error {
-		if e := tx.FirstOrCreate(&Hall{ID: 1, Name: "大陆农机馆", NameEN: "Agricultural Machinery", Slug: "agriculture"}, Hall{ID: 1}).Error; e != nil {
+		if e := tx.FirstOrCreate(&Hall{ID: 1, Name: "农业机械厅", NameEN: "Agricultural Machinery", Slug: "agriculture"}, Hall{ID: 1}).Error; e != nil {
 			return e
 		}
 		for _, c := range []Category{{ID: 1, HallID: 1, Name: "农业机械", NameEN: "Agricultural machinery", Enabled: true}, {ID: 2, HallID: 1, Name: "农机配件", NameEN: "Machinery parts", Enabled: true}} {
@@ -172,9 +190,7 @@ func main() {
 	if e := validatePublicBase(cfg.PublicBaseURL); e != nil {
 		log.Fatal(e)
 	}
-	if cfg.Env == "production" && cfg.PublicBaseURL == "" {
-		log.Fatal("production requires PUBLIC_BASE_URL for external showroom sharing")
-	}
+
 	controlDir := controlDirectory(cfg.MediaDir)
 	target, targetError := bootstrapTarget(cfg.MediaDir, env("DB_NAME", "zqzt_exhibition"))
 	if targetError != nil {
@@ -198,6 +214,19 @@ func main() {
 		log.Fatal(e)
 	}
 	a := &App{DB: db, Config: cfg, SMS: DevelopmentSMS{}}
+	saved, settingsErr := a.systemConfig()
+	if settingsErr != nil {
+		log.Fatal("system settings invalid")
+	}
+	if cfg.Env == "production" && saved.Site.WebURL == "" && cfg.PublicBaseURL == "" {
+		log.Fatal("production requires a saved website URL or PUBLIC_BASE_URL")
+	}
+	if e = validateRuntimePaths(a); e != nil {
+		log.Fatal(e)
+	}
+	if e = db.Where("1=1").Delete(&MediaUploadReservation{}).Error; e != nil {
+		log.Fatal(e)
+	}
 	if len(os.Args) == 3 && os.Args[1] == "set-merchant-login" {
 		account, err := a.setMerchantLogin(os.Args[2], os.Getenv("MERCHANT_LOGIN_NAME"), os.Getenv("MERCHANT_LOGIN_PASSWORD"))
 		if err != nil {
@@ -235,7 +264,16 @@ func (a *App) router() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery(), a.operationsGate())
-	r.SetTrustedProxies(nil)
+	trusted := []string{}
+	if raw := strings.TrimSpace(env("TRUSTED_PROXIES", "")); raw != "" {
+		trusted = strings.Split(raw, ",")
+		for i := range trusted {
+			trusted[i] = strings.TrimSpace(trusted[i])
+		}
+	}
+	if err := r.SetTrustedProxies(trusted); err != nil {
+		panic("Invalid TRUSTED_PROXIES: " + err.Error())
+	}
 	r.Use(func(c *gin.Context) {
 		if strings.HasPrefix(c.Request.URL.Path, "/api/") && !strings.HasSuffix(c.Request.URL.Path, "/media") && !strings.HasSuffix(c.Request.URL.Path, "/resource-media") && !(strings.HasPrefix(c.Request.URL.Path, "/api/v1/admin/backups/imports/") && strings.Contains(c.Request.URL.Path, "/chunks/")) {
 			c.Request.Body = httpMaxBody(c, 1<<20)
@@ -245,10 +283,11 @@ func (a *App) router() *gin.Engine {
 		if strings.HasPrefix(c.Request.URL.Path, "/api/") {
 			c.Header("Cache-Control", "no-store")
 		}
-		if c.GetHeader("Origin") == a.Config.CORS {
-			c.Header("Access-Control-Allow-Origin", a.Config.CORS)
+		if a.allowedSiteOrigin(c.GetHeader("Origin")) {
+			c.Header("Access-Control-Allow-Origin", c.GetHeader("Origin"))
 			c.Header("Vary", "Origin")
-			c.Header("Access-Control-Allow-Headers", "Authorization, Content-Type")
+			c.Header("Access-Control-Allow-Headers", "Authorization, Content-Type, Range, If-Range")
+			c.Header("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges, Retry-After")
 			c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		}
 		if c.Request.Method == "OPTIONS" {
@@ -257,6 +296,8 @@ func (a *App) router() *gin.Engine {
 		}
 		c.Next()
 	})
+	r.Use(a.publicProtection())
+	r.GET("/robots.txt", func(c *gin.Context) { c.Data(200, "text/plain; charset=utf-8", []byte(robotsPolicy())) })
 	api := r.Group("/api/v1")
 	api.GET("/public/app", a.publicApp)
 	api.GET("/health", func(c *gin.Context) {
@@ -279,6 +320,8 @@ func (a *App) router() *gin.Engine {
 	auth.POST("/logout", a.logout)
 	pub := api.Group("/public")
 	pub.GET("/showrooms/:slug", a.publicShowroom)
+	pub.GET("/administrative-regions", a.administrativeRegions)
+	pub.GET("/halls", a.publicHalls)
 	pub.GET("/home", a.home)
 	pub.GET("/taxonomy", a.taxonomy)
 	pub.GET("/vendors", a.searchVendors)
@@ -291,9 +334,14 @@ func (a *App) router() *gin.Engine {
 	favorites.POST("/sync", a.syncFavorites)
 	api.GET("/media/:id", a.mediaRead)
 	api.HEAD("/media/:id", a.mediaRead)
+	r.GET("/media/status", a.publicMediaStatus)
+	r.GET("/media/:id", a.mediaRead)
+	r.HEAD("/media/:id", a.mediaRead)
 	merchant := api.Group("/merchant", a.requireAuth("merchant"))
 	merchant.GET("/contents", a.myContents)
 	merchant.GET("/dashboard", a.merchantDashboard)
+	merchant.GET("/showroom-link", a.merchantLink)
+	merchant.PUT("/showroom-link", a.merchantSaveLink)
 	merchant.GET("/showroom-display", a.merchantShowroomDisplay)
 	merchant.PUT("/showroom-display", a.saveMerchantShowroomDisplay)
 	merchant.GET("/contents/:id", a.privateDetail)
@@ -310,6 +358,8 @@ func (a *App) router() *gin.Engine {
 	a.operatorRoutes(admin)
 	a.jobRoutes(admin, api)
 	a.storageRoutes(admin)
+	a.settingsRoutes(admin, pub)
+	a.storageUsageRoutes(admin, merchant)
 	a.analyticsRoutes(pub, admin)
 	a.backupRoutes(admin)
 	a.backupDownloadRoutes(admin, api)
@@ -318,6 +368,7 @@ func (a *App) router() *gin.Engine {
 	admin.POST("/accounts/:id/password-reset", a.adminPasswordReset)
 	admin.GET("/operation-logs", a.adminLogs)
 	admin.GET("/system", a.adminSystem)
+	admin.GET("/vendors/:id/showroom-link", a.adminLink)
 	admin.PUT("/vendors/:id/showroom-slug", a.setShowroomSlug)
 	admin.POST("/vendors", a.adminCreateVendor)
 	admin.POST("/vendors/:id/products", a.adminCreateProduct)
@@ -330,6 +381,8 @@ func (a *App) router() *gin.Engine {
 	admin.POST("/revisions/:id/review", a.review)
 	admin.POST("/contents/:id/offline", a.offline(true))
 	admin.PUT("/contents/:id/featured", a.featured)
+	admin.GET("/halls", a.adminHalls)
+	admin.PUT("/halls/:id", a.saveHall)
 	admin.GET("/home-display", a.homeDisplay)
 	admin.PUT("/home-display", a.saveHomeDisplay)
 	admin.POST("/home-display/media", a.homeDisplayUpload)
@@ -358,10 +411,18 @@ func (a *App) router() *gin.Engine {
 			c.JSON(200, gin.H{"service": "中企展馆", "website": "Build web first. API: /api/v1/health"})
 			return
 		}
+		if a.publicHTML(c, index) {
+			return
+		}
 		if a.showroomHTML(c, index) {
 			return
 		}
-		c.File(index)
+		raw, err := os.ReadFile(index)
+		if err != nil {
+			fail(c, 500, "internal_error")
+			return
+		}
+		c.Data(200, "text/html; charset=utf-8", []byte(a.runtimeHTML(c, string(raw))))
 	})
 	return r
 }

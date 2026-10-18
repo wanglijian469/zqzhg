@@ -33,6 +33,7 @@ func recordReview(tx *gorm.DB, log ReviewLog) error {
 }
 func (a *App) adminCreateVendor(c *gin.Context) {
 	var req struct {
+		HallID    uint64  `json:"hall_id"`
 		AccountID uint64  `json:"account_id"`
 		LoginName string  `json:"login_name"`
 		Data      Payload `json:"data"`
@@ -85,7 +86,7 @@ func (a *App) adminCreateVendor(c *gin.Context) {
 		if e := a.validatePayload(tx, account, "vendor", &req.Data); e != nil {
 			return e
 		}
-		content = Content{Kind: "vendor", OwnerID: account.ID, VendorOwnerKey: &account.ID}
+		content = Content{Kind: "vendor", OwnerID: account.ID, VendorOwnerKey: &account.ID, HallID: req.HallID}
 		if e := tx.Create(&content).Error; e != nil {
 			return e
 		}
@@ -140,7 +141,7 @@ func (a *App) adminCreateProduct(c *gin.Context) {
 		if _, e = productSlot(tx, vendor.OwnerID); e != nil {
 			return e
 		}
-		content = Content{Kind: "product", VendorID: vendor.ID, OwnerID: vendor.OwnerID}
+		content = Content{Kind: "product", VendorID: vendor.ID, OwnerID: vendor.OwnerID, HallID: vendor.HallID}
 		if e = tx.Create(&content).Error; e != nil {
 			return e
 		}
@@ -422,7 +423,7 @@ func (a *App) adminSystem(c *gin.Context) {
 		}
 	}
 	c.Header("Cache-Control", "no-store")
-	c.JSON(200, gin.H{"service": "ok", "environment": a.Config.Env, "database_ok": dbOK, "media_ok": mediaOK, "media_files": files, "media_bytes": bytes, "sms_provider": a.Config.SMSProvider, "aliyun_configured": configured, "checked_at": time.Now().UTC(), "product_limit": maxVendorProducts})
+	c.JSON(200, gin.H{"service": "ok", "environment": a.Config.Env, "database_ok": dbOK, "media_ok": mediaOK, "media_files": files, "media_bytes": bytes, "sms_provider": a.Config.SMSProvider, "aliyun_configured": configured, "checked_at": time.Now().UTC(), "product_limit": maxVendorProducts, "public_protection": a.protectionStats()})
 }
 func uintQuery(c *gin.Context, key string) uint64 {
 	v, _ := strconv.ParseUint(c.Query(key), 10, 64)

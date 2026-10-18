@@ -129,19 +129,27 @@ func (a *App) backupProfilePinned(id uint64) bool {
 }
 func (a *App) backupStore(id uint64) (ObjectStore, error) {
 	if id == 0 {
-		return localObjectStore{filepath.Join(a.operations().dir, "backups")}, nil
+		return localObjectStore{a.localBackupDir()}, nil
 	}
 	return a.store(id)
 }
 func (a *App) backupEntryStore(entry BackupEntry) (ObjectStore, error) {
 	if entry.Location != nil {
 		profile := entry.Location.Profile
+		profile.RootKey = ""
 		profile.Credentials = entry.Location.Credentials
 		var current StorageProfile
 		if a.DB != nil && a.DB.First(&current, entry.StoreID).Error == nil && sameStorageLocation(profile, current) {
 			profile.Credentials = current.Credentials
 		}
 		return a.profileStore(profile)
+	}
+	if entry.StoreID == 0 {
+		for _, root := range []string{a.localBackupDir(), filepath.Join(a.operations().dir, "backups")} {
+			if _, e := (localObjectStore{root}).Stat(context.Background(), entry.Key); e == nil {
+				return localObjectStore{root}, nil
+			}
+		}
 	}
 	return a.backupStore(entry.StoreID)
 }
@@ -240,6 +248,7 @@ func (a *App) runBackup(ctx context.Context, job *OperationJob) (any, error) {
 	var store ObjectStore
 	if policy.TargetID == 0 {
 		store, err = a.backupStore(0)
+		location = &BackupLocation{Profile: StorageProfile{Kind: "local", LocalRoot: a.localBackupDir()}}
 	} else {
 		var profile StorageProfile
 		profile, err = a.storageProfile(policy.TargetID)
@@ -292,7 +301,7 @@ func (a *App) runBackup(ctx context.Context, job *OperationJob) (any, error) {
 	if err != nil {
 		return nil, err
 	}
-	manifest := BackupManifest{1, "1.6.0", schema, a.currentDatabase(), time.Now().UTC(), hash, sqlSize, objects, counts}
+	manifest := BackupManifest{1, "2.0.0", schema, a.currentDatabase(), time.Now().UTC(), hash, sqlSize, objects, counts}
 	archive, err := os.OpenFile(plainPath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
 	if err != nil {
 		return nil, err
@@ -323,7 +332,7 @@ func (a *App) runBackup(ctx context.Context, job *OperationJob) (any, error) {
 			if e = a.updateJob(job.ID, "copying_media", int64(i), int64(len(objects))); e != nil {
 				return e
 			}
-			source, e := a.store(object.StoreID)
+			_, source, e := a.resolveObject(ctx, object.Key)
 			if e != nil {
 				return e
 			}
@@ -453,7 +462,13 @@ func (a *App) backupRoutes(admin *gin.RouterGroup) {
 			return
 		}
 		sort.Slice(entries, func(i, j int) bool { return entries[i].CreatedAt.After(entries[j].CreatedAt) })
-		c.JSON(200, gin.H{"items": entries, "policy": a.backupPolicy()})
+		var lastDownload OperationLog
+		a.DB.Where("action=?", "backup_downloaded").Order("id DESC").Limit(1).Find(&lastDownload)
+		var downloadedAt *time.Time
+		if lastDownload.ID > 0 {
+			downloadedAt = &lastDownload.CreatedAt
+		}
+		c.JSON(200, gin.H{"items": entries, "policy": a.backupPolicy(), "last_download_at": downloadedAt})
 	})
 	admin.PUT("/backups/policy", func(c *gin.Context) {
 		var policy BackupPolicy
@@ -619,7 +634,7 @@ func (a *App) unpackBackup(ctx context.Context, job *OperationJob, destination s
 	}
 	err = json.NewDecoder(io.LimitReader(body, 8<<20)).Decode(&manifest)
 	body.Close()
-	if err != nil || manifest.Format != 1 || manifest.Schema > 10 || manifest.Schema < 10 || len(manifest.Objects) > 100000 {
+	if err != nil || manifest.Format != 1 || manifest.Schema > 15 || manifest.Schema < 10 || len(manifest.Objects) > 100000 {
 		return manifest, errors.New("backup_version_unsupported")
 	}
 	if _, exists := files["database.sql"]; !exists {
@@ -777,6 +792,18 @@ func (a *App) runRestore(ctx context.Context, job *OperationJob) (any, error) {
 		return nil, errors.New("restore_validation_admin_required")
 	}
 	if err = migrate(db); err != nil {
+		return nil, err
+	}
+	if err = db.Where("1=1").Delete(&StoredObjectReplica{}).Error; err != nil {
+		return nil, err
+	}
+	if err = db.Where("1=1").Delete(&MediaObjectOwner{}).Error; err != nil {
+		return nil, err
+	}
+	if err = db.Model(&MerchantStorageQuota{}).Where("1=1").Update("initialized", false).Error; err != nil {
+		return nil, err
+	}
+	if err = db.Where("1=1").Delete(&MediaUploadReservation{}).Error; err != nil {
 		return nil, err
 	}
 	if err = db.Model(&StoredObject{}).Where("1=1").Update("store_id", 0).Error; err != nil {

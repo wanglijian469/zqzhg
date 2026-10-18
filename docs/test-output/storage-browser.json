@@ -1,0 +1,436 @@
+{
+  "checks": [
+    "Super administrator saves versioned settings and tests same-site addresses without rebuilding",
+    "Runtime upload limit is reflected by the public config",
+    "60 desktop/tablet/mobile layout combinations, both languages and equivalent 125%",
+    "Local storage selects registered root; arbitrary path input removed",
+    "Merchant sees own usage, default 2 GiB and zero released reservations",
+    "New and old media paths share Range, HEAD and private access permissions"
+  ],
+  "layouts": [
+    {
+      "width": 1440,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "zoom": 1,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "zoom": 1.25,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "zoom": 1,
+      "tab": "storage",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "site",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "uploads",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "zoom": 1.25,
+      "tab": "storage",
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "isolatedDatabase": true,
+  "realDeviceVerified": false,
+  "productionWrites": false
+}

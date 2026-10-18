@@ -1,0 +1,6 @@
+import {configureRuntime} from './runtime-config';
+// @vitest-environment jsdom
+import {afterEach,expect,it,vi} from 'vitest';
+import {api,publicRetrySeconds} from './api';
+afterEach(()=>{vi.useRealTimers();vi.unstubAllGlobals()});
+it('honors edge HTML 429 responses without repeated requests and recovers after Retry-After',async()=>{vi.useFakeTimers();const now=Date.now();vi.setSystemTime(now);const request=vi.fn().mockResolvedValueOnce(new Response('<html>Too many requests</html>',{status:429,headers:{'Retry-After':'2'}})).mockResolvedValueOnce(new Response('{}'));vi.stubGlobal('fetch',request);configureRuntime({version:1,site:{},uploads:{image_mib:10,video_mib:200,pdf_mib:50,default_quota_bytes:2147483648}});await expect(api('/public/products')).rejects.toMatchObject({code:'public_rate_limited'});expect(publicRetrySeconds()).toBe(2);await expect(api('/public/vendors')).rejects.toMatchObject({code:'public_rate_limited'});expect(request).toHaveBeenCalledTimes(1);await expect(api('/public/administrative-regions')).resolves.toEqual({});expect(request).toHaveBeenCalledTimes(2);request.mockResolvedValueOnce(new Response('{}'));vi.setSystemTime(now+3000);await expect(api('/public/products')).resolves.toEqual({});expect(request).toHaveBeenCalledTimes(3)});

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/image/draw"
@@ -13,6 +14,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 )
 
 func scaled(src image.Image, maxSize int) image.Image {
@@ -55,10 +57,18 @@ func writeImage(path string, img image.Image, format string) error {
 	return closeErr
 }
 func (a *App) upload(c *gin.Context) {
+	if e := a.checkUploadDisks(0); e != nil {
+		dbFail(c, e)
+		return
+	}
 	c.Request.Body = io.NopCloser(c.Request.Body)
-	c.Request.Body = httpMaxBody(c, 11<<20)
+	imageMiB := a.uploadConfig().ImageMiB
+	c.Request.Body = httpMaxBody(c, int64(imageMiB+1)<<20)
 	file, e := c.FormFile("file")
-	if e != nil || file.Size > 10<<20 || file.Size == 0 {
+	if c.Request.MultipartForm != nil {
+		defer c.Request.MultipartForm.RemoveAll()
+	}
+	if e != nil || file.Size > int64(imageMiB)<<20 || file.Size == 0 {
 		fail(c, 400, "invalid_image")
 		return
 	}
@@ -105,12 +115,50 @@ func (a *App) upload(c *gin.Context) {
 	}
 	defer os.Remove(fullPath)
 	defer os.Remove(thumbPath)
+	fullInfo, _ := os.Stat(fullPath)
+	thumbInfo, _ := os.Stat(thumbPath)
+	if fullInfo == nil || thumbInfo == nil {
+		fail(c, 500, "internal_error")
+		return
+	}
+	lease, leaseErr := a.reserveUpload(uploadOwner(c), fullInfo.Size()+thumbInfo.Size())
+	if leaseErr != nil {
+		dbFail(c, leaseErr)
+		return
+	}
+	defer lease.Release()
+	persisted := false
+	storeID := a.defaultStoreID()
+	defer func() {
+		if persisted {
+			return
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		for _, key := range []string{path, thumb} {
+			var object StoredObject
+			target := storeID
+			if a.DB.First(&object, "object_key=?", key).Error == nil {
+				target = object.StoreID
+			}
+			if store, err := a.store(target); err == nil {
+				if err = store.Delete(ctx, key); err == nil {
+					a.DB.Where("object_key=?", key).Delete(&StoredObject{})
+					a.DB.Where("object_key=?", key).Delete(&MediaObjectOwner{})
+				}
+			}
+		}
+	}()
 	if e = a.storeWorkFile(c.Request.Context(), path, fullPath); e != nil {
 		fail(c, 503, "storage_unavailable")
 		return
 	}
 	if e = a.storeWorkFile(c.Request.Context(), thumb, thumbPath); e != nil {
 		fail(c, 503, "storage_unavailable")
+		return
+	}
+	if e = lease.Commit(path, thumb); e != nil {
+		dbFail(c, e)
 		return
 	}
 	media := Media{OwnerID: actor(c).ID, Path: path, ThumbPath: thumb}
@@ -141,7 +189,8 @@ func (a *App) upload(c *gin.Context) {
 		fail(c, 500, "internal_error")
 		return
 	}
-	c.JSON(201, gin.H{"id": media.ID, "url": fmt.Sprintf("/api/v1/media/%d", media.ID), "thumb_url": fmt.Sprintf("/api/v1/media/%d?thumb=1", media.ID)})
+	persisted = true
+	c.JSON(201, gin.H{"id": media.ID, "url": a.mediaAddress(c, media.ID, ""), "thumb_url": a.mediaAddress(c, media.ID, "?thumb=1")})
 }
 func (a *App) mediaRead(c *gin.Context) {
 	mediaID, e := strconv.ParseUint(c.Param("id"), 10, 64)
@@ -155,13 +204,13 @@ func (a *App) mediaRead(c *gin.Context) {
 		return
 	}
 	var count int64
-	e = a.DB.Raw("SELECT COUNT(*) FROM media_references mr JOIN contents c ON c.published_revision_id=mr.revision_id JOIN revisions r ON r.id=mr.revision_id AND r.status='approved' LEFT JOIN contents v ON v.id=c.vendor_id LEFT JOIN revisions vr ON vr.id=v.published_revision_id WHERE mr.media_id=? AND c.visible=1 AND (c.kind='vendor' OR (v.visible=1 AND vr.status='approved'))", mediaID).Scan(&count).Error
+	e = a.DB.Raw("SELECT COUNT(*) FROM media_references mr JOIN contents c ON c.published_revision_id=mr.revision_id JOIN revisions r ON r.id=mr.revision_id AND r.status='approved' JOIN halls h ON h.id=c.hall_id AND h.status='open' LEFT JOIN contents v ON v.id=c.vendor_id LEFT JOIN revisions vr ON vr.id=v.published_revision_id WHERE mr.media_id=? AND c.visible=1 AND (c.kind='vendor' OR (v.visible=1 AND vr.status='approved'))", mediaID).Scan(&count).Error
 	if e != nil {
 		fail(c, 500, "internal_error")
 		return
 	}
 	if count == 0 {
-		if e := a.DB.Table("home_display_settings hs").Joins("JOIN home_display_media hm ON hm.media_id=hs.hero_media_id").Where("hs.id=1 AND hm.media_id=?", mediaID).Count(&count).Error; e != nil {
+		if e := a.DB.Table("home_display_settings hs").Joins("JOIN home_display_media hm ON hm.media_id=hs.hero_media_id").Where("hm.media_id=? AND EXISTS (SELECT 1 FROM halls h WHERE h.id=hs.id AND h.status IN ('open','preparing'))", mediaID).Count(&count).Error; e != nil {
 			fail(c, 500, "internal_error")
 			return
 		}

@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 	"html"
 	"net/url"
 	"os"
@@ -159,7 +157,7 @@ func (a *App) resolveShowroom(slug string) ([]View, error) {
 		id, _ := strconv.ParseUint(slug[2:], 10, 64)
 		q = q.Where("contents.id=?", id)
 	} else {
-		q = q.Where("contents.showroom_slug=?", slug)
+		q = q.Where("(contents.showroom_slug=? OR contents.id IN (SELECT vendor_id FROM showroom_addresses WHERE slug=?))", slug, slug)
 	}
 	return a.publicViews(q)
 }
@@ -236,9 +234,7 @@ func (a *App) publicShowroom(c *gin.Context) {
 		}
 	}
 	canonical := "/v/" + item.ShowroomSlug
-	if a.Config.PublicBaseURL != "" {
-		canonical = strings.TrimRight(a.Config.PublicBaseURL, "/") + canonical
-	}
+	canonical = a.publicBase(c) + canonical
 	resourceCounts := map[string]int64{}
 	for _, kind := range []string{"video", "catalog"} {
 		var n int64
@@ -249,6 +245,11 @@ func (a *App) publicShowroom(c *gin.Context) {
 		resourceCounts[kind] = n
 	}
 	representatives, e := a.representativeProducts(item.ID)
+	if e != nil {
+		dbFail(c, e)
+		return
+	}
+	homeProducts, e := a.showroomHomeProducts(item.ID, representatives)
 	if e != nil {
 		dbFail(c, e)
 		return
@@ -269,48 +270,9 @@ func (a *App) publicShowroom(c *gin.Context) {
 			}{category.ID, category.Name, category.NameEN}
 		}
 	}
-	c.JSON(200, gin.H{"business_category": businessCategory, "representative_products": representatives, "item": item, "categories": cats, "product_count": total, "canonical_url": canonical, "resource_counts": resourceCounts})
+	c.JSON(200, gin.H{"business_category": businessCategory, "representative_products": representatives, "home_products": homeProducts, "item": item, "categories": cats, "product_count": total, "canonical_url": canonical, "resource_counts": resourceCounts})
 }
-func (a *App) setShowroomSlug(c *gin.Context) {
-	var req struct {
-		Slug string `json:"slug"`
-	}
-	if c.ShouldBindJSON(&req) != nil || !regexp.MustCompile(`^[a-z][a-z0-9-]{1,63}$`).MatchString(req.Slug) || regexp.MustCompile(`^v-[0-9]+$`).MatchString(req.Slug) {
-		fail(c, 400, "invalid_showroom_slug")
-		return
-	}
-	e := a.DB.Transaction(func(tx *gorm.DB) error {
-		var content Content
-		if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("kind='vendor'").First(&content, id(c)).Error; e != nil {
-			return e
-		}
-		if content.ShowroomSlug != nil {
-			if *content.ShowroomSlug == req.Slug {
-				return nil
-			}
-			return fmt.Errorf("showroom_slug_locked")
-		}
-		var n int64
-		if e := tx.Model(&Content{}).Where("showroom_slug=?", req.Slug).Count(&n).Error; e != nil {
-			return e
-		}
-		if n > 0 {
-			return fmt.Errorf("showroom_slug_exists")
-		}
-		if e := tx.Model(&content).Update("showroom_slug", req.Slug).Error; e != nil {
-			if strings.Contains(e.Error(), "Duplicate entry") {
-				return fmt.Errorf("showroom_slug_exists")
-			}
-			return e
-		}
-		return recordOperation(tx, actor(c).ID, "vendor", content.ID, "showroom_slug_set", req.Slug)
-	})
-	if e != nil {
-		dbFail(c, e)
-		return
-	}
-	c.JSON(200, gin.H{"showroom_slug": req.Slug})
-}
+func (a *App) setShowroomSlug(c *gin.Context) { a.saveShowroomAddress(c, true) }
 
 // The SPA remains interactive; metadata is rendered by Go for link crawlers.
 func (a *App) showroomHTML(c *gin.Context, index string) bool {
@@ -340,6 +302,9 @@ func (a *App) showroomHTML(c *gin.Context, index string) bool {
 		return true
 	}
 	item := items[0]
+	if a.redirectOldShowroom(c, item) {
+		return true
+	}
 	data := item.Data
 	desc := data.MainProducts
 	cover := uint64(0)
@@ -352,7 +317,7 @@ func (a *App) showroomHTML(c *gin.Context, index string) bool {
 	if cover == 0 && len(data.MediaIDs) > 0 {
 		cover = data.MediaIDs[0]
 	}
-	base := strings.TrimRight(a.Config.PublicBaseURL, "/")
+	base := a.publicBase(c)
 	if base == "" {
 		scheme := "http"
 		if c.Request.TLS != nil {
@@ -360,19 +325,26 @@ func (a *App) showroomHTML(c *gin.Context, index string) bool {
 		}
 		base = scheme + "://" + c.Request.Host
 	}
-	canonical := base + "/v/" + item.ShowroomSlug
-	title := data.Name + " · " + data.MainProducts + " | 中企展馆"
+	canonical := canonicalPublic(base, "/v/"+item.ShowroomSlug, c.Request.URL.Query())
+	title := data.Name + " · " + data.MainProducts + " | " + a.brandName()
 	meta := `<title>` + html.EscapeString(title) + `</title><meta name="description" content="` + html.EscapeString(desc) + `"><link rel="canonical" href="` + html.EscapeString(canonical) + `">`
 	for k, v := range map[string]string{"og:type": "website", "og:title": title, "og:description": desc, "og:url": canonical} {
 		meta += `<meta property="` + k + `" content="` + html.EscapeString(v) + `">`
 	}
 	if cover > 0 {
-		meta += `<meta property="og:image" content="` + html.EscapeString(fmt.Sprintf("%s/api/v1/media/%d", base, cover)) + `">`
+		meta += `<meta property="og:image" content="` + html.EscapeString(a.mediaAddress(c, cover, "")) + `">`
 	}
 	org, _ := json.Marshal(map[string]string{"@context": "https://schema.org", "@type": "Organization", "name": data.Name, "url": canonical, "telephone": data.Phone, "address": data.Address})
 	meta += `<script type="application/ld+json">` + string(org) + `</script>`
-	page := regexp.MustCompile(`(?s)<title>.*?</title>`).ReplaceAllStringFunc(string(source), func(string) string { return "" })
+	page := cleanHTMLMetadata(string(source))
+	robots := "index,follow"
+	for _, k := range []string{"q", "category_id", "region_id", "vendor_id", "sort"} {
+		if c.Query(k) != "" {
+			robots = "noindex,follow"
+		}
+	}
+	meta += `<meta name="zqzg-public-base" content="` + html.EscapeString(base) + `"><meta name="robots" content="` + robots + `">`
 	page = strings.Replace(page, "<head>", "<head>"+meta, 1)
-	c.Data(200, "text/html; charset=utf-8", []byte(page))
+	c.Data(200, "text/html; charset=utf-8", []byte(a.runtimeHTML(c, page)))
 	return true
 }

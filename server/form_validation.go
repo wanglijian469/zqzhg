@@ -152,8 +152,5 @@ func payloadFieldIssues(kind string, p Payload) []FieldIssue {
 	if len(p.MediaIDs) > 12 {
 		issues = append(issues, FieldIssue{"media_ids", "too_many", 12, "items"})
 	}
-	if kind == "product" && p.CategoryID == 0 && strings.TrimSpace(p.Keywords) == "" {
-		issues = append(issues, FieldIssue{Field: "category_id", Code: "category_or_keywords"})
-	}
 	return issues
 }

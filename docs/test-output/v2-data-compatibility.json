@@ -1,0 +1,16 @@
+{
+  "before": {
+    "contents": "48f10787afcd3e7f74bd9fe77cf60c7e742b67467d961badae7c2ba0402637cc",
+    "revisions": "a9eef75385604a43617d8632f303d103659fd454ddc000483c7051b472b71357",
+    "accounts": "6d6364bc0c9ce5b70efff03ad3c4e0ea6d6b7fab8f398a2a8d44de7b62f24e77",
+    "counts": "product\t34\r\nvendor\t4"
+  },
+  "after": {
+    "contents": "48f10787afcd3e7f74bd9fe77cf60c7e742b67467d961badae7c2ba0402637cc",
+    "revisions": "a9eef75385604a43617d8632f303d103659fd454ddc000483c7051b472b71357",
+    "accounts": "6d6364bc0c9ce5b70efff03ad3c4e0ea6d6b7fab8f398a2a8d44de7b62f24e77",
+    "counts": "product\t34\r\nvendor\t4"
+  },
+  "unchanged": true,
+  "migration": "11"
+}

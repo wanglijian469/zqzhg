@@ -5,7 +5,7 @@ import {ErrorState,PhoneLogin,useLanguage} from './main';
 import type {MerchantAuthResponse} from './types';
 
 export type MerchantAuthMode='register'|'account'|'phone';
-export function MerchantAuth({onLogin,defaultMode='register',companyName='',onBusy}:{onLogin:()=>void;defaultMode?:MerchantAuthMode;companyName?:string;onBusy?:(busy:boolean)=>void}){
+export function MerchantAuth({onLogin,defaultMode='register',companyName='',onBusy}:{onLogin:(registered?:boolean)=>void;defaultMode?:MerchantAuthMode;companyName?:string;onBusy?:(busy:boolean)=>void}){
  const {t,lang}=useLanguage();const zh=lang==='zh';const [mode,setMode]=useState(defaultMode);
  const [username,setUsername]=useState(companyName);const [password,setPassword]=useState('');const [confirmation,setConfirmation]=useState('');
  const [error,setError]=useState('');const [fieldError,setFieldError]=useState<Record<string,string>>({});const [busy,setBusy]=useState(false);const inFlight=useRef(false);
@@ -20,7 +20,7 @@ export function MerchantAuth({onLogin,defaultMode='register',companyName='',onBu
   }else if(!password)fields.password=zh?'请填写密码。':'Enter your password.';
   setFieldError(fields);if(Object.keys(fields).length)return;
   inFlight.current=true;setBusy(true);onBusy?.(true);
-  try{const r=await api<MerchantAuthResponse>(mode==='register'?'/auth/merchant/register':'/auth/merchant',{method:'POST',body:body(mode==='register'?{login_name:username,password}:{username,password})});sessionStorage.setItem('zqzt.merchant',r.token);sessionStorage.setItem('zqzt.merchant.id',String(r.account.id));setPassword('');setConfirmation('');window.dispatchEvent(new Event('zqzt.merchant.changed'));onLogin()}
+  try{const r=await api<MerchantAuthResponse>(mode==='register'?'/auth/merchant/register':'/auth/merchant',{method:'POST',body:body(mode==='register'?{login_name:username,password}:{username,password})});sessionStorage.setItem('zqzt.merchant',r.token);sessionStorage.setItem('zqzt.merchant.id',String(r.account.id));setPassword('');setConfirmation('');window.dispatchEvent(new Event('zqzt.merchant.changed'));onLogin(mode==='register')}
   catch(e){const p=e as APIError;if(p.fields?.length){const f:Record<string,string>={};for(const i of p.fields)f[i.field]=i.code==='password_length'?(zh?'密码需为12–72个 UTF-8 字节，不能全为空白。':'Use 12–72 UTF-8 bytes, not all whitespace.'):issueText(i,lang);setFieldError(f)}else setError(p.code||'internal_error');if(p.code==='network_error'&&mode==='register')setError('registrationUnconfirmed')}
   finally{inFlight.current=false;setBusy(false);onBusy?.(false)}
  };

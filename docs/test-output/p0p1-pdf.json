@@ -1,0 +1,31 @@
+{
+  "isolatedBrowserRoutes": true,
+  "databaseWrites": false,
+  "results": [
+    {
+      "width": 375,
+      "pdfRender": true,
+      "zoom": true,
+      "download": true,
+      "onePageControls": true,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "pdfRender": true,
+      "zoom": true,
+      "download": true,
+      "onePageControls": true,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "pdfRender": true,
+      "zoom": true,
+      "download": true,
+      "onePageControls": true,
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

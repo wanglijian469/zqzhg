@@ -1,0 +1,9 @@
+{
+  "phoneBarClearance": true,
+  "emptyClearPreservesHall": true,
+  "apiFailureRetry": true,
+  "keyboardTabs": true,
+  "brokenCoverFallback": true,
+  "normalConsoleErrors": [],
+  "runtimeErrors": []
+}

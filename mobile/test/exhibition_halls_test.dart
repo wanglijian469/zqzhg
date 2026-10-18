@@ -28,7 +28,7 @@ void main() {
       await tester.pumpWidget(nav.harness(m));
       await tester.pumpAndSettle();
       expect(
-        tester.getCenter(find.text('农业机械馆')).dy,
+        tester.getCenter(find.text('农业机械厅')).dy,
         closeTo(tester.getCenter(find.text('中企展馆')).dy, 5),
       );
       expect(find.byType(ChoiceChip), findsNothing);
@@ -76,9 +76,12 @@ void main() {
       for (final tab in [1, 2, 0]) {
         await nav.tap(tester, find.byKey(ValueKey('app-tab-$tab')));
       }
-      expect(calls, isEmpty);
+      expect(calls.where((u) => !u.path.endsWith('/halls')), isEmpty);
       await nav.tap(tester, find.byKey(const ValueKey('return-agriculture')));
-      expect(calls.map((u) => u.path), ['/api/v1/public/home']);
+      expect(
+        calls.where((u) => !u.path.endsWith('/halls')).map((u) => u.path),
+        unorderedEquals(['/api/v1/public/home', '/api/v1/public/taxonomy']),
+      );
       expect(m.activeHall, ExhibitionHall.agriculture);
       await tester.pumpWidget(const SizedBox());
     },
@@ -115,7 +118,7 @@ void main() {
         '440',
       );
       expect(find.text('农业机械'), findsOneWidget);
-      expect(find.text('2'), findsOneWidget);
+      expect(find.textContaining('2 /'), findsOneWidget);
       expect(controller.offset, offset);
       expect(
         calls.where((u) => u.path.endsWith('/vendors')).length,

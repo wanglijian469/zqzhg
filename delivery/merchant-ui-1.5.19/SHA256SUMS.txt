@@ -1,4 +1,0 @@
-03a7b1dbca9242e9bc0fff3f6e2d1004aa09129b00f8e21d6bedc5d25b881db7  delivery/android/dalunongji-1.5.19+27.apk
-20809428586237f69b97bcd5ed20c5a9c5cd04bb453568f55fb39870cda104c2  delivery/android/dalunongji-1.5.19+27-debug.apk
-e6abdbb933deb276c3fa2c1d6fbf582f959241ab0cbb17e939ebd2ab9ea091a8  delivery/merchant-ui-1.5.19/web-dist.zip
-6b5c88dc930b1689569cf2630851a9f59898ba65ee59dd75f5a4374678ae8a6e  delivery/merchant-ui-1.5.19/exhibition-linux-amd64

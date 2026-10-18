@@ -53,10 +53,14 @@ func pdfPages(path string) (int, error) {
 	return doc.PageCount, nil
 }
 func (a *App) uploadResourceMedia(c *gin.Context) {
+	if e := a.checkUploadDisks(0); e != nil {
+		dbFail(c, e)
+		return
+	}
 	kind := c.Query("kind")
-	maxBytes := int64(settingInt("MAX_VIDEO_MIB", 200)) << 20
+	maxBytes := int64(a.uploadConfig().VideoMiB) << 20
 	if kind == "pdf" {
-		maxBytes = int64(settingInt("MAX_PDF_MIB", 50)) << 20
+		maxBytes = int64(a.uploadConfig().PDFMiB) << 20
 	} else if kind != "video" {
 		fail(c, 400, "invalid_request")
 		return
@@ -117,8 +121,24 @@ func (a *App) uploadResourceMedia(c *gin.Context) {
 		status = 202
 	}
 	defer os.Remove(full)
+	lease, leaseErr := a.reserveUpload(media.OwnerID, n)
+	if leaseErr != nil {
+		dbFail(c, leaseErr)
+		return
+	}
+	defer lease.Release()
+	persisted := false
+	defer func() {
+		if !persisted {
+			a.cleanupNewObjects(path)
+		}
+	}()
 	if e = a.storeWorkFile(c.Request.Context(), path, full); e != nil {
 		fail(c, 503, "storage_unavailable")
+		return
+	}
+	if e = lease.Commit(path); e != nil {
+		dbFail(c, e)
 		return
 	}
 	e = a.DB.Transaction(func(tx *gorm.DB) error {
@@ -139,6 +159,7 @@ func (a *App) uploadResourceMedia(c *gin.Context) {
 		fail(c, 500, "internal_error")
 		return
 	}
+	persisted = true
 	c.JSON(status, meta)
 }
 func (a *App) resourceMediaStatus(c *gin.Context) {
@@ -230,6 +251,12 @@ func (a *App) processNextVideo(parent context.Context) bool {
 		os.Remove(a.workPath(m.Path))
 		os.Remove(a.workPath(m.ThumbPath))
 	}
+	lease, leaseErr := a.reserveUpload(m.OwnerID, meta.Size*2+(2<<20))
+	if leaseErr != nil {
+		failure(leaseErr.Error())
+		return true
+	}
+	defer lease.Release()
 	input, inputErr := a.materializeObject(ctx, meta.SourcePath)
 	if inputErr == nil {
 		defer os.Remove(input)
@@ -301,6 +328,20 @@ func (a *App) processNextVideo(parent context.Context) bool {
 	}
 	defer os.Remove(target)
 	defer os.Remove(cover)
+	newKeys := []string{}
+	finished := false
+	defer func() {
+		if !finished {
+			a.cleanupNewObjects(newKeys...)
+		}
+	}()
+	for _, key := range []string{m.Path, m.ThumbPath} {
+		var count int64
+		a.DB.Model(&StoredObject{}).Where("object_key=?", key).Count(&count)
+		if count == 0 {
+			newKeys = append(newKeys, key)
+		}
+	}
 	if e = a.storeWorkFile(ctx, m.Path, target); e != nil {
 		failure("storage_unavailable")
 		return true
@@ -309,12 +350,17 @@ func (a *App) processNextVideo(parent context.Context) bool {
 		failure("storage_unavailable")
 		return true
 	}
+	if e = lease.Commit(m.Path, m.ThumbPath); e != nil {
+		failure(e.Error())
+		return true
+	}
 	scale := min(1.0, float64(long)/float64(max(w, h)))
-	e = a.DB.Model(&meta).Updates(map[string]any{"state": "ready", "error": "", "duration": duration, "width": int(float64(w) * scale), "height": int(float64(h) * scale), "size": st.Size(), "source_path": ""}).Error
+	e = a.DB.Model(&meta).Updates(map[string]any{"state": "ready", "error": "", "duration": duration, "width": int(float64(w) * scale), "height": int(float64(h) * scale), "size": st.Size(), "source_path": meta.SourcePath}).Error
 	if e != nil {
 		failure("video_processing_failed")
 		return true
 	}
+	finished = true
 	os.Remove(input)
 	return true
 }

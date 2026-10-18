@@ -1,3 +1,4 @@
+import {withHallFixture} from './hall-test-fixture';
 // @vitest-environment jsdom
 import React from 'react';
 import {afterEach,beforeEach,describe,it,expect,vi} from 'vitest';
@@ -19,7 +20,7 @@ const fetchMock=vi.fn(async(url:string,opts?:RequestInit)=>{
  if(url.includes('/admin/taxonomy'))return response({categories:[],regions:[]});
  return response({});
 });
-beforeEach(()=>{localStorage.clear();sessionStorage.clear();sessionStorage.setItem('zqzt.admin','test-token');fetchMock.mockClear();finish=undefined;vi.stubGlobal('fetch',fetchMock);vi.stubGlobal('scrollTo',vi.fn())});
+beforeEach(()=>{localStorage.clear();sessionStorage.clear();sessionStorage.setItem('zqzt.admin','test-token');fetchMock.mockClear();finish=undefined;vi.stubGlobal('fetch',withHallFixture(fetchMock));vi.stubGlobal('scrollTo',vi.fn())});
 afterEach(()=>{cleanup();vi.unstubAllGlobals()});
 function mount(path:string){history.replaceState(null,'',path);render(<BrowserRouter><App/></BrowserRouter>)}
 describe('Manufacturer password reset',()=>{

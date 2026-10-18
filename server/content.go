@@ -46,9 +46,11 @@ func dbFail(c *gin.Context, e error) {
 	switch code {
 	case "forbidden":
 		fail(c, 403, code)
-	case "pending_review", "stale_revision", "already_reviewed", "vendor_required", "product_limit_reached", "login_name_exists", "showroom_slug_exists", "showroom_slug_locked", "resource_limit_reached", "media_not_ready", "featured_limit_reached", "representative_limit_reached":
+	case "storage_quota_exceeded", "disk_space_insufficient", "media_in_use", "pending_review", "stale_revision", "already_reviewed", "vendor_required", "product_limit_reached", "login_name_exists", "showroom_slug_exists", "showroom_slug_locked", "resource_limit_reached", "media_not_ready", "featured_limit_reached", "representative_limit_reached":
 		fail(c, 409, code)
-	case "invalid_request", "invalid_media", "invalid_category", "invalid_region", "invalid_showroom_slug", "rejection_reason_required":
+	case "storage_unavailable":
+		fail(c, 503, e.Error())
+	case "invalid_system_settings", "mixed_content_address", "address_probe_required", "storage_root_not_registered", "storage_mount_missing", "invalid_request", "invalid_media", "invalid_category", "invalid_region", "invalid_showroom_slug", "rejection_reason_required":
 		fail(c, 400, code)
 	default:
 		fail(c, 500, "internal_error")
@@ -67,14 +69,21 @@ func loadOwned(tx *gorm.DB, contentID uint64, who Account, lock bool) (Content, 
 	return content, e
 }
 func (a *App) validatePayload(tx *gorm.DB, who Account, kind string, p *Payload) error {
+	if kind == "vendor" && p.RegionCode != "" {
+		if e := resolveAdministrativeRegion(tx, p); e != nil {
+			return e
+		}
+	}
 	p.Name = strings.TrimSpace(p.Name)
 	p.RegionName = strings.TrimSpace(p.RegionName)
 	if issues := payloadFieldIssues(kind, *p); len(issues) > 0 {
 		code := "invalid_request"
-		if kind == "product" && p.CategoryID == 0 && strings.TrimSpace(p.Keywords) == "" {
-			code = "invalid_category"
-		}
 		return &FieldValidationError{Code: code, Fields: issues}
+	}
+	if kind == "vendor" && p.RegionCode == "" {
+		if e := resolveTextRegion(tx, p); e != nil {
+			return e
+		}
 	}
 	if p.CategoryID > 0 {
 		p.CategoryID = canonicalCategory(tx, p.CategoryID)
@@ -115,6 +124,12 @@ func (a *App) validatePayload(tx *gorm.DB, who Account, kind string, p *Payload)
 	return nil
 }
 func makeDraft(tx *gorm.DB, content *Content, p Payload) error {
+	if e := validateContentHall(tx, content, p); e != nil {
+		return e
+	}
+	if e := tx.Model(content).Update("hall_id", content.HallID).Error; e != nil {
+		return e
+	}
 	blob, e := json.Marshal(p)
 	if e != nil {
 		return e
@@ -155,20 +170,29 @@ func productSlot(tx *gorm.DB, ownerID uint64) (uint64, error) {
 }
 func (a *App) createContent(c *gin.Context) {
 	var req struct {
-		Kind string  `json:"kind"`
-		Data Payload `json:"data"`
+		HallID uint64  `json:"hall_id"`
+		Kind   string  `json:"kind"`
+		Data   Payload `json:"data"`
 	}
 	if c.ShouldBindJSON(&req) != nil || (req.Kind != "vendor" && req.Kind != "product") {
 		fail(c, 400, "invalid_request")
 		return
 	}
 	who := actor(c)
-	content := Content{Kind: req.Kind, OwnerID: who.ID}
+	content := Content{Kind: req.Kind, OwnerID: who.ID, HallID: req.HallID}
 	e := a.DB.Transaction(func(tx *gorm.DB) error {
 		if e := a.validatePayload(tx, who, req.Kind, &req.Data); e != nil {
 			return e
 		}
 		if req.Kind == "vendor" {
+			hall := Hall{}
+			hid := content.HallID
+			if hid == 0 {
+				hid = 1
+			}
+			if tx.First(&hall, hid).Error != nil || hall.Status != "open" {
+				return fmt.Errorf("invalid_request")
+			}
 			content.VendorOwnerKey = &who.ID
 			var n int64
 			tx.Model(&Content{}).Where("vendor_owner_key = ?", who.ID).Count(&n)
@@ -326,6 +350,9 @@ func (a *App) review(c *gin.Context) {
 			if json.Unmarshal([]byte(rev.Payload), &p) != nil {
 				return fmt.Errorf("invalid_request")
 			}
+			if e = validateContentHall(tx, &content, p); e != nil {
+				return e
+			}
 			if content.Kind == "vendor" && p.RegionID == 0 {
 				region := Region{Name: p.RegionName, Enabled: true}
 				if e = tx.Where("name = ?", p.RegionName).FirstOrCreate(&region).Error; e != nil {
@@ -415,6 +442,13 @@ func page(c *gin.Context) (int, int) {
 func (a *App) listContents(c *gin.Context, admin bool) {
 	p, n := page(c)
 	q := a.DB.Model(&Content{}).Joins("JOIN revisions dr ON dr.id = contents.draft_revision_id")
+	if c.Query("hall") != "" {
+		hall, ok := a.requestHall(c)
+		if !ok {
+			return
+		}
+		q = q.Where("contents.hall_id=?", hall.ID)
+	}
 	if admin && actor(c).Role == "operator" {
 		kinds := []string{}
 		for _, kind := range []string{"vendor", "product"} {
@@ -436,9 +470,7 @@ func (a *App) listContents(c *gin.Context, admin bool) {
 	if strings.TrimSpace(c.Query("q")) != "" {
 		k := keyword(c)
 		if !admin && c.Query("kind") == "product" {
-			// Search only the existing specifications field, never arbitrary JSON
-			// or another owner's data. The API shape and public search stay intact.
-			q = q.Where("("+keywordCondition("dr")+" OR JSON_UNQUOTE(JSON_EXTRACT(dr.payload, '$.parameters')) LIKE ?)", k, k, k, k, k)
+			q = q.Where(specKeywordCondition("dr"), k, k, k, k, k)
 		} else {
 			q = q.Where(keywordCondition("dr"), k, k, k, k)
 		}
@@ -515,7 +547,11 @@ func (a *App) featured(c *gin.Context) {
 		return
 	}
 	e := a.DB.Transaction(func(tx *gorm.DB) error {
-		if _, e := lockHomeDisplay(tx); e != nil {
+		var target Content
+		if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&target, id(c)).Error; e != nil {
+			return e
+		}
+		if _, e := lockHomeDisplay(tx, target.HallID); e != nil {
 			return e
 		}
 		content, e := loadOwned(tx, id(c), actor(c), true)
@@ -525,14 +561,14 @@ func (a *App) featured(c *gin.Context) {
 		if req.Featured {
 			var count int64
 			ta := &App{DB: tx}
-			if e = ta.publicQuery(content.Kind).Where("contents.id=?", content.ID).Count(&count).Error; e != nil {
+			if e = ta.publicQuery(content.Kind, true).Where("contents.id=?", content.ID).Count(&count).Error; e != nil {
 				return e
 			}
 			if count != 1 {
 				return fmt.Errorf("invalid_request")
 			}
 			if content.Kind == "vendor" && !content.Featured {
-				if e := ta.publicQuery("vendor").Where("contents.featured=1").Count(&count).Error; e != nil {
+				if e := ta.publicQuery("vendor", true).Where("contents.featured=1 AND contents.hall_id=?", content.HallID).Count(&count).Error; e != nil {
 					return e
 				}
 				if count >= homeVendorLimit {

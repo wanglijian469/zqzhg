@@ -1,0 +1,13 @@
+import {useSyncExternalStore} from 'react';
+export interface RuntimeConfig{version:number;site:{name:string;name_en:string;web_url:string;api_url:string;media_url:string};uploads:{image_mib:number;video_mib:number;pdf_mib:number;default_quota_bytes:number}}
+const initial:RuntimeConfig={version:0,site:{name:'',name_en:'',web_url:'',api_url:'',media_url:''},uploads:{image_mib:10,video_mib:200,pdf_mib:50,default_quota_bytes:2*1024**3}};
+let current=initial,pending:Promise<RuntimeConfig>|undefined;const listeners=new Set<()=>void>();
+export function runtimeConfig(){return current}
+export function configureRuntime(value:unknown){const v=value as RuntimeConfig;if(!v?.site||!v.uploads||!Number.isFinite(v.version))return;for(const key of ['web_url','api_url','media_url'] as const){if(v.site[key]){try{const u=new URL(v.site[key],location.origin);if(!['http:','https:'].includes(u.protocol)||u.username||u.password) return}catch{return}}};current=v;listeners.forEach(f=>f())}
+try{const el=typeof document==='undefined'?null:document.getElementById('zqzg-runtime-config');if(el)configureRuntime(JSON.parse(el.textContent||'{}'))}catch{/* Legacy HTML uses the same-origin compatibility defaults. */}
+export function loadRuntime(force=false):Promise<RuntimeConfig>{if(!force&&current.version>0)return Promise.resolve(current);if(!force&&pending)return pending;pending=fetch('/api/v1/public/config',{signal:AbortSignal.timeout(8000)}).then(async r=>{if(r.ok)configureRuntime(await r.json());return current}).catch(()=>current).finally(()=>{pending=undefined});return pending}
+export function useRuntimeConfig(){return useSyncExternalStore(cb=>{listeners.add(cb);return()=>listeners.delete(cb)},()=>current,()=>initial)}
+export function apiURL(path:string){return (current.site.api_url||'/api/v1').replace(/\/$/,'')+(path.startsWith('/')?path:'/'+path)}
+export function mediaURL(id?:number|string,query=''){return (current.site.media_url||'/api/v1/media').replace(/\/$/,'')+(id===undefined?'':'/'+id)+query}
+export function imageLimitBytes(){return current.uploads.image_mib*1024**2}
+export function brandName(lang:string){return lang==='en'?(current.site.name_en||current.site.name):current.site.name}

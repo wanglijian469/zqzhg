@@ -1,0 +1,297 @@
+{
+  "checks": [
+    "Registration opens the workspace editor and creates no empty company",
+    "Province and city required, county optional; cloud save retains editor instance",
+    "Introduction is in basics; example is read-only; suggestions are factual and explicitly applied; placeholder italic only",
+    "Actual authenticated photo upload retry preserves the company and maps to a real region",
+    "Submit, approve and public region filter work; pending edits preserve the former public revision",
+    "40 layout states: 5 widths, both languages, equivalent 125%, collapsed and expanded material groups",
+    "Legacy manual region and existing English retained; all additional material groups remain accessible"
+  ],
+  "layouts": [
+    {
+      "width": 1440,
+      "lang": "zh",
+      "zoom": 1,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "zoom": 1,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "zoom": 1.25,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "zoom": 1.25,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "zoom": 1,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "zoom": 1,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "zoom": 1.25,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "zoom": 1.25,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "zh",
+      "zoom": 1,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "zh",
+      "zoom": 1,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "zh",
+      "zoom": 1.25,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "zh",
+      "zoom": 1.25,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "en",
+      "zoom": 1,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "en",
+      "zoom": 1,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "en",
+      "zoom": 1.25,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "en",
+      "zoom": 1.25,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "zoom": 1,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "zoom": 1,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "zoom": 1.25,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "zoom": 1.25,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "zoom": 1,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "zoom": 1,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "zoom": 1.25,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "zoom": 1.25,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "zoom": 1,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "zoom": 1,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "zoom": 1.25,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "zoom": 1.25,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "zoom": 1,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "zoom": 1,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "zoom": 1.25,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "zoom": 1.25,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "zoom": 1,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "zoom": 1,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "zoom": 1.25,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "zoom": 1.25,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "zoom": 1,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "zoom": 1,
+      "expanded": true,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "zoom": 1.25,
+      "expanded": false,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "zoom": 1.25,
+      "expanded": true,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "isolatedDatabase": true,
+  "productionWrites": false,
+  "realDeviceVerified": false
+}

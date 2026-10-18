@@ -1,3 +1,4 @@
+import {withHallFixture} from './hall-test-fixture';
 // @vitest-environment jsdom
 import {beforeEach,afterEach,it,expect,vi} from 'vitest';
 import {render,screen,within,cleanup,waitFor} from '@testing-library/react';
@@ -10,7 +11,7 @@ const publicVendor={...vendor,status:'approved',data:{...vendor.data,name:'公�
 const product={...vendor,id:8,kind:'product',data:{...emptyData,name:'尚未审核的新名称',parameters:'型号：1LF-440\n规格：液压设备'}};
 let calls:{url:string;method?:string}[]=[], hidden=false, failVendor=false;
 const response=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status});
-beforeEach(()=>{calls=[];hidden=failVendor=false;localStorage.clear();sessionStorage.clear();sessionStorage.setItem('zqzt.merchant','owner-token');sessionStorage.setItem('zqzt.merchant.id','9');vi.stubGlobal('scrollTo',vi.fn());Element.prototype.scrollIntoView=vi.fn();vi.stubGlobal('fetch',vi.fn(async(url:string,options?:RequestInit)=>{
+beforeEach(()=>{calls=[];hidden=failVendor=false;localStorage.clear();sessionStorage.clear();sessionStorage.setItem('zqzt.merchant','owner-token');sessionStorage.setItem('zqzt.merchant.id','9');vi.stubGlobal('scrollTo',vi.fn());Element.prototype.scrollIntoView=vi.fn();vi.stubGlobal('fetch',withHallFixture(vi.fn(async(url:string,options?:RequestInit)=>{
   calls.push({url,method:options?.method});
   if(url.includes('/merchant/dashboard'))return response({products:{total:40,public:30,pending:6,draft:3,rejected:1}});
   if(url.includes('/merchant/contents?')){if(url.includes('kind=vendor'))return failVendor?response({error:{code:'network_error'}},503):response({items:[{...vendor,public_visible:!hidden}]});return response({items:[product],total:1,page:1,page_size:20});}
@@ -20,7 +21,7 @@ beforeEach(()=>{calls=[];hidden=failVendor=false;localStorage.clear();sessionSto
   if(url.endsWith('/offline'))return response({ok:true});
   if(url.endsWith('/history'))return response([]);
   return response({items:[],total:0});
-}));});
+})));});
 afterEach(()=>{cleanup();vi.unstubAllGlobals();vi.restoreAllMocks()});
 const mount=(path='/merchant')=>{history.replaceState(null,'',path);render(<BrowserRouter><App/></BrowserRouter>)};
 it('shows three compact counts, four primary tasks and independent draft/display states',async()=>{
@@ -28,7 +29,7 @@ it('shows three compact counts, four primary tasks and independent draft/display
   const actions=document.querySelector('.workspace-quick-actions')!;
   for(const label of ['编辑展厅','添加产品','管理产品','分享企业展厅'])expect(within(actions as HTMLElement).getByRole('link',{name:label})).toBeTruthy();
   const company=document.querySelector('.compact-company')!;expect(within(company as HTMLElement).getByText('待审核')).toBeTruthy();expect(within(company as HTMLElement).getByText('已展示')).toBeTruthy();
-  expect(screen.getByText('建议完善')).toBeTruthy();expect(document.querySelector('.workspace-topbar-actions')!.textContent).not.toContain('退出登录');
+  expect(screen.getByText('建议补充（非必填）')).toBeTruthy();expect(document.querySelector('.workspace-topbar-actions')!.textContent).not.toContain('退出登录');
 });
 it('keeps vendor and full-account stats across language and management routes',async()=>{
   mount();await screen.findByText('30');const user=userEvent.setup();await user.click(screen.getByRole('button',{name:'English'}));await user.click(screen.getByRole('link',{name:'Manage showroom'}));await screen.findByText('Company information');
@@ -43,7 +44,7 @@ it('debounces model search and keeps the same query after explicit submit',async
 it('opens promotion directly with public data, a normalized address and a share fallback',async()=>{
   mount('/merchant/promotion');await screen.findByText('公开版本企业（测试）');expect(screen.queryByRole('dialog')).toBeNull();expect(document.querySelector('.share-company-preview')!.textContent).not.toContain('测试资料修改');
   expect(screen.getByRole('textbox',{name:'展厅地址'})).toHaveProperty('value','https://business.example/v/company');const user=userEvent.setup();await user.click(screen.getByRole('button',{name:'分享企业展厅'}));await screen.findByText('当前无法调用系统分享，可复制链接或保存素材发送。');
-  for(const name of ['复制地址','展厅二维码','保存宣传海报'])expect(screen.getByRole('button',{name})).toBeTruthy();
+  for(const name of ['复制地址','展厅二维码','生成海报预览'])expect(screen.getByRole('button',{name})).toBeTruthy();
 });
 it('does not build promotional materials for an unpublished company',async()=>{
   hidden=true;mount('/merchant/promotion');await screen.findByText('未展示');expect(screen.queryByRole('button',{name:'分享企业展厅'})).toBeNull();expect(calls.some(c=>c.url.includes('/public/showrooms/'))).toBe(false);

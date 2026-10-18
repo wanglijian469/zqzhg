@@ -11,16 +11,28 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
   String kind = 'vendor';
   String? endpoint;
   Future<dynamic>? home;
+  final homes = <String, Future<dynamic>>{};
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final m = ModelScope.of(context);
-    if (endpoint != m.baseUrl) {
-      endpoint = m.baseUrl;
-      home = null;
+    unawaited(m.loadHalls());
+    if (!m.hallsReady) return;
+    final homeScope = '${m.baseUrl}:${m.activeHall.slug}';
+    if (endpoint != homeScope) {
+      endpoint = homeScope;
+      home = homes[homeScope];
     }
-    if (!m.isHallPreview && home == null) home = m.api('/public/home');
+    if (!m.isHallPreview && home == null) {
+      home = homes[homeScope] = m.publicApi('/public/home');
+      unawaited(
+        m.publicTaxonomy().then<void>(
+          (_) {},
+          onError: (Object e, StackTrace s) {},
+        ),
+      );
+    }
   }
 
   @override
@@ -33,7 +45,9 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
     final m = ModelScope.of(context);
     if (m.isHallPreview) return;
     setState(() {
-      home = m.api('/public/home');
+      home = homes['${m.baseUrl}:${m.activeHall.slug}'] = m.publicApi(
+        '/public/home',
+      );
     });
     await Future.wait(
       [
@@ -58,6 +72,7 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final m = ModelScope.of(context);
+    if (!m.hallsReady) return const HallLoadScreen();
     if (m.isHallPreview) return const HallComingSoonScreen();
     return Scaffold(
       appBar: const HomeBrandBar(),
@@ -67,7 +82,7 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
         child: RefreshIndicator(
           onRefresh: refresh,
           child: CustomScrollView(
-            key: const PageStorageKey('exhibition-home'),
+            key: PageStorageKey('exhibition-home:${m.activeHall.slug}'),
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               SliverPadding(
@@ -82,6 +97,7 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
                     ),
                     space(12),
                     FutureBuilder<dynamic>(
+                      key: ValueKey('hero:$endpoint'),
                       future: home,
                       builder: (context, snap) {
                         final data = asMap(snap.data ?? {});
@@ -95,6 +111,7 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
                 ),
               ),
               FutureBuilder<dynamic>(
+                key: ValueKey('home:$endpoint'),
                 future: home,
                 builder: (context, snap) {
                   if (!snap.hasData || snap.hasError) {
@@ -104,7 +121,7 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
                         child: HomeLoadState(
                           error: snap.error,
                           onRetry: () => setState(() {
-                            home = m.api('/public/home');
+                            home = m.publicApi('/public/home');
                           }),
                         ),
                       ),
@@ -112,17 +129,20 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
                   }
                   final data = asMap(snap.data);
                   final allVendors = rows(data['vendors']);
-                  final vendors = allVendors.take(6).toList();
-                  final products = rows(data['products']).take(6).map((p) {
-                    final vendor = allVendors
-                        .where((v) => v['id'] == p['vendor_id'])
-                        .firstOrNull;
-                    return <String, dynamic>{
-                      ...p,
-                      if (p['vendor'] == null && vendor != null)
-                        'vendor': vendor,
-                    };
-                  }).toList();
+                  final vendors = allVendors.take(4).toList();
+                  final products = uniqueContent(rows(data['products']))
+                      .take(8)
+                      .map((p) {
+                        final vendor = allVendors
+                            .where((v) => v['id'] == p['vendor_id'])
+                            .firstOrNull;
+                        return <String, dynamic>{
+                          ...p,
+                          if (p['vendor'] == null && vendor != null)
+                            'vendor': vendor,
+                        };
+                      })
+                      .toList();
                   return SliverPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     sliver: SliverMainAxisGroup(
@@ -227,7 +247,7 @@ class HomeBrandBar extends StatelessWidget implements PreferredSizeWidget {
               initialValue: m.activeHall,
               onSelected: m.selectHall,
               itemBuilder: (_) => [
-                for (final hall in ExhibitionHall.values)
+                for (final hall in m.availableHalls)
                   PopupMenuItem(
                     key: ValueKey('hall-option-${hall.name}'),
                     value: hall,
@@ -238,7 +258,7 @@ class HomeBrandBar extends StatelessWidget implements PreferredSizeWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(exhibitionHallName(m, hall)),
-                          if (hall == ExhibitionHall.cablesPreview)
+                          if (!hall.isOpen)
                             Text(
                               m.t('hallPreparing'),
                               style: const TextStyle(
@@ -252,7 +272,7 @@ class HomeBrandBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
               ],
               child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 44),
+                constraints: const BoxConstraints(minHeight: 48),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -412,7 +432,10 @@ class HomeBrandBanner extends StatelessWidget {
         }
 
         final copyHeight =
-            textHeight(m.t('homeHero'), titleStyle) +
+            textHeight(
+              '${m.t('brand')} · ${exhibitionHallName(m, m.activeHall)}',
+              titleStyle,
+            ) +
             6 +
             textHeight(m.t('homeHeroSub'), subtitleStyle);
         final height = max(imageHeight, 128 + copyHeight + 44);
@@ -477,7 +500,10 @@ class HomeBrandBanner extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(m.t('homeHero'), style: titleStyle),
+                    Text(
+                      '${m.t('brand')} · ${exhibitionHallName(m, m.activeHall)}',
+                      style: titleStyle,
+                    ),
                     const SizedBox(height: 6),
                     Text(m.t('homeHeroSub'), style: subtitleStyle),
                   ],

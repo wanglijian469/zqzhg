@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/modood/Administrative-divisions-of-China",
+  "file": "dist/pca-code.json",
+  "version": "2023-06-30",
+  "license": "WTFPL-2.0",
+  "sha256": "83b7536f853ad16beb4d37b92890a3fd7bb9d33d4f37e7c8885fb948749a9bc4",
+  "note": "Upstream no longer updated. Historical or missing regions remain manually editable."
+}

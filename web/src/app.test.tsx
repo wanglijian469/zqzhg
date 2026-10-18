@@ -1,3 +1,4 @@
+import {withHallFixture} from './hall-test-fixture';
 import {uiMessages} from './ui-messages';
 // @vitest-environment jsdom
 import React from 'react';
@@ -28,7 +29,7 @@ const defaultFetch=async (url:string, options?:RequestInit)=>{
 const fetchMock=vi.fn(defaultFetch);
 beforeEach(()=>{
   offline=false;fetchMock.mockReset();fetchMock.mockImplementation(defaultFetch);localStorage.clear();sessionStorage.clear();
-  vi.stubGlobal('fetch',fetchMock);vi.stubGlobal('scrollTo',vi.fn());
+  vi.stubGlobal('fetch',withHallFixture(fetchMock));vi.stubGlobal('scrollTo',vi.fn());
 });
 afterEach(()=>{cleanup();vi.unstubAllGlobals()});
 
@@ -37,13 +38,13 @@ describe('Browser workflows',()=>{
     history.replaceState(null,'','/');
     render(<BrowserRouter><App/></BrowserRouter>);
     const user=userEvent.setup();
-    await user.type(screen.getByRole('textbox',{name:'关键词'}),'440');
+    await user.type(await screen.findByRole('textbox',{name:'关键词'}),'440');
     expect(screen.getByRole('button',{name:'找厂家',pressed:true})).toBeTruthy();
     await user.click(screen.getAllByRole('button',{name:'找厂家'})[1]);
     expect(location.pathname).toBe('/browse');
     expect(new URLSearchParams(location.search).get('q')).toBe('440');
-    await user.click(screen.getByRole('link',{name:'逛展馆'}));
-    await user.type(screen.getByRole('textbox',{name:'关键词'}),'550');
+    await user.click(screen.getByRole('link',{name:'首页'}));
+    await user.type(await screen.findByRole('textbox',{name:'关键词'}),'550');
     await user.click(screen.getByRole('button',{name:'找产品'}));
     expect((screen.getByRole('textbox',{name:'关键词'}) as HTMLInputElement).value).toBe('550');
     await user.click(screen.getAllByRole('button',{name:'找产品'})[1]);
@@ -80,11 +81,11 @@ describe('Browser workflows',()=>{
     await user.click(within(document.querySelector('main')!).getByRole('link',{name:uiMessages.en.navProducts}));
     await screen.findByRole('link',{name:product.data.name});
     expect(location.pathname+location.search).toBe(original);
-    await user.click(within(screen.getByRole('navigation',{name:'Browse mode'})).getByRole('link',{name:uiMessages.en.navBrowse}));
+    await user.click(within(document.querySelector('header')!).getByRole('link',{name:'Find manufacturers'}));
     expect(location.pathname).toBe('/browse');
     const params=new URLSearchParams(location.search);
     expect(params.get('q')).toBe('TEST');expect(params.get('category_id')).toBe('2');expect(params.get('region_id')).toBe('1');expect(params.has('page')).toBe(false);
-    await user.click(within(screen.getByRole('navigation',{name:'Browse mode'})).getByRole('link',{name:uiMessages.en.navProducts}));
+    await user.click(within(document.querySelector('header')!).getByRole('link',{name:uiMessages.en.navProducts}));
     expect(location.pathname).toBe('/browse/products');
     expect((screen.getByRole('textbox',{name:'Keyword'}) as HTMLInputElement).value).toBe('TEST');
   });
@@ -99,9 +100,9 @@ describe('Browser workflows',()=>{
     });
     render(<BrowserRouter><App/></BrowserRouter>);
     const user=userEvent.setup();
-    const popular=await screen.findByRole('heading',{name:'精选工业展品'});
+    const popular=await screen.findByRole('heading',{name:'精选工业产品'});
     expect(within(popular.closest('section')!).getByRole('link',{name:'查看全部'}).getAttribute('href')).toBe('/browse/products');
-    await user.click(within(popular.closest('section')!).getByRole('link',{name:'查看产品 '+product.data.name}));
+    await user.click(await within(popular.closest('section')!).findByRole('link',{name:'查看产品 '+product.data.name}));
     await screen.findByRole('heading',{name:product.data.name});
     expect(within(document.querySelector('main')!).getByRole('link',{name:'找产品'}).getAttribute('href')).toBe('/browse/products');
   });
@@ -129,7 +130,7 @@ describe('Browser workflows',()=>{
     await user.click(screen.getByRole('link',{name:'所属厂商 '+vendor.data.name}));
     await screen.findByRole('heading',{name:vendor.data.name});
     expect(location.pathname).toBe('/v/v-1');
-    await user.click(screen.getByRole('tab',{name:'展品'}));
+    await user.click(screen.getByRole('tab',{name:'产品中心'}));
     expect(screen.getAllByRole('link',{name:'查看产品 '+product.data.name})[0]).toBeTruthy();
   });
   it('signs in with a company account and loads its existing booth for editing',async()=>{
@@ -148,7 +149,7 @@ describe('Browser workflows',()=>{
     });
     render(<BrowserRouter><App/></BrowserRouter>);
     const user=userEvent.setup();
-    await user.type(screen.getByRole('textbox',{name:'公司登录账号'}),'测试企业账号');
+    await user.type(await screen.findByRole('textbox',{name:'公司登录账号'}),'测试企业账号');
     await user.type(screen.getByLabelText('密码',{exact:true}),'Test-Merchant-Password!');
     await user.click(screen.getByRole('button',{name:'登录'}));
     await screen.findByRole('heading',{name:'厂商工作台'});
@@ -162,7 +163,7 @@ describe('Browser workflows',()=>{
     render(<BrowserRouter><App/></BrowserRouter>);
     const user=userEvent.setup();
     await screen.findByRole('option',{name:'农机配件'});
-    await user.type(screen.getByRole('textbox',{name:'关键词'}),'component');
+    await user.type(await screen.findByRole('textbox',{name:'关键词'}),'component{Enter}');
     await user.selectOptions(screen.getByRole('combobox',{name:'产品分类'}),'2');
     await user.selectOptions(screen.getByRole('combobox',{name:'地区 / 产业带'}),'1');
     await user.click(screen.getByRole('button',{name:'English'}));

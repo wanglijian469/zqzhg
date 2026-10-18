@@ -174,6 +174,7 @@ func TestStorageUploadRangeAndMigration(t *testing.T) {
 	png.Encode(&imageBytes, image.NewRGBA(image.Rect(0, 0, 8, 8)))
 	first := resourceUpload(t, a, merchant, "/merchant/media", "first.png", imageBytes.Bytes(), 201)
 	root := t.TempDir()
+	registerStorageTestRoot(t, root)
 	profile := tc.call("POST", "/admin/storage/profiles", admin, gin.H{"name": "第二存储", "kind": "local", "local_root": root}, 200)["profile"].(map[string]any)
 	tc.call("POST", "/admin/storage/profiles/"+number(profile["id"])+"/activate", admin, gin.H{}, 200)
 	second := resourceUpload(t, a, merchant, "/merchant/media", "second.png", imageBytes.Bytes(), 201)
@@ -220,6 +221,19 @@ func TestCompleteBackupRestoreAndCutover(t *testing.T) {
 	}
 	t.Setenv("OPERATIONS_DIR", a.operations().dir)
 	originalName := a.currentDatabase()
+	restoredCode := "130528"
+	if e := a.DB.Create(&Region{ID: 88, Name: "河北省 邢台市 宁晋县", Enabled: true, AdministrativeCode: &restoredCode}).Error; e != nil {
+		t.Fatal(e)
+	}
+	savedVendor := Content{Kind: "vendor", OwnerID: 1}
+	if e := a.DB.Create(&savedVendor).Error; e != nil {
+		t.Fatal(e)
+	}
+	for _, slug := range []string{"restored-current", "restored-historical"} {
+		if e := a.DB.Create(&ShowroomAddress{Slug: slug, VendorID: savedVendor.ID, CreatedAt: time.Now().UTC()}).Error; e != nil {
+			t.Fatal(e)
+		}
+	}
 	names := []string{originalName}
 	t.Cleanup(func() {
 		db, err := openExistingDB("", env("DB_USER", "root"), env("DB_PASSWORD", "root"))
@@ -233,6 +247,11 @@ func TestCompleteBackupRestoreAndCutover(t *testing.T) {
 		}
 	})
 	admin := resourceTestSession(t, a, "admin")
+	tc := testClient{t, a.router()}
+	var hallPhoto bytes.Buffer
+	png.Encode(&hallPhoto, image.NewRGBA(image.Rect(0, 0, 12, 8)))
+	hero := resourceUpload(t, a, admin, "/admin/home-display/media", "restored-hall.png", hallPhoto.Bytes(), 201)
+	tc.call("PUT", "/admin/halls/2", admin, gin.H{"name": "恢复验证电缆厅", "name_en": "Restored Cable Hall", "description": "隔离恢复验证", "description_en": "Isolated restore verification", "status": "preparing", "slug": "cable", "hero_media_id": hero["id"], "version": 1}, 200)
 	if err := os.WriteFile(filepath.Join(a.Config.MediaDir, "snapshot.txt"), []byte("snapshot media"), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -270,6 +289,22 @@ func TestCompleteBackupRestoreAndCutover(t *testing.T) {
 		t.Fatalf("cutover %s", done.Error)
 	}
 	testClient{t, a.router()}.call("GET", "/admin/dashboard", admin, nil, 401)
+	restoredHalls, err := a.hallConfigurations()
+	if err != nil || len(restoredHalls) != 2 || restoredHalls[1].Name != "恢复验证电缆厅" || restoredHalls[1].Version != 2 || restoredHalls[1].HeroMediaID != uint64(hero["id"].(float64)) || restoredHalls[1].Status != "preparing" {
+		t.Fatal("hall settings restore mismatch", restoredHalls, err)
+	}
+	homeMediaRead(t, a, "", "/media/"+number(hero["id"]), 200)
+	if !a.DB.Migrator().HasIndex("contents", "idx_content_hall_vendor_public") {
+		t.Fatal("restored index missing")
+	}
+	var addressCount int64
+	if e := a.DB.Model(&ShowroomAddress{}).Where("vendor_id=?", savedVendor.ID).Count(&addressCount).Error; e != nil || addressCount != 2 {
+		t.Fatal("restored link history mismatch", e, addressCount)
+	}
+	var restoredRegion Region
+	if e := a.DB.First(&restoredRegion, 88).Error; e != nil || restoredRegion.AdministrativeCode == nil || *restoredRegion.AdministrativeCode != "130528" || !a.DB.Migrator().HasIndex("regions", "idx_regions_administrative_code") {
+		t.Fatal("restored administrative region mismatch", e)
+	}
 	host, err := readHostTargetFrom(a.operations().dir)
 	if err != nil || host.Pending || host.Previous.Database != originalName {
 		t.Fatal("rollback target not preserved")
@@ -485,6 +520,7 @@ func TestBackupChunkImportDownloadAndRevokedTicket(t *testing.T) {
 func TestBackupCatalogLocationSurvivesDatabaseChanges(t *testing.T) {
 	a := importTestApp(t)
 	root := t.TempDir()
+	registerStorageTestRoot(t, root)
 	profile := StorageProfile{Name: "备份独立位置", Kind: "local", LocalRoot: root}
 	if err := a.DB.Create(&profile).Error; err != nil {
 		t.Fatal(err)
@@ -524,7 +560,9 @@ func TestMigrationRejectsLocationAliasesAndChecksumFailure(t *testing.T) {
 	tc.call("POST", "/admin/storage/profiles", admin, gin.H{"name": "同一原目录", "kind": "local", "local_root": a.Config.MediaDir}, 409)
 	key := "check-source.bin"
 	os.WriteFile(filepath.Join(a.Config.MediaDir, key), []byte("correct"), 0600)
-	profile := StorageProfile{Name: "迁移校验目标", Kind: "local", LocalRoot: t.TempDir()}
+	targetRoot := t.TempDir()
+	registerStorageTestRoot(t, targetRoot)
+	profile := StorageProfile{Name: "迁移校验目标", Kind: "local", LocalRoot: targetRoot}
 	a.DB.Create(&profile)
 	os.WriteFile(filepath.Join(profile.LocalRoot, key), []byte("wrong"), 0600)
 	job, _, err := a.newJob("migration", migrationParams{0, profile.ID}, 1)

@@ -26,19 +26,27 @@ type HomeDisplayMedia struct {
 }
 
 func (HomeDisplayMedia) TableName() string { return "home_display_media" }
-func lockHomeDisplay(tx *gorm.DB) (HomeDisplaySettings, error) {
+func lockHomeDisplay(tx *gorm.DB, hallIDs ...uint64) (HomeDisplaySettings, error) {
+	hallID := uint64(1)
+	if len(hallIDs) > 0 {
+		hallID = hallIDs[0]
+	}
 	var s HomeDisplaySettings
-	e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&s, 1).Error
+	e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&s, hallID).Error
 	return s, e
 }
 func (a *App) homeDisplay(c *gin.Context) {
+	hall, ok := a.requestHall(c)
+	if !ok {
+		return
+	}
 	var settings HomeDisplaySettings
-	if e := a.DB.First(&settings, 1).Error; e != nil {
+	if e := a.DB.First(&settings, hall.ID).Error; e != nil {
 		dbFail(c, e)
 		return
 	}
 	var count int64
-	if e := a.publicQuery("vendor").Where("contents.featured=1").Count(&count).Error; e != nil {
+	if e := a.publicQuery("vendor", true).Where("contents.featured=1 AND contents.hall_id=?", hall.ID).Count(&count).Error; e != nil {
 		dbFail(c, e)
 		return
 	}
@@ -47,6 +55,10 @@ func (a *App) homeDisplay(c *gin.Context) {
 }
 func (a *App) homeDisplayUpload(c *gin.Context) { c.Set("upload_home_display", true); a.upload(c) }
 func (a *App) saveHomeDisplay(c *gin.Context) {
+	hall, ok := a.requestHall(c)
+	if !ok {
+		return
+	}
 	var req struct {
 		HeroMediaID uint64 `json:"hero_media_id"`
 		Version     uint64 `json:"version"`
@@ -57,7 +69,7 @@ func (a *App) saveHomeDisplay(c *gin.Context) {
 	}
 	var saved HomeDisplaySettings
 	e := a.DB.Transaction(func(tx *gorm.DB) error {
-		settings, e := lockHomeDisplay(tx)
+		settings, e := lockHomeDisplay(tx, hall.ID)
 		if e != nil {
 			return e
 		}
@@ -81,7 +93,7 @@ func (a *App) saveHomeDisplay(c *gin.Context) {
 			return e
 		}
 		saved = settings
-		return recordOperation(tx, actor(c).ID, "home_display", 1, "home_display_saved", fmt.Sprintf("hero_media_id=%d", req.HeroMediaID))
+		return recordOperation(tx, actor(c).ID, "home_display", hall.ID, "home_display_saved", fmt.Sprintf("hero_media_id=%d", req.HeroMediaID))
 	})
 	if e != nil {
 		dbFail(c, e)

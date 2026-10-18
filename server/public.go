@@ -10,10 +10,14 @@ import (
 	"strings"
 )
 
-func (a *App) publicQuery(kind string) *gorm.DB {
-	q := a.DB.Model(&Content{}).Joins("JOIN revisions r ON r.id = contents.published_revision_id AND r.status = 'approved'").Where("contents.kind = ? AND contents.visible = 1", kind)
+func (a *App) publicQuery(kind string, includePreparing ...bool) *gorm.DB {
+	q := a.DB.Model(&Content{})
+	if len(includePreparing) == 0 || !includePreparing[0] {
+		q = q.Where("EXISTS (SELECT 1 FROM halls h WHERE h.id=contents.hall_id AND h.status='open')")
+	}
+	q = q.Joins("JOIN revisions r ON r.id = contents.published_revision_id AND r.status = 'approved'").Where("contents.kind = ? AND contents.visible = 1", kind)
 	if kind == "product" {
-		q = q.Joins("JOIN contents v ON v.id = contents.vendor_id AND v.kind = 'vendor' AND v.visible = 1").Joins("JOIN revisions vr ON vr.id = v.published_revision_id AND vr.status = 'approved'")
+		q = q.Joins("JOIN contents v ON v.id = contents.vendor_id AND v.kind = 'vendor' AND v.visible = 1 AND v.hall_id = contents.hall_id").Joins("JOIN revisions vr ON vr.id = v.published_revision_id AND vr.status = 'approved'")
 	}
 	return q
 }
@@ -23,10 +27,24 @@ func (a *App) publicViews(q *gorm.DB) ([]View, error) {
 		return nil, e
 	}
 	items := []View{}
-	for _, content := range rows {
-		var rev Revision
-		if e := a.DB.First(&rev, content.PublishedRevisionID).Error; e != nil {
+	ids := []uint64{}
+	for _, row := range rows {
+		ids = append(ids, row.PublishedRevisionID)
+	}
+	revisions := []Revision{}
+	if len(ids) > 0 {
+		if e := a.DB.Where("id IN ?", ids).Find(&revisions).Error; e != nil {
 			return nil, e
+		}
+	}
+	byID := map[uint64]Revision{}
+	for _, rev := range revisions {
+		byID[rev.ID] = rev
+	}
+	for _, content := range rows {
+		rev, ok := byID[content.PublishedRevisionID]
+		if !ok {
+			return nil, gorm.ErrRecordNotFound
 		}
 		content.OwnerID = 0
 		content.DraftRevisionID = 0
@@ -34,7 +52,9 @@ func (a *App) publicViews(q *gorm.DB) ([]View, error) {
 		content.Epoch = 0
 		items = append(items, view(content, rev))
 	}
-	a.resolveCategoryViews(items)
+	if e := a.resolveCategoryViews(items); e != nil {
+		return nil, e
+	}
 	return items, nil
 }
 func (a *App) categoryIDs(category string) []uint64 {
@@ -65,8 +85,8 @@ func (a *App) categoryIDs(category string) []uint64 {
 	}
 	return ids
 }
-func keywordCondition(alias string) string {
-	return fmt.Sprintf("(%s.name LIKE ? OR %s.name_en LIKE ? OR %s.main_products LIKE ? OR %s.keywords LIKE ?)", alias, alias, alias, alias)
+func specKeywordCondition(alias string) string {
+	return fmt.Sprintf("(%s.name LIKE ? OR %s.name_en LIKE ? OR %s.main_products LIKE ? OR %s.keywords LIKE ? OR JSON_UNQUOTE(JSON_EXTRACT(%s.payload, '$.parameters')) LIKE ?)", alias, alias, alias, alias, alias)
 }
 func keyword(c *gin.Context) string {
 	runes := []rune(strings.TrimSpace(c.Query("q")))
@@ -79,19 +99,29 @@ func keyword(c *gin.Context) string {
 	s = strings.ReplaceAll(s, "_", "\\_")
 	return "%" + s + "%"
 }
+func positiveFilterID(value string) uint64 {
+	n, e := strconv.ParseUint(value, 10, 64)
+	if e != nil || n == 0 {
+		return ^uint64(0)
+	}
+	return n
+}
 func (a *App) filterProducts(c *gin.Context, q *gorm.DB) *gorm.DB {
 	if strings.TrimSpace(c.Query("q")) != "" {
 		k := keyword(c)
-		q = q.Where(keywordCondition("r"), k, k, k, k)
+		q = q.Where(specKeywordCondition("r"), k, k, k, k, k)
 	}
-	if ids := a.categoryIDs(c.Query("category_id")); len(ids) > 0 {
+	if ids := a.categoryIDs(c.Query("category_id")); c.Query("category_id") != "" {
+		if len(ids) == 0 {
+			return q.Where("1=0")
+		}
 		q = q.Where("r.category_id IN ?", ids)
 	}
 	if vendorID := c.Query("vendor_id"); vendorID != "" {
-		q = q.Where("contents.vendor_id = ?", vendorID)
+		q = q.Where("contents.vendor_id = ?", positiveFilterID(vendorID))
 	}
 	if regionID := c.Query("region_id"); regionID != "" {
-		q = q.Where("vr.region_id = ?", regionID)
+		q = q.Where("vr.region_id = ?", positiveFilterID(regionID))
 	}
 	return q
 }
@@ -130,49 +160,60 @@ func (a *App) productVendorSummaries(items []View) error {
 	}
 	return nil
 }
-func (a *App) searchVendors(c *gin.Context) {
+func publicPage(c *gin.Context, size int) (int, int) {
 	p, n := page(c)
-	q := a.publicQuery("vendor")
-	productMatch := "SELECT 1 FROM contents p JOIN revisions pr ON pr.id=p.published_revision_id AND pr.status='approved' WHERE p.vendor_id=contents.id AND p.kind='product' AND p.visible=1"
+	requested, e := strconv.Atoi(c.Query("page_size"))
+	if e != nil || requested < 1 || requested > size {
+		n = size
+	}
+	return p, n
+}
+func (a *App) searchVendors(c *gin.Context) {
+	p, n := publicPage(c, 20)
+	q, ok := a.hallQuery(c, a.publicQuery("vendor"))
+	if !ok {
+		return
+	}
+	productMatch := "SELECT 1 FROM contents p JOIN revisions pr ON pr.id=p.published_revision_id AND pr.status='approved' WHERE p.vendor_id=contents.id AND p.hall_id=contents.hall_id AND p.kind='product' AND p.visible=1"
 	if strings.TrimSpace(c.Query("q")) != "" {
 		k := keyword(c)
-		q = q.Where("("+keywordCondition("r")+" OR EXISTS ("+productMatch+" AND "+keywordCondition("pr")+"))", k, k, k, k, k, k, k, k)
+		q = q.Where("("+specKeywordCondition("r")+" OR EXISTS ("+productMatch+" AND "+specKeywordCondition("pr")+"))", k, k, k, k, k, k, k, k, k, k)
 	}
 	if ids := a.categoryIDs(c.Query("category_id")); len(ids) > 0 {
 		q = q.Where("(r.category_id IN ? OR EXISTS ("+productMatch+" AND pr.category_id IN ?))", ids, ids)
 	}
 	if region := c.Query("region_id"); region != "" {
-		q = q.Where("r.region_id = ?", region)
+		q = q.Where("r.region_id = ?", positiveFilterID(region))
 	}
 	var total int64
 	if e := q.Count(&total).Error; e != nil {
 		dbFail(c, e)
 		return
 	}
-	items, e := a.publicViews(q.Order("contents.featured DESC, contents.sort_order ASC, contents.id DESC").Offset((p - 1) * n).Limit(n))
+	items, e := a.publicViews(q.Order(publicOrder(c, "vendor")).Offset((p - 1) * n).Limit(n))
 	if e != nil {
 		dbFail(c, e)
 		return
 	}
-	for i := range items {
-		products, e := a.publicViews(a.filterProducts(c, a.publicQuery("product")).Where("contents.vendor_id = ?", items[i].ID).Order("contents.id DESC").Limit(3))
-		if e != nil {
-			dbFail(c, e)
-			return
-		}
-		items[i].MatchingProducts = products
+	if e = a.batchRepresentatives(items, a.filterProducts(c, a.publicQuery("product")), "contents.id DESC"); e != nil {
+		dbFail(c, e)
+		return
 	}
 	c.JSON(200, gin.H{"items": items, "total": total, "page": p, "page_size": n})
 }
 func (a *App) publicProducts(c *gin.Context) {
-	p, n := page(c)
-	q := a.filterProducts(c, a.publicQuery("product"))
+	p, n := publicPage(c, 24)
+	base, ok := a.hallQuery(c, a.publicQuery("product"))
+	if !ok {
+		return
+	}
+	q := a.filterProducts(c, base)
 	var total int64
 	if e := q.Count(&total).Error; e != nil {
 		dbFail(c, e)
 		return
 	}
-	items, e := a.publicViews(q.Order("contents.featured DESC, contents.sort_order ASC, contents.id DESC").Offset((p - 1) * n).Limit(n))
+	items, e := a.publicViews(q.Order(publicOrder(c, "product")).Offset((p - 1) * n).Limit(n))
 	if e != nil {
 		dbFail(c, e)
 		return
@@ -196,7 +237,7 @@ func (a *App) publicDetail(kind string) gin.HandlerFunc {
 		}
 		result := gin.H{"item": items[0]}
 		if kind == "vendor" {
-			p, n := page(c)
+			p, n := publicPage(c, 24)
 			q := a.publicQuery("product").Where("contents.vendor_id = ?", id(c))
 			var total int64
 			q.Count(&total)
@@ -217,30 +258,80 @@ func (a *App) publicDetail(kind string) gin.HandlerFunc {
 		c.JSON(200, result)
 	}
 }
+func publicOrder(c *gin.Context, kind string) string {
+	switch c.Query("sort") {
+	case "latest":
+		if kind == "vendor" {
+			return "contents.created_at DESC, contents.id DESC"
+		}
+		return "r.reviewed_at DESC, contents.id DESC"
+	case "name":
+		if kind == "vendor" {
+			return "r.name ASC, contents.id ASC"
+		}
+	}
+	return "contents.featured DESC, contents.sort_order ASC, contents.id DESC"
+}
 func (a *App) home(c *gin.Context) {
-	vendors, e := a.publicViews(a.publicQuery("vendor").Where("contents.featured=1").Order("contents.sort_order, contents.id DESC").Limit(homeVendorLimit))
+	hall, ok := a.requestHall(c)
+	if !ok {
+		return
+	}
+	if hall.Status != "open" {
+		c.JSON(200, gin.H{"hall": hall, "hero": gin.H{"media_id": 0}, "vendors": []View{}, "products": []View{}, "vendor_count": 0})
+		return
+	}
+	vendors, e := a.homeVendors(hall.ID)
 	if e != nil {
 		dbFail(c, e)
 		return
 	}
-	products, e := a.publicViews(a.publicQuery("product").Where("contents.featured=1").Order("contents.sort_order, contents.id DESC").Limit(8))
+	if e = a.batchRepresentatives(vendors, a.publicQuery("product").Where("contents.hall_id=?", hall.ID), "contents.featured DESC, contents.sort_order, contents.id DESC"); e != nil {
+		dbFail(c, e)
+		return
+	}
+	products, e := a.homeProducts(hall.ID)
 	if e != nil {
+		dbFail(c, e)
+		return
+	}
+	if e = a.productVendorSummaries(products); e != nil {
 		dbFail(c, e)
 		return
 	}
 	var count int64
-	a.publicQuery("vendor").Count(&count)
+	if e = a.publicQuery("vendor").Where("contents.hall_id=?", hall.ID).Count(&count).Error; e != nil {
+		dbFail(c, e)
+		return
+	}
 	var settings HomeDisplaySettings
-	if e := a.DB.First(&settings, 1).Error; e != nil {
+	if e = a.DB.First(&settings, hall.ID).Error; e != nil {
 		dbFail(c, e)
 		return
 	}
 	c.Header("Cache-Control", "no-store")
-	c.JSON(200, gin.H{"hero": gin.H{"media_id": settings.HeroMediaID}, "vendors": vendors, "products": products, "vendor_count": count})
+	c.JSON(200, gin.H{"hall": hall, "hero": gin.H{"media_id": settings.HeroMediaID}, "vendors": vendors, "products": products, "vendor_count": count})
 }
 func (a *App) taxonomy(c *gin.Context)    { a.taxonomyResult(c, false) }
 func (a *App) allTaxonomy(c *gin.Context) { a.taxonomyResult(c, true) }
 func (a *App) taxonomyResult(c *gin.Context, all bool) {
+	var scopedHall uint64
+	if !all || c.Query("hall") != "" {
+		hall, ok := a.requestHall(c)
+		if !ok {
+			return
+		}
+		scopedHall = hall.ID
+	}
+	if all && !platformAccount(actor(c)) {
+		var booth Content
+		a.DB.Where("kind='vendor' AND owner_id=?", actor(c).ID).First(&booth)
+		if booth.HallID > 0 {
+			scopedHall = booth.HallID
+		} else if scopedHall == 0 {
+			scopedHall = 1
+		}
+	}
 	categories := []Category{}
 	regions := []Region{}
 	halls := []Hall{}
@@ -255,18 +346,25 @@ func (a *App) taxonomyResult(c *gin.Context, all bool) {
 	}
 	rq := a.DB.Model(&Region{})
 	if !all {
-		rq = rq.Where("enabled=1 AND id IN (SELECT r.region_id FROM contents c JOIN revisions r ON r.id=c.published_revision_id AND r.status='approved' WHERE c.kind='vendor' AND c.visible=1)")
+		rq = rq.Where("enabled=1 AND id IN (SELECT r.region_id FROM contents c JOIN revisions r ON r.id=c.published_revision_id AND r.status='approved' JOIN halls h ON h.id=c.hall_id AND h.status='open' WHERE c.kind='vendor' AND c.visible=1 AND c.hall_id=?)", scopedHall)
 	}
 	if e := rq.Order("id").Find(&regions).Error; e != nil {
 		dbFail(c, e)
 		return
 	}
-	c.JSON(200, gin.H{"halls": halls, "categories": a.scopedCategories(func() Account {
+	scoped := a.scopedCategories(func() Account {
 		if all {
 			return actor(c)
 		}
 		return Account{}
-	}(), !all), "regions": regions, "aliases": a.categoryAliases()})
+	}(), !all)
+	filtered := []ScopedCategory{}
+	for _, cat := range scoped {
+		if scopedHall == 0 || cat.HallID == scopedHall {
+			filtered = append(filtered, cat)
+		}
+	}
+	c.JSON(200, gin.H{"halls": halls, "categories": filtered, "regions": regions, "aliases": a.categoryAliases()})
 }
 func (a *App) saveCategory(c *gin.Context) {
 	var req Category
@@ -305,6 +403,9 @@ func (a *App) saveCategory(c *gin.Context) {
 		var old Category
 		if e := tx.First(&old, req.ID).Error; e != nil {
 			return e
+		}
+		if old.HallID != req.HallID {
+			return fmt.Errorf("invalid_category")
 		}
 		if e := tx.Model(&old).Select("HallID", "ParentID", "Name", "NameEN", "SortOrder", "Enabled").Updates(req).Error; e != nil {
 			return e
@@ -345,4 +446,36 @@ func (a *App) saveRegion(c *gin.Context) {
 		return
 	}
 	c.JSON(200, req)
+}
+
+func keywordCondition(alias string) string {
+	return fmt.Sprintf("(%s.name LIKE ? OR %s.name_en LIKE ? OR %s.main_products LIKE ? OR %s.keywords LIKE ?)", alias, alias, alias, alias)
+}
+
+// Preserve each manufacturer's selected order while avoiding long supplier runs.
+func spreadHomeProducts(items []View) []View {
+	remaining := append([]View{}, items...)
+	result := []View{}
+	vendors := map[uint64]int{}
+	categories := map[uint64]int{}
+	for len(remaining) > 0 {
+		best := 0
+		score := func(v View) int { return vendors[v.VendorID]*100 + categories[v.Data.CategoryID]*10 }
+		seenVendors := map[uint64]bool{remaining[0].VendorID: true}
+		for i := 1; i < len(remaining); i++ {
+			if seenVendors[remaining[i].VendorID] {
+				continue
+			}
+			seenVendors[remaining[i].VendorID] = true
+			if score(remaining[i]) < score(remaining[best]) {
+				best = i
+			}
+		}
+		next := remaining[best]
+		result = append(result, next)
+		vendors[next.VendorID]++
+		categories[next.Data.CategoryID]++
+		remaining = append(remaining[:best], remaining[best+1:]...)
+	}
+	return result
 }

@@ -33,7 +33,14 @@ func importTestApp(t *testing.T) *App {
 	if e = seed(db); e != nil {
 		t.Fatal(e)
 	}
-	return &App{DB: db, Config: Config{Env: "development", SMSProvider: "development", MediaDir: t.TempDir(), WebDir: t.TempDir()}, SMS: DevelopmentSMS{}}
+	cfg := defaultGuardConfig()
+	cfg.List = 100000
+	cfg.Detail = 100000
+	cfg.Total = 200000
+	cfg.Media = 200000
+	cfg.Vendors = 100000
+	cfg.Products = 100000
+	return &App{guard: newPublicGuard(cfg), DB: db, Config: Config{Env: "development", SMSProvider: "development", MediaDir: t.TempDir(), WebDir: t.TempDir()}, SMS: DevelopmentSMS{}}
 }
 
 func TestThousandProductsAndConcurrentLastSlot(t *testing.T) {

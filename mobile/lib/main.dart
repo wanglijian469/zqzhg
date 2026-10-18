@@ -31,6 +31,7 @@ part 'exhibition_home.dart';
 part 'browse_screen.dart';
 part 'exhibit_card.dart';
 part 'exhibition_halls.dart';
+part 'app_upgrade.dart';
 
 typedef Json = Map<String, dynamic>;
 const green = industrialBlue;
@@ -44,7 +45,8 @@ List<int> imageIDs(Json data) => (data['media_ids'] as List? ?? [])
 class ApiFailure implements Exception {
   final String code;
   final List<Json> fields;
-  ApiFailure(this.code, [this.fields = const []]);
+  final int status;
+  ApiFailure(this.code, [this.fields = const [], this.status = 0]);
 }
 
 class AppModel extends ChangeNotifier {
@@ -62,27 +64,70 @@ class AppModel extends ChangeNotifier {
   late String baseUrl;
   late String token;
   late Json account;
-  ExhibitionHall activeHall = ExhibitionHall.agriculture;
-  bool get isHallPreview => activeHall == ExhibitionHall.cablesPreview;
-  void selectHall(ExhibitionHall hall) {
-    if (hall == activeHall) return;
-    activeHall = hall;
-    notifyListeners();
+  late final HallRegistry hallRegistry = HallRegistry(this);
+  ExhibitionHall get activeHall => hallRegistry.active;
+  List<ExhibitionHall> get availableHalls => hallRegistry.items;
+  bool get isHallPreview => !activeHall.isOpen;
+  bool get hallsReady => hallRegistry.ready;
+  bool get modernPublicApi => hallsReady && !hallRegistry.legacy;
+  String? get hallError => hallRegistry.error;
+  void publicChanged() => notifyListeners();
+  void selectHall(ExhibitionHall hall) => hallRegistry.select(hall);
+  Future<void> loadHalls({bool refresh = false}) =>
+      hallRegistry.load(refresh: refresh);
+  final browseMemory = <String, Json>{};
+  final _taxonomies = <String, Future<dynamic>>{};
+  final _categoryLabels = <String, Json>{};
+  String productCategory(Json data) {
+    final supplied = content(data, 'category_name');
+    if (supplied.isNotEmpty) return supplied;
+    final category = _categoryLabels['$baseUrl:${data['category_id']}'];
+    return category == null ? '' : content(category, 'name');
   }
 
-  Future<dynamic>? _taxonomy;
-  String? _taxonomyBase;
+  String publicPath(String path, {ExhibitionHall? hall}) {
+    final uri = Uri.parse(path);
+    return uri
+        .replace(
+          queryParameters: {
+            ...uri.queryParameters,
+            'hall': (hall ?? activeHall).slug,
+          },
+        )
+        .toString();
+  }
+
+  Future<dynamic> publicApi(String path, {ExhibitionHall? hall}) async {
+    final source = baseUrl, selected = hall ?? activeHall;
+    await loadHalls();
+    if (source != baseUrl) throw ApiFailure('network_error');
+    if (!hallsReady) throw ApiFailure(hallError ?? 'network_error');
+    final actual = availableHalls
+        .where((h) => h.slug == selected.slug)
+        .firstOrNull;
+    if (actual == null || !actual.isOpen) throw ApiFailure('not_found');
+    return api(publicPath(path, hall: actual));
+  }
+
   Future<dynamic> publicTaxonomy({bool refresh = false}) {
-    if (refresh || _taxonomyBase != baseUrl) _taxonomy = null;
-    _taxonomyBase = baseUrl;
-    if (_taxonomy != null) return _taxonomy!;
-    final request = api('/public/taxonomy');
-    _taxonomy = request;
+    final key = '$baseUrl:${activeHall.slug}';
+    if (refresh) _taxonomies.remove(key);
+    final cached = _taxonomies[key];
+    if (cached != null) return cached;
+    final source = baseUrl;
+    final request = publicApi('/public/taxonomy').then((value) {
+      for (final category in rows(value['categories'])) {
+        _categoryLabels['$source:${category['id']}'] = category;
+      }
+      if (source == baseUrl) publicChanged();
+      return value;
+    });
+    _taxonomies[key] = request;
     unawaited(
       request.then<void>(
         (_) {},
         onError: (Object e, StackTrace s) {
-          if (identical(_taxonomy, request)) _taxonomy = null;
+          if (identical(_taxonomies[key], request)) _taxonomies.remove(key);
         },
       ),
     );
@@ -156,6 +201,9 @@ class AppModel extends ChangeNotifier {
       if (response.statusCode == 404 && path.startsWith('/auth/visitor')) {
         throw ApiFailure('favoritesUpgradeRequired');
       }
+      if (response.statusCode == 404 && path == '/public/halls') {
+        throw ApiFailure('not_found', const [], 404);
+      }
       final dynamic parsed = jsonDecode(response.body);
       if (response.statusCode >= 400) {
         final credentials = [
@@ -176,6 +224,7 @@ class AppModel extends ChangeNotifier {
         throw ApiFailure(
           parsed['error']?['code'] ?? 'internal_error',
           rows(parsed['error']?['fields']),
+          response.statusCode,
         );
       }
       return parsed;
@@ -256,7 +305,9 @@ class AppModel extends ChangeNotifier {
     }
     await signOut();
     baseUrl = url.replaceAll(RegExp(r'/$'), '');
-    activeHall = ExhibitionHall.agriculture;
+    hallRegistry.reset();
+    _taxonomies.clear();
+    browseMemory.clear();
     await prefs.setString('base_url', baseUrl);
     notifyListeners();
   }
@@ -290,7 +341,7 @@ class ExhibitionApp extends StatelessWidget {
     child: AnimatedBuilder(
       animation: model,
       builder: (context, _) => MaterialApp(
-        title: '大陆农机',
+        title: model.t('brand'),
         navigatorObservers: [analyticsRoutes],
         debugShowCheckedModeBanner: false,
         locale: Locale(model.language),
@@ -373,6 +424,7 @@ class AsyncPane extends StatefulWidget {
 
 class _AsyncPaneState extends State<AsyncPane> {
   late Future<dynamic> future;
+  int retryVersion = 0;
   @override
   void initState() {
     super.initState();
@@ -387,6 +439,7 @@ class _AsyncPaneState extends State<AsyncPane> {
 
   @override
   Widget build(BuildContext context) => FutureBuilder<dynamic>(
+    key: ValueKey(widget.identity + retryVersion.toString()),
     future: future,
     builder: (context, snap) {
       final m = ModelScope.of(context);
@@ -406,6 +459,7 @@ class _AsyncPaneState extends State<AsyncPane> {
               space(),
               OutlinedButton(
                 onPressed: () => setState(() {
+                  retryVersion++;
                   future = widget.load();
                 }),
                 child: Text(m.t('retry')),
@@ -523,17 +577,14 @@ class Contact extends StatelessWidget {
         if (phone.isNotEmpty)
           FilledButton.icon(
             icon: const Icon(Icons.phone),
-            onPressed: () async {
-              try {
-                analyticsContact(context, 'contact_phone');
-                if (!await launchUrl(Uri(scheme: 'tel', path: phone))) {
-                  throw ApiFailure('network_error');
-                }
-              } catch (e) {
-                if (context.mounted) showError(context, e);
-              }
-            },
+            onPressed: () => dialContact(context, phone),
             label: Text(phone),
+          ),
+        if (phone.isNotEmpty)
+          TextButton.icon(
+            onPressed: () => copyNativeText(context, phone),
+            icon: const Icon(Icons.copy, size: 18),
+            label: Text(m.t('copyPhone')),
           ),
         if (wechat.isNotEmpty)
           Padding(

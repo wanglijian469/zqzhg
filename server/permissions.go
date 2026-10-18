@@ -156,7 +156,7 @@ func (a *App) permissionForRequest(c *gin.Context) string {
 		return "audit.read"
 	case path == "system":
 		return "system.read"
-	case strings.HasPrefix(path, "home-display"):
+	case strings.HasPrefix(path, "home-display") || path == "halls" || strings.HasPrefix(path, "halls/"):
 		return "home.manage"
 	case path == "taxonomy" && method == "GET":
 		return "platform.taxonomy"

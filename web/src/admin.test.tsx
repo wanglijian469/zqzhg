@@ -1,3 +1,4 @@
+import {withHallFixture} from './hall-test-fixture';
 // @vitest-environment jsdom
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -39,7 +40,7 @@ const fetchMock = vi.fn(async (url: string, opts?: RequestInit) => {
         return response({ items: [], total: 0, page: 1, page_size: 20 });
     return response({ ok: true });
 });
-beforeEach(() => { localStorage.clear(); sessionStorage.clear(); sessionStorage.setItem('zqzt.admin', 'test-only-token'); fetchMock.mockClear(); status = 'draft'; expired = false; vi.stubGlobal('fetch', fetchMock); vi.stubGlobal('scrollTo', vi.fn()); });
+beforeEach(() => { localStorage.clear(); sessionStorage.clear(); sessionStorage.setItem('zqzt.admin', 'test-only-token'); fetchMock.mockClear(); status = 'draft'; expired = false; vi.stubGlobal('fetch', withHallFixture(fetchMock)); vi.stubGlobal('scrollTo', vi.fn()); });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 const mount = (path: string) => { history.replaceState(null, '', path); render(<BrowserRouter><App /></BrowserRouter>); };
 describe('Administrator console', () => {
@@ -47,7 +48,7 @@ describe('Administrator console', () => {
         mount('/admin');
         const user = userEvent.setup();
         await screen.findByRole('heading', { name: '工作台' });
-        expect(location.pathname).toBe('/admin/dashboard');
+        await waitFor(()=>expect(location.pathname).toBe('/admin/dashboard'));
         expect(document.querySelector('.header')).toBeNull();
         expect(document.querySelector('.footer')).toBeNull();
         await user.click(screen.getByRole('button', { name: '收起导航' }));

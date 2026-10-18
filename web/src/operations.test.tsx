@@ -1,3 +1,4 @@
+import {withHallFixture} from './hall-test-fixture';
 // @vitest-environment jsdom
 import {afterEach,beforeEach,expect,it,vi} from 'vitest';
 import {cleanup,render,screen,within,waitFor} from '@testing-library/react';
@@ -20,7 +21,7 @@ const fetchMock=vi.fn(async(url:string,options?:RequestInit):Promise<Response>=>
  if(url.includes('/admin/jobs'))return json({items:[]});
  return json({ok:true});
 });
-beforeEach(()=>{sessionStorage.clear();localStorage.clear();sessionStorage.setItem('zqzt.admin','test-only');permissions=[];role='operator';fetchMock.mockClear();vi.stubGlobal('fetch',fetchMock);vi.stubGlobal('scrollTo',vi.fn())});
+beforeEach(()=>{sessionStorage.clear();localStorage.clear();sessionStorage.setItem('zqzt.admin','test-only');permissions=[];role='operator';fetchMock.mockClear();vi.stubGlobal('fetch',withHallFixture(fetchMock));vi.stubGlobal('scrollTo',vi.fn())});
 afterEach(()=>{cleanup();vi.unstubAllGlobals()});
 function mount(path:string){history.replaceState(null,'',path);render(<BrowserRouter><App/></BrowserRouter>)}
 it('uses effective permissions for the menu and vendor action buttons',async()=>{permissions=['vendor.read'];mount('/admin/vendors');await screen.findByText('权限测试厂商');const nav=document.querySelector('.admin-navigation')!;expect(within(nav as HTMLElement).queryByText('厂商账号')).toBeNull();expect(within(nav as HTMLElement).queryByText('产品管理')).toBeNull();expect(screen.queryByRole('button',{name:'新增厂商'})).toBeNull();expect(screen.queryByRole('button',{name:'下架'})).toBeNull();expect(screen.getAllByRole('checkbox').every(v=>(v as HTMLInputElement).disabled)).toBe(true);expect(screen.getByRole('link',{name:'查看内容'}).getAttribute('href')).toBe('/admin/contents/1')});

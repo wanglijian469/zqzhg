@@ -1,7 +1,7 @@
 name: dalunongji
 description: 中企展馆高端企业云展厅
 publish_to: none
-version: 1.6.0+28
+version: 1.7.0+29
 environment:
   sdk: '>=3.10.0 <4.0.0'
 dependencies:

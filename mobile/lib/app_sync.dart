@@ -269,22 +269,7 @@ class PortalResourceSummary extends StatelessWidget {
       load: () => m.api(
         '/public/resources?vendor_id=$vendorID&kind=$kind&page_size=3&page=1',
       ),
-      builder: (r) => Column(
-        children: rows(r['items'])
-            .take(3)
-            .map(
-              (item) => ListTile(
-                leading: Icon(
-                  kind == 'video'
-                      ? Icons.play_circle_outline
-                      : Icons.menu_book_outlined,
-                ),
-                title: Text(resourceTitle(m, item)),
-                onTap: () => push(context, NativeResourceViewer(item: item)),
-              ),
-            )
-            .toList(),
-      ),
+      builder: (r) => Column(children:rows(r['items']).where((item)=>item['vendor_id']==vendorID).take(3).map((item)=>NativePublicResourceCard(item:item)).toList()),
     );
   }
 }

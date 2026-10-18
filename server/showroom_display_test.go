@@ -39,7 +39,7 @@ func TestShowroomRepresentativesIsolationVersionsAndVisibility(t *testing.T) {
 	foreign := create(other, "product", "其他账号产品")
 	publish(other, foreign)
 	products := []map[string]any{}
-	for i := 0; i < 4; i++ {
+	for i := 0; i < 10; i++ {
 		p := create(merchant, "product", fmt.Sprintf("公开产品%d", i))
 		publish(merchant, p)
 		products = append(products, p)
@@ -51,8 +51,20 @@ func TestShowroomRepresentativesIsolationVersionsAndVisibility(t *testing.T) {
 	}
 	path := "/public/showrooms/v-" + number(vendor["id"])
 	public := tc.call("GET", path, "", nil, 200)
+	home := public["home_products"].([]any)
+	if len(home) != 8 {
+		t.Fatal("homepage limit", len(home))
+	}
+	seen := map[any]bool{}
+	for _, raw := range home {
+		row := raw.(map[string]any)
+		if seen[row["id"]] || row["vendor_id"] != vendor["id"] {
+			t.Fatal("duplicate or foreign homepage product", row)
+		}
+		seen[row["id"]] = true
+	}
 	auto := public["representative_products"].([]any)
-	if auto[0].(map[string]any)["id"] != products[3]["id"] {
+	if auto[0].(map[string]any)["id"] != products[9]["id"] {
 		t.Fatal("automatic order changed")
 	}
 	save := func(ids []any, version any, status int) map[string]any {
@@ -66,6 +78,9 @@ func TestShowroomRepresentativesIsolationVersionsAndVisibility(t *testing.T) {
 	saved := save(ids, 0, 200)
 	save(ids, 0, 409)
 	public = tc.call("GET", path, "", nil, 200)
+	if public["home_products"].([]any)[0].(map[string]any)["id"] != products[1]["id"] {
+		t.Fatal("homepage manual priority ignored")
+	}
 	if public["representative_products"].([]any)[0].(map[string]any)["id"] != products[1]["id"] {
 		t.Fatal("manual order ignored")
 	}
@@ -93,6 +108,9 @@ func TestShowroomRepresentativesIsolationVersionsAndVisibility(t *testing.T) {
 		t.Fatal("republish did not restore selection")
 	}
 	saved = save([]any{}, saved["version"], 200)
+	if len(tc.call("GET", path, "", nil, 200)["home_products"].([]any)) != 0 {
+		t.Fatal("manual empty homepage must hide")
+	}
 	if len(tc.call("GET", path, "", nil, 200)["representative_products"].([]any)) != 0 {
 		t.Fatal("manual empty must hide")
 	}

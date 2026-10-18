@@ -77,7 +77,7 @@ ThemeData industrialTheme() => ThemeData(
     style: FilledButton.styleFrom(
       backgroundColor: industrialBlue,
       foregroundColor: Colors.white,
-      minimumSize: const Size(44, 44),
+      minimumSize: const Size(48, 48),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
@@ -85,7 +85,7 @@ ThemeData industrialTheme() => ThemeData(
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
       foregroundColor: industrialInk,
-      minimumSize: const Size(44, 44),
+      minimumSize: const Size(48, 48),
       side: const BorderSide(color: industrialLine),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -106,8 +106,9 @@ ThemeData industrialTheme() => ThemeData(
 );
 
 class ExhibitGrid extends StatelessWidget {
+  final bool showVendor;
   final List<Json> items;
-  const ExhibitGrid({super.key, required this.items});
+  const ExhibitGrid({super.key, required this.items, this.showVendor = true});
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, c) {
@@ -121,7 +122,11 @@ class ExhibitGrid extends StatelessWidget {
             .map(
               (i) => SizedBox(
                 width: width,
-                child: ItemTile(item: i, compact: columns == 2),
+                child: ItemTile(
+                  item: i,
+                  compact: columns == 2,
+                  showVendor: showVendor,
+                ),
               ),
             )
             .toList(),

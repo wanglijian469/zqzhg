@@ -129,7 +129,7 @@ func TestFeaturedVendorLimitConcurrentAndPublicSnapshots(t *testing.T) {
 	v := vendors[0]
 	tc.call("PUT", "/admin/contents/"+number(v["id"])+"/draft", admin, gin.H{"revision_id": v["revision_id"], "data": Payload{Name: "未审核新名称不能进入首页", RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567"}}, 200)
 	home := tc.call("GET", "/public/home", "", nil, 200)
-	if len(home["vendors"].([]any)) != 12 {
+	if len(home["vendors"].([]any)) != 8 {
 		t.Fatal("home limit")
 	}
 	for _, item := range home["vendors"].([]any) {
@@ -140,7 +140,7 @@ func TestFeaturedVendorLimitConcurrentAndPublicSnapshots(t *testing.T) {
 	// A legacy database above the limit remains untouched; removal and reorder still work.
 	a.DB.Model(&Content{}).Where("kind='vendor'").Update("featured", true)
 	home = tc.call("GET", "/public/home", "", nil, 200)
-	if len(home["vendors"].([]any)) != 12 {
+	if len(home["vendors"].([]any)) != 8 {
 		t.Fatal("legacy display limit")
 	}
 	tc.call("PUT", "/admin/contents/"+number(v["id"])+"/featured", admin, gin.H{"featured": true, "sort_order": -1}, 200)

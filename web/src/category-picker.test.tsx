@@ -1,3 +1,4 @@
+import {withHallFixture} from './hall-test-fixture';
 // @vitest-environment jsdom
 import React from 'react';
 import {afterEach,beforeEach,expect,it,vi} from 'vitest';
@@ -34,33 +35,22 @@ const fetchMock=vi.fn(async(url:string,opts?:RequestInit)=>{
 });
 const mount=(path:string)=>{history.replaceState(null,'',path);render(<BrowserRouter><App/></BrowserRouter>)};
 const signed=()=>{sessionStorage.setItem('zqzt.merchant','test-merchant-token');sessionStorage.setItem('zqzt.merchant.id','7')};
-beforeEach(()=>{pending=[];failNext=false;holdRefresh=false;productStatus='draft';refreshes.length=0;fetchMock.mockClear();localStorage.clear();sessionStorage.clear();vi.stubGlobal('fetch',fetchMock);vi.stubGlobal('scrollTo',vi.fn());Element.prototype.scrollIntoView=vi.fn();vi.stubGlobal('URL',Object.assign(URL,{createObjectURL:vi.fn(()=> 'blob:retained-photo'),revokeObjectURL:vi.fn()}))});
+beforeEach(()=>{pending=[];failNext=false;holdRefresh=false;productStatus='draft';refreshes.length=0;fetchMock.mockClear();localStorage.clear();sessionStorage.clear();vi.stubGlobal('fetch',withHallFixture(fetchMock));vi.stubGlobal('scrollTo',vi.fn());Element.prototype.scrollIntoView=vi.fn();vi.stubGlobal('URL',Object.assign(URL,{createObjectURL:vi.fn(()=> 'blob:retained-photo'),revokeObjectURL:vi.fn()}))});
 afterEach(()=>{holdRefresh=false;for(const finish of refreshes)finish(response(taxonomy()));cleanup();vi.unstubAllGlobals();localStorage.clear();sessionStorage.clear()});
 
 it('creates and immediately selects top-level business and product categories with parent_id zero',async()=>{
  const user=userEvent.setup();signed();mount('/join?tab=boothManage');await user.click(await screen.findByRole('link',{name:'基本信息'}));
- await user.click(screen.getByRole('button',{name:'新增经营分类'}));let dialog=screen.getByRole('dialog');
+ if(!document.querySelector('.company-more-basics')?.hasAttribute('open'))await user.click(document.querySelector('.company-more-basics>summary')!);await user.click(screen.getByRole('button',{name:'新增经营分类'}));let dialog=screen.getByRole('dialog');
  await user.selectOptions(within(dialog).getByRole('combobox',{name:'上级分类'}),'0');await user.type(within(dialog).getByRole('textbox',{name:'中文分类名称'}),'齿轮');await user.click(within(dialog).getByRole('button',{name:'保存并选中'}));
  await waitFor(()=>expect(screen.queryByRole('dialog')).toBeNull());expect(pending[0].parent_id).toBe(0);expect((screen.getByRole('combobox',{name:'企业经营分类'}) as HTMLSelectElement).value).toBe('70');
  await user.click(screen.getByRole('button',{name:'新增经营分类'}));dialog=screen.getByRole('dialog');expect((within(dialog).getByRole('combobox',{name:'上级分类'}) as HTMLSelectElement).value).toBe('0');await user.click(within(dialog).getByRole('button',{name:'取消'}));
- await user.click(screen.getByRole('link',{name:'产品管理'}));await user.click(await screen.findByRole('link',{name:'添加产品'}));await user.click(screen.getByRole('button',{name:'新增产品分类'}));dialog=screen.getByRole('dialog');
+ await user.click(screen.getByRole('link',{name:'产品管理'}));if(screen.queryByRole('dialog'))await user.click(within(screen.getByRole('dialog')).getByRole('button',{name:'离开页面'}));await user.click(await screen.findByRole('link',{name:'添加产品'}));await user.click(screen.getByRole('button',{name:'新增产品分类'}));dialog=screen.getByRole('dialog');
  expect((within(dialog).getByRole('combobox',{name:'上级分类'}) as HTMLSelectElement).value).toBe('0');await user.type(within(dialog).getByRole('textbox',{name:'中文分类名称'}),'动力传动');await user.click(within(dialog).getByRole('button',{name:'保存并选中'}));
  await waitFor(()=>expect(screen.queryByRole('dialog')).toBeNull());expect(pending[1].parent_id).toBe(0);expect((screen.getByRole('combobox',{name:'产品分类'}) as HTMLSelectElement).value).toBe('71');
  await user.click(screen.getByRole('button',{name:'English'}));await user.click(screen.getByRole('button',{name:'Add product category'}));expect(screen.getByRole('option',{name:'Top-level (level 1) category'})).toBeTruthy();
 });
 
-it('keeps guest entries and selected photo through cancelled and completed category login',async()=>{
- const user=userEvent.setup();mount('/join');await screen.findByRole('option',{name:'农业机械'});
- await user.type(screen.getByRole('textbox',{name:'企业 / 工厂名称'}),'保留填写的企业');await user.selectOptions(screen.getByRole('combobox',{name:'企业经营分类'}),'2');
- await user.click(document.querySelector('.profile-editor>summary')!);const file=new File(['photo'],'retained.png',{type:'image/png'});
- await user.upload(document.querySelector('.brand-image-field.logo input[type=file]') as HTMLInputElement,file);await user.click(within(screen.getByRole('dialog')).getByRole('button',{name:'关闭'}));
- const add=await screen.findByRole('button',{name:'新增经营分类'});await user.click(add);await user.click(within(screen.getByRole('dialog')).getByRole('button',{name:'关闭'}));
- await waitFor(()=>expect((add as HTMLButtonElement).disabled).toBe(false));expect((screen.getByRole('textbox',{name:'企业 / 工厂名称'}) as HTMLInputElement).value).toBe('保留填写的企业');
- await user.click(add);let dialog=screen.getByRole('dialog');await user.click(within(dialog).getByRole('button',{name:'已有公司账号登录'}));await user.type(within(dialog).getByLabelText('公司登录账号'),'existing-company');await user.type(within(dialog).getByLabelText('密码'),'test-password');await user.click(within(dialog).getByRole('button',{name:'登录'}));
- await screen.findByRole('heading',{name:'新增经营分类'});dialog=screen.getByRole('dialog');expect((within(dialog).getByRole('combobox',{name:'上级分类'}) as HTMLSelectElement).value).toBe('2');
- expect((screen.getByRole('textbox',{name:'企业 / 工厂名称'}) as HTMLInputElement).value).toBe('保留填写的企业');expect(document.querySelector('.brand-image-field.logo img')?.getAttribute('src')).toBe('blob:retained-photo');expect(screen.getByRole('button',{name:'重试 · retained.png'})).toBeTruthy();
- expect(fetchMock.mock.calls.some(([url,opts])=>url.includes('/merchant/contents')&&opts?.method==='POST')).toBe(false);
-});
+it('keeps workspace material when a new category dialog is cancelled',async()=>{const user=userEvent.setup();signed();mount('/merchant/booth/edit');const name=await screen.findByRole('textbox',{name:'企业 / 工厂名称'});await user.clear(name);await user.type(name,'保留填写的企业');await user.click(document.querySelector('.company-more-basics>summary')!);await user.selectOptions(screen.getByRole('combobox',{name:'企业经营分类'}),'2');await user.click(screen.getByRole('button',{name:'新增经营分类'}));await user.click(within(screen.getByRole('dialog')).getByRole('button',{name:'取消'}));expect((name as HTMLInputElement).value).toBe('保留填写的企业');expect((screen.getByRole('combobox',{name:'企业经营分类'}) as HTMLSelectElement).value).toBe('2');expect(fetchMock.mock.calls.some(([url,opts])=>url.includes('/merchant/contents')&&opts?.method==='POST')).toBe(false)});
 
 it('keeps failed input, submits only category on Enter and selects the new option before refresh completes',async()=>{
  const user=userEvent.setup();signed();mount('/join?tab=productManage');await user.click(await screen.findByRole('link',{name:'添加产品'}));

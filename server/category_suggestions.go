@@ -121,6 +121,7 @@ func (a *App) suggestCategory(c *gin.Context) {
 	var req struct {
 		Name     string `json:"name"`
 		NameEN   string `json:"name_en"`
+		HallID   uint64 `json:"hall_id"`
 		ParentID uint64 `json:"parent_id"`
 	}
 	if c.ShouldBindJSON(&req) != nil {
@@ -148,13 +149,25 @@ func (a *App) suggestCategory(c *gin.Context) {
 			return e
 		}
 		// Root categories belong to the same default hall as administrator-created categories.
-		parent := Category{HallID: 1}
+		hid := req.HallID
+		if hid == 0 {
+			hid = 1
+		}
+		var booth Content
+		tx.Where("kind='vendor' AND owner_id=?", who.ID).First(&booth)
+		if booth.HallID > 0 {
+			hid = booth.HallID
+		}
+		parent := Category{HallID: hid}
 		if req.ParentID == 0 {
 			var hall Hall
 			if e := tx.First(&hall, parent.HallID).Error; e != nil {
 				return e
 			}
 		} else if !categoryAllowed(tx, req.ParentID, 0) || tx.First(&parent, req.ParentID).Error != nil {
+			return fieldFailure("invalid_category", "parent_id", "formal_parent_required")
+		}
+		if parent.HallID != hid {
 			return fieldFailure("invalid_category", "parent_id", "formal_parent_required")
 		}
 		var matches []Category
@@ -282,8 +295,30 @@ func (a *App) normalizeCategory(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{"ok": true})
 }
-func (a *App) resolveCategoryViews(items []View) {
-	for i := range items {
-		items[i].Data.CategoryID = canonicalCategory(a.DB, items[i].Data.CategoryID)
+func (a *App) resolveCategoryViews(items []View) error {
+	if len(items) == 0 {
+		return nil
 	}
+	var rows []CategoryAlias
+	if e := a.DB.Find(&rows).Error; e != nil {
+		return e
+	}
+	aliases := map[uint64]uint64{}
+	for _, r := range rows {
+		aliases[r.SourceID] = r.TargetID
+	}
+	for i := range items {
+		id := items[i].Data.CategoryID
+		seen := map[uint64]bool{}
+		for id > 0 && aliases[id] > 0 {
+			if seen[id] {
+				id = 0
+				break
+			}
+			seen[id] = true
+			id = aliases[id]
+		}
+		items[i].Data.CategoryID = id
+	}
+	return nil
 }

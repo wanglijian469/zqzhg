@@ -42,3 +42,10 @@ node_modules/
 *.tsbuildinfo
 /delivery/operations-1.6.0/
 /mobile/android/build/
+# Release binaries and complete delivery snapshots are GitHub Release assets.
+/delivery/
+# Python compilation caches are local build output.
+__pycache__/
+*.pyc
+# Raw vendor intake/contact/authorization material is business data, not source.
+/厂商信息/

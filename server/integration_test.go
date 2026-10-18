@@ -87,7 +87,7 @@ func TestBusinessAndMediaIsolation(t *testing.T) {
 	}
 	tc.call("POST", "/auth/phone", "", gin.H{"phone": "13900000003", "code": code}, 401)
 	home := tc.call("GET", "/public/home", "", nil, 200)
-	tc.call("GET", "/public/vendors?q="+strings.Repeat("农", 201), "", nil, 200)
+	tc.call("GET", "/public/vendors?q="+strings.Repeat("农", 201), "", nil, 400)
 	if home["vendor_count"].(float64) != 0 {
 		t.Fatal("new database must be empty")
 	}

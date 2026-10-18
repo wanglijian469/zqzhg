@@ -89,7 +89,7 @@ type ResourceView struct {
 	File          *MediaMetadata  `json:"file,omitempty"`
 }
 
-const resourcePublicSQL = "resources.visible=1 AND pr.status='approved' AND EXISTS (SELECT 1 FROM contents v JOIN revisions vr ON vr.id=v.published_revision_id WHERE v.id=resources.vendor_id AND v.kind='vendor' AND v.visible=1 AND vr.status='approved') AND (pr.product_id=0 OR EXISTS (SELECT 1 FROM contents p JOIN revisions pvr ON pvr.id=p.published_revision_id WHERE p.id=pr.product_id AND p.kind='product' AND p.vendor_id=resources.vendor_id AND p.visible=1 AND pvr.status='approved'))"
+const resourcePublicSQL = "resources.visible=1 AND pr.status='approved' AND EXISTS (SELECT 1 FROM contents v JOIN revisions vr ON vr.id=v.published_revision_id JOIN halls h ON h.id=v.hall_id AND h.status='open' WHERE v.id=resources.vendor_id AND v.kind='vendor' AND v.visible=1 AND vr.status='approved') AND (pr.product_id=0 OR EXISTS (SELECT 1 FROM contents p JOIN revisions pvr ON pvr.id=p.published_revision_id WHERE p.id=pr.product_id AND p.kind='product' AND p.vendor_id=resources.vendor_id AND p.visible=1 AND pvr.status='approved'))"
 
 func settingInt(key string, def int) int {
 	n, e := strconv.Atoi(env(key, strconv.Itoa(def)))

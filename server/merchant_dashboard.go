@@ -28,6 +28,9 @@ func (a *App) merchantDashboard(c *gin.Context) {
 
 func (a *App) publicApp(c *gin.Context) {
 	base := strings.TrimRight(env("APP_DOWNLOAD_BASE_URL", a.Config.PublicBaseURL), "/")
+	if cfg, e := a.systemConfig(); e == nil && cfg.Site.WebURL != "" {
+		base = cfg.Site.WebURL
+	}
 	if validatePublicBase(base) != nil {
 		base = ""
 	}

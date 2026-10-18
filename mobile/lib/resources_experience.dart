@@ -19,10 +19,350 @@ class CompanyShowroomScreen extends StatefulWidget {
 
 class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
   late int tab = widget.initialTab;
-  int page = 1;
-  String query = '';
-  int category = 0;
-  final search = TextEditingController();
+  final productState = <String, dynamic>{};
+  final tabKeys = {
+    for (final i in [5, 0, 1, 2, 3, 4]) i: GlobalKey(),
+  };
+  bool positioned = false;
+  void choose(int value) {
+    FocusScope.of(context).unfocus();
+    setState(() => tab = value);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final c = tabKeys[value]?.currentContext;
+      if (c != null) {
+        Scrollable.of(c, axis: Axis.horizontal).position.ensureVisible(
+          c.findRenderObject()!,
+          alignment: .5,
+          duration: const Duration(milliseconds: 180),
+        );
+      }
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    unawaited(ModelScope.of(context).loadHalls());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final m = ModelScope.of(context);
+    return Scaffold(
+      appBar: appBar(context, m.t('brand')),
+      body: AsyncPane(
+        identity: '${m.baseUrl}:showroom:${widget.slug}',
+        load: () =>
+            m.api('/public/showrooms/${Uri.encodeComponent(widget.slug)}'),
+        builder: (result) {
+          final item = asMap(result['item']),
+              data = asMap(item['data']),
+              profile = asMap(data['company_profile'] ?? {});
+          final ownHall = m.availableHalls
+              .where((h) => h.id == (item['hall_id'] ?? 1))
+              .firstOrNull;
+          if (!positioned) {
+            positioned = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final c = tabKeys[tab]?.currentContext;
+              if (c != null) {
+                Scrollable.of(
+                  c,
+                  axis: Axis.horizontal,
+                ).position.ensureVisible(c.findRenderObject()!, alignment: .5);
+              }
+            });
+          }
+          void returnHall() {
+            if (ownHall == null) return;
+            m.selectHall(ownHall);
+            if (m.openHome != null) {
+              Navigator.of(context).popUntil((r) => r.isFirst);
+              m.openHome!();
+            } else {
+              push(context, const HomeScreen());
+            }
+          }
+
+          final phone = (data['phone'] ?? '').toString(),
+              wechat = (data['wechat'] ?? '').toString();
+          return AnalyticsScreen(
+            page: '/v/${widget.slug}',
+            kind: 'vendor',
+            id: item['id'],
+            child: Scaffold(
+              bottomNavigationBar: Material(
+                color: Colors.white,
+                elevation: 4,
+                child: SafeArea(
+                  top: false,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextButton.icon(
+                          onPressed: () => choose(1),
+                          icon: const Icon(Icons.inventory_2_outlined),
+                          label: Text(m.t('navProducts')),
+                        ),
+                      ),
+                      if (phone.isNotEmpty || wechat.isNotEmpty)
+                        Expanded(
+                          child: TextButton.icon(
+                            onPressed: () => phone.isNotEmpty
+                                ? dialContact(context, phone)
+                                : copyNativeText(context, wechat),
+                            icon: Icon(
+                              phone.isNotEmpty
+                                  ? Icons.phone_outlined
+                                  : Icons.chat_outlined,
+                            ),
+                            label: Text(
+                              m.t(phone.isNotEmpty ? 'phone' : 'wechat'),
+                            ),
+                          ),
+                        ),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => choose(4),
+                          child: Text(m.t('showroomContact')),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              body: CustomScrollView(
+                key: PageStorageKey('showroom:${widget.slug}:$tab'),
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        onPressed: ownHall == null ? null : returnHall,
+                        icon: const Icon(Icons.arrow_back, size: 16),
+                        label: Text(
+                          m.t('backExhibition') +
+                              (ownHall == null
+                                  ? ''
+                                  : ' · ${exhibitionHallName(m, ownHall)}'),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: tab == 5
+                        ? NativeCompanyHero(
+                            item: item,
+                            slug: widget.slug,
+                            onProducts: () => choose(1),
+                            onContact: () => choose(4),
+                          )
+                        : NativeCompanyHeader(data: data),
+                  ),
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: ShowroomTabsHeader(
+                      height:
+                          56 *
+                          max(
+                            1,
+                            MediaQuery.textScalerOf(context).scale(12) / 12,
+                          ),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            for (final i in [5, 0, 1, 2, 3, 4])
+                              Padding(
+                                key: tabKeys[i],
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
+                                child: ChoiceChip(
+                                  label: Text(
+                                    m.t(
+                                      [
+                                        'companyIntro',
+                                        'exhibits',
+                                        'shortVideos',
+                                        'electronicCatalogs',
+                                        'showroomContact',
+                                        'portalHome',
+                                      ][i],
+                                    ),
+                                  ),
+                                  selected: tab == i,
+                                  onSelected: (_) => choose(i),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.all(16),
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (tab == 5)
+                            ShowroomHomeBody(
+                              data: data,
+                              result: asMap(result),
+                              onTab: choose,
+                            ),
+                          if (tab == 0) ...[
+                            CompanyPortalBody(
+                              data: {...data, 'media_ids': <int>[]},
+                              result: asMap(result),
+                            ),
+                            if (companyGallery(data).isNotEmpty) ...[
+                              space(),
+                              Text(
+                                m.t('showroomGallery'),
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              NativeCompanyGallery(items: companyGallery(data)),
+                            ],
+                          ],
+                          if (tab == 1)
+                            NativeCompanyProducts(
+                              vendorID: item['id'],
+                              hall: ownHall,
+                              categories: rows(result['categories']),
+                              memory: productState,
+                            ),
+                          if (tab == 2 || tab == 3)
+                            NativeResourceList(
+                              key: ValueKey('${widget.slug}:$tab'),
+                              vendorID: item['id'],
+                              kind: tab == 2 ? 'video' : 'catalog',
+                            ),
+                          if (tab == 4) ...[
+                            Text(
+                              m.t('showroomContact'),
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            space(12),
+                            Text(
+                              m.content(data, 'name'),
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            if (m.content(profile, 'contact_name').isNotEmpty)
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(m.t('contactName')),
+                                subtitle: Text(
+                                  m.content(profile, 'contact_name'),
+                                ),
+                              ),
+                            Contact(data: data),
+                            if ((data['address'] ?? '').toString().isNotEmpty)
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(m.t('companyAddress')),
+                                subtitle: Text(data['address']),
+                              ),
+                            if ((profile['website'] ?? '')
+                                .toString()
+                                .isNotEmpty)
+                              TextButton(
+                                onPressed: () => launchUrl(
+                                  Uri.parse(profile['website']),
+                                  mode: LaunchMode.externalApplication,
+                                ),
+                                child: Text(profile['website']),
+                              ),
+                            for (final c in rows(profile['contacts']))
+                              if ((c['name'] ?? c['phone'] ?? c['wechat'] ?? '')
+                                  .toString()
+                                  .isNotEmpty)
+                                Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(14),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        Text(
+                                          [
+                                                m.content(c, 'area'),
+                                                m.content(c, 'name'),
+                                              ]
+                                              .where((v) => v.isNotEmpty)
+                                              .join(' · '),
+                                        ),
+                                        Contact(data: c),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                          ],
+                          space(16),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class NativeCompanyProducts extends StatefulWidget {
+  final int vendorID;
+  final ExhibitionHall? hall;
+  final List<Json> categories;
+  final Json memory;
+  const NativeCompanyProducts({
+    super.key,
+    required this.vendorID,
+    required this.hall,
+    required this.categories,
+    required this.memory,
+  });
+  @override
+  State<NativeCompanyProducts> createState() => _NativeCompanyProductsState();
+}
+
+class _NativeCompanyProductsState extends State<NativeCompanyProducts> {
+  late final TextEditingController search;
+  late int page, category;
+  late String term, order;
+  @override
+  void initState() {
+    super.initState();
+    search = TextEditingController(text: widget.memory['query'] ?? '');
+    term = widget.memory['term'] ?? '';
+    page = widget.memory['page'] ?? 1;
+    category = widget.memory['category'] ?? 0;
+    order = widget.memory['order'] ?? '';
+  }
+
+  void change(VoidCallback fn) {
+    setState(fn);
+    widget.memory.addAll({
+      'query': search.text,
+      'term': term,
+      'page': page,
+      'category': category,
+      'order': order,
+    });
+  }
+
+  void submit() {
+    FocusScope.of(context).unfocus();
+    change(() {
+      term = search.text.trim();
+      page = 1;
+    });
+  }
+
   @override
   void dispose() {
     search.dispose();
@@ -32,240 +372,136 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
   @override
   Widget build(BuildContext context) {
     final m = ModelScope.of(context);
-    return Scaffold(
-      appBar: appBar(context, m.t('showroom')),
-      body: AsyncPane(
-        identity: '${m.baseUrl}:showroom:${widget.slug}',
-        load: () =>
-            m.api('/public/showrooms/${Uri.encodeComponent(widget.slug)}'),
-        builder: (result) {
-          final item = asMap(result['item']);
-          final data = asMap(item['data']);
-          final profile = asMap(data['company_profile'] ?? {});
-          final cats = rows(result['categories']);
-          final counts = asMap(result['resource_counts'] ?? {});
-          final available = [
-            5,
-            0,
-            if ((result['product_count'] ?? 0) > 0) 1,
-            if ((counts['video'] ?? 0) > 0) 2,
-            if ((counts['catalog'] ?? 0) > 0) 3,
-            4,
-          ];
-          if (!available.contains(tab)) tab = 5;
-          return AnalyticsScreen(
-            page: '/v/${widget.slug}',
-            kind: 'vendor',
-            id: item['id'] as int,
-            child: NestedScrollView(
-              headerSliverBuilder: (context, scrolled) => [
-                SliverToBoxAdapter(
-                  child: NativeBrandHero(
-                    favoriteAction: FavoriteButton(
-                      item: {...item, 'kind': 'vendor'},
-                      onDark: true,
+    final params = Uri(
+      queryParameters: {
+        'vendor_id': widget.vendorID.toString(),
+        'page': '$page',
+        'page_size': '24',
+        'q': term,
+        if (category > 0) 'category_id': '$category',
+        if (m.modernPublicApi && order.isNotEmpty) 'sort': order,
+      },
+    ).query;
+    final path = m.publicPath(
+      '/public/products?$params',
+      hall: widget.hall ?? ExhibitionHall.agriculture,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        TextField(
+          controller: search,
+          textInputAction: TextInputAction.search,
+          decoration: InputDecoration(
+            labelText: m.t('showroomKeyword'),
+            suffixIcon: IconButton(
+              tooltip: m.t('search'),
+              onPressed: submit,
+              icon: const Icon(Icons.search),
+            ),
+          ),
+          onSubmitted: (_) => submit(),
+        ),
+        NativeFilterPanel(
+          count: (category > 0 ? 1 : 0) + (order.isEmpty ? 0 : 1),
+          panelKey: const PageStorageKey('company-product-filters'),
+          children: [
+            DropdownButtonFormField<int>(
+              key: ValueKey(category),
+              initialValue: category,
+              isExpanded: true,
+              decoration: InputDecoration(labelText: m.t('category')),
+              items: [
+                DropdownMenuItem(value: 0, child: Text(m.t('allCategories'))),
+                for (final c in widget.categories)
+                  DropdownMenuItem(
+                    value: c['id'],
+                    child: Text(
+                      m.content(c, 'name'),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    data: data,
-                    onContact: () => setState(() => tab = 4),
-                    onShare: () =>
-                        push(context, ShowroomPromotion(slug: widget.slug)),
                   ),
+              ],
+              onChanged: (v) => change(() {
+                category = v ?? 0;
+                page = 1;
+              }),
+            ),
+            if (m.modernPublicApi)
+              DropdownButtonFormField<String>(
+                initialValue: order,
+                isExpanded: true,
+                decoration: InputDecoration(labelText: m.t('sort')),
+                items: [
+                  DropdownMenuItem(value: '', child: Text(m.t('defaultSort'))),
+                  DropdownMenuItem(
+                    value: 'latest',
+                    child: Text(m.t('latestSort')),
+                  ),
+                ],
+                onChanged: (v) => change(() {
+                  order = v ?? '';
+                  page = 1;
+                }),
+              ),
+            if (category > 0 || term.isNotEmpty || order.isNotEmpty)
+              TextButton(
+                onPressed: () => change(() {
+                  category = 0;
+                  term = '';
+                  order = '';
+                  search.clear();
+                  page = 1;
+                }),
+                child: Text(m.t('clear')),
+              ),
+          ],
+        ),
+        AsyncPane(
+          identity: m.baseUrl + path,
+          load: () => m.api(path),
+          builder: (r) {
+            final products = uniqueContent(rows(r['items'])).map((p) {
+              final d = asMap(p['data']);
+              final c = widget.categories
+                  .where((c) => c['id'] == d['category_id'])
+                  .firstOrNull;
+              return <String, dynamic>{
+                ...p,
+                'data': {
+                  ...d,
+                  if (c != null) 'category_name': m.content(c, 'name'),
+                },
+              };
+            }).toList();
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  '${m.t('productResults')}: ${r['total']}',
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: ShowroomTabsHeader(
-                    height:
-                        64 * MediaQuery.textScalerOf(context).scale(12) / 12,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          for (final i in available)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                              ),
-                              child: ChoiceChip(
-                                label: Text(
-                                  m.t(
-                                    [
-                                      'companyIntro',
-                                      'exhibits',
-                                      'shortVideos',
-                                      'electronicCatalogs',
-                                      'showroomContact',
-                                      'portalHome',
-                                    ][i],
-                                  ),
-                                ),
-                                selected: tab == i,
-                                onSelected: (_) => setState(() => tab = i),
-                              ),
-                            ),
-                        ],
-                      ),
+                if (products.isEmpty)
+                  message(
+                    context,
+                    m.t(
+                      term.isNotEmpty || category > 0
+                          ? 'showroomNoMatches'
+                          : 'showroomEmpty',
                     ),
                   ),
+                ExhibitGrid(items: products, showVendor: false),
+                NativePagination(
+                  page: page,
+                  total: (r['total'] as num).toInt(),
+                  size: (r['page_size'] as num?)?.toInt() ?? 24,
+                  onPage: (n) => change(() => page = n),
                 ),
               ],
-              body: ListView(
-                padding: const EdgeInsets.all(20),
-                children: [
-                  if (tab == 5 || tab == 0)
-                    CompanyPortalBody(
-                      data: data,
-                      result: result,
-                      compact: tab == 5,
-                      onTab: (v) => setState(() => tab = v),
-                    ),
-                  if (tab == 1) ...[
-                    if (rows(result['representative_products']).isNotEmpty) ...[
-                      Text(
-                        m.t('representativeProducts'),
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      ExhibitGrid(
-                        items: rows(result['representative_products']),
-                      ),
-                    ],
-                    TextField(
-                      controller: search,
-                      decoration: InputDecoration(
-                        labelText: m.t('showroomKeyword'),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () => setState(() {
-                            query = search.text;
-                            page = 1;
-                          }),
-                        ),
-                      ),
-                      onSubmitted: (v) => setState(() {
-                        query = v;
-                        page = 1;
-                      }),
-                    ),
-                    space(),
-                    DropdownButtonFormField<int>(
-                      initialValue: category,
-                      isExpanded: true,
-                      decoration: InputDecoration(labelText: m.t('category')),
-                      items: [
-                        DropdownMenuItem(
-                          value: 0,
-                          child: Text(m.t('allCategories')),
-                        ),
-                        for (final c in cats)
-                          DropdownMenuItem(
-                            value: c['id'],
-                            child: Text(
-                              '${m.content(c, 'name')} (${c['product_count'] ?? 0})',
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                      ],
-                      onChanged: (v) => setState(() {
-                        category = v ?? 0;
-                        page = 1;
-                      }),
-                    ),
-                    space(),
-                    AsyncPane(
-                      identity:
-                          '${m.baseUrl}:${item['id']}:$query:$category:$page',
-                      load: () => m.api(
-                        '/public/products?${Uri(queryParameters: {'vendor_id': '${item['id']}', 'q': query, 'category_id': category == 0 ? '' : '$category', 'page': '$page', 'page_size': '12'}).query}',
-                      ),
-                      builder: (products) => Column(
-                        children: [
-                          Text('${products['total']} ${m.t('productCount')}'),
-                          ExhibitGrid(items: rows(products['items'])),
-                          if (rows(products['items']).isEmpty)
-                            message(context, m.t('noProductResults')),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                onPressed: page > 1
-                                    ? () => setState(() => page--)
-                                    : null,
-                                child: Text(m.t('previous')),
-                              ),
-                              Text('$page'),
-                              TextButton(
-                                onPressed:
-                                    page * 12 < (products['total'] as num)
-                                    ? () => setState(() => page++)
-                                    : null,
-                                child: Text(m.t('next')),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                  if (tab == 2)
-                    NativeResourceList(
-                      key: const ValueKey('videos'),
-                      vendorID: item['id'],
-                      kind: 'video',
-                    ),
-                  if (tab == 3)
-                    NativeResourceList(
-                      key: const ValueKey('catalogs'),
-                      vendorID: item['id'],
-                      kind: 'catalog',
-                    ),
-                  if (tab == 4) ...[
-                    Text(
-                      m.t('showroomContact'),
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    space(),
-                    Contact(data: data),
-                    if ((data['address'] ?? '').toString().isNotEmpty)
-                      ListTile(
-                        title: Text(m.t('companyAddress')),
-                        subtitle: Text(data['address']),
-                      ),
-                    if ((profile['contact_name'] ?? '').toString().isNotEmpty)
-                      ListTile(
-                        title: Text(m.t('contactName')),
-                        subtitle: Text(profile['contact_name']),
-                      ),
-                    if ((profile['website'] ?? '').toString().isNotEmpty)
-                      TextButton(
-                        onPressed: () => launchUrl(
-                          Uri.parse(profile['website']),
-                          mode: LaunchMode.externalApplication,
-                        ),
-                        child: Text(profile['website']),
-                      ),
-                    for (final c in rows(profile['contacts']))
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(14),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('${c['area']} · ${c['name']}'),
-                              Contact(data: c),
-                            ],
-                          ),
-                        ),
-                      ),
-                  ],
-                  space(24),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+            );
+          },
+        ),
+      ],
     );
   }
 }
@@ -396,191 +632,218 @@ class _NativeResourceListState extends State<NativeResourceList> {
             children: [
               if (rows(r['items']).isEmpty)
                 message(context, m.t('noResources')),
-              for (final item in rows(r['items']))
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(14),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (!widget.management)
-                          InkWell(
-                            onTap: () =>
-                                push(context, NativeResourceViewer(item: item)),
-                            child: item['data']['cover_media_id'] != 0
-                                ? Photo(
-                                    id: item['data']['cover_media_id'],
-                                    height: 180,
-                                  )
-                                : item['kind'] == 'video'
-                                ? Photo(
-                                    id: item['data']['file_media_id'],
-                                    height: 180,
-                                  )
-                                : const SizedBox(
-                                    height: 100,
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.picture_as_pdf,
-                                        size: 44,
-                                      ),
-                                    ),
-                                  ),
-                          ),
-                        Text(
-                          resourceTitle(m, item),
-                          style: const TextStyle(
-                            fontSize: 19,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        if (item['kind'] == 'video' && item['file'] != null)
-                          Text('${(item['file']['duration'] as num).ceil()} s')
-                        else
-                          Text(
-                            '${item['file']?['page_count'] ?? (item['data']['page_media_ids'] as List).length} ${m.t('pageNumber')}',
-                          ),
-                        if (widget.management) ...[
-                          Wrap(
-                            spacing: 8,
-                            children: [
-                              Chip(label: Text(m.t(item['status']))),
-                              Chip(
-                                label: Text(
-                                  m.t(
-                                    item['public_visible'] == true
-                                        ? 'published'
-                                        : 'unpublished',
-                                  ),
-                                ),
-                              ),
-                              if (item['file'] != null)
-                                Chip(label: Text(m.t(item['file']['state']))),
-                            ],
-                          ),
-                          if ((item['review_note'] ?? '').toString().isNotEmpty)
-                            message(
-                              context,
-                              item['review_note'] == 'offline'
-                                  ? m.t('offline')
-                                  : item['review_note'],
-                            ),
-                        ],
-                        Wrap(
-                          spacing: 12,
-                          runSpacing: 8,
-                          children: [
-                            OutlinedButton(
-                              onPressed: () => push(
+              for (final item in rows(r['items']).where(
+                (e) =>
+                    widget.management ||
+                    widget.vendorID == null ||
+                    e['vendor_id'] == widget.vendorID,
+              ))
+                if (!widget.management)
+                  NativePublicResourceCard(item: item)
+                else
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (!widget.management)
+                            InkWell(
+                              onTap: () => push(
                                 context,
-                                NativeResourceViewer(
-                                  item: item,
-                                  private: widget.management,
-                                ),
+                                NativeResourceViewer(item: item),
                               ),
-                              child: Text(
-                                m.t(
-                                  widget.management
-                                      ? 'preview'
-                                      : item['kind'] == 'video'
-                                      ? 'play'
-                                      : 'readCatalog',
-                                ),
-                              ),
-                            ),
-                            if (widget.management) ...[
-                              OutlinedButton(
-                                onPressed: () async {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => NativeResourceEditor(
-                                        kind: item['kind'],
-                                        item: item,
-                                        productID: widget.productID,
+                              child: item['data']['cover_media_id'] != 0
+                                  ? Photo(
+                                      id: item['data']['cover_media_id'],
+                                      aspectRatio: 16 / 9,
+                                    )
+                                  : item['kind'] == 'video'
+                                  ? Photo(
+                                      id: item['data']['file_media_id'],
+                                      height: 180,
+                                    )
+                                  : const SizedBox(
+                                      height: 100,
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.picture_as_pdf,
+                                          size: 44,
+                                        ),
                                       ),
                                     ),
-                                  );
-                                  refresh();
-                                },
-                                child: Text(m.t('edit')),
+                            ),
+                          Text(
+                            resourceTitle(m, item),
+                            style: const TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (item['kind'] == 'video')
+                            Text(
+                              m.t(
+                                    item['data']['purpose'] == 'production'
+                                        ? 'productionVideo'
+                                        : item['data']['purpose'] == 'product'
+                                        ? 'productVideo'
+                                        : 'companyVideo',
+                                  ) +
+                                  ((item['file']?['duration'] as num? ?? 0) > 0
+                                      ? ' · ${(item['file']['duration'] as num).ceil()} s'
+                                      : ''),
+                            )
+                          else if ((item['file']?['page_count'] ??
+                                  (item['data']['page_media_ids'] as List? ??
+                                          [])
+                                      .length) >
+                              0)
+                            Text(
+                              '${item['file']?['page_count'] ?? (item['data']['page_media_ids'] as List).length} ${m.t('pageNumber')}',
+                            ),
+                          if (widget.management) ...[
+                            Wrap(
+                              spacing: 8,
+                              children: [
+                                Chip(label: Text(m.t(item['status']))),
+                                Chip(
+                                  label: Text(
+                                    m.t(
+                                      item['public_visible'] == true
+                                          ? 'published'
+                                          : 'unpublished',
+                                    ),
+                                  ),
+                                ),
+                                if (item['file'] != null)
+                                  Chip(label: Text(m.t(item['file']['state']))),
+                              ],
+                            ),
+                            if ((item['review_note'] ?? '')
+                                .toString()
+                                .isNotEmpty)
+                              message(
+                                context,
+                                item['review_note'] == 'offline'
+                                    ? m.t('offline')
+                                    : item['review_note'],
                               ),
-                              if (item['status'] == 'draft')
-                                FilledButton(
-                                  onPressed:
-                                      item['file'] != null &&
-                                          item['file']['state'] != 'ready'
-                                      ? null
-                                      : () async {
-                                          try {
-                                            await m.api(
-                                              '/merchant/resources/${item['id']}/submit',
-                                              method: 'POST',
-                                              data: {
-                                                'revision_id':
-                                                    item['revision_id'],
-                                              },
-                                            );
-                                            refresh();
-                                          } catch (e) {
-                                            if (context.mounted) {
-                                              showError(context, e);
-                                            }
-                                          }
-                                        },
-                                  child: Text(m.t('submit')),
-                                ),
-                              if (item['visible'] == true)
-                                TextButton(
-                                  onPressed: () async {
-                                    final ok = await showDialog<bool>(
-                                      context: context,
-                                      builder: (c) => AlertDialog(
-                                        content: Text(m.t('offlineConfirm')),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(c, false),
-                                            child: Text(m.t('cancel')),
-                                          ),
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(c, true),
-                                            child: Text(m.t('offline')),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                    if (ok != true) return;
-                                    try {
-                                      await m.api(
-                                        '/merchant/resources/${item['id']}/offline',
-                                        method: 'POST',
-                                        data: {},
-                                      );
-                                      refresh();
-                                    } catch (e) {
-                                      if (context.mounted) {
-                                        showError(context, e);
-                                      }
-                                    }
-                                  },
-                                  child: Text(m.t('offline')),
-                                ),
-                              TextButton(
+                          ],
+                          Wrap(
+                            spacing: 12,
+                            runSpacing: 8,
+                            children: [
+                              OutlinedButton(
                                 onPressed: () => push(
                                   context,
-                                  ResourceHistoryScreen(id: item['id']),
+                                  NativeResourceViewer(
+                                    item: item,
+                                    private: widget.management,
+                                  ),
                                 ),
-                                child: Text(m.t('history')),
+                                child: Text(
+                                  m.t(
+                                    widget.management
+                                        ? 'preview'
+                                        : item['kind'] == 'video'
+                                        ? 'play'
+                                        : 'readCatalog',
+                                  ),
+                                ),
                               ),
+                              if (widget.management) ...[
+                                OutlinedButton(
+                                  onPressed: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => NativeResourceEditor(
+                                          kind: item['kind'],
+                                          item: item,
+                                          productID: widget.productID,
+                                        ),
+                                      ),
+                                    );
+                                    refresh();
+                                  },
+                                  child: Text(m.t('edit')),
+                                ),
+                                if (item['status'] == 'draft')
+                                  FilledButton(
+                                    onPressed:
+                                        item['file'] != null &&
+                                            item['file']['state'] != 'ready'
+                                        ? null
+                                        : () async {
+                                            try {
+                                              await m.api(
+                                                '/merchant/resources/${item['id']}/submit',
+                                                method: 'POST',
+                                                data: {
+                                                  'revision_id':
+                                                      item['revision_id'],
+                                                },
+                                              );
+                                              refresh();
+                                            } catch (e) {
+                                              if (context.mounted) {
+                                                showError(context, e);
+                                              }
+                                            }
+                                          },
+                                    child: Text(m.t('submit')),
+                                  ),
+                                if (item['visible'] == true)
+                                  TextButton(
+                                    onPressed: () async {
+                                      final ok = await showDialog<bool>(
+                                        context: context,
+                                        builder: (c) => AlertDialog(
+                                          content: Text(m.t('offlineConfirm')),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(c, false),
+                                              child: Text(m.t('cancel')),
+                                            ),
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(c, true),
+                                              child: Text(m.t('offline')),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                      if (ok != true) return;
+                                      try {
+                                        await m.api(
+                                          '/merchant/resources/${item['id']}/offline',
+                                          method: 'POST',
+                                          data: {},
+                                        );
+                                        refresh();
+                                      } catch (e) {
+                                        if (context.mounted) {
+                                          showError(context, e);
+                                        }
+                                      }
+                                    },
+                                    child: Text(m.t('offline')),
+                                  ),
+                                TextButton(
+                                  onPressed: () => push(
+                                    context,
+                                    ResourceHistoryScreen(id: item['id']),
+                                  ),
+                                  child: Text(m.t('history')),
+                                ),
+                              ],
                             ],
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -649,6 +912,7 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
   bool reportedView = false;
   int page = 0;
   final pdfController = PdfViewerController();
+  int pdfPage = 1, pdfCount = 0, readerVersion = 0;
   bool loading = false;
   @override
   void initState() {
@@ -668,27 +932,40 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
         ).analytics.page('/resources/$id', kind: 'resource', id: id);
       }
     }
-    if (widget.item['kind'] == 'video' &&
-        video == null &&
-        (widget.item['file']?['state'] == null ||
-            widget.item['file']['state'] == 'ready')) {
-      final m = ModelScope.of(context);
-      video = VideoPlayerController.networkUrl(
-        Uri.parse(
-          '${m.baseUrl}/api/v1/media/${widget.item['data']['file_media_id']}',
-        ),
-        httpHeaders: widget.private
-            ? {'Authorization': 'Bearer ${m.token}'}
-            : {},
-      );
-      video!
-          .initialize()
-          .then((_) {
-            if (mounted) setState(() {});
-          })
-          .catchError((e) {
-            if (mounted) setState(() => error = 'network_error');
-          });
+  }
+
+  bool videoStarting = false;
+  Future<void> startVideo() async {
+    if (videoStarting) return;
+    setState(() {
+      videoStarting = true;
+      error = '';
+    });
+    final m = ModelScope.of(context);
+    final next = VideoPlayerController.networkUrl(
+      Uri.parse(
+        '${m.baseUrl}/api/v1/media/${widget.item['data']['file_media_id']}',
+      ),
+      httpHeaders: widget.private ? {'Authorization': 'Bearer ${m.token}'} : {},
+    );
+    await video?.dispose();
+    if (!mounted) {
+      await next.dispose();
+      return;
+    }
+    video = next;
+    try {
+      await next.initialize();
+      if (!mounted) return;
+      if (WidgetsBinding.instance.lifecycleState == null ||
+          WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+        await next.play();
+      }
+      if (mounted) setState(() {});
+    } catch (_) {
+      if (mounted) setState(() => error = 'network_error');
+    } finally {
+      if (mounted) setState(() => videoStarting = false);
     }
   }
 
@@ -726,9 +1003,11 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
                         ? Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              AspectRatio(
-                                aspectRatio: video!.value.aspectRatio,
-                                child: VideoPlayer(video!),
+                              Flexible(
+                                child: AspectRatio(
+                                  aspectRatio: video!.value.aspectRatio,
+                                  child: VideoPlayer(video!),
+                                ),
                               ),
                               VideoProgressIndicator(
                                 video!,
@@ -748,16 +1027,54 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
                                       ? Icons.pause
                                       : Icons.play_arrow,
                                 ),
-                                label: Text(m.t('play')),
+                                label: Text(
+                                  m.t(
+                                    video!.value.isPlaying ? 'pause' : 'play',
+                                  ),
+                                ),
                               ),
                             ],
                           )
-                        : error.isEmpty
+                        : videoStarting
                         ? const CircularProgressIndicator()
-                        : const SizedBox(),
+                        : Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if ((d['cover_media_id'] ?? 0) > 0)
+                                Photo(
+                                  id: d['cover_media_id'],
+                                  aspectRatio: 16 / 9,
+                                ),
+                              FilledButton.icon(
+                                key: const ValueKey('video-start'),
+                                onPressed: startVideo,
+                                icon: const Icon(Icons.play_arrow),
+                                label: Text(
+                                  m.t(error.isEmpty ? 'play' : 'retry'),
+                                ),
+                              ),
+                            ],
+                          ),
                   )
                 : d['format'] == 'pdf'
                 ? PdfViewer.uri(
+                    key: ValueKey(readerVersion),
+                    params: PdfViewerParams(
+                      onViewerReady: (doc, controller) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (mounted) {
+                            setState(() => pdfCount = doc.pages.length);
+                          }
+                        });
+                      },
+                      onPageChanged: (value) {
+                        if (value != null && value != pdfPage) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (mounted) setState(() => pdfPage = value);
+                          });
+                        }
+                      },
+                    ),
                     Uri.parse(
                       '${m.baseUrl}/api/v1/media/${d['file_media_id']}',
                     ),
@@ -768,13 +1085,23 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
                     preferRangeAccess: true,
                   )
                 : InteractiveViewer(
+                    key: ValueKey('$page:$readerVersion'),
                     child: Image.network(
                       '${m.baseUrl}/api/v1/media/${d['page_media_ids'][page]}',
                       headers: widget.private
                           ? {'Authorization': 'Bearer ${m.token}'}
                           : {},
                       fit: BoxFit.contain,
-                      errorBuilder: (_, _, _) => Text(m.t('network_error')),
+                      errorBuilder: (_, _, _) => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(m.t('network_error')),
+                          TextButton(
+                            onPressed: () => setState(() => readerVersion++),
+                            child: Text(m.t('retry')),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
           ),
@@ -797,43 +1124,70 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
                   ),
                 ] else ...[
                   TextButton(
-                    onPressed: () => pdfController.zoomDown(),
+                    onPressed: pdfCount > 0 && pdfPage > 1
+                        ? () => pdfController.goToPage(pageNumber: pdfPage - 1)
+                        : null,
+                    child: Text(m.t('previous')),
+                  ),
+                  if (pdfCount > 0) Text('$pdfPage / $pdfCount'),
+                  TextButton(
+                    onPressed: pdfCount > 0 && pdfPage < pdfCount
+                        ? () => pdfController.goToPage(pageNumber: pdfPage + 1)
+                        : null,
+                    child: Text(m.t('next')),
+                  ),
+                  TextButton(
+                    onPressed: () => setState(() {
+                      readerVersion++;
+                      pdfCount = 0;
+                      pdfPage = 1;
+                    }),
+                    child: Text(m.t('retry')),
+                  ),
+                  TextButton(
+                    onPressed: pdfCount > 0
+                        ? () => pdfController.zoomDown()
+                        : null,
                     child: Text(m.t('zoomOut')),
                   ),
                   TextButton(
-                    onPressed: () => pdfController.zoomUp(),
+                    onPressed: pdfCount > 0
+                        ? () => pdfController.zoomUp()
+                        : null,
                     child: Text(m.t('zoomIn')),
                   ),
-                  TextButton(
-                    onPressed: loading
-                        ? null
-                        : () async {
-                            setState(() => loading = true);
-                            try {
-                              final response = await m.client.get(
-                                Uri.parse(
-                                  '${m.baseUrl}/api/v1/media/${d['file_media_id']}',
-                                ),
-                                headers: widget.private
-                                    ? {'Authorization': 'Bearer ${m.token}'}
-                                    : {},
-                              );
-                              if (response.statusCode != 200) {
-                                throw ApiFailure('network_error');
+                  if ((d['file_media_id'] ?? 0) > 0 &&
+                      (widget.private || widget.item['public_visible'] == true))
+                    TextButton(
+                      onPressed: loading
+                          ? null
+                          : () async {
+                              setState(() => loading = true);
+                              try {
+                                final response = await m.client.get(
+                                  Uri.parse(
+                                    '${m.baseUrl}/api/v1/media/${d['file_media_id']}',
+                                  ),
+                                  headers: widget.private
+                                      ? {'Authorization': 'Bearer ${m.token}'}
+                                      : {},
+                                );
+                                if (response.statusCode != 200) {
+                                  throw ApiFailure('network_error');
+                                }
+                                await sharingBridge.invokeMethod('saveFile', {
+                                  'bytes': response.bodyBytes,
+                                  'name': '${d['title']}.pdf',
+                                  'mime': 'application/pdf',
+                                });
+                              } catch (e) {
+                                if (context.mounted) showError(context, e);
+                              } finally {
+                                if (mounted) setState(() => loading = false);
                               }
-                              await sharingBridge.invokeMethod('saveFile', {
-                                'bytes': response.bodyBytes,
-                                'name': '${d['title']}.pdf',
-                                'mime': 'application/pdf',
-                              });
-                            } catch (e) {
-                              if (context.mounted) showError(context, e);
-                            } finally {
-                              if (mounted) setState(() => loading = false);
-                            }
-                          },
-                    child: Text(m.t('downloadPDF')),
-                  ),
+                            },
+                      child: Text(m.t('downloadPDF')),
+                    ),
                 ],
               ],
             ),
@@ -847,7 +1201,7 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
                     : d['description'],
               ),
             ),
-          if (d['product_id'] != 0 && !widget.private)
+          if ((d['product_id'] ?? 0) > 0 && !widget.private)
             TextButton(
               onPressed: () => push(
                 context,

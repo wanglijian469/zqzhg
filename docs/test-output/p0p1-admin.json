@@ -1,0 +1,207 @@
+{
+  "checks": [
+    "Bilingual hall metadata and registered hero image saved atomically",
+    "Preparing hall uses its own configured image without business data",
+    "Concurrent administrator conflict retains draft and requires reload",
+    "Open and preparing status round trip",
+    "Removed visual becomes private again",
+    "Hall audit type and action filters"
+  ],
+  "layouts": [
+    {
+      "width": 1440,
+      "lang": "zh",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 1366,
+      "lang": "zh",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 1366,
+      "lang": "zh",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 1366,
+      "lang": "en",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 1366,
+      "lang": "en",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "zh",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "zh",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "en",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "lang": "en",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 414,
+      "lang": "zh",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 414,
+      "lang": "zh",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 414,
+      "lang": "en",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 414,
+      "lang": "en",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "lang": "zh",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "lang": "zh",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "lang": "en",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "lang": "en",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "zoom": 1.25,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "zoom": 1,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "zoom": 1.25,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "isolatedDatabase": true,
+  "productionWrites": false
+}

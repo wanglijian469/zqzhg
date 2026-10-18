@@ -31,7 +31,7 @@ func (a *App) backupDownloadRoutes(admin, api *gin.RouterGroup) {
 		mac.Write([]byte("backup-download:" + encoded))
 		ticket := encoded + "." + hex.EncodeToString(mac.Sum(nil))
 		c.SetSameSite(http.SameSiteStrictMode)
-		secure := c.Request.TLS != nil || strings.HasPrefix(a.Config.PublicBaseURL, "https://")
+		secure := c.Request.TLS != nil || strings.HasPrefix(a.publicBase(c), "https://")
 		c.SetCookie("zqzt_backup_download", ticket, 120, "/api/v1/backup-download/"+entry.ID, "", secure, true)
 		a.audit(actor(c).ID, "backup", 0, "backup_download_authorized")
 		c.JSON(200, gin.H{"ok": true})

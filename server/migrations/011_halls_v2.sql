@@ -1,0 +1,11 @@
+ALTER TABLE halls ADD COLUMN status VARCHAR(16) NOT NULL DEFAULT 'open';
+ALTER TABLE halls ADD COLUMN icon VARCHAR(32) NOT NULL DEFAULT 'factory';
+ALTER TABLE halls ADD COLUMN theme VARCHAR(32) NOT NULL DEFAULT 'blue';
+ALTER TABLE halls ADD COLUMN description TEXT;
+ALTER TABLE halls ADD COLUMN description_en TEXT;
+ALTER TABLE contents ADD COLUMN hall_id BIGINT UNSIGNED NOT NULL DEFAULT 1;
+CREATE INDEX idx_content_hall_public ON contents(hall_id,kind,visible,featured,sort_order,id);
+INSERT IGNORE INTO halls(id,slug,name,name_en,status,icon,theme) VALUES(1,'agriculture','农业机械厅','Agricultural Machinery Hall','open','tractor','blue');
+UPDATE halls SET name='农业机械厅',name_en='Agricultural Machinery Hall',icon='tractor' WHERE slug='agriculture';
+INSERT IGNORE INTO halls(slug,name,name_en,status,icon,theme,description,description_en) VALUES('cable','电线电缆厅','Wire & Cable Hall','preparing','cable','blue','电线电缆厅正在筹建，敬请期待。','The Wire & Cable Hall is under preparation.');
+INSERT IGNORE INTO home_display_settings(id,hero_media_id,version,updated_by,updated_at) SELECT id,0,1,0,UTC_TIMESTAMP(3) FROM halls;

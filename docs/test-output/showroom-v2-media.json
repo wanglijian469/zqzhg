@@ -1,0 +1,14 @@
+{
+  "isolated": true,
+  "databasePrefix": "zqzt_exhibition_test_resource_browser_",
+  "pdfRender": true,
+  "pdfZoom": true,
+  "pdfDownload": true,
+  "imagePaging": true,
+  "videoExplicitPlayback": true,
+  "widths": [
+    1440,
+    390
+  ],
+  "consoleErrors": []
+}

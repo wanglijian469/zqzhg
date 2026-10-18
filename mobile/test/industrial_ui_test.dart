@@ -1,3 +1,4 @@
+import 'legacy_hall_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -21,9 +22,8 @@ void main() {
             jsonDecode(File('assets/i18n/$lang.json').readAsStringSync()),
           ),
       },
-      client:
-          client ??
-          MockClient((_) async => http.Response('{"items":[],"total":0}', 200)),
+      client: legacyHallClient(client ??
+          MockClient((_) async => http.Response('{"items":[],"total":0}', 200))),
     );
   }
 

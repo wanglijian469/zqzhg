@@ -1,0 +1,17 @@
+{
+  "checks": [
+    "Persistent search, explicit submit, independent removal and hall retention",
+    "Navigation close, Escape focus and route dismissal",
+    "Real server pagination, distinct pages and browser history",
+    "Six direct horizontal tabs and no initial hero scroll",
+    "Catalog paging, bounded zoom and modal contact-bar layering",
+    "Video only mounted after activation and no preload",
+    "Photo modal layering, valid telephone URI and manual copy fallback",
+    "Empty result and preparing hall isolation",
+    "Failed request retry",
+    "Broken image fallback"
+  ],
+  "errors": [],
+  "deviceValidation": false,
+  "requestFailuresAndBrokenImages": "isolated browser routes only; no database writes"
+}

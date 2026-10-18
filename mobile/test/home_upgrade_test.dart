@@ -41,7 +41,14 @@ void main() {
       final m = await nav.fixture(signed: false, calls: calls);
       await tester.pumpWidget(nav.harness(m));
       await tester.pumpAndSettle();
-      expect(calls.map((u) => u.path), ['/api/v1/public/home']);
+      expect(
+        calls.map((u) => u.path),
+        unorderedEquals([
+          '/api/v1/public/halls',
+          '/api/v1/public/home',
+          '/api/v1/public/taxonomy',
+        ]),
+      );
       expect(
         tester.getBottomLeft(find.byKey(const ValueKey('home-banner'))).dy -
             tester.getTopLeft(find.byKey(const ValueKey('home-banner'))).dy,
@@ -86,7 +93,7 @@ void main() {
       expect(calls.where((u) => u.path.endsWith('/products')), hasLength(1));
       await tester.pump(const Duration(milliseconds: 1));
       await tester.pumpAndSettle();
-      expect(calls.where((u) => u.path.endsWith('/products')), hasLength(2));
+      expect(calls.where((u) => u.path.endsWith('/products')), hasLength(1));
       await tester.testTextInput.receiveAction(TextInputAction.search);
       await tester.pumpAndSettle();
       expect(calls.where((u) => u.path.endsWith('/products')), hasLength(2));
@@ -126,7 +133,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(reads, 3);
-      expect(calls.where((u) => u.path.endsWith('/taxonomy')), isEmpty);
+      expect(calls.where((u) => u.path.endsWith('/taxonomy')), hasLength(1));
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     },
@@ -217,7 +224,7 @@ void main() {
       );
       expect(find.text('型号：1LF-440'), findsOneWidget);
       for (final photo in tester.widgetList<Photo>(find.byType(Photo))) {
-        expect(photo.aspectRatio, 1);
+        expect(photo.aspectRatio, 4 / 3);
         expect(photo.fit, BoxFit.contain);
       }
       expect(tester.takeException(), isNull);
@@ -265,9 +272,9 @@ void main() {
         );
         await tester.pumpAndSettle();
       }
-      expect(vendors, {1, 2, 3, 4, 5, 6});
-      expect(products, {200, 201, 202, 203, 204, 205});
-      expect(calls, hasLength(1));
+      expect(vendors, {1, 2, 3, 4});
+      expect(products, {200, 201, 202, 203, 204, 205, 206, 207});
+      expect(calls, hasLength(3));
       await tester.pumpWidget(const SizedBox());
     },
   );

@@ -64,6 +64,30 @@ Future<AppModel> fixture({
       final override = await intercept?.call(r);
       if (override != null) return override;
       final path = r.url.path;
+      if (path.endsWith('/halls')) {
+        return http.Response(
+          jsonEncode({
+            'items': [
+              {
+                'id': 1,
+                'slug': 'agriculture',
+                'name': '农业机械厅',
+                'name_en': 'Agricultural Machinery Hall',
+                'status': 'open',
+              },
+              {
+                'id': 2,
+                'slug': 'cable',
+                'name': '电线电缆厅',
+                'name_en': 'Wire & Cable Hall',
+                'status': 'preparing',
+              },
+            ],
+          }),
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        );
+      }
       final v = vendor ?? company();
       dynamic data = {'items': [], 'total': 0};
       if (path.endsWith('/home')) {
@@ -152,6 +176,16 @@ Widget harness(
 );
 
 Future<void> tap(WidgetTester tester, Finder finder) async {
+  bool empty = false;
+  try {
+    empty = finder.evaluate().isEmpty;
+  } on StateError {
+    empty = true;
+  }
+  if (empty && find.byType(ExpansionTile).evaluate().isNotEmpty) {
+    await tester.tap(find.byType(ExpansionTile).first);
+    await tester.pumpAndSettle();
+  }
   await Scrollable.ensureVisible(tester.element(finder.first), alignment: .5);
   await tester.pumpAndSettle();
   await tester.tap(finder.first);
@@ -212,7 +246,7 @@ void main() {
         '旋耕机',
       );
       expect(scroll.offset, offset);
-      expect(find.text('2'), findsOneWidget);
+      expect(find.textContaining('2 /'), findsOneWidget);
       expect(find.text('河北'), findsOneWidget);
       expect(find.text('展品速览'), findsNothing);
       expect(find.text('匹配展品'), findsNothing);
@@ -222,7 +256,7 @@ void main() {
       expect(find.text('测试旋耕机 440'), findsOneWidget);
       await tester.tap(find.byType(BackButton).first);
       await tester.pumpAndSettle();
-      expect(find.text('2'), findsOneWidget);
+      expect(find.textContaining('2 /'), findsOneWidget);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     },
@@ -318,11 +352,11 @@ void main() {
       await tester.tap(find.byType(BackButton).first);
       await tester.pumpAndSettle();
       await tester.scrollUntilVisible(
-        find.text('企业视频'),
+        find.text('视频展示'),
         400,
         scrollable: find.byType(Scrollable).last,
       );
-      await tap(tester, find.text('企业视频'));
+      await tap(tester, find.text('视频展示'));
       expect(find.byType(MerchantResourcesScreen), findsOneWidget);
       await tester.tap(find.byType(BackButton).first);
       await tester.pumpAndSettle();

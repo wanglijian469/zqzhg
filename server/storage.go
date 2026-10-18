@@ -26,6 +26,7 @@ import (
 )
 
 type StorageProfile struct {
+	RootKey     string    `json:"root_key"`
 	ID          uint64    `json:"id"`
 	Name        string    `json:"name"`
 	Kind        string    `json:"kind"`
@@ -225,7 +226,7 @@ func (s *ossObjectStore) Delete(ctx context.Context, key string) error {
 }
 func (a *App) storageProfile(id uint64) (StorageProfile, error) {
 	if id == 0 {
-		return StorageProfile{Name: "原有本地目录", Kind: "local", LocalRoot: a.Config.MediaDir}, nil
+		return StorageProfile{Name: "ECS / Local", Kind: "local", RootKey: "primary", LocalRoot: a.Config.MediaDir}, nil
 	}
 	var profile StorageProfile
 	err := a.DB.First(&profile, id).Error
@@ -240,7 +241,11 @@ func (a *App) store(id uint64) (ObjectStore, error) {
 }
 func (a *App) profileStore(profile StorageProfile) (ObjectStore, error) {
 	if profile.Kind == "local" {
-		return localObjectStore{profile.LocalRoot}, nil
+		resolved, e := a.resolveLocalProfile(profile)
+		if e != nil {
+			return nil, e
+		}
+		return localObjectStore{resolved.LocalRoot}, nil
 	}
 	if profile.Kind != "oss" {
 		return nil, errors.New("invalid_storage_profile")
@@ -275,6 +280,10 @@ func (a *App) objectRecord(key string) (StoredObject, error) {
 			return object, e
 		}
 		object = StoredObject{Key: key, StoreID: 0, Size: size, SHA256: hash, UpdatedAt: time.Now().UTC()}
+		if e = a.DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&object).Error; e != nil {
+			return object, e
+		}
+		a.DB.First(&object, "object_key=?", key)
 		return object, nil
 	}
 	return object, err
@@ -288,6 +297,13 @@ func (a *App) storeWorkFile(ctx context.Context, key, path string) error {
 		return err
 	}
 	storeID := a.defaultStoreID()
+	profile, pe := a.storageProfile(storeID)
+	if pe != nil {
+		return pe
+	}
+	if pe = a.checkLocalWritable(profile); pe != nil {
+		return pe
+	}
 	store, err := a.store(storeID)
 	if err != nil {
 		return err
@@ -324,11 +340,7 @@ func verifyObject(ctx context.Context, store ObjectStore, key, expected string, 
 	return nil
 }
 func (a *App) materializeObject(ctx context.Context, key string) (string, error) {
-	object, err := a.objectRecord(key)
-	if err != nil {
-		return "", err
-	}
-	store, err := a.store(object.StoreID)
+	object, store, err := a.resolveObject(ctx, key)
 	if err != nil {
 		return "", err
 	}
@@ -358,26 +370,7 @@ func (a *App) materializeObject(ctx context.Context, key string) (string, error)
 	return path, nil
 }
 func (a *App) serveObject(c *gin.Context, key string) {
-	var object StoredObject
-	err := a.DB.First(&object, "object_key=?", key).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		var path string
-		path, err = localObjectPath(a.Config.MediaDir, key)
-		if err == nil {
-			var info os.FileInfo
-			info, err = os.Stat(path)
-			if err == nil && !info.IsDir() {
-				object = StoredObject{Key: key, Size: info.Size(), StoreID: 0}
-			} else if err == nil {
-				err = os.ErrNotExist
-			}
-		}
-	}
-	if err != nil {
-		fail(c, 404, "not_found")
-		return
-	}
-	store, err := a.store(object.StoreID)
+	object, store, err := a.resolveObject(c.Request.Context(), key)
 	if err != nil {
 		fail(c, 503, "storage_unavailable")
 		return
@@ -448,32 +441,42 @@ func serveOSSObject(c *gin.Context, cloud *ossObjectStore, key string, size int6
 	_, _ = io.Copy(c.Writer, result.Body)
 }
 func (a *App) inventory() ([]StoredObject, error) {
-	entries, err := os.ReadDir(a.Config.MediaDir)
+	err := filepath.WalkDir(a.Config.MediaDir, func(path string, entry os.DirEntry, e error) error {
+		if e != nil {
+			return e
+		}
+		if entry.Type()&os.ModeSymlink != 0 {
+			return errors.New("invalid_object_key")
+		}
+		if entry.IsDir() {
+			return nil
+		}
+		key, e := filepath.Rel(a.Config.MediaDir, path)
+		if e != nil {
+			return e
+		}
+		key = filepath.ToSlash(key)
+		if strings.HasPrefix(entry.Name(), ".put-") {
+			return nil
+		}
+		if !safeObjectKey(key) {
+			return errors.New("invalid_object_key")
+		}
+		var n int64
+		if e = a.DB.Model(&StoredObject{}).Where("object_key=?", key).Count(&n).Error; e != nil {
+			return e
+		}
+		if n > 0 {
+			return nil
+		}
+		sha, size, e := fileSHA(path)
+		if e != nil {
+			return e
+		}
+		return a.DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&StoredObject{Key: key, Size: size, SHA256: sha, UpdatedAt: time.Now().UTC()}).Error
+	})
 	if err != nil {
 		return nil, err
-	}
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue
-		}
-		key := entry.Name()
-		if !safeObjectKey(key) || strings.HasPrefix(key, ".put-") {
-			continue
-		}
-		var count int64
-		if a.DB.Model(&StoredObject{}).Where("object_key=?", key).Count(&count).Error != nil {
-			return nil, errors.New("database_unavailable")
-		}
-		if count != 0 {
-			continue
-		}
-		hash, size, e := fileSHA(filepath.Join(a.Config.MediaDir, key))
-		if e != nil {
-			return nil, e
-		}
-		if e = a.DB.Create(&StoredObject{Key: key, Size: size, SHA256: hash, UpdatedAt: time.Now().UTC()}).Error; e != nil {
-			return nil, e
-		}
 	}
 	var objects []StoredObject
 	err = a.DB.Order("object_key").Find(&objects).Error
@@ -513,6 +516,9 @@ func (a *App) validateProfile(profile StorageProfile) error {
 	return nil
 }
 func (a *App) testStore(ctx context.Context, profile StorageProfile) error {
+	if e := a.checkLocalWritable(profile); e != nil {
+		return e
+	}
 	store, err := a.profileStore(profile)
 	if err != nil {
 		return err
@@ -549,7 +555,7 @@ func (a *App) storageRoutes(admin *gin.RouterGroup) {
 		for _, profile := range profiles {
 			items = append(items, gin.H{"profile": profile, "credentials_configured": profile.Credentials != "", "active": profile.ID == a.defaultStoreID()})
 		}
-		c.JSON(200, gin.H{"items": items})
+		c.JSON(200, gin.H{"items": items, "roots": a.localRoots()})
 	})
 	admin.POST("/storage/profiles", a.saveStorageProfile)
 	admin.PUT("/storage/profiles/:id", a.saveStorageProfile)
@@ -596,6 +602,9 @@ func (a *App) storageRoutes(admin *gin.RouterGroup) {
 		profileID := id(c)
 		var count int64
 		a.DB.Model(&StoredObject{}).Where("store_id=?", profileID).Count(&count)
+		var replicaCount int64
+		a.DB.Model(&StoredObjectReplica{}).Where("store_id=?", profileID).Count(&replicaCount)
+		count += replicaCount
 		if profileID == 0 || count > 0 || a.defaultStoreID() == profileID || a.backupProfilePinned(profileID) {
 			fail(c, 409, "storage_in_use")
 			return
@@ -633,6 +642,15 @@ func (a *App) saveStorageProfile(c *gin.Context) {
 	}
 	profile := req.StorageProfile
 	profile.ID = 0
+	if profile.Kind == "local" {
+		root, e := a.registeredRoot(profile.RootKey, profile.LocalRoot)
+		if e != nil {
+			fail(c, 400, e.Error())
+			return
+		}
+		profile.RootKey = root.Key
+		profile.LocalRoot = root.Path
+	}
 	if c.Request.Method == "PUT" {
 		var old StorageProfile
 		if a.DB.First(&old, id(c)).Error != nil {
@@ -641,7 +659,11 @@ func (a *App) saveStorageProfile(c *gin.Context) {
 		}
 		var count int64
 		a.DB.Model(&StoredObject{}).Where("store_id=?", old.ID).Count(&count)
-		if (count > 0 || a.backupProfilePinned(old.ID)) && (profile.Kind != old.Kind || profile.LocalRoot != old.LocalRoot || profile.Region != old.Region || profile.Endpoint != old.Endpoint || profile.Bucket != old.Bucket || profile.Prefix != old.Prefix) {
+		if (count > 0 || func() bool {
+			var n int64
+			a.DB.Model(&StoredObjectReplica{}).Where("store_id=?", old.ID).Count(&n)
+			return n > 0
+		}() || a.backupProfilePinned(old.ID)) && (profile.Kind != old.Kind || profile.LocalRoot != old.LocalRoot || profile.Region != old.Region || profile.Endpoint != old.Endpoint || profile.Bucket != old.Bucket || profile.Prefix != old.Prefix) {
 			fail(c, 409, "storage_in_use")
 			return
 		}
@@ -649,6 +671,7 @@ func (a *App) saveStorageProfile(c *gin.Context) {
 		profile.CreatedAt = old.CreatedAt
 		profile.Credentials = old.Credentials
 	}
+
 	if err := a.validateProfile(profile); err != nil {
 		fail(c, 400, err.Error())
 		return
@@ -729,6 +752,9 @@ func (a *App) runStorageMigration(ctx context.Context, job *OperationJob) (any, 
 	if err != nil {
 		return nil, err
 	}
+	if e := a.checkLocalWritable(targetProfile); e != nil {
+		return nil, e
+	}
 	if targetProfile.Kind == "oss" {
 		if e := a.testStore(ctx, targetProfile); e != nil {
 			return nil, e
@@ -790,6 +816,9 @@ func (a *App) runStorageMigration(ctx context.Context, job *OperationJob) (any, 
 		if e = atomicJSON(retiredPath, retired); e != nil {
 			return nil, e
 		}
+		if e = a.registerReplica(a.DB, object, localRoot); e != nil {
+			return nil, e
+		}
 		if e = a.DB.Model(&StoredObject{}).Where("object_key=? AND store_id=?", object.Key, req.SourceID).Updates(map[string]any{"store_id": req.TargetID, "updated_at": time.Now().UTC()}).Error; e != nil {
 			return nil, e
 		}
@@ -833,6 +862,11 @@ func (a *App) cleanupRetiredObjects(c *gin.Context) {
 		}
 		var current StoredObject
 		if a.DB.First(&current, "object_key=?", entry.Object.Key).Error == nil {
+			currentStore, ce := a.store(current.StoreID)
+			if ce != nil || verifyObject(c.Request.Context(), currentStore, current.Key, current.SHA256, current.Size) != nil {
+				remaining = append(remaining, entry)
+				continue
+			}
 			currentProfile, e := a.storageProfile(current.StoreID)
 			oldProfile, e2 := a.storageProfile(entry.Object.StoreID)
 			if entry.LocalRoot != "" {
@@ -862,6 +896,7 @@ func (a *App) cleanupRetiredObjects(c *gin.Context) {
 			remaining = append(remaining, entry)
 			continue
 		}
+		a.DB.Where("object_key=? AND store_id=?", entry.Object.Key, entry.Object.StoreID).Delete(&StoredObjectReplica{})
 		deleted++
 	}
 	if atomicJSON(path, remaining) != nil {

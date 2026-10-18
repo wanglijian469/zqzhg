@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "中企展馆 · 大陆农机",
-    "version": "1.6.0",
-    "description": "Published snapshots only. Draft and pending content and media require ownership or administrator access. Error messages are localized by clients using error.code. Resource snapshots have independent review and processing states; anonymous media access also requires a public parent showroom and linked product. Platform operators use effective feature permissions. Administrator-only storage, persistent jobs and encrypted isolated recovery are provided. Anonymous analytics do not identify people."
+    "title": "中企展馆 · ZQZG",
+    "version": "2.0.0",
+    "description": "Published snapshots only. Draft and pending content and media require ownership or administrator access. Error messages are localized by clients using error.code. Resource snapshots have independent review and processing states; anonymous media access also requires a public parent showroom and linked product. Platform operators use effective feature permissions. Administrator-only storage, persistent jobs and encrypted isolated recovery are provided. Anonymous analytics do not identify people.\nPublic data reads use shared per-IP page/API limits, bounded pagination and distinct content budgets; 429 includes Retry-After. Schema14 preserves historical showroom addresses."
   },
   "servers": [
     {
@@ -796,7 +796,19 @@
             }
           }
         },
-        "description": " Adds hero:{media_id}, 0 for industrial placeholder. Vendors are published selected snapshots, ordered sort_order ASC then id DESC, limited to 12. Products remain limited to 8. Existing arrays remain compatible with previous Android versions."
+        "description": " Adds hero:{media_id}, 0 for industrial placeholder. Vendors are published selected snapshots, ordered sort_order ASC then id DESC, limited to 12. Products remain limited to 8. Existing arrays remain compatible with previous Android versions.",
+        "parameters": [
+          {
+            "name": "hall",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "agriculture"
+            },
+            "description": "Hall slug. Omitted selects agriculture. Unknown halls return 404; preparing halls return no public content."
+          }
+        ]
       }
     },
     "/public/taxonomy": {
@@ -876,7 +888,19 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "hall",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "agriculture"
+            },
+            "description": "Hall slug. Omitted selects agriculture. Unknown halls return 404; preparing halls return no public content."
+          }
+        ]
       }
     },
     "/public/vendors": {
@@ -1000,8 +1024,32 @@
               "format": "int64",
               "minimum": 0
             }
+          },
+          {
+            "name": "hall",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "agriculture"
+            },
+            "description": "Hall slug. Omitted selects agriculture. Unknown halls return 404; preparing halls return no public content."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "default",
+                "latest",
+                "name"
+              ],
+              "default": "default"
+            }
           }
-        ]
+        ],
+        "description": "undefined V2: restricted to the selected hall; keyword search includes published parameter/model text. Server pagination totals are authoritative."
       }
     },
     "/public/products": {
@@ -1135,9 +1183,31 @@
               "format": "int64",
               "minimum": 0
             }
+          },
+          {
+            "name": "hall",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "agriculture"
+            },
+            "description": "Hall slug. Omitted selects agriculture. Unknown halls return 404; preparing halls return no public content."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "default",
+                "latest"
+              ],
+              "default": "default"
+            }
           }
         ],
-        "description": "Search public product revisions by keyword, descendant category, vendor and the published vendor region. Items include a public vendor summary; unpublished products and products of unpublished vendors are excluded."
+        "description": "Search public product revisions by keyword, descendant category, vendor and the published vendor region. Items include a public vendor summary; unpublished products and products of unpublished vendors are excluded. V2: restricted to the selected hall; keyword search includes published parameter/model text. Server pagination totals are authoritative."
       }
     },
     "/public/vendors/{id}": {
@@ -2368,6 +2438,16 @@
                 "1"
               ]
             }
+          },
+          {
+            "name": "hall",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "agriculture"
+            },
+            "description": "Hall slug. Omitted selects agriculture. Unknown halls return 404; preparing halls return no public content."
           }
         ]
       }
@@ -4661,7 +4741,7 @@
     },
     "/admin/vendors/{id}/showroom-slug": {
       "put": {
-        "summary": "Set a unique permanent alias once; lowercase ASCII 2–64 characters starting with a letter. v-number reserved. Action is logged.",
+        "summary": "Set an address or correct it with a reason; permanent historical alias registration and operation log",
         "security": [
           {
             "bearerAuth": []
@@ -4688,7 +4768,14 @@
                 "properties": {
                   "slug": {
                     "type": "string",
-                    "pattern": "^[a-z][a-z0-9-]{1,63}$"
+                    "minLength": 2,
+                    "maxLength": 64,
+                    "pattern": "^[a-z][a-z0-9-]{0,62}[a-z0-9]$"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "description": "Required when changing an existing custom address"
                   }
                 }
               }
@@ -4725,6 +4812,9 @@
           },
           "409": {
             "description": "showroom_slug_exists or showroom_slug_locked"
+          },
+          "429": {
+            "description": "Rate limited; Retry-After header"
           }
         }
       }
@@ -7299,7 +7389,19 @@
           "500": {
             "description": "Transaction or storage failure"
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "hall",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "agriculture"
+            },
+            "description": "Hall slug. Omitted selects agriculture. Unknown halls return 404; preparing halls return no public content."
+          }
+        ]
       },
       "put": {
         "summary": "Publish, replace or remove the independent platform image",
@@ -7359,7 +7461,19 @@
           "500": {
             "description": "Transaction or storage failure"
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "hall",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "agriculture"
+            },
+            "description": "Hall slug. Omitted selects agriculture. Unknown halls return 404; preparing halls return no public content."
+          }
+        ]
       }
     },
     "/admin/home-display/media": {
@@ -9848,6 +9962,609 @@
           }
         }
       }
+    },
+    "/public/halls": {
+      "get": {
+        "summary": "Available exhibition hall configuration",
+        "tags": [
+          "public"
+        ],
+        "responses": {
+          "200": {
+            "description": "Hall configuration including preparing halls",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Hall"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Includes hero_media_id and version; older clients may ignore additional properties. Preparing halls expose configuration images only."
+      }
+    },
+    "/admin/halls": {
+      "get": {
+        "summary": "List hall metadata and visual configuration (home.manage)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "items: fixed hall id/slug, bilingual names/descriptions, status, hero_media_id and version"
+          }
+        }
+      }
+    },
+    "/admin/halls/{id}": {
+      "put": {
+        "summary": "Atomically update existing hall configuration (home.manage)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "name_en",
+                  "status",
+                  "hero_media_id",
+                  "version"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "name_en": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 2000
+                  },
+                  "description_en": {
+                    "type": "string",
+                    "maxLength": 2000
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "open",
+                      "preparing"
+                    ]
+                  },
+                  "hero_media_id": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "slug": {
+                    "type": "string",
+                    "description": "Immutable; if provided must equal the current slug"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved configuration with incremented version. Refresh public/halls."
+          },
+          "400": {
+            "description": "Invalid metadata or image not uploaded via home-display/media"
+          },
+          "403": {
+            "description": "Missing home.manage"
+          },
+          "409": {
+            "description": "stale_revision; reload before retrying"
+          }
+        }
+      }
+    },
+    "/public/administrative-regions": {
+      "get": {
+        "summary": "Bundled 2023 administrative directory; no external service required",
+        "parameters": [
+          {
+            "name": "parent_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Parent code; omit for provinces"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Resolve a selected code and ancestor trail"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Resolve an exact normalized legacy region name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Child nodes, selected node and ancestor trail with historical version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdministrativeRegion"
+                      }
+                    },
+                    "selected": {
+                      "$ref": "#/components/schemas/AdministrativeRegion"
+                    },
+                    "trail": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdministrativeRegion"
+                      }
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "2023-06-30"
+                    },
+                    "historical": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unknown code"
+          }
+        }
+      }
+    },
+    "/merchant/showroom-link": {
+      "get": {
+        "summary": "Own company link, name-related suggestions and optional availability check; no occupied company information",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 64,
+              "pattern": "^[a-z][a-z0-9-]{0,62}[a-z0-9]$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid address or query"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "409": {
+            "description": "showroom_slug_exists or showroom_slug_locked"
+          },
+          "429": {
+            "description": "Rate limited; Retry-After header"
+          }
+        }
+      },
+      "put": {
+        "summary": "Set the current manufacturer company address once; lowercases ASCII, transactionally unique and logged",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "slug"
+                ],
+                "properties": {
+                  "slug": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 64,
+                    "pattern": "^[a-z][a-z0-9-]{0,62}[a-z0-9]$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid address or query"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "409": {
+            "description": "showroom_slug_exists or showroom_slug_locked"
+          },
+          "429": {
+            "description": "Rate limited; Retry-After header"
+          }
+        }
+      }
+    },
+    "/admin/vendors/{id}/showroom-link": {
+      "get": {
+        "summary": "Company link state and availability; vendor.write permission",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "slug",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 64,
+              "pattern": "^[a-z][a-z0-9-]{0,62}[a-z0-9]$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid address or query"
+          },
+          "401": {
+            "description": "Sign-in required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "409": {
+            "description": "showroom_slug_exists or showroom_slug_locked"
+          },
+          "429": {
+            "description": "Rate limited; Retry-After header"
+          }
+        }
+      }
+    },
+    "/public/config": {
+      "get": {
+        "summary": "Public runtime configuration without secrets or filesystem paths",
+        "tags": [
+          "public"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "409": {
+            "description": "Version, quota, disk-space or reference conflict"
+          }
+        }
+      }
+    },
+    "/admin/settings": {
+      "get": {
+        "summary": "Versioned site, upload, quota and disk settings",
+        "tags": [
+          "system"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "403": {
+            "description": "Super administrator required; merchant usage is owner-only"
+          },
+          "409": {
+            "description": "Version, quota, disk-space or reference conflict"
+          }
+        }
+      },
+      "put": {
+        "summary": "Versioned site, upload, quota and disk settings",
+        "tags": [
+          "system"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "403": {
+            "description": "Super administrator required; merchant usage is owner-only"
+          },
+          "409": {
+            "description": "Version, quota, disk-space or reference conflict"
+          }
+        }
+      }
+    },
+    "/admin/settings/test-addresses": {
+      "post": {
+        "summary": "Bounded SSRF-protected same-site address verification; returns 10 minute proof",
+        "tags": [
+          "system"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "403": {
+            "description": "Super administrator required; merchant usage is owner-only"
+          },
+          "409": {
+            "description": "Version, quota, disk-space or reference conflict"
+          }
+        }
+      }
+    },
+    "/admin/storage/status": {
+      "get": {
+        "summary": "Nonsecret storage, capacity and backup status",
+        "tags": [
+          "system"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "403": {
+            "description": "Super administrator required; merchant usage is owner-only"
+          },
+          "409": {
+            "description": "Version, quota, disk-space or reference conflict"
+          }
+        }
+      }
+    },
+    "/merchant/storage/usage": {
+      "get": {
+        "summary": "Current merchant logical usage and active reservations",
+        "tags": [
+          "merchant"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "403": {
+            "description": "Super administrator required; merchant usage is owner-only"
+          },
+          "409": {
+            "description": "Version, quota, disk-space or reference conflict"
+          }
+        }
+      }
+    },
+    "/admin/storage/quotas": {
+      "get": {
+        "summary": "Paginated merchant storage quotas",
+        "tags": [
+          "system"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "403": {
+            "description": "Super administrator required; merchant usage is owner-only"
+          },
+          "409": {
+            "description": "Version, quota, disk-space or reference conflict"
+          }
+        }
+      }
+    },
+    "/admin/storage/quotas/{id}": {
+      "put": {
+        "summary": "Set quota_bytes or null to restore default",
+        "tags": [
+          "system"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "403": {
+            "description": "Super administrator required; merchant usage is owner-only"
+          },
+          "409": {
+            "description": "Version, quota, disk-space or reference conflict"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ]
+      }
+    },
+    "/admin/media/{id}": {
+      "delete": {
+        "summary": "Explicitly confirm deletion of unreferenced media only",
+        "tags": [
+          "system"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "403": {
+            "description": "Super administrator required; merchant usage is owner-only"
+          },
+          "409": {
+            "description": "Version, quota, disk-space or reference conflict"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -9930,11 +10647,16 @@
           "company_profile": {
             "$ref": "#/components/schemas/CompanyProfile",
             "description": "Optional versioned vendor profile. Omission or null on draft updates preserves the latest stored profile for legacy clients; use an empty object to clear. Image references must belong to the vendor owner and remain versioned."
+          },
+          "region_code": {
+            "type": "string",
+            "description": "Optional validated city/county administrative code from the bundled 2023 directory. The server derives region_id and region_name. Omit for legacy ID or manual-text input."
           }
         },
         "required": [
           "name"
-        ]
+        ],
+        "description": "Product V2.2: only name is required. Category, keywords, photos and English fields are optional for both draft and review submission. Product ownership, hall/category validation, length limits and approval rules remain enforced. Parameters remain legacy-compatible plain text."
       },
       "View": {
         "type": "object",
@@ -10010,6 +10732,11 @@
           },
           "showroom_slug": {
             "type": "string"
+          },
+          "hall_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Owning hall. Products inherit the manufacturer hall."
           }
         },
         "required": []
@@ -10148,9 +10875,10 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
-            "minimum": 0
+            "type": "integer"
+          },
+          "slug": {
+            "type": "string"
           },
           "name": {
             "type": "string"
@@ -10158,11 +10886,26 @@
           "name_en": {
             "type": "string"
           },
-          "slug": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "preparing"
+            ]
+          },
+          "icon": {
+            "type": "string"
+          },
+          "theme": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "description_en": {
             "type": "string"
           }
-        },
-        "required": []
+        }
       },
       "Category": {
         "type": "object",
@@ -10238,6 +10981,11 @@
           },
           "enabled": {
             "type": "boolean"
+          },
+          "administrative_code": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional unique administrative code; existing region IDs are retained."
           }
         },
         "required": [
@@ -10273,6 +11021,11 @@
           },
           "data": {
             "$ref": "#/components/schemas/Payload"
+          },
+          "hall_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Optional for a new manufacturer; omitted defaults to hall 1. Products always inherit their manufacturer hall."
           }
         },
         "required": [
@@ -10626,6 +11379,11 @@
           },
           "data": {
             "$ref": "#/components/schemas/Payload"
+          },
+          "hall_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Optional for a new manufacturer; omitted defaults to hall 1. Products always inherit their manufacturer hall."
           }
         },
         "required": [
@@ -10815,6 +11573,14 @@
               }
             },
             "description": "Published company operating category, including its own approved supplemental category; canonical aliases resolved."
+          },
+          "home_products": {
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "$ref": "#/components/schemas/View"
+            },
+            "description": "Homepage only: configured representatives first, then published products of this vendor, at most eight; manual empty selection stays empty. Original representative_products contract remains unchanged."
           }
         }
       },
@@ -11700,6 +12466,35 @@
             "enum": [
               "Asia/Shanghai"
             ]
+          }
+        }
+      },
+      "AdministrativeRegion": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "parent_code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer"
+          },
+          "has_children": {
+            "type": "boolean"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       }

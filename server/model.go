@@ -29,10 +29,15 @@ type SMSCode struct {
 func (SMSCode) TableName() string { return "sms_codes" }
 
 type Hall struct {
-	ID     uint64 `json:"id"`
-	Name   string `json:"name"`
-	NameEN string `json:"name_en"`
-	Slug   string `json:"slug"`
+	Status        string `json:"status"`
+	Icon          string `json:"icon"`
+	Theme         string `json:"theme"`
+	Description   string `json:"description"`
+	DescriptionEN string `json:"description_en"`
+	ID            uint64 `json:"id"`
+	Name          string `json:"name"`
+	NameEN        string `json:"name_en"`
+	Slug          string `json:"slug"`
 }
 type Category struct {
 	ID        uint64 `json:"id"`
@@ -44,12 +49,14 @@ type Category struct {
 	Enabled   bool   `json:"enabled"`
 }
 type Region struct {
-	ID      uint64 `json:"id"`
-	Name    string `json:"name"`
-	NameEN  string `json:"name_en"`
-	Enabled bool   `json:"enabled"`
+	AdministrativeCode *string `json:"administrative_code,omitempty"`
+	ID                 uint64  `json:"id"`
+	Name               string  `json:"name"`
+	NameEN             string  `json:"name_en"`
+	Enabled            bool    `json:"enabled"`
 }
 type Content struct {
+	HallID              uint64    `gorm:"default:1" json:"hall_id"`
 	ShowroomSlug        *string   `json:"-"`
 	ID                  uint64    `json:"id"`
 	Kind                string    `json:"kind"`
@@ -66,6 +73,7 @@ type Content struct {
 	UpdatedAt           time.Time `json:"updated_at"`
 }
 type Payload struct {
+	RegionCode     string          `json:"region_code,omitempty"`
 	CompanyProfile *CompanyProfile `json:"company_profile,omitempty"`
 	Name           string          `json:"name"`
 	NameEN         string          `json:"name_en"`

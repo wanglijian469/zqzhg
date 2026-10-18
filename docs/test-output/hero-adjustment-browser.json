@@ -1,0 +1,686 @@
+{
+  "base": "http://localhost:8080",
+  "checkedAt": "2026-10-17T10:57:17.728Z",
+  "checks": [
+    {
+      "width": 1440,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/",
+      "viewport": 1440,
+      "scroll": 1440,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.777824074074074
+      }
+    },
+    {
+      "width": 1440,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/",
+      "viewport": 1440,
+      "scroll": 1440,
+      "cards": 12,
+      "hero": {
+        "text": "ZQZG Exhibition · Agricultural Machinery Hall",
+        "lines": 2,
+        "fits": true,
+        "imageRatio": 1.777824074074074
+      }
+    },
+    {
+      "width": 1440,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/browse",
+      "viewport": 1440,
+      "scroll": 1440,
+      "cards": 0
+    },
+    {
+      "width": 1440,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/browse",
+      "viewport": 1440,
+      "scroll": 1440,
+      "cards": 0
+    },
+    {
+      "width": 1440,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/browse/products",
+      "viewport": 1440,
+      "scroll": 1440,
+      "cards": 24
+    },
+    {
+      "width": 1440,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/browse/products",
+      "viewport": 1440,
+      "scroll": 1440,
+      "cards": 24
+    },
+    {
+      "width": 1440,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/",
+      "viewport": 1152,
+      "scroll": 1152,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7778568690795598
+      }
+    },
+    {
+      "width": 1440,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/",
+      "viewport": 1152,
+      "scroll": 1152,
+      "cards": 12,
+      "hero": {
+        "text": "ZQZG Exhibition · Agricultural Machinery Hall",
+        "lines": 2,
+        "fits": true,
+        "imageRatio": 1.7778568690795598
+      }
+    },
+    {
+      "width": 1440,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/browse",
+      "viewport": 1152,
+      "scroll": 1152,
+      "cards": 0
+    },
+    {
+      "width": 1440,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/browse",
+      "viewport": 1152,
+      "scroll": 1152,
+      "cards": 0
+    },
+    {
+      "width": 1440,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/browse/products",
+      "viewport": 1152,
+      "scroll": 1152,
+      "cards": 24
+    },
+    {
+      "width": 1440,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/browse/products",
+      "viewport": 1152,
+      "scroll": 1152,
+      "cards": 24
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/",
+      "viewport": 1280,
+      "scroll": 1280,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7778265321047242
+      }
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/",
+      "viewport": 1280,
+      "scroll": 1280,
+      "cards": 12,
+      "hero": {
+        "text": "ZQZG Exhibition · Agricultural Machinery Hall",
+        "lines": 2,
+        "fits": true,
+        "imageRatio": 1.7778265321047242
+      }
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/browse",
+      "viewport": 1280,
+      "scroll": 1280,
+      "cards": 0
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/browse",
+      "viewport": 1280,
+      "scroll": 1280,
+      "cards": 0
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/browse/products",
+      "viewport": 1280,
+      "scroll": 1280,
+      "cards": 24
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/browse/products",
+      "viewport": 1280,
+      "scroll": 1280,
+      "cards": 24
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/",
+      "viewport": 1024,
+      "scroll": 1024,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/",
+      "viewport": 1024,
+      "scroll": 1024,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/browse",
+      "viewport": 1024,
+      "scroll": 1024,
+      "cards": 0
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/browse",
+      "viewport": 1024,
+      "scroll": 1024,
+      "cards": 0
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/browse/products",
+      "viewport": 1024,
+      "scroll": 1024,
+      "cards": 24
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/browse/products",
+      "viewport": 1024,
+      "scroll": 1024,
+      "cards": 24
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/",
+      "viewport": 768,
+      "scroll": 768,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/",
+      "viewport": 768,
+      "scroll": 768,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/browse",
+      "viewport": 768,
+      "scroll": 768,
+      "cards": 0
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/browse",
+      "viewport": 768,
+      "scroll": 768,
+      "cards": 0
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/browse/products",
+      "viewport": 768,
+      "scroll": 768,
+      "cards": 24
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/browse/products",
+      "viewport": 768,
+      "scroll": 768,
+      "cards": 24
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/",
+      "viewport": 614,
+      "scroll": 614,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/",
+      "viewport": 614,
+      "scroll": 614,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/browse",
+      "viewport": 614,
+      "scroll": 614,
+      "cards": 0
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/browse",
+      "viewport": 614,
+      "scroll": 614,
+      "cards": 0
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/browse/products",
+      "viewport": 614,
+      "scroll": 614,
+      "cards": 24
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/browse/products",
+      "viewport": 614,
+      "scroll": 614,
+      "cards": 24
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/",
+      "viewport": 390,
+      "scroll": 390,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/",
+      "viewport": 390,
+      "scroll": 390,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/browse",
+      "viewport": 390,
+      "scroll": 390,
+      "cards": 0
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/browse",
+      "viewport": 390,
+      "scroll": 390,
+      "cards": 0
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/browse/products",
+      "viewport": 390,
+      "scroll": 390,
+      "cards": 24
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/browse/products",
+      "viewport": 390,
+      "scroll": 390,
+      "cards": 24
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/",
+      "viewport": 312,
+      "scroll": 312,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/",
+      "viewport": 312,
+      "scroll": 312,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/browse",
+      "viewport": 312,
+      "scroll": 312,
+      "cards": 0
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/browse",
+      "viewport": 312,
+      "scroll": 312,
+      "cards": 0
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/browse/products",
+      "viewport": 312,
+      "scroll": 312,
+      "cards": 24
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/browse/products",
+      "viewport": 312,
+      "scroll": 312,
+      "cards": 24
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/",
+      "viewport": 360,
+      "scroll": 360,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/",
+      "viewport": 360,
+      "scroll": 360,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/browse",
+      "viewport": 360,
+      "scroll": 360,
+      "cards": 0
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/browse",
+      "viewport": 360,
+      "scroll": 360,
+      "cards": 0
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1,
+      "language": "zh",
+      "route": "/browse/products",
+      "viewport": 360,
+      "scroll": 360,
+      "cards": 24
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1,
+      "language": "en",
+      "route": "/browse/products",
+      "viewport": 360,
+      "scroll": 360,
+      "cards": 24
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/",
+      "viewport": 288,
+      "scroll": 288,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/",
+      "viewport": 288,
+      "scroll": 288,
+      "cards": 12,
+      "hero": {
+        "text": "中企展馆 · 农业机械厅",
+        "lines": 1,
+        "fits": true,
+        "imageRatio": 1.7777777777777777
+      }
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/browse",
+      "viewport": 288,
+      "scroll": 288,
+      "cards": 0
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/browse",
+      "viewport": 288,
+      "scroll": 288,
+      "cards": 0
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1.25,
+      "language": "zh",
+      "route": "/browse/products",
+      "viewport": 288,
+      "scroll": 288,
+      "cards": 24
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1.25,
+      "language": "en",
+      "route": "/browse/products",
+      "viewport": 288,
+      "scroll": 288,
+      "cards": 24
+    }
+  ],
+  "publicVendors": 5,
+  "publicProducts": 38,
+  "homepageVendors": 5,
+  "homepageProducts": 12,
+  "consoleErrors": [],
+  "interactionChecks": [
+    "product pagination",
+    "sorting",
+    "detail return preserves URL",
+    "product to vendor showroom",
+    "vendor product catalog",
+    "hall switching",
+    "preparing hall isolation",
+    "English",
+    "unknown hall",
+    "merchant login",
+    "join",
+    "admin login"
+  ],
+  "zoomNote": "1.25 uses equivalent CSS viewport with device scale factor; native browser zoom remains a manual acceptance item."
+}

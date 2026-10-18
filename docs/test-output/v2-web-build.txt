@@ -1,0 +1,25 @@
+
+> zqzt-exhibition-web@2.0.0 prebuild
+> node ../scripts/sync-form-rules.mjs && node ../scripts/prepare-pdf-assets.mjs
+
+
+> zqzt-exhibition-web@2.0.0 build
+> tsc -b && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 3066 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                         0.60 kB │ gzip:   0.44 kB
+dist/assets/pdf-worker-PC57fB-y.js  1,524.21 kB
+dist/assets/index-D4pD5Oq3.css        138.56 kB │ gzip:  26.44 kB
+dist/assets/index-DooaUOVB.js         259.68 kB │ gzip:  95.86 kB
+dist/assets/pdf-CL8ynlU4.js           495.58 kB │ gzip: 151.29 kB
+dist/assets/index-DcbYJ5s1.js         638.20 kB │ gzip: 203.01 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 12.06s

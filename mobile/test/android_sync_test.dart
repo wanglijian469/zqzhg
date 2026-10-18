@@ -1,3 +1,4 @@
+import 'legacy_hall_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -29,7 +30,7 @@ void main() {
             jsonDecode(File('assets/i18n/$lang.json').readAsStringSync()),
           ),
       },
-      client: MockClient(
+      client: legacyHallClient(MockClient(
         handler ??
             (_) async => response({
               'items': [],
@@ -38,7 +39,7 @@ void main() {
               'regions': [],
               'products': {},
             }),
-      ),
+      )),
     );
   }
 
@@ -103,7 +104,7 @@ void main() {
         app(m, const CompanyShowroomScreen(slug: 'fixture')),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(ChoiceChip), findsNWidgets(3));
+      expect(find.byType(ChoiceChip), findsNWidgets(6));
       expect(
         tester
             .widget<ChoiceChip>(find.widgetWithText(ChoiceChip, '展厅首页'))
