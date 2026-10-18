@@ -25,7 +25,7 @@ def main():
     for check in ['web-tests','web-build','upgrade-tests','backend-tests','video-tests','go-vet','build-amd64','build-arm64']:
         if (ROOT/'.local'/('aliyun-'+check+'-exit.txt')).read_text().strip()!='0':raise RuntimeError('Failed check: '+check)
     web=(ROOT/'.local/aliyun-web-tests.log').read_text(encoding='utf-8-sig');backend=(ROOT/'.local/aliyun-backend-tests.log').read_text(encoding='utf-8-sig')
-    if '135 passed' not in web or backend.count('--- PASS:')!=79 or '\nPASS\n' not in backend.replace('\r\n','\n'):raise RuntimeError('Incomplete fresh verification')
+    if '135 passed' not in web or sum(line.startswith('--- PASS:') for line in backend.splitlines())!=79 or '\nPASS\n' not in backend.replace('\r\n','\n'):raise RuntimeError('Incomplete fresh verification')
     source=OUT/(NAME+'-source.zip');linux=OUT/(NAME+'-linux.tar.gz')
     if source.exists() or linux.exists():raise RuntimeError('Never overwrite an existing release archive')
     OUT.mkdir(exist_ok=True);STAGE.mkdir(parents=True)

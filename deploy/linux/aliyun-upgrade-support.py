@@ -40,7 +40,7 @@ def context(env_file, install):
     if not media.is_dir(): raise ValueError('Effective media directory does not exist')
     if not operations.is_dir(): raise ValueError('Create and permission the stable OPERATIONS_DIR before upgrade; do not discard existing control state')
     key = cfg.get('CONFIG_ENCRYPTION_KEY','')
-    try: key_bytes = bytes.fromhex(key)
+    try: key_bytes = bytes.fromhex(key) if re.fullmatch(r'[A-Fa-f0-9]{64}',key) else base64.b64decode(key,validate=True)
     except ValueError:
         try: key_bytes = base64.b64decode(key,validate=True)
         except ValueError: key_bytes = b''
