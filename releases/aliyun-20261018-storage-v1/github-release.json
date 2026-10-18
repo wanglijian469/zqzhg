@@ -1,0 +1,70 @@
+{
+  "url": "https://github.com/wanglijian469/zqzhg/releases/tag/aliyun-20261018-storage-v1",
+  "tag": "aliyun-20261018-storage-v1",
+  "commit": "eb4907f9d814536b24ea968c3b5ef53800646ef9",
+  "draft": false,
+  "assets": [
+    {
+      "name": "manifest-aliyun-20261018-storage-v1.json",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/aliyun-20261018-storage-v1/manifest-aliyun-20261018-storage-v1.json",
+      "size": 1485,
+      "digest": "sha256:2a6a2817b9ced515be18973b0e4873d5492b43b3d0fe06a63e28b5a13e974692"
+    },
+    {
+      "name": "SHA256SUMS-aliyun-20261018-storage-v1.txt",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/aliyun-20261018-storage-v1/SHA256SUMS-aliyun-20261018-storage-v1.txt",
+      "size": 327,
+      "digest": "sha256:a1b1987b8849f45ca7d1b677d627f5afa7756c6874cfe89581654b30fdb58f1e"
+    },
+    {
+      "name": "zqzg-aliyun-20261018-storage-v1-linux.tar.gz",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/aliyun-20261018-storage-v1/zqzg-aliyun-20261018-storage-v1-linux.tar.gz",
+      "size": 63632661,
+      "digest": "sha256:d569a5fb2de5de052ae2f00e62a46544e99cdf70d0b56e47e07d1fbd41645eca"
+    },
+    {
+      "name": "zqzg-aliyun-20261018-storage-v1-source.zip",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/aliyun-20261018-storage-v1/zqzg-aliyun-20261018-storage-v1-source.zip",
+      "size": 201284078,
+      "digest": "sha256:045176545f3c7e13bd5ce470d222eb495815c175ea37e2937366f93e102a4c69"
+    }
+  ],
+  "publicDownloadChecks": [
+    {
+      "name": "manifest-aliyun-20261018-storage-v1.json",
+      "status": 200,
+      "size": 1485,
+      "sha256": "2a6a2817b9ced515be18973b0e4873d5492b43b3d0fe06a63e28b5a13e974692",
+      "transport": "curl HEAD via public download URL"
+    },
+    {
+      "name": "SHA256SUMS-aliyun-20261018-storage-v1.txt",
+      "status": 200,
+      "size": 327,
+      "sha256": "a1b1987b8849f45ca7d1b677d627f5afa7756c6874cfe89581654b30fdb58f1e",
+      "transport": "curl HEAD via public download URL"
+    },
+    {
+      "name": "zqzg-aliyun-20261018-storage-v1-linux.tar.gz",
+      "status": 200,
+      "size": 63632661,
+      "sha256": "d569a5fb2de5de052ae2f00e62a46544e99cdf70d0b56e47e07d1fbd41645eca",
+      "transport": "curl HEAD via public download URL"
+    },
+    {
+      "name": "zqzg-aliyun-20261018-storage-v1-source.zip",
+      "status": 200,
+      "size": 201284078,
+      "sha256": "045176545f3c7e13bd5ce470d222eb495815c175ea37e2937366f93e102a4c69",
+      "transport": "curl HEAD via public download URL"
+    }
+  ],
+  "tests": {
+    "frontend": 135,
+    "backend": 80,
+    "upgradeHelper": 6
+  },
+  "productionDeployed": false,
+  "privateBusinessFilesInCurrentTree": false,
+  "historicalGitDataPurged": false
+}
