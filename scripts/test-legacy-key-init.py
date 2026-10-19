@@ -35,7 +35,7 @@ class KeyTests(unittest.TestCase):
              patch.object(keyinit.subprocess, 'run', return_value=subprocess.CompletedProcess([], code, output, '')) as run, \
              patch.object(keyinit.os, 'chown', create=True):
             result = keyinit.initialize(str(self.cfg), str(HELPER))
-            self.assertNotIn('do-not-log', ' '.join(run.call_args.args[0]))
+            self.assertNotIn('do-not-log', ' '.join(run.call_args[0][0]))
             return result
 
     def test_verified_legacy_schema_can_initialize_once(self):

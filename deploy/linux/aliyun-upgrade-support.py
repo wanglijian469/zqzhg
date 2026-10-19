@@ -73,15 +73,15 @@ def backup(env_file, install, directory):
     if directory==Path(directory.anchor) or directory.exists(): raise ValueError('Backup destination must be a new, private directory')
     directory.parent.mkdir(parents=True,exist_ok=True)
     estimate=sum(p.stat().st_size for root in [Path(info['media']),Path(info['operations'])] if root.exists() for p in root.rglob('*') if p.is_file() and not p.is_symlink())
-    if shutil.disk_usage(directory.parent).free < estimate+(1<<30): raise ValueError('Insufficient backup disk space; choose another protected disk')
+    if shutil.disk_usage(str(directory.parent)).free < estimate+(1<<30): raise ValueError('Insufficient backup disk space; choose another protected disk')
     os.mkdir(directory,0o700)
     shutil.copyfile(env_file,directory/'exhibition.env');os.chmod(directory/'exhibition.env',0o600)
     dump=tool(cfg,'mysqldump');client=tool(cfg,'mysql');env={**os.environ,'MYSQL_PWD':cfg.get('DB_PASSWORD','')}
     common=db_args(cfg)
-    schema=subprocess.run([client,*common,'--batch','--skip-column-names',info['database'],'--execute=SELECT COALESCE(MAX(version),0) FROM schema_migrations'],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+    schema=subprocess.run([client,*common,'--batch','--skip-column-names',info['database'],'--execute=SELECT COALESCE(MAX(version),0) FROM schema_migrations'],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,universal_newlines=True)
     if schema.returncode or not schema.stdout.strip().isdigit(): raise ValueError('Cannot read existing schema version; current service can be restarted unchanged')
     if int(schema.stdout.strip())>15: raise ValueError('Database is newer than this build; refusing downgrade')
-    help_text=subprocess.run([dump,'--no-defaults','--help'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True).stdout
+    help_text=subprocess.run([dump,'--no-defaults','--help'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,universal_newlines=True).stdout
     flags=['--single-transaction','--skip-lock-tables','--hex-blob','--default-character-set=utf8mb4']
     for flag,feature in [('--no-tablespaces','no-tablespaces'),('--column-statistics=0','column-statistics'),('--set-gtid-purged=OFF','set-gtid-purged')]:
         if feature in help_text: flags.append(flag)
@@ -95,7 +95,7 @@ def backup(env_file, install, directory):
             target=directory/(label+'.tar.gz')
             with target.open('xb') as stream:
                 os.chmod(target,0o600)
-                with tarfile.open(fileobj=stream,mode='w:gz') as archive: archive.add(source,arcname=label)
+                with tarfile.open(fileobj=stream,mode='w:gz') as archive: archive.add(str(source),arcname=label)
     checks=[]
     for file in sorted(directory.iterdir()):
         h=hashlib.sha256()

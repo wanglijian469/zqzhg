@@ -19,6 +19,7 @@ class UpgradeTests(unittest.TestCase):
  def test_private_backup_preserves_key_names_and_config(self):
   tools=self.root/'bin';tools.mkdir();[(tools/name).write_text('fake executable for subprocess mock') for name in ['mysql','mysqldump']];self.cfg['MYSQL_BIN']=str(tools);self.write();photo=self.media/'companies/1/logo/file';photo.parent.mkdir(parents=True);photo.write_bytes(b'fixture');before=self.env.read_bytes()
   def run(args,**kwargs):
+   self.assertNotIn('text',kwargs);self.assertNotIn('capture_output',kwargs)
    if '--help' in args:return subprocess.CompletedProcess(args,0,stdout='no-tablespaces column-statistics set-gtid-purged',stderr='')
    if any('--execute=' in x for x in args):return subprocess.CompletedProcess(args,0,stdout='14\n',stderr='')
    kwargs['stdout'].write(b'-- isolated fake SQL backup\n');return subprocess.CompletedProcess(args,0,stderr=b'')

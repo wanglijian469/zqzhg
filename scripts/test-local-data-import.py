@@ -74,8 +74,8 @@ class ImportTests(unittest.TestCase):
             with gzip.open(self.root / 'database.sql.gz', 'rb') as source:
                 imp.mysql({'DB_PASSWORD': 'private-password'}, 'mysql', database='isolated_db', source=source)
         call = run.call_args
-        self.assertEqual(call.kwargs['input'], b'SELECT 1;')
-        self.assertNotIn('private-password', ' '.join(call.args[0]))
+        self.assertEqual(call[1]['input'], b'SELECT 1;')
+        self.assertNotIn('private-password', ' '.join(call[0][0]))
 
     def test_sql_failure_redacts_credentials(self):
         with patch.object(imp.subprocess, 'run', return_value=subprocess.CompletedProcess([], 1, b'', b'secret')):
@@ -101,7 +101,7 @@ class ImportTests(unittest.TestCase):
         metadata = self.root.stat()
         with patch.object(imp.os, 'fchown', create=True) as chown:
             imp.write_pointer(pointer, {'current': {'database': 'new'}})
-        self.assertEqual(chown.call_args.args[1:], (metadata.st_uid, metadata.st_gid))
+        self.assertEqual(chown.call_args[0][1:], (metadata.st_uid, metadata.st_gid))
 
 
 class ImportFlowTests(unittest.TestCase):
@@ -181,13 +181,13 @@ class ImportFlowTests(unittest.TestCase):
     def test_health_failure_restores_original_pointer(self):
         self.assertRaisesRegex(RuntimeError, 'healthy', self.run_flow, healthy=False)
         self.assertEqual(json.loads(self.pointer.read_text()), self.old)
-        self.assertEqual(self.run.call_args.args[0], ['systemctl', 'start', 'zqzt-exhibition.service'])
+        self.assertEqual(self.run.call_args[0][0], ['systemctl', 'start', 'zqzt-exhibition.service'])
 
     def test_backup_failure_prevents_cutover(self):
         self.upgrade.backup.side_effect = RuntimeError('isolated backup failure')
         self.assertRaisesRegex(RuntimeError, 'backup failure', self.run_flow)
         self.assertEqual(json.loads(self.pointer.read_text()), self.old)
-        self.assertEqual(self.run.call_args.args[0], ['systemctl', 'start', 'zqzt-exhibition.service'])
+        self.assertEqual(self.run.call_args[0][0], ['systemctl', 'start', 'zqzt-exhibition.service'])
 
 
 def real_restore(stage):
@@ -238,8 +238,8 @@ def real_restore(stage):
             with opener.open('http://127.0.0.1:18097' + path, timeout=10) as response:
                 return response.read(), response.headers.get_content_type()
         with (work / 'stdout.log').open('wb') as stdout, (work / 'stderr.log').open('wb') as stderr:
-            process = subprocess.Popen([str(executable)], cwd=work, env=env, stdout=stdout, stderr=stderr,
-                                       creationflags=subprocess.CREATE_NO_WINDOW)
+            process = subprocess.Popen([str(executable)], cwd=str(work), env=env, stdout=stdout, stderr=stderr,
+                                       creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0x08000000))
             for _ in range(60):
                 if process.poll() is not None:
                     raise RuntimeError('Isolated runtime exited; inspect private smoke logs')

@@ -165,7 +165,7 @@ def main():
     target = Path(args.install_dir).resolve() / 'shared' / 'local-data' / stamp
     target.parent.mkdir(parents=True, exist_ok=True)
     os.chmod(target.parent, 0o700)
-    if shutil.disk_usage(target.parent).free < sum(o['size'] for o in manifest['objects']) * 2 + (1 << 30):
+    if shutil.disk_usage(str(target.parent)).free < sum(o['size'] for o in manifest['objects']) * 2 + (1 << 30):
         raise ValueError('Insufficient free disk space')
     database = 'zqzt_exhibition_restore_' + secrets.token_hex(8)
     # CREATE has no IF NOT EXISTS: an existing DB can never be imported over.
@@ -192,7 +192,7 @@ def main():
         if digest(media / item['key']) != item['sha256']:
             raise ValueError('Copied media differs; original site is unchanged')
     mysql(cfg, tool, "UPDATE stored_objects SET store_id=0; UPDATE merchant_storage_quotas SET initialized=0;", database)
-    owner = subprocess.check_output(['systemctl', 'show', args.service, '--property=User', '--value'], text=True).strip()
+    owner = subprocess.check_output(['systemctl', 'show', args.service, '--property=User', '--value'], universal_newlines=True).strip()
     if owner:
         # The service must traverse the private parent as well as the media dir.
         shutil.chown(target.parent, user=owner)
