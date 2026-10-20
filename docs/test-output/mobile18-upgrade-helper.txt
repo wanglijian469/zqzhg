@@ -1,0 +1,12 @@
+test_backup_cannot_write_into_media (__main__.UpgradeTests.test_backup_cannot_write_into_media) ... ok
+test_keys_and_persistent_paths_are_checked (__main__.UpgradeTests.test_keys_and_persistent_paths_are_checked) ... ok
+test_pending_restore_is_rejected (__main__.UpgradeTests.test_pending_restore_is_rejected) ... ok
+test_private_backup_preserves_key_names_and_config (__main__.UpgradeTests.test_private_backup_preserves_key_names_and_config) ... ok
+test_read_only_context_and_secret_redaction (__main__.UpgradeTests.test_read_only_context_and_secret_redaction) ... ok
+test_restore_pointer_uses_actual_database_and_media (__main__.UpgradeTests.test_restore_pointer_uses_actual_database_and_media) ... ok
+test_schema_16_target_accepts_16_and_rejects_17 (__main__.UpgradeTests.test_schema_16_target_accepts_16_and_rejects_17) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.167s
+
+OK

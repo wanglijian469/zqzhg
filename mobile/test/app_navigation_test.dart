@@ -347,6 +347,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
       await tester.tap(find.byType(BackButton).first);
       await tester.pumpAndSettle();
+      await tap(tester,find.text('保留草稿并离开'));
       await tap(tester, find.text('基本信息'));
       expect(find.text('修改后企业'), findsOneWidget);
       await tester.tap(find.byType(BackButton).first);
@@ -399,7 +400,7 @@ void main() {
   );
 
   testWidgets(
-    'First booth creation returns to the existing shell and reloads the new booth',
+    'First cloud save stays in the editor and the workspace refreshes after return',
     (tester) async {
       viewport(tester, 390);
       var created = false;
@@ -440,7 +441,9 @@ void main() {
       await tap(tester, find.widgetWithText(OutlinedButton, '保存云端草稿'));
       expect(created, isTrue);
       expect(boothReads, greaterThanOrEqualTo(2));
-      expect(find.byType(EditorScreen), findsNothing);
+      expect(find.byType(EditorScreen), findsOneWidget);
+      await tester.tap(find.byType(BackButton).first);
+      await tester.pumpAndSettle();
       expect(find.byType(MerchantWorkspace), findsOneWidget);
       expect(find.text('免费入驻展馆'), findsNothing);
       await tester.tap(find.byType(BackButton).first);

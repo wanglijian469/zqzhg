@@ -1,5 +1,15 @@
 # 中企展馆 ZQZG V2.0
 
+Android与手机网页升级验收包 **1.8.0-rc.1+30**：同步注册登录、企业资料、三步产品发布、工作台与推广体验，原包名／签名及稳定APK保持不变。本地 `/app` 独立下载。正式地图资源和真机验收仍待完成，未部署生产。[同步清单、测试与升级说明](docs/MOBILE18_ACCEPTANCE.md)。
+
+GitHub安装包与对应源码：[移动端升级预发布 v1.8.0-rc.1](https://github.com/wanglijian469/zqzhg/releases/tag/v1.8.0-rc.1)。APK和完整更新ZIP放在Release附件中，源码修改提交至本仓库；本机学习地图资源及其轮廓截图不随仓库或附件分发。
+
+厂商地图本机轮廓预览：开发环境以 `scripts/start.ps1 -MapPreview` 启用相邻拼接的省市县真实轮廓，保留真实统计及下钻；仅本机学习预览，默认和生产仍使用方块示意图。[当前实现、资源用途与验收](docs/FACTORY_MAP_OUTLINE_PREVIEW.md)。
+
+厂商地图：`/regions` 默认使用 ECharts 可点击行政区方块示意图，显示真实厂商数量并按目录逐级下钻，支持固定视口、自适应分页及手机地图／厂商切换。页面明确标注“非真实地理边界”，不依赖边界文件。[当前使用与验证说明](docs/FACTORY_MAP_SCHEMATIC.md)。
+
+新增产业地图（Schema16）：网站 `/regions` 提供全国／省／市／区县导航、真实公开厂商统计与筛选分页，首版为行政区划列表模式；ECharts 图形等待合规资源核验后启用。[功能与接口说明](docs/INDUSTRY_MAP.md)、[地图资源核验](docs/MAP_RESOURCE_REVIEW.md)、[本次验收](docs/INDUSTRY_MAP_ACCEPTANCE.md)。本次未部署生产，未向生产数据插入测试企业。
+
 当前网站与后端延续 **2.0.0** 版本标识，已合入V2.2产品提交、企业工作台、展厅与存储设置升级（Schema15）。最新阿里云发行包见 [部署发行说明](releases/aliyun-20261018-storage-v1/README.md)，配套源码与产品附件发布到GitHub Release。展馆切换、首页及查询升级、迁移、验收和部署回滚见 [V2.0 升级说明](docs/V2.0_UPGRADE.md)。Android沿用已交付的1.7.0+29安装包及原签名；本次仅编译发布阿里云部署包，不直接部署生产服务器。
 
 React 响应式展馆网站、网页 CMS、Go/Gin/GORM/MySQL 后端与 Flutter 厂商 App。网站、App 和后台使用同一组 API 和数据库，首版提供公开展示、找厂、联系、入驻、审核及中英文切换。
@@ -41,7 +51,7 @@ cd mobile
 & $taskFlutter test --concurrency=1
 ```
 
-在项目根目录执行 `./scripts/build-apk.ps1 -ApiBaseUrl 'http://172.27.35.2:8080'` 生成独立签名 Release APK，输出到 `delivery/android/dalunongji.apk`，同时提供网站 `/downloads/dalunongji.apk` 下载。
+本轮在项目根目录执行 `./scripts/build-apk.ps1 -Preview` 生成原签名 Release 验收 APK，输出到 `delivery/android-preview/`，并提供独立 `/downloads/previews/` 下载。预发布版本禁止覆盖原稳定 `dalunongji.apk`；默认服务器地址保留，局域网验收在 App 设置切换。
 
 手机与电脑需在同一网络。App 右上角设置可调整 API URL；电脑 IP 改变后在此更新。Android 模拟器一般使用 `http://10.0.2.2:8080`。更改地址会清除登录会话，草稿按来源地址和账号隔离。网络连接失败时先检查地址、电脑防火墙及 8080 端口可达性。
 
@@ -85,3 +95,5 @@ go vet ./...
 产品提交页V2.2：三步骤、最少必填、草稿及图片优化，见[交付与验证说明](docs/PRODUCT_V22_UPGRADE.md)。
 
 厂商注册与企业资料填写升级：工作台内完善、省市县、范文与移动端，见[交付与迁移说明](docs/COMPANY_ONBOARDING_UPGRADE.md)。
+
+我要入驻／厂商登录入口优化（2026-10-19）：统一蓝白布局、手机适配、密码显隐及异常恢复，见[使用、截图与验证说明](docs/MERCHANT_ENTRY_UPGRADE.md)。本地可查看，未部署生产。

@@ -10314,12 +10314,31 @@
     "/public/config": {
       "get": {
         "summary": "Public runtime configuration without secrets or filesystem paths",
+        "description": "Backward-compatible capabilities identify administrative_regions, industry_map and product_name_only support. Clients isolate capability caches by server. Missing capabilities on an older successful response mean unsupported; a network failure must remain retryable.",
         "tags": [
           "public"
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success, retaining existing configuration fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "capabilities": {
+                      "type": "object",
+                      "properties": {
+                        "administrative_regions": { "type": "boolean" },
+                        "industry_map": { "type": "boolean" },
+                        "product_name_only": { "type": "boolean" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Validation failed"

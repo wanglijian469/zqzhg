@@ -1,0 +1,28 @@
+[
+  {
+    "command": [
+      "go",
+      "vet",
+      "./..."
+    ],
+    "cwd": "server",
+    "exit_code": 0,
+    "elapsed_seconds": 1.422,
+    "output_file": "industry-map-go-vet.txt",
+    "output_bytes": 0
+  },
+  {
+    "command": [
+      "go",
+      "build",
+      "-o",
+      "../.local/industry-map-exhibition.exe",
+      "."
+    ],
+    "cwd": "server",
+    "exit_code": 0,
+    "elapsed_seconds": 0.75,
+    "output_file": "industry-map-go-build.txt",
+    "output_bytes": 0
+  }
+]

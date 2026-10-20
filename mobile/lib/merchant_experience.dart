@@ -199,14 +199,17 @@ class PromotionalProfileEditor extends StatelessWidget {
 }
 
 String showroomShareURL(String canonical, String base) {
-  final resolved = Uri.parse(base).resolve(canonical);
-  return resolved
-      .replace(query: null, fragment: null)
-      .toString()
-      .split('?')
-      .first
-      .split('#')
-      .first;
+  if (RegExp(r'[\\\x00-\x20]').hasMatch(canonical)) {
+    throw ApiFailure('invalid_request');
+  }
+  final resolved = Uri.tryParse(base)?.resolve(canonical);
+  if (resolved == null ||
+      !['http', 'https'].contains(resolved.scheme) ||
+      resolved.host.isEmpty ||
+      resolved.userInfo.isNotEmpty) {
+    throw ApiFailure('invalid_request');
+  }
+  return resolved.toString().split('?').first.split('#').first;
 }
 
 String showroomAddressScope(String url) {

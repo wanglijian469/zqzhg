@@ -99,6 +99,9 @@ String fieldIssueText(AppModel m, Json issue) {
         'category_or_keywords': zh
             ? '请选择分类或填写关键词'
             : 'Choose a category or enter keywords',
+        'already_used': zh
+            ? '此登录账号已使用，请更换'
+            : 'This account name is already used',
         'category_unavailable': zh
             ? '此分类不可选，请更换'
             : 'Choose an available category',
@@ -165,11 +168,6 @@ Map<String, Json> validateFormData(
       (data['wechat'] ?? '').toString().trim().isEmpty) {
     add('phone', 'contact_required');
     add('wechat', 'contact_required');
-  }
-  if (kind == 'product' &&
-      (data['category_id'] ?? 0) == 0 &&
-      (data['keywords'] ?? '').toString().trim().isEmpty) {
-    add('category_id', 'category_or_keywords');
   }
   final p = asMap(data['company_profile'] ?? {});
   final contacts = rows(p['contacts']);
@@ -281,8 +279,8 @@ class NativeJoinGuide extends StatelessWidget {
       ),
       child: Text(
         m.language == 'zh'
-            ? '填写资料 → 登录并保存 → 提交审核 → 公开展示\n本机草稿仅在此设备；云端保存后可在网站和 App 继续编辑，审核通过后才对外展示。'
-            : 'Enter details → Sign in and save → Submit → Public showroom\nLocal drafts stay on this device. Cloud drafts work on web and app; review is required for publication.',
+            ? '注册账号 → 完善企业资料 → 提交审核 → 公开展示\n本机草稿仅在此设备；云端保存后可在网站和 App 继续编辑，审核通过后才对外展示。'
+            : 'Create account → Complete profile → Submit → Public showroom\nLocal drafts stay on this device. Cloud drafts work on web and app; review is required for publication.',
         style: const TextStyle(fontSize: 13, height: 1.8),
       ),
     );
@@ -292,6 +290,7 @@ class NativeJoinGuide extends StatelessWidget {
 class NativeCategoryPicker extends StatefulWidget {
   final int value;
   final String kind;
+  final int? hallID;
   final bool enabled;
   final ValueChanged<int> onChanged;
   final Json? issue;
@@ -299,6 +298,7 @@ class NativeCategoryPicker extends StatefulWidget {
     super.key,
     required this.value,
     this.kind = 'vendor',
+    this.hallID,
     required this.enabled,
     required this.onChanged,
     this.issue,
@@ -421,6 +421,7 @@ class _NativeCategoryPickerState extends State<NativeCategoryPicker> {
                               'name': name.text,
                               'name_en': en.text,
                               'parent_id': parent,
+                              'hall_id': widget.hallID ?? m.activeHall.id,
                             },
                           ),
                         );
@@ -455,11 +456,26 @@ class _NativeCategoryPickerState extends State<NativeCategoryPicker> {
     final m = ModelScope.of(context);
     return AsyncPane(
       identity:
-          '${m.baseUrl}:category-picker:${m.scope}:${m.token.isNotEmpty}:$version',
-      load: () =>
-          m.api(m.token.isEmpty ? '/public/taxonomy' : '/merchant/taxonomy'),
+          '${m.baseUrl}:category-picker:${m.scope}:${widget.hallID ?? m.activeHall.id}:${m.token.isNotEmpty}:$version',
+      load: () {
+        final hall = m.availableHalls
+            .where((h) => h.id == (widget.hallID ?? m.activeHall.id))
+            .firstOrNull;
+        return m.api(
+          (m.token.isEmpty ? '/public/taxonomy' : '/merchant/taxonomy') +
+              (hall == null
+                  ? ''
+                  : '?hall=${Uri.encodeQueryComponent(hall.slug)}'),
+        );
+      },
       builder: (r) {
-        final cats = rows(r['categories']);
+        final cats = rows(r['categories'])
+            .where(
+              (cat) =>
+                  cat['hall_id'] == null ||
+                  cat['hall_id'] == (widget.hallID ?? m.activeHall.id),
+            )
+            .toList();
         final selected =
             rows(r['aliases'])
                 .where((a) => a['source_id'] == widget.value)

@@ -91,6 +91,7 @@ type Payload struct {
 	MediaIDs       []uint64        `json:"media_ids"`
 }
 type Revision struct {
+	AdministrativeSnapshot
 	ID           uint64     `json:"id"`
 	ContentID    uint64     `json:"content_id"`
 	BaseEpoch    uint64     `json:"base_epoch"`

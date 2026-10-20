@@ -1,0 +1,12 @@
+PASS local English layout join 1440x900
+PASS local English layout merchant/login 1440x900
+PASS local English layout join 1366x768
+PASS local English layout merchant/login 1366x768
+PASS local English layout join 390x844
+PASS local English layout merchant/login 390x844
+PASS local English layout join 360x640
+PASS local English layout merchant/login 360x640
+PASS local English layout join 844x390
+PASS local English layout merchant/login 844x390
+PASS local outline retained {"total":9,"preview":{"enabled":true,"source":"DataV / 高德开放平台","source_terms":"https://help.aliyun.com/zh/datav/datav-7-0/user-guide/datav-geoatlas-widgets/","usage":"local-learning-only"}}
+PASS local service 6332, routes render and browser has no runtime errors; no account mutations sent

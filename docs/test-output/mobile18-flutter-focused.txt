@@ -1,0 +1,16 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_test.dart
+00:00 +0: Expanded optional fields keep their focus while typing
+00:01 +1: Region choice commits a city and never invents a district or saves just its province
+00:01 +2: Product categories follow its company hall rather than the public hall
+00:01 +3: Image order and cover changes persist without deleting media
+00:02 +4: Newly registered companies restore guest text and only clear it after cloud saving
+00:02 +5: Capabilities distinguish explicit absence from network failure and evict failed requests
+00:02 +6: A delayed capability result from a previous server is rejected
+00:02 +7: Name-only product validation and suggestions never add invented values
+00:02 +8: Polygon holes, multiple polygons and projected proportions are preserved
+00:02 +9: Unapproved resources never download geometry; verified files cache and repair corrupted bytes
+00:02 +10: Registration validates focus, independent visibility, reset and single uncertain request
+00:03 +11: A name-only product saves once, stays in the same editor and resumes its cloud ID
+00:04 +12: Old-server name-only save is explained without inventing a category
+00:04 +13: Map counts and region navigation work without claiming boundary completion
+00:04 +14: All tests passed!

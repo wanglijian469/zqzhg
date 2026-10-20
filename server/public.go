@@ -168,20 +168,27 @@ func publicPage(c *gin.Context, size int) (int, int) {
 	}
 	return p, n
 }
+func (a *App) filterVendors(c *gin.Context, q *gorm.DB) *gorm.DB {
+	productMatch := "SELECT 1 FROM contents p JOIN revisions pr ON pr.id=p.published_revision_id AND pr.status='approved' WHERE p.vendor_id=contents.id AND p.hall_id=contents.hall_id AND p.kind='product' AND p.visible=1"
+	if strings.TrimSpace(c.Query("q")) != "" {
+		k := keyword(c)
+		q = q.Where("("+specKeywordCondition("r")+" OR EXISTS ("+productMatch+" AND "+specKeywordCondition("pr")+"))", k, k, k, k, k, k, k, k, k, k)
+	}
+	if ids := a.categoryIDs(c.Query("category_id")); c.Query("category_id") != "" {
+		if len(ids) == 0 {
+			return q.Where("1=0")
+		}
+		q = q.Where("(r.category_id IN ? OR EXISTS ("+productMatch+" AND pr.category_id IN ?))", ids, ids)
+	}
+	return q
+}
 func (a *App) searchVendors(c *gin.Context) {
 	p, n := publicPage(c, 20)
 	q, ok := a.hallQuery(c, a.publicQuery("vendor"))
 	if !ok {
 		return
 	}
-	productMatch := "SELECT 1 FROM contents p JOIN revisions pr ON pr.id=p.published_revision_id AND pr.status='approved' WHERE p.vendor_id=contents.id AND p.hall_id=contents.hall_id AND p.kind='product' AND p.visible=1"
-	if strings.TrimSpace(c.Query("q")) != "" {
-		k := keyword(c)
-		q = q.Where("("+specKeywordCondition("r")+" OR EXISTS ("+productMatch+" AND "+specKeywordCondition("pr")+"))", k, k, k, k, k, k, k, k, k, k)
-	}
-	if ids := a.categoryIDs(c.Query("category_id")); len(ids) > 0 {
-		q = q.Where("(r.category_id IN ? OR EXISTS ("+productMatch+" AND pr.category_id IN ?))", ids, ids)
-	}
+	q = a.filterVendors(c, q)
 	if region := c.Query("region_id"); region != "" {
 		q = q.Where("r.region_id = ?", positiveFilterID(region))
 	}

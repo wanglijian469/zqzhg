@@ -1,0 +1,3 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart
+00:00 +0: Native entry, company, product stages and map layout matrix
+00:23 +1: All tests passed!

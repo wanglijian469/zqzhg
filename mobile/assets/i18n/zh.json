@@ -465,5 +465,6 @@
   "copyPhone": "复制电话",
   "pause": "暂停",
   "copyright": "© 2026 河北企元数智科技有限公司 版权所有",
-  "technicalSupport": "技术支持：河北企元数智科技有限公司"
+  "technicalSupport": "技术支持：河北企元数智科技有限公司",
+  "mobileUpgradeRequired": "当前服务器尚未支持此功能，请升级配套服务或切换到本地验收服务。"
 }

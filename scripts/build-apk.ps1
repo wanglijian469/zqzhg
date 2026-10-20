@@ -1,4 +1,4 @@
-param([string]$ApiBaseUrl = 'http://39.97.250.244:8089')
+param([string]$ApiBaseUrl = 'http://39.97.250.244:8089', [switch]$Preview)
 . "$PSScriptRoot/flutter-env.ps1"
 $existingApk = Join-Path $taskRoot 'delivery/android/dalunongji.apk'
 $apkSigner = Join-Path $env:ANDROID_HOME 'build-tools/36.0.0/apksigner.bat'
@@ -42,6 +42,14 @@ $keyProperties = "storePassword=$($signing.password)`nkeyPassword=$($signing.pas
 [IO.File]::WriteAllText((Join-Path $taskRoot 'mobile/android/key.properties'), $keyProperties)
 Push-Location (Join-Path $taskRoot 'mobile')
 try {
+    $taskBuildSources = @{}
+    foreach ($taskSourceDirectory in @('lib','assets','android/app/src')) {
+        Get-ChildItem -LiteralPath $taskSourceDirectory -Recurse -File | ForEach-Object { $taskBuildSources[$_.FullName] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash }
+    }
+    foreach ($taskSourceFile in @('pubspec.yaml','pubspec.lock','android/app/build.gradle.kts')) {
+        $taskResolvedSource = (Resolve-Path -LiteralPath $taskSourceFile).Path
+        $taskBuildSources[$taskResolvedSource] = (Get-FileHash -LiteralPath $taskResolvedSource -Algorithm SHA256).Hash
+    }
     $buildStarted = Get-Date
     & $taskFlutter build apk --release --no-pub "--dart-define=API_BASE_URL=$ApiBaseUrl"
     if ($LASTEXITCODE -ne 0) {
@@ -58,9 +66,32 @@ try {
         ForEach-Object { Get-Item -LiteralPath (Join-Path $taskRoot $_) -ErrorAction SilentlyContinue } |
         Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
     if (-not $apkSource -or (Get-Item -LiteralPath $apkSource).LastWriteTime -lt $buildStarted) { throw 'No newly built APK was found; refusing to publish an old artifact.' }
+    foreach ($taskSource in $taskBuildSources.GetEnumerator()) {
+        if ((Get-FileHash -LiteralPath $taskSource.Key -Algorithm SHA256).Hash -ne $taskSource.Value) { throw 'App sources changed while building. Rebuild before publishing the acceptance APK.' }
+    }
     $certificate = Get-ApkCertificate $apkSource
     if ($expectedCertificate -and $certificate -ne $expectedCertificate) { throw 'Signing certificate changed; refusing to replace downloads.' }
     $version = [regex]::Match((Get-Content (Join-Path $taskRoot 'mobile/pubspec.yaml') -Raw), '(?m)^version:\s*(\S+)').Groups[1].Value
+    if ($version.Contains('-') -and -not $Preview) { throw 'Prerelease APKs require -Preview; the stable download must not be replaced.' }
+    $taskVersionParts = $version.Split('+')
+    if ($taskVersionParts.Length -ne 2) { throw 'pubspec version must include a build number.' }
+    $taskBadging = & (Join-Path $env:ANDROID_HOME 'build-tools/36.0.0/aapt.exe') dump badging $apkSource 2>&1
+    if ($LASTEXITCODE -ne 0) { throw 'APK metadata verification failed.' }
+    $taskMetadata = $taskBadging -join "`n"
+    if (-not $taskMetadata.Contains("name='com.zqzt.dalunongji'") -or -not $taskMetadata.Contains("versionName='$($taskVersionParts[0])'") -or -not $taskMetadata.Contains("versionCode='$($taskVersionParts[1])'")) { throw 'APK package or version differs from pubspec.' }
+    if ($Preview) {
+        $previewDirectories = @('delivery/android-preview','web/public/downloads/previews','web/dist/downloads/previews')
+        foreach ($previewOutput in $previewDirectories) {
+            $previewDirectory = Join-Path $taskRoot $previewOutput
+            New-Item -ItemType Directory -Path $previewDirectory -Force | Out-Null
+            Copy-Item -LiteralPath $apkSource -Destination (Join-Path $previewDirectory "dalunongji-$version.apk") -Force
+        }
+        $stableHash = (Get-FileHash -LiteralPath $existingApk -Algorithm SHA256).Hash.ToLowerInvariant()
+        $receipt = @{version=$version;sha256=(Get-FileHash -LiteralPath $apkSource -Algorithm SHA256).Hash.ToLowerInvariant();certificateSHA256=$certificate;signingMatchesPrevious=($certificate -eq $expectedCertificate);stableSHA256=$stableHash;apiBaseUrl=$ApiBaseUrl;productionDeployed=$false;deviceValidation=$false}
+        $receipt | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskRoot '.local/android-preview-verification.json') -Encoding utf8
+        Write-Output "Acceptance APK $version built separately; stable APK retained; certificate SHA-256: $certificate"
+        return
+    }
     if ($expectedCertificate) {
         $oldHash = (Get-FileHash $existingApk -Algorithm SHA256).Hash.ToLowerInvariant()
         $archive = Join-Path $taskRoot 'delivery/android/archive'

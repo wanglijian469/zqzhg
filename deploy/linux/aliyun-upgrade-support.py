@@ -65,7 +65,7 @@ def tool(cfg,name):
 def db_args(cfg):
     return ['--no-defaults','--host='+cfg.get('DB_HOST','127.0.0.1'),'--port='+cfg.get('DB_PORT','3306'),'--user='+cfg.get('DB_USER','root')]
 
-def backup(env_file, install, directory):
+def backup(env_file, install, directory, max_schema=15):
     cfg,info=context(env_file,install)
     directory=Path(directory).resolve()
     for parent in [Path(info['media']),Path(info['operations']),Path(info['web']),Path(info['release'])]:
@@ -80,7 +80,7 @@ def backup(env_file, install, directory):
     common=db_args(cfg)
     schema=subprocess.run([client,*common,'--batch','--skip-column-names',info['database'],'--execute=SELECT COALESCE(MAX(version),0) FROM schema_migrations'],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,universal_newlines=True)
     if schema.returncode or not schema.stdout.strip().isdigit(): raise ValueError('Cannot read existing schema version; current service can be restarted unchanged')
-    if int(schema.stdout.strip())>15: raise ValueError('Database is newer than this build; refusing downgrade')
+    if int(schema.stdout.strip())>max_schema: raise ValueError('Database is newer than this build; refusing downgrade')
     help_text=subprocess.run([dump,'--no-defaults','--help'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,universal_newlines=True).stdout
     flags=['--single-transaction','--skip-lock-tables','--hex-blob','--default-character-set=utf8mb4']
     for flag,feature in [('--no-tablespaces','no-tablespaces'),('--column-statistics=0','column-statistics'),('--set-gtid-purged=OFF','set-gtid-purged')]:
@@ -109,11 +109,12 @@ def backup(env_file, install, directory):
     return info
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('mode',choices=['inspect','backup']);parser.add_argument('--env-file',required=True);parser.add_argument('--install-dir',required=True);parser.add_argument('--output')
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('mode',choices=['inspect','backup']);parser.add_argument('--env-file',required=True);parser.add_argument('--install-dir',required=True);parser.add_argument('--output');parser.add_argument('--max-schema',type=int,default=15)
     args=parser.parse_args()
     if args.mode=='backup':
         if not args.output: parser.error('--output is required')
-        info=backup(args.env_file,args.install_dir,args.output)
+        if args.max_schema<1: parser.error('--max-schema must be positive')
+        info=backup(args.env_file,args.install_dir,args.output,args.max_schema)
     else: _,info=context(args.env_file,args.install_dir)
     print(json.dumps(info,ensure_ascii=False))
 if __name__=='__main__':

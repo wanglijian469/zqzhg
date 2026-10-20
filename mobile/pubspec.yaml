@@ -1,7 +1,7 @@
 name: dalunongji
 description: 中企展馆高端企业云展厅
 publish_to: none
-version: 1.7.0+29
+version: 1.8.0-rc.1+30
 environment:
   sdk: '>=3.10.0 <4.0.0'
 dependencies:
@@ -10,6 +10,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   qr: ^4.0.0
+  crypto: ^3.0.6
   http: ^1.5.0
   shared_preferences: ^2.5.3
   image_picker: ^1.2.0

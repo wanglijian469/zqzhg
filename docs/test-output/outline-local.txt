@@ -1,0 +1,1 @@
+{"status":"pass","page_status":200,"public_vendors":9,"hebei":8,"source_features":35,"statistical_regions":31,"drilldown":["13","1305","130528"],"forwarded_request_status":404,"usage":"local-learning-only"}

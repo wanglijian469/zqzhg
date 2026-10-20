@@ -227,6 +227,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
       appBar: appBar(
         context,
         m.t(widget.kind == 'product' ? 'navProducts' : 'navManufacturers'),
+        extraActions:[if(widget.kind=='vendor')IconButton(tooltip:syncText(context,'厂商地图','Manufacturer map'),onPressed:()=>push(context,const NativeIndustryMapScreen()),icon:const Icon(Icons.map_outlined))],
       ),
       body: SafeArea(
         top: false,

@@ -152,7 +152,7 @@ func guardKind(path string) string {
 	}
 	p := strings.TrimPrefix(path, "/api/v1/public")
 	if p != path {
-		if p == "/vendors" || p == "/products" || p == "/home" || p == "/resources" || p == "/favorites/resolve" || strings.HasSuffix(p, "/resources") {
+		if p == "/industry-map/regions" || p == "/industry-map/vendors" || p == "/vendors" || p == "/products" || p == "/home" || p == "/resources" || p == "/favorites/resolve" || strings.HasSuffix(p, "/resources") {
 			return "list"
 		}
 		if strings.HasPrefix(p, "/vendors/") || strings.HasPrefix(p, "/products/") || strings.HasPrefix(p, "/showrooms/") || strings.HasPrefix(p, "/resources/") {
@@ -160,7 +160,7 @@ func guardKind(path string) string {
 		}
 		return ""
 	}
-	if path == "/" || path == "/browse" || path == "/browse/products" {
+	if path == "/regions" || path == "/" || path == "/browse" || path == "/browse/products" {
 		return "list"
 	}
 	if strings.HasPrefix(path, "/v/") || strings.HasPrefix(path, "/vendors/") || strings.HasPrefix(path, "/products/") {

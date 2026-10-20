@@ -10,6 +10,7 @@ import (
 	"image/png"
 	"net/http/httptest"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 	"time"
@@ -58,6 +59,16 @@ func TestProductV22BrowserHarness(t *testing.T) {
 	blob, _ := json.Marshal(map[string]any{"base": srv.URL, "token": merchant, "account_id": merchantAccount.ID, "admin_token": admin, "product_id": product["id"], "media_ids": mids})
 	if e := os.WriteFile(file, blob, 0600); e != nil {
 		t.Fatal(e)
+	}
+	if os.Getenv("RUN_AUTOMATED_UPGRADE_BROWSER") == "1" {
+		command := exec.CommandContext(t.Context(), "node", filepath.Join(root, "scripts", "verify-product-v22.cjs"))
+		command.Dir = root
+		output, err := command.CombinedOutput()
+		t.Log(string(output))
+		if err != nil {
+			t.Fatal(err)
+		}
+		return
 	}
 	deadline := time.After(12 * time.Minute)
 	tick := time.NewTicker(time.Second)

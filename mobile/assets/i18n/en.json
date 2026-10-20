@@ -465,5 +465,6 @@
   "copyPhone": "Copy phone",
   "pause": "Pause",
   "copyright": "© 2026 Hebei Qiyuan Digital Intelligence Technology Co., Ltd.",
-  "technicalSupport": "Technical support: Hebei Qiyuan Digital Intelligence Technology Co., Ltd."
+  "technicalSupport": "Technical support: Hebei Qiyuan Digital Intelligence Technology Co., Ltd.",
+  "mobileUpgradeRequired": "This server does not support this feature. Upgrade the companion server or switch to the local acceptance server."
 }

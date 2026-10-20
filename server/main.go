@@ -25,7 +25,11 @@ import (
 //go:embed migrations/*.sql
 var migrations embed.FS
 
-type Config struct{ Env, Addr, MediaDir, WebDir, CORS, SMSProvider, PublicBaseURL string }
+type Config struct {
+	Env, Addr, MediaDir, WebDir, CORS, SMSProvider, PublicBaseURL string
+	MapPreviewEnabled                                             bool
+	MapPreviewDir                                                 string
+}
 type App struct {
 	uploadMu             sync.Mutex
 	DB                   *gorm.DB
@@ -38,6 +42,8 @@ type App struct {
 	guard                *publicGuard
 	operationsOnce       sync.Once
 	operationsRuntime    *OperationsRuntime
+	mapPreviewMu         sync.Mutex
+	mapPreviewClient     *http.Client
 }
 
 func env(key, fallback string) string {
@@ -149,6 +155,11 @@ func migrate(db *gorm.DB) error {
 				}
 			}
 		}
+		if version == 16 {
+			if e = backfillAdministrativeSnapshots(db); e != nil {
+				return e
+			}
+		}
 		if e = db.Exec("INSERT INTO schema_migrations(version,applied_at) VALUES(?,UTC_TIMESTAMP(3))", version).Error; e != nil {
 			return e
 		}
@@ -184,6 +195,8 @@ func seed(db *gorm.DB) error {
 func main() {
 	loadEnv()
 	cfg := Config{Env: env("APP_ENV", "development"), Addr: env("HTTP_ADDR", "0.0.0.0:8080"), MediaDir: env("MEDIA_DIR", "./data/media"), WebDir: env("WEB_DIR", "../web/dist"), CORS: env("CORS_ORIGIN", "http://localhost:5173"), SMSProvider: env("SMS_PROVIDER", "development"), PublicBaseURL: strings.TrimRight(env("PUBLIC_BASE_URL", ""), "/")}
+	cfg.MapPreviewEnabled = env("MAP_PREVIEW_ENABLED", "false") == "true"
+	cfg.MapPreviewDir = env("MAP_PREVIEW_DIR", "../.local/map-preview")
 	if e := validateSMSMode(cfg.Env, cfg.SMSProvider); e != nil {
 		log.Fatal(e)
 	}
@@ -299,6 +312,8 @@ func (a *App) router() *gin.Engine {
 	r.Use(a.publicProtection())
 	r.GET("/robots.txt", func(c *gin.Context) { c.Data(200, "text/plain; charset=utf-8", []byte(robotsPolicy())) })
 	api := r.Group("/api/v1")
+	api.GET("/dev/map-preview/config", a.mapPreviewConfiguration)
+	api.GET("/dev/map-preview/regions", a.mapPreviewRegions)
 	api.GET("/public/app", a.publicApp)
 	api.GET("/health", func(c *gin.Context) {
 		sqlDB, e := a.DB.DB()
@@ -321,6 +336,8 @@ func (a *App) router() *gin.Engine {
 	pub := api.Group("/public")
 	pub.GET("/showrooms/:slug", a.publicShowroom)
 	pub.GET("/administrative-regions", a.administrativeRegions)
+	pub.GET("/industry-map/regions", a.industryMapRegions)
+	pub.GET("/industry-map/vendors", a.industryMapVendors)
 	pub.GET("/halls", a.publicHalls)
 	pub.GET("/home", a.home)
 	pub.GET("/taxonomy", a.taxonomy)

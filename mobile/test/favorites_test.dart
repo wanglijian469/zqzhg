@@ -449,7 +449,7 @@ void main() {
       expect(find.text(m.t('visitorMerchantHelp')), findsOneWidget);
       expect(find.byType(MerchantWorkspace), findsNothing);
       await nav.tap(tester, find.widgetWithText(TextButton, '厂商账号登录'));
-      await tester.enterText(find.widgetWithText(TextField, '账号'), '厂商账号');
+      await tester.enterText(find.widgetWithText(TextField, '公司登录账号'), '厂商账号');
       await tester.enterText(
         find.widgetWithText(TextField, '密码'),
         'Manufacturer-Pass-2026!',

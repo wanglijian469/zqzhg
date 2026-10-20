@@ -1,0 +1,150 @@
+{
+  "readonly": true,
+  "deviceTested": false,
+  "productionDeployed": false,
+  "checks": [
+    "three public capability flags",
+    "LAN health200; preview allowed on loopback and refused on LAN",
+    "downloaded acceptance/stable APK hashes; formal manifest remains empty",
+    "local learning outline actual clicks Hebei/Xingtai/Ningjin and history; counts match API (not formal map acceptance); viewport repeats reuse successful live GETs to respect rate limits",
+    "business public counts/IDs unchanged; all browser writes intercepted"
+  ],
+  "layouts": [
+    {
+      "width": 1440,
+      "height": 900,
+      "path": "/join",
+      "passed": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "path": "/merchant/login",
+      "passed": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "path": "/regions",
+      "passed": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "path": "/app",
+      "passed": true
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "path": "/join",
+      "passed": true
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "path": "/merchant/login",
+      "passed": true
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "path": "/regions",
+      "passed": true
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "path": "/app",
+      "passed": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "path": "/join",
+      "passed": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "path": "/merchant/login",
+      "passed": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "path": "/regions",
+      "passed": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "path": "/app",
+      "passed": true
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "path": "/join",
+      "passed": true
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "path": "/merchant/login",
+      "passed": true
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "path": "/regions",
+      "passed": true
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "path": "/app",
+      "passed": true
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "path": "/join",
+      "passed": true
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "path": "/merchant/login",
+      "passed": true
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "path": "/regions",
+      "passed": true
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "path": "/app",
+      "passed": true
+    }
+  ],
+  "browserErrors": [],
+  "businessAfter": {
+    "vendors": 9,
+    "vendorIDs": [
+      1,
+      21,
+      27,
+      37,
+      39,
+      44,
+      48,
+      51,
+      53
+    ],
+    "products": 45
+  }
+}

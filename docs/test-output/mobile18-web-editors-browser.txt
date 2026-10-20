@@ -1,0 +1,1609 @@
+=== RUN   TestCompanyOnboardingBrowserHarness
+[GIN] 2026/10/20 - 12:40:03 | 201 | 179.64ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/20 - 12:40:03 | 200 |   6.28ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/20 - 12:40:03 | 200 |   8.26ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+
+2026/10/20 12:40:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.977ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:04 | 200 |   1.97ms |       127.0.0.1 | GET      "/join"
+
+2026/10/20 12:40:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.043ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.577ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:04 | 200 | 283.33ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:04 | 200 | 295.34ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:04 | 200 |    956µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.566ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:05 | 201 |  56.48ms |       127.0.0.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/20 - 12:40:05 | 200 |   1.57ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:05 | 200 |   3.12ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:05 | 200 |  10.22ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:05 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/public.go:335 [35;1mrecord not found
+[0m[33m[1.688ms] [34;1m[rows:0][0m SELECT * FROM `contents` WHERE kind='vendor' AND owner_id=4 ORDER BY `contents`.`id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:05 | 200 |  15.56ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:05 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 12:40:05 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+[GIN] 2026/10/20 - 12:40:05 | 200 |   1.75ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.287ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/administrative_regions.go:135 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `regions` WHERE administrative_code='1305' ORDER BY `regions`.`id` LIMIT 1 FOR UPDATE
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/administrative_regions.go:142 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `regions` WHERE name='河北省 邢台市' AND administrative_code IS NULL ORDER BY id,`regions`.`id` LIMIT 1 FOR UPDATE
+[GIN] 2026/10/20 - 12:40:05 | 201 |   8.24ms |       127.0.0.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/20 - 12:40:05 | 200 |   2.66ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=1"
+[GIN] 2026/10/20 - 12:40:05 | 200 |   4.75ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=1"
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.733ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/administrative_regions.go:135 [35;1mrecord not found
+[0m[33m[0.603ms] [34;1m[rows:0][0m SELECT * FROM `regions` WHERE administrative_code='130528' ORDER BY `regions`.`id` LIMIT 1 FOR UPDATE
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/administrative_regions.go:142 [35;1mrecord not found
+[0m[33m[0.692ms] [34;1m[rows:0][0m SELECT * FROM `regions` WHERE name='河北省 邢台市 宁晋县' AND administrative_code IS NULL ORDER BY id,`regions`.`id` LIMIT 1 FOR UPDATE
+[GIN] 2026/10/20 - 12:40:05 | 200 |   9.56ms |       127.0.0.1 | PUT      "/api/v1/merchant/contents/2/draft"
+[GIN] 2026/10/20 - 12:40:05 | 200 |   1.71ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=2"
+[GIN] 2026/10/20 - 12:40:05 | 200 |   2.42ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=2"
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.596ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.663ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.529ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.117ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.001ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/storage_settings.go:179 [35;1mrecord not found
+[0m[33m[2.000ms] [34;1m[rows:0][0m SELECT * FROM `merchant_storage_quotas` WHERE account_id=4 ORDER BY `merchant_storage_quotas`.`account_id` LIMIT 1 FOR UPDATE
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.585ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.724ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:05 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.103ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.559ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.525ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.606ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.615ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 201 | 104.21ms |       127.0.0.1 | POST     "/api/v1/merchant/media"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.985ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/content.go:120 [35;1mrecord not found
+[0m[33m[0.778ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |  19.63ms |       127.0.0.1 | PUT      "/api/v1/merchant/contents/2/draft"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.558ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |  17.57ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.153ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |  18.59ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:06 | 200 |  10.94ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=3"
+[GIN] 2026/10/20 - 12:40:06 | 200 |  15.38ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=3"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.041ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |  28.45ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.565ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |  31.14ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   2.25ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/content.go:120 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   8.46ms |       127.0.0.1 | PUT      "/api/v1/merchant/contents/2/draft"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.523ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   1.96ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=4"
+[GIN] 2026/10/20 - 12:40:06 | 200 |    7.8ms |       127.0.0.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   5.59ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=4"
+[GIN] 2026/10/20 - 12:40:06 | 200 |    1.2ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   2.14ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=5"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   3.28ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=5"
+[GIN] 2026/10/20 - 12:40:06 | 200 |  10.22ms |       127.0.0.1 | POST     "/api/v1/admin/revisions/5/review"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   7.04ms |       127.0.0.1 | GET      "/api/v1/public/vendors?region_id=3&q=%E5%B7%A5%E4%BD%9C%E5%8F%B0%E6%B3%A8%E5%86%8C%E9%AA%8C%E6%94%B6%E4%BC%81%E4%B8%9A"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.031ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   2.03ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.534ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.532ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   1.62ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   2.13ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   2.21ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   3.36ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   2.77ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:06 | 200 |  525.7µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:06 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?code=130528"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   2.66ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.603ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.534ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   5.42ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   4.88ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   7.12ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   6.96ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:06 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 12:40:06 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.627ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/content.go:120 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   8.03ms |       127.0.0.1 | PUT      "/api/v1/merchant/contents/2/draft"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   5.73ms |       127.0.0.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   2.12ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=1"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   3.36ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=1"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.059ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   1.05ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   3.44ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=2"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   4.75ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=2"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |    2.1ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.348ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   3.37ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:06 | 200 |    1.7ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   2.23ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   3.51ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.591ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |    3.6ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   23.1µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:06 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?code=130528"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.096ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.550ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   5.42ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   3.68ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:06 | 200 |    4.2ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   5.45ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:06 | 200 |    5.3ms |       127.0.0.1 | GET      "/api/v1/public/vendors/2"
+[GIN] 2026/10/20 - 12:40:06 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.689ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   1.68ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.524ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |    2.1ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.708ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:06 | 200 |   1.22ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   1.33ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   3.66ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   7.43ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:06 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:06 | 200 |  536.3µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:06 | 200 |   7.34ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:07 | 200 |   4.64ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:08 | 200 |   1.05ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.380ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.062ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:08 | 200 |   2.28ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:08 | 200 |   4.76ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:08 | 200 |   1.56ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:08 | 200 |   3.62ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:08 | 200 |   5.31ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:08 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:08 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:08 | 200 |   4.88ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:08 | 200 |   1.75ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:08 | 200 |  526.8µs |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.535ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:08 | 200 |   1.05ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:08 | 200 |   1.59ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:08 | 200 |  532.1µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:08 | 200 |   2.11ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:08 | 200 |   4.22ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:08 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:08 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:08 | 200 |    4.5ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:08 | 200 |   2.23ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.564ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:09 | 200 |    1.1ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.538ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.042ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:09 | 200 |    2.1ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:09 | 200 |   1.56ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:09 | 200 |   1.14ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:09 | 200 |   3.38ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:09 | 200 |   5.03ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:09 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:09 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:09 | 200 |   5.94ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:09 | 200 |   3.19ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.598ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:09 | 200 |   1.13ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.540ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:09 | 200 |   3.17ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.031ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:09 | 200 |   1.57ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:09 | 200 |  691.5µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:09 | 200 |   3.59ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:09 | 200 |   6.29ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:09 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:09 | 200 |  537.6µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:09 | 200 |   6.07ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:10 | 200 |   5.74ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:10 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.989ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:10 | 200 |   1.86ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:10 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.532ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:10 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.345ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:10 | 200 |   3.06ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:10 | 200 |   2.54ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:10 | 200 |   1.09ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:10 | 200 |   2.72ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:10 | 200 |   4.34ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:10 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:10 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:10 | 200 |   5.97ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:10 | 200 |   3.48ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:10 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:10 | 200 |   1.04ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:10 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.519ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:10 | 200 |   2.05ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:10 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.623ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:10 | 200 |   1.14ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:11 | 200 |   1.23ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:11 | 200 |    2.4ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:11 | 200 |   3.53ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:11 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:11 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:11 | 200 |   3.55ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:11 | 200 |    1.9ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:11 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:11 | 200 |   1.04ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:11 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:11 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.554ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:11 | 200 |    1.6ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:11 | 200 |   1.08ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:11 | 200 |  535.4µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:11 | 200 |   2.65ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:11 | 200 |   3.81ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:11 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:11 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:11 | 200 |    3.8ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:11 | 200 |   2.56ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:11 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.654ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:11 | 200 |   1.17ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:11 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:12 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.521ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:12 | 200 |   1.04ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:12 | 200 |   1.57ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:12 | 200 |  531.4µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:12 | 200 |   2.66ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:12 | 200 |   4.06ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:12 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:12 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:12 | 200 |   4.54ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:12 | 200 |   2.72ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:13 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.503ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:13 | 200 |   1.05ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:13 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.523ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:13 | 200 |   1.58ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:13 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.580ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:13 | 200 |    1.1ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:13 | 200 |   1.04ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:13 | 200 |   3.31ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:13 | 200 |   5.13ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:13 | 200 |  580.7µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:13 | 200 |   1.06ms |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:13 | 200 |   5.52ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:13 | 200 |    2.1ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:13 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:13 | 200 |   1.05ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:13 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.535ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:13 | 200 |   1.58ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:13 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.693ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:13 | 200 |   1.72ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:13 | 200 |   1.06ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:13 | 200 |   2.65ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:13 | 200 |   3.21ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:13 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:13 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:13 | 200 |   3.59ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:13 | 200 |   3.39ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:14 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.565ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:14 | 200 |    1.1ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:14 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:14 | 200 |   2.11ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:14 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.675ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:14 | 200 |   1.73ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:14 | 200 |   1.07ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:14 | 200 |   2.33ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:14 | 200 |   4.11ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:14 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:14 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:14 | 200 |   9.29ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:14 | 200 |   3.72ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:14 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.529ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:14 | 200 |   1.05ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:14 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.089ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:14 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.534ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:14 | 200 |   1.56ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:14 | 200 |   3.34ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:14 | 200 |  508.6µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:14 | 200 |   3.66ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:14 | 200 |   7.43ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:14 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:14 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:14 | 200 |   7.07ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:15 | 200 |   3.27ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:15 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.664ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:15 | 200 |   1.77ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:15 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:15 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.786ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:15 | 200 |   2.34ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:15 | 200 |   1.85ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:15 | 200 |   1.14ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:15 | 200 |    3.4ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:15 | 200 |   5.84ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:15 | 200 |  629.7µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:15 | 200 |  510.5µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:15 | 200 |  12.41ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:15 | 200 |   2.24ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:16 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.673ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:16 | 200 |   1.72ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:16 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:16 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.061ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:16 | 200 |   2.11ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:16 | 200 |   2.11ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:16 | 200 |   1.03ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:16 | 200 |   2.76ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:16 | 200 |    4.8ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:16 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:16 | 200 |      1ms |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:16 | 200 |   6.35ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:16 | 200 |   4.29ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:16 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.189ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:16 | 200 |   1.18ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:16 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:16 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.731ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:16 | 200 |   2.31ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:16 | 200 |   2.84ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:17 | 200 |   1.94ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:17 | 200 |    5.1ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:17 | 200 |   7.75ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:17 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:17 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:17 | 200 |   7.66ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:17 | 200 |   3.03ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:17 | 200 |   1.05ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.682ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.066ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:17 | 200 |   2.84ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:17 | 200 |   2.15ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:17 | 200 |   1.13ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:17 | 200 |   2.39ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:17 | 200 |   3.63ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:17 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:17 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:17 | 200 |   4.72ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:17 | 200 |   1.69ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:18 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.752ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:18 | 200 |   1.28ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:18 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.554ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:18 | 200 |   2.11ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:18 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:18 | 200 |   1.06ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:18 | 200 |  530.3µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:18 | 200 |   2.65ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:18 | 200 |   4.36ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:18 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:18 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:18 | 200 |   4.95ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:18 | 200 |   2.25ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:18 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.683ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:18 | 200 |   1.18ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:18 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.566ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:18 | 200 |   2.14ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:18 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.548ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:18 | 200 |   1.56ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:18 | 200 |   1.33ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:18 | 200 |   3.22ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:18 | 200 |   5.36ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:18 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:18 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:18 | 200 |   4.12ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:19 | 200 |   3.49ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+
+2026/10/20 12:40:19 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.529ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:19 | 200 |   1.89ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 12:40:19 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.609ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:19 | 200 |   3.34ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:19 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.063ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:19 | 200 |    2.2ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:19 | 200 |   1.88ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:19 | 200 |   5.04ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:19 | 200 |   6.67ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:19 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 12:40:19 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%97%A7%E5%9C%B0%E5%8C%BA%E6%96%87%E5%AD%97%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"
+[GIN] 2026/10/20 - 12:40:19 | 200 |   7.01ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:19 | 200 |   3.16ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q="
+    company_onboarding_browser_test.go:62: {"checks":7,"layouts":40,"errors":[]}
+        
+
+2026/10/20 12:40:20 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[314.036ms] [33m[rows:36][35m DROP DATABASE `zqzt_exhibition_test_1792471201358797800`[0m
+--- PASS: TestCompanyOnboardingBrowserHarness (19.19s)
+=== RUN   TestProductV22BrowserHarness
+[GIN] 2026/10/20 - 12:40:22 | 201 |     17ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/20 - 12:40:22 | 200 |   7.55ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/20 - 12:40:22 | 200 |    9.4ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.629ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.757ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.069ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/storage_settings.go:179 [35;1mrecord not found
+[0m[33m[1.760ms] [34;1m[rows:0][0m SELECT * FROM `merchant_storage_quotas` WHERE account_id=2 ORDER BY `merchant_storage_quotas`.`account_id` LIMIT 1 FOR UPDATE
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.555ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.558ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.635ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.532ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.674ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:22 | 201 |  88.61ms |       192.0.2.1 | POST     "/api/v1/merchant/media"
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.557ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.644ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.694ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.979ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.538ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.597ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.152ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:22 | 201 |  79.79ms |       192.0.2.1 | POST     "/api/v1/merchant/media"
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/content.go:120 [35;1mrecord not found
+[0m[33m[1.010ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:22 [31;1mD:/workspace-main/codex-zqzt/server/content.go:120 [35;1mrecord not found
+[0m[33m[1.772ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:22 | 201 |  29.81ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+
+2026/10/20 12:40:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.150ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:24 | 200 |   2.76ms |       127.0.0.1 | GET      "/merchant/products/new"
+
+2026/10/20 12:40:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.247ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:24 | 200 |    4.3ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.816ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:24 | 200 |   3.45ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:24 | 200 |   9.62ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:24 | 200 |   9.94ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:24 | 200 |  21.91ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:24 | 200 |   9.63ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:24 | 200 |  16.81ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:24 | 200 |   20.6ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:24 | 200 |  24.71ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=product&page_size=1"
+
+2026/10/20 12:40:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[5.384ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:24 | 201 |  25.27ms |       127.0.0.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/20 - 12:40:24 | 200 |  13.09ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=3"
+[GIN] 2026/10/20 - 12:40:24 | 200 |  12.93ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=3"
+
+2026/10/20 12:40:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.223ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:25 | 200 |   4.69ms |       127.0.0.1 | GET      "/merchant/products/new"
+
+2026/10/20 12:40:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.384ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:25 | 200 |   4.31ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.662ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:25 | 200 |   4.84ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:25 | 200 |   3.57ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:25 | 200 |  10.71ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:25 | 200 |  10.45ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:25 | 200 |   7.69ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=3"
+[GIN] 2026/10/20 - 12:40:25 | 200 |    9.9ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=3"
+[GIN] 2026/10/20 - 12:40:25 | 200 |  12.55ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:25 | 200 |  14.91ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:25 | 200 |   18.9ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=product&page_size=1"
+
+2026/10/20 12:40:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.269ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:25 | 200 |  33.08ms |       127.0.0.1 | PUT      "/api/v1/merchant/contents/3/draft"
+
+2026/10/20 12:40:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.048ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:25 | 200 |  19.17ms |       127.0.0.1 | PUT      "/api/v1/merchant/contents/3/draft"
+
+2026/10/20 12:40:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.886ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:25 | 200 |  22.68ms |       127.0.0.1 | POST     "/api/v1/merchant/contents/3/submit"
+
+2026/10/20 12:40:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.894ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:25 | 200 |   3.89ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+[GIN] 2026/10/20 - 12:40:25 | 200 |  11.81ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=1"
+[GIN] 2026/10/20 - 12:40:25 | 200 |  17.36ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=1"
+
+2026/10/20 12:40:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.251ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:25 | 200 |    4.5ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[4.635ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:25 | 200 |      6ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:25 | 200 |   1.68ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:25 | 200 |   8.12ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:25 | 200 |   17.6ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:25 | 200 |  18.19ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:25 | 200 |  29.78ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:25 | 200 |  28.46ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:25 | 200 |  36.25ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:25 | 200 |   7.38ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:25 | 200 |   7.38ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:25 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.868ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:25 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.776ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:25 | 200 |  33.82ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:25 | 200 |  35.59ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:26 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.043ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:26 [31;1mD:/workspace-main/codex-zqzt/server/content.go:120 [35;1mrecord not found
+[0m[33m[1.307ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:26 [31;1mD:/workspace-main/codex-zqzt/server/content.go:120 [35;1mrecord not found
+[0m[33m[0.536ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:26 | 200 |  32.48ms |       127.0.0.1 | PUT      "/api/v1/merchant/contents/2/draft"
+[GIN] 2026/10/20 - 12:40:26 | 200 |   11.2ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+
+2026/10/20 12:40:26 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.215ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:26 | 200 |  15.94ms |       127.0.0.1 | GET      "/api/v1/media/1"
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[4.695ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[6.067ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.317ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.675ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.999ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.997ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.002ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.999ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.006ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.440ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.366ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.756ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:27 | 201 | 180.42ms |       127.0.0.1 | POST     "/api/v1/merchant/media"
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.058ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/content.go:120 [35;1mrecord not found
+[0m[33m[1.179ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/content.go:120 [35;1mrecord not found
+[0m[33m[1.054ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:27 [31;1mD:/workspace-main/codex-zqzt/server/content.go:120 [35;1mrecord not found
+[0m[33m[0.535ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:27 | 200 |  36.98ms |       127.0.0.1 | PUT      "/api/v1/merchant/contents/2/draft"
+[GIN] 2026/10/20 - 12:40:27 | 200 |  16.55ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+
+2026/10/20 12:40:28 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[7.987ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:28 | 200 |   9.58ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:28 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[6.323ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:28 | 200 |   7.59ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+
+2026/10/20 12:40:28 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[8.490ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:28 | 200 |  11.03ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:28 | 200 |   2.74ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:28 | 200 |  18.67ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:28 | 200 |  17.66ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:28 | 200 |  28.07ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:28 | 200 |  13.27ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:28 | 200 |  17.04ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:28 | 200 |  19.45ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+
+2026/10/20 12:40:28 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.921ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:28 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[3.823ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:28 | 200 |  16.94ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:28 | 200 |  18.08ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:28 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.897ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:28 | 200 |  17.76ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+[GIN] 2026/10/20 - 12:40:28 | 200 |   7.37ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:28 | 200 |   9.42ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:29 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.280ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:29 | 200 |  19.99ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.670ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:29 | 200 |   3.62ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.187ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:29 | 200 |   3.49ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.160ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:29 | 200 |   2.29ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:29 | 200 |   1.89ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:29 | 200 |   8.44ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:29 | 200 |   7.89ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:29 | 200 |  11.53ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:29 | 200 |   7.81ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:29 | 200 |   7.83ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:29 | 200 |  10.55ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:30 | 200 |  14.42ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:30 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[5.130ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:30 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.582ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:30 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[9.880ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:30 | 200 |  41.97ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+[GIN] 2026/10/20 - 12:40:30 | 200 |   41.6ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:30 | 200 |  43.37ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:30 | 200 |  44.83ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:30 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.335ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:30 | 200 |  16.53ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:30 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.913ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:30 | 200 |   1.42ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:30 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.252ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:30 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.536ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:30 | 200 |   1.64ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:30 | 200 |   3.79ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:30 | 200 |   2.39ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:30 | 200 |  12.08ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:30 | 200 |   13.1ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:30 | 200 |  15.83ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:30 | 200 |  13.93ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:30 | 200 |   27.2ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:30 | 200 |  26.55ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:30 | 200 |    9.3ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:30 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.134ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:30 | 200 |  15.23ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+
+2026/10/20 12:40:30 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.376ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:30 | 200 |  19.09ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:30 | 200 |  20.03ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+
+2026/10/20 12:40:30 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[3.653ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:30 | 200 |  40.81ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:31 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[4.013ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:31 | 200 |  22.19ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:31 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.780ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:31 | 200 |      5ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:31 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.292ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:31 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.449ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:31 | 200 |   4.94ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:31 | 200 |   4.85ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:31 | 200 |  962.7µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:31 | 200 |  14.99ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:31 | 200 |   9.94ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:31 | 200 |   19.3ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:31 | 200 |  12.38ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:31 | 200 |  12.89ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:31 | 200 |  16.16ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:31 | 200 |   7.66ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:31 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.558ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:31 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.910ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:31 | 200 |  17.27ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+[GIN] 2026/10/20 - 12:40:31 | 200 |  20.62ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+[GIN] 2026/10/20 - 12:40:31 | 200 |  29.23ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:31 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[3.163ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:31 | 200 |  68.12ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+
+2026/10/20 12:40:31 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.617ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:31 | 200 |  47.78ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[5.188ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:32 | 200 |   5.18ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.423ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:32 | 200 |   4.27ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.521ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:32 | 200 |   4.52ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:32 | 200 |   1.31ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:32 | 200 |   6.53ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:32 | 200 |  14.44ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:32 | 200 |  17.17ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:32 | 200 |  21.22ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:32 | 200 |  23.95ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:32 | 200 |  21.48ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:32 | 200 |   7.48ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:32 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.220ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:32 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.993ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:32 | 200 |  17.39ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+[GIN] 2026/10/20 - 12:40:32 | 200 |  13.16ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+
+2026/10/20 12:40:32 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.488ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:32 | 200 |  16.92ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:32 | 200 |  18.29ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:32 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:32 | 200 |  13.56ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.242ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:32 | 200 |   1.78ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.212ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.159ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:32 | 200 |   2.86ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:32 | 200 |   6.75ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:33 | 200 |   2.07ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:33 | 200 |   4.71ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:33 | 200 |  10.29ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:33 | 200 |  14.11ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:33 | 200 |   7.81ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:33 | 200 |  10.27ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:33 | 200 |   24.3ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+
+2026/10/20 12:40:33 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.573ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:33 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.046ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:33 | 200 |  20.94ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:33 | 200 |  21.46ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+[GIN] 2026/10/20 - 12:40:33 | 200 |  22.28ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:33 | 200 |  31.93ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:33 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[3.655ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:33 | 200 |  43.25ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+
+2026/10/20 12:40:33 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[5.279ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:33 | 200 |  58.21ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.669ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:33 | 200 |   7.03ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[6.063ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:33 | 200 |   9.54ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[11.990ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:33 | 200 |  15.81ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:34 | 200 |   2.49ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:34 | 200 |  16.98ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:34 | 200 |   23.7ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:34 | 200 |  29.96ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:34 | 200 |  14.52ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:34 | 200 |  15.19ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:34 | 200 |  25.95ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:34 | 200 |  10.07ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:34 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.817ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:34 | 200 |  16.58ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+
+2026/10/20 12:40:34 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.364ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:34 | 200 |  26.13ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:34 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[3.625ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:34 | 200 |  31.99ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:34 | 200 |  32.48ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:34 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.650ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:34 | 200 |  24.06ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:34 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.437ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:34 | 200 |   1.98ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:34 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.102ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:34 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.839ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:34 | 200 |   3.94ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:34 | 200 |   3.09ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:34 | 200 |      4ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:34 | 200 |  18.88ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:34 | 200 |   22.1ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:34 | 200 |  26.97ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:35 | 200 |  10.25ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:35 | 200 |  11.84ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:35 | 200 |  12.66ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:35 | 200 |   6.38ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:35 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.587ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:35 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.110ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:35 | 200 |   6.85ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:35 | 200 |  16.83ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:35 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.113ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:35 | 200 |  16.13ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:35 | 200 |  15.84ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+
+2026/10/20 12:40:35 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.585ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:35 | 200 |  15.39ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.297ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:35 | 200 |   2.98ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.704ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:35 | 200 |   4.41ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.250ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:35 | 200 |   4.95ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:35 | 200 |   1.24ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:35 | 200 |   6.23ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:35 | 200 |   3.99ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:35 | 200 |   8.34ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:35 | 200 |  11.51ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:35 | 200 |  26.17ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:35 | 200 |  34.42ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:36 | 200 |   7.35ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:36 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.909ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:36 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[3.964ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:36 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[3.039ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:36 | 200 |  16.37ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:36 | 200 |  26.64ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+[GIN] 2026/10/20 - 12:40:36 | 200 |  20.53ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+[GIN] 2026/10/20 - 12:40:36 | 200 |  21.24ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:36 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.041ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:36 | 200 |  14.88ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:36 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.389ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:36 | 200 |   1.91ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:36 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.271ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:36 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.185ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:36 | 200 |   3.28ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:36 | 200 |   5.02ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:36 | 200 |   5.05ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:37 | 200 |   6.95ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:37 | 200 |  13.69ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:37 | 200 |  14.78ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:37 | 200 |   26.4ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:37 | 200 |  27.76ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:37 | 200 |  30.64ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:37 | 200 |   7.51ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:37 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.025ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:37 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.535ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:37 | 200 |  14.88ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:37 | 200 |  18.84ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+[GIN] 2026/10/20 - 12:40:37 | 200 |  16.99ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:37 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.531ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:37 | 200 |  72.32ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:37 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.203ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:37 | 200 |  32.64ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.544ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:37 | 200 |   4.08ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.895ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.895ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:37 | 200 |   3.38ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:37 | 200 |   5.67ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:37 | 200 |   1.46ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:37 | 200 |  11.67ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:37 | 200 |  14.33ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:37 | 200 |  13.68ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:37 | 200 |  23.74ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:37 | 200 |  23.74ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:37 | 200 |  44.54ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:38 | 200 |   14.5ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:38 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.580ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:38 | 200 |  25.35ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:38 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[4.280ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:38 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.381ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:38 | 200 |  31.73ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+[GIN] 2026/10/20 - 12:40:38 | 200 |  32.24ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:38 | 200 |  34.03ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:38 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[3.977ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:38 | 200 | 103.12ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:38 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[33.137ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:38 | 200 |  34.49ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:38 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[4.337ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:38 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.881ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:38 | 200 |   6.57ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:38 | 200 |   5.11ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:38 | 200 |   2.05ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:38 | 200 |  11.09ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:38 | 200 |  12.63ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:38 | 200 |  17.96ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:39 | 200 |   9.48ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:39 | 200 |   9.48ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:39 | 200 |  11.21ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:39 | 200 |   7.63ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:39 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.109ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:39 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[3.127ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:39 | 200 |  28.32ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+[GIN] 2026/10/20 - 12:40:39 | 200 |   26.7ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+
+2026/10/20 12:40:39 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.249ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:39 | 200 |  34.43ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+[GIN] 2026/10/20 - 12:40:39 | 200 |  30.03ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:39 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.952ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:39 | 200 |  14.04ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:39 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.206ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:39 | 200 |   3.71ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:39 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.752ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:39 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.150ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:39 | 200 |    5.6ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:39 | 200 |   9.43ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:39 | 200 |   1.54ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:39 | 200 |   6.01ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:39 | 200 |   5.69ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:39 | 200 |  10.62ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:39 | 200 |   9.24ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:39 | 200 |  10.94ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:39 | 200 |  11.58ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:40 | 200 |   11.2ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:40 | 200 |   11.6ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:40 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[4.545ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:40 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.652ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:40 | 200 |  25.03ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:40 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[6.244ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:40 | 200 |  25.86ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+[GIN] 2026/10/20 - 12:40:40 | 200 |  27.02ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+
+2026/10/20 12:40:40 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.277ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:40 | 200 |  13.29ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:40 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.624ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:40 | 200 |   2.35ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:40 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.742ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:40 | 200 |   3.11ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:40 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.611ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:40 | 200 |   4.77ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:40 | 200 |   6.21ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:40 | 200 |   9.34ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:40 | 200 |  13.09ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:40 | 200 |  10.68ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:40 | 200 |   8.01ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:40 | 200 |   8.01ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:40 | 200 |   9.02ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:41 | 200 |  18.85ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:41 | 200 |  18.32ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:41 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.605ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:41 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.507ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:41 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[3.210ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:41 | 200 |  30.54ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:41 | 200 |  32.57ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+[GIN] 2026/10/20 - 12:40:41 | 200 |  39.65ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:41 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.277ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:41 | 200 |  12.33ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.611ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:41 | 200 |   2.12ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.520ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.227ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:41 | 200 |   4.28ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:41 | 200 |   6.47ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:41 | 200 |      1ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:41 | 200 |   6.27ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:41 | 200 |  13.07ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:41 | 200 |   11.4ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:41 | 200 |  12.16ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:41 | 200 |  15.46ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:41 | 200 |  28.58ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:41 | 200 |  11.93ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:41 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.970ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:41 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.322ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:41 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.079ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:41 | 200 |  15.93ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:41 | 200 |  20.92ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+[GIN] 2026/10/20 - 12:40:41 | 200 |  19.91ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:41 | 200 |  20.42ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+
+2026/10/20 12:40:41 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.450ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:41 | 200 |   20.4ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:42 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.529ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:42 | 200 |   1.52ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:42 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.156ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:42 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.632ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:42 | 200 |   2.39ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:42 | 200 |   3.54ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:42 | 200 |   1.52ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:42 | 200 |   6.77ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:42 | 200 |   4.86ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:42 | 200 |   8.37ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:42 | 200 |   8.63ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:42 | 200 |   9.28ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:42 | 200 |  12.14ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:42 | 200 |  10.88ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:42 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.571ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:42 | 200 |  15.78ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+
+2026/10/20 12:40:42 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.237ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:42 | 200 |  14.67ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:42 | 200 |  21.34ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:42 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[5.262ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:42 | 200 |  27.05ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+
+2026/10/20 12:40:42 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.456ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:42 | 200 |   19.3ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:42 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.342ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:42 | 200 |   2.07ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:42 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.239ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:42 | 200 |   3.74ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:42 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.784ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:42 | 200 |   2.59ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:43 | 200 |   1.44ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:43 | 200 |   5.38ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:43 | 200 |   3.63ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:43 | 200 |  10.02ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:43 | 200 |   7.96ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:43 | 200 |   9.29ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:43 | 200 |  10.15ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+
+2026/10/20 12:40:43 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.000ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:43 | 200 |  16.15ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:43 | 200 |  16.57ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:43 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[3.728ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:43 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.072ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:43 | 200 |  24.92ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+[GIN] 2026/10/20 - 12:40:43 | 200 |  22.57ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:43 | 200 |  26.16ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+
+2026/10/20 12:40:43 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.019ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:43 | 200 |  16.76ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:43 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.464ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:43 | 200 |   1.97ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:43 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.177ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:43 | 200 |   5.15ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:43 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[4.169ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:43 | 200 |   5.46ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:44 | 200 |    7.4ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:44 | 200 |  15.33ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:44 | 200 |  48.28ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:44 | 200 |  56.35ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:44 | 200 |  14.27ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:44 | 200 |  13.78ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:44 | 200 |   18.9ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:44 | 200 |  11.51ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:44 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.809ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:44 | 200 |  14.77ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+
+2026/10/20 12:40:44 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.823ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:44 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.821ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:44 | 200 |  17.12ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+[GIN] 2026/10/20 - 12:40:44 | 200 |  18.94ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+[GIN] 2026/10/20 - 12:40:44 | 200 |  16.45ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:44 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.600ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:44 | 200 |  10.46ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:44 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.395ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:44 | 200 |   3.83ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:44 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.838ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:44 | 200 |   7.33ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+
+2026/10/20 12:40:44 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[7.330ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:44 | 200 |   8.69ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:44 | 200 |   1.98ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:44 | 200 |   8.07ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:44 | 200 |   6.13ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:44 | 200 |  10.14ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:44 | 200 |  10.44ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:44 | 200 |  12.64ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:44 | 200 |   14.4ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:45 | 200 |   9.03ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+[GIN] 2026/10/20 - 12:40:45 | 200 |  12.47ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:45 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[2.585ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:45 | 200 |   18.6ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:45 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[4.175ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:45 | 200 |  24.84ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+
+2026/10/20 12:40:45 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[4.697ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:45 | 200 |  28.66ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+
+2026/10/20 12:40:45 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.790ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:45 | 200 |  22.26ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.536ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:45 | 200 |   1.53ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 12:40:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.171ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 12:40:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.138ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 12:40:45 | 200 |    3.6ms |       127.0.0.1 | GET      "/assets/index-Ct-MH_eS.js"
+[GIN] 2026/10/20 - 12:40:45 | 200 |   2.43ms |       127.0.0.1 | GET      "/assets/index-y2JDv7CX.css"
+[GIN] 2026/10/20 - 12:40:45 | 200 |   1.18ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 12:40:45 | 200 |   6.98ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 12:40:45 | 200 |   4.94ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 12:40:45 | 200 |    8.6ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 12:40:45 | 200 |   8.42ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:45 | 200 |   7.98ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 12:40:45 | 200 |   7.62ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 12:40:45 | 200 |   5.35ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:45 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.588ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+
+2026/10/20 12:40:45 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[0.751ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:45 | 200 |   9.62ms |       127.0.0.1 | GET      "/media/1?thumb=1"
+[GIN] 2026/10/20 - 12:40:45 | 200 |  14.06ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+
+2026/10/20 12:40:45 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.639ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=3 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:45 | 200 |  11.36ms |       127.0.0.1 | GET      "/media/3?thumb=1"
+[GIN] 2026/10/20 - 12:40:45 | 200 |  15.58ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=2"
+
+2026/10/20 12:40:46 [31;1mD:/workspace-main/codex-zqzt/server/media.go:237 [35;1mrecord not found
+[0m[33m[1.126ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=2 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/20 - 12:40:46 | 200 |  10.24ms |       127.0.0.1 | GET      "/media/2?thumb=1"
+    product_v22_browser_test.go:67: {"checks":7,"layouts":60,"errors":[]}
+        
+
+2026/10/20 12:40:46 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[350.818ms] [33m[rows:36][35m DROP DATABASE `zqzt_exhibition_test_1792471220552055700`[0m
+--- PASS: TestProductV22BrowserHarness (26.29s)
+PASS
+ok  	zqzt/exhibition	46.760s

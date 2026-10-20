@@ -1,0 +1,1 @@
+{"status":"pass","page_status":200,"public_vendors":9,"province_nodes":31,"hebei":8,"graphic_drilldown":["13","1305","130528"],"boundary_requests":0}

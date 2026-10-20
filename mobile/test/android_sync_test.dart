@@ -244,7 +244,7 @@ void main() {
       await click(tester, find.widgetWithText(OutlinedButton, '保存云端草稿'));
       expect(find.byType(LoginScreen), findsOneWidget);
       await tester.enterText(
-        find.widgetWithText(TextField, '密码'),
+        find.widgetWithText(TextField, '设置密码'),
         'fixture-pass-123',
       );
       await tester.enterText(

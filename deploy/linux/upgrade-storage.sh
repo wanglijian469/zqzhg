@@ -61,7 +61,9 @@ OWNER="$(systemctl show "$SERVICE" --property=User --value)"
 [[ -z "$OWNER" ]] || chown -R "$OWNER" "$RELEASE"
 STOPPED=1
 systemctl stop "$SERVICE"
-python3 "$BUNDLE/aliyun-upgrade-support.py" backup --env-file "$ENV_FILE" --install-dir "$INSTALL_DIR" --output "$BACKUP" >"$RELEASE/upgrade-backup-location.json"
+MAX_SCHEMA="$(python3 -c 'import json,sys;print(int(json.load(open(sys.argv[1]))["schema"]))' "$BUNDLE/manifest.json")"
+[[ "$MAX_SCHEMA" =~ ^[0-9]{1,4}$ ]] || fail 'Invalid bundle schema version.'
+python3 "$BUNDLE/aliyun-upgrade-support.py" backup --env-file "$ENV_FILE" --install-dir "$INSTALL_DIR" --output "$BACKUP" --max-schema "$MAX_SCHEMA" >"$RELEASE/upgrade-backup-location.json"
 PORT="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["port"])' "$BACKUP/context.json")"
 # The environment, current database, media roots and encryption key are unchanged.
 ln -s "$RELEASE" "$INSTALL_DIR/current.next-$STAMP"

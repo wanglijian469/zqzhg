@@ -30,10 +30,13 @@ func canonicalPublic(base, path string, query url.Values) string {
 	q := url.Values{}
 	company := strings.HasPrefix(path, "/v/")
 	keys := []string{"hall", "q", "category_id", "region_id", "vendor_id", "sort", "page"}
+	if path == "/regions" {
+		keys = []string{"hall", "q", "category_id", "region_code", "unassigned", "page"}
+	}
 	if company {
 		keys = []string{"tab", "q", "category_id", "sort", "page"}
 	}
-	if company || path == "/" || path == "/browse" || path == "/browse/products" {
+	if company || path == "/regions" || path == "/" || path == "/browse" || path == "/browse/products" {
 		for _, k := range keys {
 			v := strings.TrimSpace(query.Get(k))
 			if k == "tab" && (v == "home" || !strings.Contains("|about|products|videos|catalogs|contact|", "|"+v+"|")) {
@@ -83,7 +86,7 @@ func (a *App) sendPublicHTML(c *gin.Context, index string, status int, title, de
 }
 func (a *App) publicHTML(c *gin.Context, index string) bool {
 	path := c.Request.URL.Path
-	if path != "/" && path != "/browse" && path != "/browse/products" && !strings.HasPrefix(path, "/products/") {
+	if path != "/regions" && path != "/" && path != "/browse" && path != "/browse/products" && !strings.HasPrefix(path, "/products/") {
 		return false
 	}
 	title, desc, robots, status := a.brandName(), "汇聚制造企业，展示特色产品，连接采购需求", "index,follow", 200
@@ -141,6 +144,9 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 				desc = hall.Name + "正在筹建，敬请期待。"
 			}
 			robots = "noindex,follow"
+		} else if path == "/regions" {
+			title = "厂商地图 | " + title
+			desc = "按行政区划浏览" + hall.Name + "的公开厂商。行政目录覆盖大陆31个省级行政区，版本2023-06-30。"
 		} else if path == "/browse" {
 			title = "找厂家 | " + title
 			desc = "按产品、主营业务和所在地区，快速发现" + hall.Name + "的制造企业。"
@@ -148,7 +154,7 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 			title = "找产品 | " + title
 			desc = "按名称、型号、分类和地区，发现" + hall.Name + "的真实产品。"
 		}
-		for _, k := range []string{"q", "category_id", "region_id", "vendor_id", "sort"} {
+		for _, k := range []string{"q", "category_id", "region_id", "region_code", "unassigned", "vendor_id", "sort"} {
 			if c.Query(k) != "" {
 				robots = "noindex,follow"
 			}

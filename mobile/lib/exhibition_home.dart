@@ -95,6 +95,7 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
                       onKind: (v) => setState(() => kind = v),
                       onSearch: () => browse(kind, term: query.text.trim()),
                     ),
+                    TextButton.icon(onPressed:()=>push(context,const NativeIndustryMapScreen()),icon:const Icon(Icons.map_outlined),label:Text(syncText(context,'厂商地图','Manufacturer map'))),
                     space(12),
                     FutureBuilder<dynamic>(
                       key: ValueKey('hero:$endpoint'),
@@ -544,16 +545,7 @@ class HomeLoadState extends StatelessWidget {
   }
 }
 
-void openManufacturerEntry(BuildContext context) {
-  final m = ModelScope.of(context);
-  if (m.token.isNotEmpty && m.account['role'] != 'visitor') {
-    returnToMerchant(context);
-  } else if (m.account['role'] == 'visitor') {
-    unawaited(loginManufacturer(context));
-  } else {
-    push(context, const EditorScreen(kind: 'vendor'));
-  }
-}
+void openManufacturerEntry(BuildContext context){final m=ModelScope.of(context);if(isMerchant(m)){push(context,const MerchantScreen());}else{unawaited(authenticateManufacturerEntry(context));}}
 
 class HomeJoinCard extends StatelessWidget {
   const HomeJoinCard({super.key});

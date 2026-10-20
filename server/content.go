@@ -135,6 +135,15 @@ func makeDraft(tx *gorm.DB, content *Content, p Payload) error {
 		return e
 	}
 	r := Revision{ContentID: content.ID, BaseEpoch: content.Epoch, Status: "draft", Name: p.Name, NameEN: p.NameEN, Keywords: p.Keywords, MainProducts: p.MainProducts, RegionID: p.RegionID, CategoryID: p.CategoryID, Payload: string(blob)}
+	if content.Kind == "vendor" {
+		var region Region
+		if p.RegionID != 0 {
+			if e = tx.First(&region, p.RegionID).Error; e != nil {
+				return e
+			}
+		}
+		r.AdministrativeSnapshot = administrativeSnapshot(p, region)
+	}
 	if e = tx.Create(&r).Error; e != nil {
 		return e
 	}

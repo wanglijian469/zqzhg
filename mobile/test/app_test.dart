@@ -33,7 +33,11 @@ void main() {
     );
     await tester.pump();
     await tester.enterText(find.byType(TextField).at(0), '测试草稿仅本机');
-    await tester.enterText(find.widgetWithText(TextField, '所在地区'), '河北');
+    await tester.tap(find.text('历史或未覆盖地区，保留文字'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.widgetWithText(TextField,'所在地区'),'河北');
+    await tester.tap(find.widgetWithText(FilledButton,'保存'));
+    await tester.pumpAndSettle();
     await tester.pump(const Duration(milliseconds: 350));
     final draftKey = 'draft.${m.scope}.vendor';
     expect(m.prefs.getString(draftKey), contains('测试草稿仅本机'));

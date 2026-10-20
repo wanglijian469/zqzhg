@@ -461,30 +461,46 @@ class _MerchantCompleteness extends StatelessWidget {
         d = asMap(item['data']),
         p = asMap(d['company_profile'] ?? {});
     final required = validateFormData(d, 'vendor').keys.toList();
-    final suggested = <String>[
-      if ((p['logo_media_id'] as num? ?? 0) == 0) 'logo',
-      if ((p['cover_media_id'] as num? ?? 0) == 0) 'cover',
+    final suggestions = <(String, String)>[
       if ((p['summary'] ?? '').toString().trim().isEmpty &&
           (d['description'] ?? '').toString().trim().isEmpty)
-        'summary',
-      if (imageIDs(d).isEmpty) 'boothGallery',
+        ('summary', 'basic'),
+      if ((p['logo_media_id'] as num? ?? 0) == 0) ('logo', 'brand'),
+      if ((p['cover_media_id'] as num? ?? 0) == 0) ('cover', 'brand'),
+      if (imageIDs(d).isEmpty) ('boothGallery', 'gallery'),
+      if ((d['address'] ?? '').toString().trim().isEmpty)
+        ('address', 'contact'),
+      if (rows(p['contacts']).isEmpty) ('regionalContacts', 'profile'),
     ];
-    if (required.isEmpty && suggested.isEmpty) return const SizedBox();
+    if (required.isEmpty && suggestions.isEmpty) return const SizedBox();
     return Card(
-      child: ListTile(
-        dense: true,
-        title: Text(
-          m.t(required.isEmpty ? 'suggestedDetails' : 'requiredDetails'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              m.t(required.isEmpty ? 'suggestedDetails' : 'requiredDetails'),
+            ),
+            Wrap(
+              spacing: 8,
+              children: [
+                for (final field in required)
+                  TextButton(
+                    onPressed: () =>
+                        editMerchant(context, item, 'vendor', section: 'basic'),
+                    child: Text('${formRules[field]?[m.language] ?? field}'),
+                  ),
+                for (final (label, section) in suggestions)
+                  TextButton(
+                    onPressed: () =>
+                        editMerchant(context, item, 'vendor', section: section),
+                    child: Text(m.t(label)),
+                  ),
+              ],
+            ),
+          ],
         ),
-        subtitle: Text(
-          required.isNotEmpty
-              ? required
-                    .map((k) => '${formRules[k]?[m.language] ?? k}')
-                    .join('、')
-              : suggested.map(m.t).join('、'),
-        ),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () => editMerchant(context, item, 'vendor'),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'package:crypto/crypto.dart';
 import 'package:qr/qr.dart';
 import 'package:video_player/video_player.dart';
 import 'package:pdfrx/pdfrx.dart';
@@ -32,6 +33,9 @@ part 'browse_screen.dart';
 part 'exhibit_card.dart';
 part 'exhibition_halls.dart';
 part 'app_upgrade.dart';
+part 'native_auth_entry.dart';
+part 'mobile_upgrade.dart';
+part 'native_industry_map.dart';
 
 typedef Json = Map<String, dynamic>;
 const green = industrialBlue;
@@ -50,6 +54,10 @@ class ApiFailure implements Exception {
 }
 
 class AppModel extends ChangeNotifier {
+  late final NativeBoundaryStore boundaryStore = NativeBoundaryStore(this);
+  String merchantVendorName = '';
+  bool newlyRegistered = false;
+  final Map<String, Future<Json>> clientCapabilityCache = {};
   late final MerchantDataStore merchant = MerchantDataStore(this);
   late final FavoritesStore favorites = FavoritesStore(this);
   late final AppAnalytics analytics = AppAnalytics(this);
@@ -204,6 +212,9 @@ class AppModel extends ChangeNotifier {
       if (response.statusCode == 404 && path == '/public/halls') {
         throw ApiFailure('not_found', const [], 404);
       }
+      if (response.statusCode == 404) {
+        throw ApiFailure('not_found', const [], 404);
+      }
       final dynamic parsed = jsonDecode(response.body);
       if (response.statusCode >= 400) {
         final credentials = [
@@ -266,6 +277,7 @@ class AppModel extends ChangeNotifier {
 
   Future<void> signIn(Json result) async {
     merchant.clear();
+    merchantVendorName = '';
     token = result['token'];
     account = asMap(result['account']);
     await prefs.setString('token', token);
@@ -287,6 +299,7 @@ class AppModel extends ChangeNotifier {
     }
     token = '';
     account = {};
+    merchantVendorName = '';
     merchant.clear();
     await prefs.remove('token');
     await prefs.remove('account');
@@ -307,6 +320,7 @@ class AppModel extends ChangeNotifier {
     baseUrl = url.replaceAll(RegExp(r'/$'), '');
     hallRegistry.reset();
     _taxonomies.clear();
+    clientCapabilityCache.clear();
     browseMemory.clear();
     await prefs.setString('base_url', baseUrl);
     notifyListeners();
@@ -869,370 +883,51 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 }
 
-class LoginScreen extends StatefulWidget {
-  final bool visitor;
-  final bool register;
-  final String initialName;
-  const LoginScreen({
-    super.key,
-    this.register = false,
-    this.initialName = '',
-    this.visitor = false,
-  });
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final phone = TextEditingController(),
-      code = TextEditingController(),
-      username = TextEditingController(),
-      password = TextEditingController();
-  bool accountMode = true, registerMode = false;
-  bool manufacturerLogin = false;
-  bool get visitorAccount => widget.visitor && !manufacturerLogin;
-  final confirmation = TextEditingController();
-  Map<String, String> authErrors = {};
-  @override
-  void initState() {
-    super.initState();
-    registerMode = widget.register;
-    username.text = widget.initialName;
-  }
-
-  bool busy = false;
-  String dev = '';
-  int cooldown = 0;
-  Timer? timer;
-  @override
-  void dispose() {
-    confirmation.dispose();
-    username.dispose();
-    password.dispose();
-    phone.dispose();
-    code.dispose();
-    timer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final m = ModelScope.of(context);
-    return Scaffold(
-      appBar: appBar(
-        context,
-        m.t(widget.visitor ? 'favoriteAccountLogin' : 'verify'),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(24),
-        children: [
-          if (widget.visitor)
-            SegmentedButton<bool>(
-              segments: [
-                ButtonSegment(value: false, label: Text(m.t('visitorAccount'))),
-                ButtonSegment(
-                  value: true,
-                  label: Text(m.t('manufacturerAccount')),
-                ),
-              ],
-              selected: {manufacturerLogin},
-              onSelectionChanged: busy
-                  ? null
-                  : (value) => setState(() {
-                      manufacturerLogin = value.first;
-                      registerMode = false;
-                      password.clear();
-                      confirmation.clear();
-                      authErrors = {};
-                    }),
-            )
-          else
-            SegmentedButton<bool>(
-              segments: [
-                ButtonSegment(value: true, label: Text(m.t('accountLogin'))),
-                ButtonSegment(value: false, label: Text(m.t('smsLogin'))),
-              ],
-              selected: {accountMode},
-              onSelectionChanged: busy
-                  ? null
-                  : (v) => setState(() => accountMode = v.first),
-            ),
-          space(),
-          if (accountMode) ...[
-            Wrap(
-              children: [
-                TextButton(
-                  onPressed: busy
-                      ? null
-                      : () => setState(() {
-                          registerMode = false;
-                          authErrors = {};
-                          password.clear();
-                          confirmation.clear();
-                        }),
-                  child: Text(m.t('accountLogin')),
-                ),
-                TextButton(
-                  onPressed: busy
-                      ? null
-                      : () => setState(() {
-                          registerMode = true;
-                          authErrors = {};
-                          password.clear();
-                          confirmation.clear();
-                        }),
-                  child: Text(
-                    visitorAccount
-                        ? m.t('newVisitorRegister')
-                        : syncText(context, '新厂商注册', 'Register manufacturer'),
-                  ),
-                ),
-              ],
-            ),
-            TextField(
-              controller: username,
-              autofillHints: const [AutofillHints.username],
-              decoration: InputDecoration(
-                labelText: m.t('username'),
-                errorText: authErrors['login_name'],
-              ),
-            ),
-            space(),
-            TextField(
-              controller: password,
-              obscureText: true,
-              autofillHints: const [AutofillHints.password],
-              decoration: InputDecoration(
-                labelText: m.t('password'),
-                errorText: authErrors['password'],
-                helperText: registerMode
-                    ? syncText(context, '密码12–72个UTF-8字节', '12–72 UTF-8 bytes')
-                    : null,
-              ),
-            ),
-            space(),
-            if (registerMode)
-              TextField(
-                controller: confirmation,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: syncText(context, '确认密码', 'Confirm password'),
-                  errorText: authErrors['confirmation'],
-                ),
-              ),
-            FilledButton(
-              onPressed: busy
-                  ? null
-                  : () async {
-                      if (registerMode) {
-                        final n = utf8.encode(password.text).length;
-                        setState(
-                          () => authErrors = {
-                            if (username.text.trim().isEmpty ||
-                                username.text.trim().runes.length > 100)
-                              'login_name': syncText(
-                                context,
-                                '账号不能为空，最多100字',
-                                'Required, up to 100 characters',
-                              ),
-                            if (n < 12 ||
-                                n > 72 ||
-                                password.text.trim().isEmpty)
-                              'password': syncText(
-                                context,
-                                '密码需12–72个UTF-8字节',
-                                'Use 12–72 UTF-8 bytes',
-                              ),
-                            if (confirmation.text != password.text)
-                              'confirmation': syncText(
-                                context,
-                                '两次密码不一致',
-                                'Passwords do not match',
-                              ),
-                          },
-                        );
-                        if (authErrors.isNotEmpty) return;
-                      }
-                      setState(() => busy = true);
-                      try {
-                        final r = asMap(
-                          await m.api(
-                            visitorAccount
-                                ? (registerMode
-                                      ? '/auth/visitor/register'
-                                      : '/auth/visitor')
-                                : (registerMode
-                                      ? '/auth/merchant/register'
-                                      : '/auth/merchant'),
-                            method: 'POST',
-                            data: {
-                              (registerMode ? 'login_name' : 'username'):
-                                  username.text.trim(),
-                              'password': password.text,
-                            },
-                          ),
-                        );
-                        await m.signIn(r);
-                        password.clear();
-                        if (context.mounted) Navigator.pop(context, true);
-                      } catch (e) {
-                        if (context.mounted) {
-                          if (registerMode &&
-                              e is ApiFailure &&
-                              e.code == 'network_error') {
-                            setState(() {
-                              registerMode = false;
-                              authErrors = {
-                                'login_name': syncText(
-                                  context,
-                                  '注册结果不确定，请用刚设置的账号密码登录后继续。',
-                                  'Registration unconfirmed. Sign in with these credentials to continue.',
-                                ),
-                              };
-                            });
-                          } else if (e is ApiFailure && e.fields.isNotEmpty) {
-                            setState(
-                              () => authErrors = {
-                                for (final f in e.fields)
-                                  f['field']: fieldIssueText(m, f),
-                              },
-                            );
-                          } else {
-                            showError(context, e);
-                          }
-                        }
-                      } finally {
-                        if (mounted) setState(() => busy = false);
-                      }
-                    },
-              child: Text(
-                busy
-                    ? m.t('loading')
-                    : registerMode
-                    ? syncText(context, '注册并继续', 'Register and continue')
-                    : m.t('login'),
-              ),
-            ),
-          ] else ...[
-            TextField(
-              controller: phone,
-              keyboardType: TextInputType.phone,
-              autofillHints: const [AutofillHints.telephoneNumberNational],
-              decoration: InputDecoration(labelText: m.t('phone')),
-            ),
-            space(),
-            TextField(
-              controller: code,
-              keyboardType: TextInputType.number,
-              autofillHints: const [AutofillHints.oneTimeCode],
-              decoration: InputDecoration(labelText: m.t('code')),
-            ),
-            space(),
-            OutlinedButton(
-              onPressed: busy || cooldown > 0
-                  ? null
-                  : () async {
-                      setState(() => busy = true);
-                      try {
-                        final result = await m.api(
-                          '/auth/sms',
-                          method: 'POST',
-                          data: {'phone': phone.text.trim()},
-                        );
-                        if (mounted) {
-                          setState(() {
-                            dev = result['development_code'] ?? '';
-                            cooldown = 60;
-                          });
-                          timer?.cancel();
-                          timer = Timer.periodic(const Duration(seconds: 1), (
-                            t,
-                          ) {
-                            if (!mounted) {
-                              t.cancel();
-                              return;
-                            }
-                            setState(() => cooldown--);
-                            if (cooldown <= 0) t.cancel();
-                          });
-                        }
-                      } catch (e) {
-                        if (context.mounted) showError(context, e);
-                      } finally {
-                        if (mounted) setState(() => busy = false);
-                      }
-                    },
-              child: Text(cooldown > 0 ? '$cooldown s' : m.t('sendCode')),
-            ),
-            if (dev.isNotEmpty) message(context, '${m.t('devCode')}: $dev'),
-            space(),
-            FilledButton(
-              onPressed: busy
-                  ? null
-                  : () async {
-                      setState(() => busy = true);
-                      try {
-                        final result = await m.api(
-                          '/auth/phone',
-                          method: 'POST',
-                          data: {
-                            'phone': phone.text.trim(),
-                            'code': code.text.trim(),
-                          },
-                        );
-                        await m.signIn(asMap(result));
-                        if (context.mounted) Navigator.pop(context, true);
-                      } catch (e) {
-                        if (context.mounted) showError(context, e);
-                      } finally {
-                        if (mounted) setState(() => busy = false);
-                      }
-                    },
-              child: Text(m.t('verify')),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
 class MerchantScreen extends StatelessWidget {
   const MerchantScreen({super.key});
   @override
   Widget build(BuildContext context) {
     final m = ModelScope.of(context);
-    if (m.token.isNotEmpty && m.account['role'] != 'visitor') {
-      return MerchantWorkspace(key: ValueKey(m.scope));
-    }
+    if (isMerchant(m)) return MerchantWorkspace(key: ValueKey(m.scope));
     return Scaffold(
       appBar: appBar(context, m.t('merchantCenter')),
-      body: ListView(
-        padding: const EdgeInsets.all(24),
-        children: [
-          Text(
-            m.t('joinTitle'),
-            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-          ),
-          message(context, m.t('localDraft')),
-          if (m.account['role'] == 'visitor')
-            message(context, m.t('visitorMerchantHelp')),
-          FilledButton(
-            onPressed: () => m.account['role'] == 'visitor'
-                ? push(context, const LoginScreen())
-                : push(context, const EditorScreen(kind: 'vendor')),
-            child: Text(
-              m.t(
-                m.account['role'] == 'visitor' ? 'manufacturerAccount' : 'join',
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: ListView(
+            padding: const EdgeInsets.all(24),
+            children: [
+              Text(
+                syncText(context, '厂商入驻', 'Manufacturer entry'),
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
+              space(),
+              Text(
+                syncText(
+                  context,
+                  '注册账号 → 工作台完善资料 → 提交审核',
+                  'Create account → Complete profile → Submit for review',
+                ),
+              ),
+              space(24),
+              FilledButton(
+                onPressed: () => authenticateManufacturerEntry(context),
+                child: Text(m.t('join')),
+              ),
+              space(),
+              OutlinedButton(
+                onPressed: () =>
+                    authenticateManufacturerEntry(context, register: false),
+                child: Text(syncText(context, '已有公司账号登录', 'Company sign-in')),
+              ),
+              if (m.account['role'] == 'visitor')
+                message(context, m.t('visitorMerchantHelp')),
+            ],
           ),
-          space(),
-          OutlinedButton(
-            onPressed: () => push(context, const LoginScreen()),
-            child: Text(m.t('login')),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -1370,6 +1065,18 @@ class _EditorScreenState extends State<EditorScreen> {
   bool initialized = false, busy = false;
   Timer? timer;
   String? draftKey;
+  int editorHallID = 1;
+  int productStep = 0;
+  bool guestAdoptionApproved = false;
+  bool operationLock = false,
+      dirty = false,
+      leaving = false,
+      creationUncertain = false;
+  String? guestDraftKey;
+  List<String> galleryOrder = [];
+  final fieldFocus = <String, FocusNode>{};
+  final expandedSections = <String>{};
+  final groupControllers = <String, ExpansibleController>{};
   int taxonomyVersion = 0;
   Map<String, Json> issues = {};
   final fieldKeys = <String, GlobalKey>{};
@@ -1412,6 +1119,7 @@ class _EditorScreenState extends State<EditorScreen> {
     ownerID = m.account['id'] ?? 0;
     sourceEndpoint = m.baseUrl;
     current = widget.item;
+    editorHallID = (current?['hall_id'] as num?)?.toInt() ?? m.activeHall.id;
     draftKey = 'draft.${m.scope}.${widget.item?['id'] ?? widget.kind}';
     data = widget.item == null
         ? {
@@ -1431,11 +1139,44 @@ class _EditorScreenState extends State<EditorScreen> {
             'media_ids': <int>[],
           }
         : asMap(widget.item!['data']);
-    final raw = m.prefs.getString(draftKey!);
+    var raw = m.prefs.getString(draftKey!);
+    if (widget.kind == 'vendor' && widget.item == null && m.newlyRegistered) {
+      final guest = 'draft.${Uri.encodeComponent(m.baseUrl)}.guest.vendor';
+      if (raw == null && m.prefs.containsKey(guest)) {
+        raw = m.prefs.getString(guest);
+        guestDraftKey = guest;
+      }
+      m.newlyRegistered = false;
+    }
+    if (widget.kind == 'product') {
+      final identity = m.scope;
+      unawaited(
+        m.merchant.vendor().then<void>((value) {
+          if (!mounted || m.scope != identity) return;
+          final items = rows(value['items']);
+          if (items.isNotEmpty) {
+            editorHallID =
+                (items.first['hall_id'] as num?)?.toInt() ?? editorHallID;
+            m.merchantVendorName = m.content(
+              asMap(items.first['data']),
+              'name',
+            );
+            setState(() {});
+          }
+        }, onError: (Object e, StackTrace stack) {}),
+      );
+    }
     if (raw != null) {
       try {
         final local = asMap(jsonDecode(raw));
-        if (local['revision_id'] == (current?['revision_id'] ?? 0)) {
+        if (local['revision_id'] == (current?['revision_id'] ?? 0) ||
+            current == null && local['current'] is Map) {
+          if (current == null && local['current'] is Map) {
+            current = asMap(local['current']);
+          }
+          productStep = (local['step'] as int? ?? 0).clamp(0, 2);
+          creationUncertain = local['creation_uncertain'] == true;
+          galleryOrder = List<String>.from(local['gallery_order'] ?? []);
           data = asMap(local['data']);
           photos = rows(local['photos']);
         }
@@ -1474,6 +1215,10 @@ class _EditorScreenState extends State<EditorScreen> {
       'address',
       'parameters',
     ]) {
+      fieldFocus[key] = FocusNode()
+        ..addListener(() {
+          if (mounted) setState(() {});
+        });
       fields[key] = TextEditingController(text: (data[key] ?? '').toString());
       fields[key]!.addListener(() {
         data[key] = fields[key]!.text;
@@ -1488,6 +1233,9 @@ class _EditorScreenState extends State<EditorScreen> {
         final target = sectionKeys[widget.initialSection]?.currentContext;
         if (target != null) Scrollable.ensureVisible(target, alignment: .05);
       });
+    }
+    if (widget.initialSection != null) {
+      expandedSections.addAll(['profile', 'credentials', 'more']);
     }
     unawaited(recoverCamera());
   }
@@ -1507,6 +1255,7 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   void scheduleSave() {
+    dirty = true;
     timer?.cancel();
     timer = Timer(
       const Duration(milliseconds: 250),
@@ -1517,7 +1266,10 @@ class _EditorScreenState extends State<EditorScreen> {
   Future<void> persist() async {
     if (!mounted || draftKey == null || retired) return;
     final m = ModelScope.of(context);
-    if (m.token.isNotEmpty && ownerID == 0 && draftKey!.contains('.guest.')) {
+    if (m.token.isNotEmpty &&
+        ownerID == 0 &&
+        guestAdoptionApproved &&
+        draftKey!.contains('.guest.')) {
       ownerID = m.account['id'];
       final previous = draftKey!;
       draftKey = 'draft.${m.scope}.${current?['id'] ?? widget.kind}';
@@ -1527,6 +1279,10 @@ class _EditorScreenState extends State<EditorScreen> {
           'data': data,
           'photos': photos,
           'revision_id': current?['revision_id'] ?? 0,
+          'step': productStep,
+          'current': current,
+          'gallery_order': galleryOrder,
+          'creation_uncertain': creationUncertain,
         }),
       );
       await m.prefs.remove(previous);
@@ -1537,21 +1293,50 @@ class _EditorScreenState extends State<EditorScreen> {
         'data': data,
         'photos': photos,
         'revision_id': current?['revision_id'] ?? 0,
+        'step': productStep,
+        'current': current,
+        'gallery_order': galleryOrder,
+        'creation_uncertain': creationUncertain,
       }),
     );
+    if (widget.item == null && current != null) {
+      await m.prefs.setString(
+        'draft.${m.scope}.${widget.kind}',
+        jsonEncode({
+          'data': data,
+          'photos': photos,
+          'revision_id': current?['revision_id'] ?? 0,
+          'step': productStep,
+          'current': current,
+          'gallery_order': galleryOrder,
+          'creation_uncertain': creationUncertain,
+        }),
+      );
+    }
   }
 
   @override
   void dispose() {
     timer?.cancel();
+    for (final controller in groupControllers.values) {
+      controller.dispose();
+    }
+    for (final node in fieldFocus.values) {
+      node.dispose();
+    }
     for (final field in fields.values) {
       field.dispose();
     }
     super.dispose();
   }
 
-  Future<void> retainPhoto(XFile file, {String? slot}) async {
+  Future<void> retainPhoto(
+    XFile file, {
+    String? slot,
+    String? replacement,
+  }) async {
     if (slot == null &&
+        replacement == null &&
         imageIDs(data).length +
                 photos
                     .where((p) => p['id'] == null && p['slot'] == null)
@@ -1570,6 +1355,8 @@ class _EditorScreenState extends State<EditorScreen> {
     setState(() {
       if (slot != null) photos.removeWhere((p) => p['slot'] == slot);
       photos.add({'path': target, 'slot': ?slot});
+      if (slot == null) galleryOrder.add('p:$target');
+      dirty = true;
     });
     await persist();
   }
@@ -1608,18 +1395,32 @@ class _EditorScreenState extends State<EditorScreen> {
       request.files.add(
         await http.MultipartFile.fromPath('file', photo['path']),
       );
-      final response = await http.Response.fromStream(
-        await m.client.send(request),
-      ).timeout(const Duration(minutes: 3));
+      photo.remove('error');
+      http.Response response;
+      try {
+        response = await http.Response.fromStream(
+          await m.client.send(request),
+        ).timeout(const Duration(minutes: 3));
+      } catch (e) {
+        photo['error'] = 'network_error';
+        await persist();
+        rethrow;
+      }
       final payload = asMap(jsonDecode(response.body));
       if (response.statusCode >= 400) {
+        photo['error'] = payload['error']['code'];
+        await persist();
         if (response.statusCode == 401) await m.expireSession();
         throw ApiFailure(payload['error']['code']);
       }
       final mid = payload['id'];
       photo['id'] = mid;
       if (photo['slot'] == null) {
+        final key = 'p:${photo['path']}';
+        final position = galleryOrder.indexOf(key);
+        if (position >= 0) galleryOrder[position] = 'm:$mid';
         data['media_ids'] = [...imageIDs(data), mid];
+        galleryChanged();
       } else if (photo['slot'].toString().startsWith('credential:')) {
         final p = asMap(data['company_profile'] ?? {});
         final key = photo['slot'].toString().substring('credential:'.length);
@@ -1651,11 +1452,13 @@ class _EditorScreenState extends State<EditorScreen> {
 
   Future<void> retryBrand() async {
     final m = ModelScope.of(context);
+    if (!mounted) return;
     if (m.token.isEmpty) {
       final ok = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
           builder: (_) => LoginScreen(
+            onRegistered: () => guestAdoptionApproved = true,
             register: ownerID == 0,
             initialName: ownerID == 0 ? (data['name'] ?? '').toString() : '',
           ),
@@ -1668,6 +1471,9 @@ class _EditorScreenState extends State<EditorScreen> {
         return;
       }
     }
+    if (!await approveGuestAdoption() || !mounted) return;
+    await adoptGuestOwnership();
+    if (!mounted) return;
     setState(() => busy = true);
     try {
       await uploadPendingPhotos(brandOnly: true);
@@ -1679,11 +1485,35 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   Future<void> save({bool submit = false}) async {
+    if (operationLock || busy || creationUncertain) return;
+    operationLock = true;
+    try {
+      await saveInternal(submit: submit);
+    } finally {
+      operationLock = false;
+    }
+  }
+
+  Future<void> saveInternal({bool submit = false}) async {
     final m = ModelScope.of(context);
     timer?.cancel();
     await persist();
     if (!mounted) return;
     if (retired) return;
+    if (widget.kind == 'product' &&
+        (data['category_id'] ?? 0) == 0 &&
+        (data['keywords'] ?? '').toString().trim().isEmpty) {
+      try {
+        final capabilities = await m.clientCapabilities();
+        if (capabilities['product_name_only'] != true) {
+          if (mounted) showError(context, ApiFailure('mobileUpgradeRequired'));
+          return;
+        }
+      } catch (error) {
+        if (mounted) showError(context, error);
+        return;
+      }
+    }
     final errors = validateFormData(
       data,
       widget.kind,
@@ -1694,17 +1524,17 @@ class _EditorScreenState extends State<EditorScreen> {
     );
     setState(() => issues = errors);
     if (errors.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final ctx = fieldKeys[errors.keys.first]?.currentContext;
-        if (ctx != null) Scrollable.ensureVisible(ctx, alignment: .3);
-      });
+      revealIssues();
       return;
     }
+    if (!mounted) return;
     if (m.token.isEmpty) {
+      bool registeredDuringAuth = false;
       final ok = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
           builder: (_) => LoginScreen(
+            onRegistered: () => registeredDuringAuth = true,
             register: ownerID == 0,
             initialName: ownerID == 0 ? (data['name'] ?? '').toString() : '',
           ),
@@ -1716,12 +1546,16 @@ class _EditorScreenState extends State<EditorScreen> {
           (ownerID != 0 && m.account['id'] != ownerID)) {
         return;
       }
+      if (registeredDuringAuth) guestAdoptionApproved = true;
+      if (!await approveGuestAdoption() || !mounted) return;
       final oldKey = draftKey;
       final returningOwner = ownerID != 0;
       ownerID = m.account['id'];
       draftKey = 'draft.${m.scope}.${current?['id'] ?? widget.kind}';
       await persist();
-      if (oldKey != draftKey) await m.prefs.remove(oldKey!);
+      if (oldKey != draftKey && oldKey != 'draft.${m.scope}.${widget.kind}') {
+        await m.prefs.remove(oldKey!);
+      }
       setState(() => taxonomyVersion++);
       if (returningOwner) {
         if (mounted) {
@@ -1741,8 +1575,11 @@ class _EditorScreenState extends State<EditorScreen> {
       }
     }
     if (!mounted) return;
+    if (!await approveGuestAdoption() || !mounted) return;
+    await adoptGuestOwnership();
+    if (!mounted) return;
     setState(() => busy = true);
-    final creatingBooth = widget.kind == 'vendor' && current == null;
+    final firstCreation = current == null;
     try {
       if (widget.kind == 'vendor' && current == null) {
         final existing = rows(
@@ -1789,7 +1626,7 @@ class _EditorScreenState extends State<EditorScreen> {
               : '/merchant/contents/${current!['id']}/draft',
           method: current == null ? 'POST' : 'PUT',
           data: current == null
-              ? {'kind': widget.kind, 'data': data}
+              ? {'kind': widget.kind, 'hall_id': editorHallID, 'data': data}
               : {'revision_id': current!['revision_id'], 'data': data},
         ),
       );
@@ -1798,7 +1635,14 @@ class _EditorScreenState extends State<EditorScreen> {
       final oldKey = draftKey;
       draftKey = 'draft.${m.scope}.${saved['id']}';
       await persist();
-      if (oldKey != draftKey) await m.prefs.remove(oldKey!);
+      if (oldKey != draftKey && oldKey != 'draft.${m.scope}.${widget.kind}') {
+        await m.prefs.remove(oldKey!);
+      }
+      dirty = false;
+      if (guestDraftKey != null) {
+        await m.prefs.remove(guestDraftKey!);
+        guestDraftKey = null;
+      }
       if (submit) {
         await m.api(
           '/merchant/contents/${saved['id']}/submit',
@@ -1806,23 +1650,35 @@ class _EditorScreenState extends State<EditorScreen> {
           data: {'revision_id': saved['revision_id']},
         );
         await m.prefs.remove(draftKey!);
+        if (widget.item == null) {
+          await m.prefs.remove('draft.${m.scope}.${widget.kind}');
+        }
       }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(m.t(submit ? 'pending' : 'saved'))),
         );
-        if (creatingBooth) {
+        m.merchant.refresh();
+        if (submit && widget.kind == 'vendor') {
           returnToMerchant(context);
         } else if (submit) {
           Navigator.pop(context, true);
         }
       }
     } catch (e) {
+      if (firstCreation &&
+          current == null &&
+          e is ApiFailure &&
+          e.code == 'network_error') {
+        creationUncertain = true;
+        await persist();
+      }
       if (e is ApiFailure && e.code == 'unauthorized') {
         await m.expireSession();
       }
       if (mounted && e is ApiFailure && e.fields.isNotEmpty) {
         setState(() => issues = {for (final f in e.fields) f['field']: f});
+        revealIssues();
       } else if (mounted) {
         showError(context, e);
       }
@@ -1831,358 +1687,1048 @@ class _EditorScreenState extends State<EditorScreen> {
     }
   }
 
+  List<Json> galleryEntries() {
+    final all = <Json>[
+      for (final id in imageIDs(data)) {'id': id, 'key': 'm:$id'},
+      for (final p in photos.where((p) => p['id'] == null && p['slot'] == null))
+        {...p, 'key': 'p:${p['path']}'},
+    ];
+    for (final item in all) {
+      if (!galleryOrder.contains(item['key'])) galleryOrder.add(item['key']);
+    }
+    galleryOrder.removeWhere((key) => !all.any((item) => item['key'] == key));
+    all.sort(
+      (a, b) => galleryOrder
+          .indexOf(a['key'])
+          .compareTo(galleryOrder.indexOf(b['key'])),
+    );
+    return all;
+  }
+
+  void galleryChanged() {
+    data['media_ids'] = galleryEntries()
+        .where((p) => p['id'] != null)
+        .map((p) => p['id'])
+        .toList();
+    scheduleSave();
+  }
+
+  void moveImage(Json item, int offset) {
+    setState(() {
+      final index = galleryOrder.indexOf(item['key']), target = index + offset;
+      if (target < 0 || target >= galleryOrder.length) return;
+      galleryOrder.removeAt(index);
+      galleryOrder.insert(target, item['key']);
+      galleryChanged();
+    });
+  }
+
+  void removeImage(Json item) {
+    setState(() {
+      galleryOrder.remove(item['key']);
+      if (item['id'] != null) {
+        data['media_ids'] = imageIDs(
+          data,
+        ).where((id) => id != item['id']).toList();
+      }
+      photos.removeWhere(
+        (p) => item['id'] != null
+            ? p['id'] == item['id']
+            : p['path'] == item['path'],
+      );
+      final profile = asMap(data['company_profile'] ?? {});
+      if (profile['gallery_annotations'] != null) {
+        data['company_profile'] = {
+          ...profile,
+          'gallery_annotations': rows(
+            profile['gallery_annotations'],
+          ).where((p) => p['media_id'] != item['id']).toList(),
+        };
+      }
+      galleryChanged();
+    });
+  }
+
+  Future<void> replaceImage(Json item) async {
+    try {
+      final file = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 90,
+      );
+      if (file == null) return;
+      final previous = galleryOrder.indexOf(item['key']);
+      await retainPhoto(file, replacement: item['key']);
+      if (!mounted) return;
+      setState(() {
+        removeImage(item);
+        galleryOrder.remove('p:${photos.last['path']}');
+        galleryOrder.insert(
+          previous.clamp(0, galleryOrder.length),
+          'p:${photos.last['path']}',
+        );
+        galleryChanged();
+      });
+    } catch (e) {
+      if (mounted) showError(context, e);
+    }
+  }
+
+  Future<void> retryGallery() async {
+    if (busy || operationLock) return;
+    if (!await nativeSessionReady(context, ownerID, sourceEndpoint) ||
+        !mounted) {
+      return;
+    }
+    if (!await approveGuestAdoption() || !mounted) return;
+    await adoptGuestOwnership();
+    if (!mounted) return;
+    setState(() => busy = true);
+    try {
+      await uploadPendingPhotos();
+    } catch (e) {
+      if (mounted) showError(context, e);
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  void revealIssues() {
+    if (issues.isEmpty) return;
+    final key = issues.keys.first;
+    setState(() {
+      if (key.startsWith('company_profile.credentials') ||
+          key.startsWith('company_profile.gallery_annotations')) {
+        expandedSections.add('credentials');
+      } else if (key.startsWith('company_profile.')) {
+        expandedSections.add('profile');
+      } else if (key.endsWith('_en')) {
+        expandedSections.add('english');
+      } else if ([
+        'category_id',
+        'keywords',
+        'parameters',
+        'address',
+      ].contains(key)) {
+        expandedSections.add('more');
+      }
+      if (widget.kind == 'product') productStep = key == 'media_ids' ? 1 : 0;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      for (final id in expandedSections) {
+        groupControllers[id]?.expand();
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final target =
+            fieldKeys[key]?.currentContext ??
+            sectionKeys[key.startsWith('company_profile') ? 'profile' : 'basic']
+                ?.currentContext;
+        if (target != null) Scrollable.ensureVisible(target, alignment: .15);
+        fieldFocus[key]?.requestFocus();
+      });
+      WidgetsBinding.instance.scheduleFrame();
+    });
+  }
+
   Widget field(
     BuildContext context,
     String key,
     String label, {
     bool multiline = false,
   }) {
-    final m = ModelScope.of(context);
+    final m = ModelScope.of(context),
+        rule = asMap(formRules[key] ?? {}),
+        value = fields[key]?.text ?? '',
+        node = fieldFocus[key]!;
+    final count = rule['unit'] == 'bytes'
+        ? utf8.encode(value).length
+        : value.runes.length;
+    final limit = rule['max'] as num?;
     return Padding(
       key: fieldKeys.putIfAbsent(key, () => GlobalKey()),
-      padding: const EdgeInsets.only(bottom: 18),
+      padding: const EdgeInsets.only(bottom: 16),
       child: TextField(
         controller: fields[key],
+        focusNode: node,
         maxLines: multiline ? 4 : 1,
-        decoration: guidedDecoration(
-          m,
-          key,
-          (data[key] ?? '').toString(),
-          m.t(label),
-          issue: issues[key],
+        enabled: !busy && current?['status'] != 'pending',
+        decoration: InputDecoration(
+          labelText: m.t(label),
+          hintText: rule[m.language == 'zh' ? 'sample_zh' : 'sample_en'],
+          hintStyle: const TextStyle(
+            color: Color(0xff9aa8b8),
+            fontStyle: FontStyle.italic,
+          ),
+          helperText: node.hasFocus || limit != null && count > limit * .85
+              ? '$count / ${limit ?? '—'} ${rule['unit'] == 'bytes' ? (m.language == 'zh' ? '字节' : 'bytes') : (m.language == 'zh' ? '字' : 'characters')}'
+              : null,
+          errorText: issues[key] == null
+              ? null
+              : fieldIssueText(m, issues[key]!),
+          errorMaxLines: 3,
         ),
         keyboardType: key == 'phone'
             ? TextInputType.phone
             : multiline
             ? TextInputType.multiline
             : TextInputType.text,
-        enabled: !busy && current?['status'] != 'pending',
       ),
+    );
+  }
+
+  Widget group(String id, String zh, String en, List<Widget> children) {
+    return ExpansionTile(
+      key: ValueKey(id),
+      controller: groupControllers.putIfAbsent(
+        id,
+        () => ExpansibleController(),
+      ),
+      initiallyExpanded: expandedSections.contains(id),
+      maintainState: true,
+      tilePadding: EdgeInsets.zero,
+      title: Text(syncText(context, zh, en)),
+      onExpansionChanged: (open) {
+        if (open) {
+          expandedSections.add(id);
+        } else {
+          expandedSections.remove(id);
+        }
+      },
+      children: children,
+    );
+  }
+
+  Future<void> adoptGuestOwnership() async {
+    final m = ModelScope.of(context);
+    if (ownerID != 0 || !guestAdoptionApproved || m.token.isEmpty) return;
+    final previous = draftKey;
+    ownerID = m.account['id'];
+    draftKey = 'draft.${m.scope}.${current?['id'] ?? widget.kind}';
+    await persist();
+    if (previous != draftKey && previous != null) {
+      await m.prefs.remove(previous);
+    }
+  }
+
+  Future<bool> approveGuestAdoption() async {
+    if (ownerID != 0 ||
+        guestAdoptionApproved ||
+        draftKey?.contains('.guest.') != true) {
+      return true;
+    }
+    final m = ModelScope.of(context);
+    final accepted = await showDialog<bool>(
+      context: context,
+      builder: (c) => AlertDialog(
+        title: Text(syncText(c, '使用本机访客草稿？', 'Use the guest draft?')),
+        content: Text(
+          syncText(
+            c,
+            '当前登录的是已有账号。是否将这份访客资料保存到该账号？已有云端企业不会被覆盖。',
+            'You signed in to an existing account. Use this guest draft for that account? An existing cloud company will not be overwritten.',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(c, false),
+            child: Text(m.t('cancel')),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(c, true),
+            child: Text(syncText(c, '使用这份草稿', 'Use this draft')),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return false;
+    if (accepted == true) guestAdoptionApproved = true;
+    return accepted == true;
+  }
+
+  Future<void> useGuestDraft() async {
+    final m = ModelScope.of(context),
+        key = 'draft.${Uri.encodeComponent(m.baseUrl)}.guest.vendor';
+    final raw = m.prefs.getString(key);
+    if (raw == null) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (c) => AlertDialog(
+        title: Text(syncText(c, '使用本机访客草稿？', 'Use the guest draft?')),
+        content: Text(
+          syncText(
+            c,
+            '仅替换当前未保存表单；不会覆盖云端企业。',
+            'Only replace this unsaved form; cloud information is unchanged.',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(c, false),
+            child: Text(m.t('cancel')),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(c, true),
+            child: Text(m.t('confirm')),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    try {
+      final local = asMap(jsonDecode(raw));
+      setState(() {
+        data = asMap(local['data']);
+        photos = rows(local['photos']);
+        guestDraftKey = key;
+        for (final entry in fields.entries) {
+          entry.value.text = (data[entry.key] ?? '').toString();
+        }
+      });
+      scheduleSave();
+    } catch (_) {
+      if (mounted) showError(context, ApiFailure('invalid_request'));
+    }
+  }
+
+  Widget gallery() {
+    final m = ModelScope.of(context),
+        enabled = !busy && current?['status'] != 'pending',
+        entries = galleryEntries();
+    return Column(
+      key: sectionKeys['gallery'],
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          syncText(context, '产品／企业图片', 'Product / company images'),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          syncText(
+            context,
+            '最多12张，首张为封面；保存时上传，失败保留并可重试。',
+            'Up to 12 images. First is the cover. Save uploads pending images; failures remain available to retry.',
+          ),
+        ),
+        space(),
+        for (var i = 0; i < entries.length; i++)
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (entries[i]['id'] != null)
+                    Photo(
+                      id: entries[i]['id'],
+                      height: 150,
+                      fit: BoxFit.contain,
+                    )
+                  else
+                    Image.file(
+                      File(entries[i]['path']),
+                      height: 150,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, _, _) => Text(m.t('photoRetry')),
+                    ),
+                  Text(i == 0 ? syncText(context, '封面', 'Cover') : '${i + 1}'),
+                  if (entries[i]['id'] == null)
+                    Text(
+                      entries[i]['error'] != null
+                          ? syncText(
+                              context,
+                              '上传失败，文件已保留',
+                              'Upload failed; file retained',
+                            )
+                          : syncText(context, '待上传', 'Pending upload'),
+                    ),
+                  Wrap(
+                    spacing: 4,
+                    children: [
+                      IconButton(
+                        tooltip: syncText(context, '前移', 'Move earlier'),
+                        onPressed: enabled && i > 0
+                            ? () => moveImage(entries[i], -1)
+                            : null,
+                        icon: const Icon(Icons.arrow_upward),
+                      ),
+                      IconButton(
+                        tooltip: syncText(context, '后移', 'Move later'),
+                        onPressed: enabled && i < entries.length - 1
+                            ? () => moveImage(entries[i], 1)
+                            : null,
+                        icon: const Icon(Icons.arrow_downward),
+                      ),
+                      TextButton(
+                        onPressed: enabled && i > 0
+                            ? () {
+                                setState(() {
+                                  galleryOrder.remove(entries[i]['key']);
+                                  galleryOrder.insert(0, entries[i]['key']);
+                                  galleryChanged();
+                                });
+                              }
+                            : null,
+                        child: Text(syncText(context, '设为封面', 'Set cover')),
+                      ),
+                      TextButton(
+                        onPressed: enabled
+                            ? () => replaceImage(entries[i])
+                            : null,
+                        child: Text(syncText(context, '替换', 'Replace')),
+                      ),
+                      IconButton(
+                        tooltip: m.t('remove'),
+                        onPressed: enabled
+                            ? () => removeImage(entries[i])
+                            : null,
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        if (busy)
+          LinearProgressIndicator(
+            value: brandProgress > 0 ? brandProgress / 100 : null,
+          ),
+        Wrap(
+          spacing: 8,
+          children: [
+            OutlinedButton.icon(
+              onPressed: enabled ? () => pick(ImageSource.camera) : null,
+              icon: const Icon(Icons.camera_alt_outlined),
+              label: Text(m.t('camera')),
+            ),
+            OutlinedButton.icon(
+              onPressed: enabled ? () => pick(ImageSource.gallery) : null,
+              icon: const Icon(Icons.photo_library_outlined),
+              label: Text(m.t('album')),
+            ),
+            if (photos.any((p) => p['id'] == null && p['slot'] == null))
+              TextButton(
+                onPressed: enabled ? retryGallery : null,
+                child: Text(m.t('retry')),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget companyExtras() {
+    final pending = current?['status'] == 'pending';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        group('more', '经营分类与详细地址', 'Category and detailed address', [
+          NativeCategoryPicker(
+            hallID: editorHallID,
+            kind: 'vendor',
+            key: fieldKeys.putIfAbsent('category_id', () => GlobalKey()),
+            value: data['category_id'] ?? 0,
+            enabled: !busy && !pending,
+            issue: issues['category_id'],
+            onChanged: (id) {
+              setState(() => data['category_id'] = id);
+              scheduleSave();
+            },
+          ),
+          field(context, 'address', 'address'),
+        ]),
+        group('english', '英文资料（选填）', 'English details (optional)', [
+          field(context, 'name_en', 'nameEN'),
+          field(
+            context,
+            'description_en',
+            'englishDescription',
+            multiline: true,
+          ),
+        ]),
+        group(
+          'profile',
+          '品牌、企业补充资料与区域联系人',
+          'Brand, company details and regional contacts',
+          [
+            PromotionalProfileEditor(
+              initialSection: widget.initialSection,
+              sectionKeys: sectionKeys,
+              data: data,
+              issues: issues,
+              fieldKeys: fieldKeys,
+              brandProgress: brandProgress,
+              brandFiles: photos
+                  .where((p) => p['slot'] != null && p['id'] == null)
+                  .toList(),
+              onBrandPick: pickBrand,
+              onBrandRetry: retryBrand,
+              onBrandDiscard: (slot) {
+                setState(() => photos.removeWhere((p) => p['slot'] == slot));
+                scheduleSave();
+              },
+              enabled: !busy && !pending,
+              onChanged: (v) {
+                setState(() {
+                  final old = asMap(data['company_profile'] ?? {}),
+                      next = asMap(v['company_profile'] ?? {});
+                  for (final slot in ['logo_media_id', 'cover_media_id']) {
+                    if (old[slot] != next[slot]) {
+                      photos.removeWhere(
+                        (photo) => photo['slot'] == slot && photo['id'] == null,
+                      );
+                    }
+                  }
+                  data = v;
+                });
+                scheduleSave();
+              },
+            ),
+          ],
+        ),
+        group(
+          'credentials',
+          '资质、实拍说明及媒体',
+          'Credentials, photo annotations and media',
+          [
+            PortalMediaEditor(
+              key: sectionKeys['credentials'],
+              initiallyExpanded: true,
+              data: data,
+              issues: issues,
+              enabled: !busy && !pending,
+              photos: photos,
+              onPick: pickBrand,
+              onRetry: retryBrand,
+              onDiscard: (slot) {
+                setState(() => photos.removeWhere((p) => p['slot'] == slot));
+                scheduleSave();
+              },
+              onChanged: (v) {
+                setState(() => data = v);
+                scheduleSave();
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget productBasics() {
+    final m = ModelScope.of(context), pending = current?['status'] == 'pending';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        field(context, 'name', 'productName'),
+        Text(
+          syncText(
+            context,
+            '仅产品名称必填，其它资料可稍后补充。',
+            'Only the product name is required; other details can be added later.',
+          ),
+        ),
+        space(),
+        NativeCategoryPicker(
+          hallID: editorHallID,
+          kind: 'product',
+          key: fieldKeys.putIfAbsent('category_id', () => GlobalKey()),
+          value: data['category_id'] ?? 0,
+          enabled: !busy && !pending,
+          issue: issues['category_id'],
+          onChanged: (id) {
+            setState(() => data['category_id'] = id);
+            scheduleSave();
+          },
+        ),
+        group(
+          'more',
+          '关键词、说明和参数（选填）',
+          'Keywords, description and parameters (optional)',
+          [
+            field(context, 'keywords', 'keywords'),
+            Wrap(
+              spacing: 8,
+              children: [
+                for (final value in nativeKeywordSuggestions(
+                  data,
+                  m.productCategory(data),
+                ))
+                  ActionChip(
+                    label: Text(value),
+                    onPressed: busy || pending
+                        ? null
+                        : () {
+                            fields['keywords']!.text = [
+                              fields['keywords']!.text.trim(),
+                              value,
+                            ].where((v) => v.isNotEmpty).join('，');
+                          },
+                  ),
+              ],
+            ),
+            field(context, 'description', 'description', multiline: true),
+            OutlinedButton(
+              onPressed: busy || pending
+                  ? null
+                  : () async {
+                      final name = fields['name']!.text.trim();
+                      if (name.isEmpty) return;
+                      final suggestion = syncText(
+                        context,
+                        '产品：$name。',
+                        'Product: $name.',
+                      );
+                      final apply = await showDialog<bool>(
+                        context: context,
+                        builder: (c) => AlertDialog(
+                          title: Text(
+                            syncText(c, '产品说明建议', 'Description suggestion'),
+                          ),
+                          content: Text(suggestion),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(c, false),
+                              child: Text(m.t('cancel')),
+                            ),
+                            FilledButton(
+                              onPressed: () => Navigator.pop(c, true),
+                              child: Text(m.t('save')),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (apply == true && mounted) {
+                        fields['description']!.text = [
+                          fields['description']!.text,
+                          suggestion,
+                        ].where((v) => v.trim().isNotEmpty).join('\n');
+                      }
+                    },
+              child: Text(
+                syncText(
+                  context,
+                  '查看中性说明建议',
+                  'Preview a neutral description suggestion',
+                ),
+              ),
+            ),
+            field(context, 'parameters', 'parameters', multiline: true),
+            TextButton(
+              onPressed: busy || pending
+                  ? null
+                  : () {
+                      fields['parameters']!.text = [
+                        fields['parameters']!.text,
+                        nativeParameterTemplate(
+                          m.availableHalls
+                                  .where((hall) => hall.id == editorHallID)
+                                  .firstOrNull
+                                  ?.slug ??
+                              '',
+                          m.language == 'zh',
+                        ),
+                      ].where((v) => v.trim().isNotEmpty).join('\n');
+                    },
+              child: Text(
+                syncText(
+                  context,
+                  '追加空白参数模板',
+                  'Append an empty parameter template',
+                ),
+              ),
+            ),
+          ],
+        ),
+        group('english', '英文资料（选填）', 'English details (optional)', [
+          field(context, 'name_en', 'nameEN'),
+          field(
+            context,
+            'description_en',
+            'englishDescription',
+            multiline: true,
+          ),
+        ]),
+      ],
+    );
+  }
+
+  Widget companyBasics() {
+    final m = ModelScope.of(context);
+    return Column(
+      key: sectionKeys['basic'],
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        field(context, 'name', 'company'),
+        NativeRegionField(
+          key: ValueKey('region:$sourceEndpoint'),
+          data: data,
+          enabled: !busy && current?['status'] != 'pending',
+          onChanged: (v) {
+            setState(() {
+              fields['region_name']!.text = v['region_name'];
+              data = {...data, ...v};
+              issues.remove('region_name');
+            });
+            scheduleSave();
+          },
+        ),
+        if (issues['region_name'] != null)
+          Text(
+            fieldIssueText(m, issues['region_name']!),
+            style: const TextStyle(color: Colors.red),
+          ),
+        space(),
+        field(context, 'main_products', 'mainProducts'),
+        field(context, 'phone', 'phone'),
+        field(context, 'wechat', 'wechat'),
+        Text(m.t('contactRequired')),
+        space(),
+        field(context, 'description', 'about', multiline: true),
+        group('reference', '介绍参考与建议', 'Introduction references and suggestions', [
+          Text(
+            syncText(
+              context,
+              '参考结构：企业名称、所在地区、主营产品、联系方式。仅填写能够核实的情况，不必补造成立年限、资质或产能。',
+              'Suggested structure: company name, region, main products and contact information. Include only verifiable facts.',
+            ),
+          ),
+          TextButton(
+            onPressed: busy
+                ? null
+                : () async {
+                    final name = fields['name']!.text.trim(),
+                        products = fields['main_products']!.text.trim(),
+                        region = fields['region_name']!.text.trim();
+                    final text = m.language == 'zh'
+                        ? [
+                            if (name.isNotEmpty) name,
+                            if (region.isNotEmpty) '所在地区：$region',
+                            if (products.isNotEmpty) '主营产品：$products',
+                          ].join('。')
+                        : [
+                            if (name.isNotEmpty) name,
+                            if (region.isNotEmpty) 'Region: $region',
+                            if (products.isNotEmpty) 'Main products: $products',
+                          ].join('. ');
+                    if (text.isEmpty) return;
+                    final accepted = await showDialog<bool>(
+                      context: context,
+                      builder: (c) => AlertDialog(
+                        title: Text(
+                          syncText(
+                            c,
+                            '基于已填资料的草稿',
+                            'Draft based on your entries',
+                          ),
+                        ),
+                        content: Text(text),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(c, false),
+                            child: Text(m.t('cancel')),
+                          ),
+                          FilledButton(
+                            onPressed: () => Navigator.pop(c, true),
+                            child: Text(
+                              syncText(c, '追加到介绍', 'Append to introduction'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (accepted == true && mounted) {
+                      fields['description']!.text = [
+                        fields['description']!.text,
+                        text,
+                      ].where((v) => v.trim().isNotEmpty).join('\n');
+                    }
+                  },
+            child: Text(
+              syncText(
+                context,
+                '生成事实型介绍草稿',
+                'Preview a factual introduction draft',
+              ),
+            ),
+          ),
+        ]),
+        companyExtras(),
+        gallery(),
+      ],
+    );
+  }
+
+  Widget previewBody() {
+    final m = ModelScope.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          fields['name']!.text,
+          style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+        ),
+        if (m.merchantVendorName.isNotEmpty)
+          Text('${m.t('vendor')}: ${m.merchantVendorName}'),
+        for (final item in galleryEntries().take(1))
+          if (item['id'] != null)
+            Photo(id: item['id'], height: 180, fit: BoxFit.contain)
+          else
+            Image.file(
+              File(item['path']),
+              height: 180,
+              fit: BoxFit.contain,
+              errorBuilder: (_, _, _) => const SizedBox(),
+            ),
+        Text(fields['description']!.text),
+        Text(fields['parameters']!.text),
+        Text(m.t('submitNotice')),
+        if (current != null)
+          group('resources', '视频与画册管理', 'Videos and catalogues', [
+            NativeResourceList(
+              kind: 'video',
+              productID: current!['id'],
+              management: true,
+            ),
+            NativeResourceList(
+              kind: 'catalog',
+              productID: current!['id'],
+              management: true,
+            ),
+          ]),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final m = ModelScope.of(context);
-    final pending = current?['status'] == 'pending';
+    final m = ModelScope.of(context),
+        product = widget.kind == 'product',
+        pending = current?['status'] == 'pending';
     return PopScope(
-      canPop: true,
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) {
-          timer?.cancel();
-          if (draftKey != null) {
-            unawaited(
-              m.prefs.setString(
-                draftKey!,
-                jsonEncode({
-                  'data': data,
-                  'photos': photos,
-                  'revision_id': current?['revision_id'] ?? 0,
-                }),
+      canPop: !dirty || leaving,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final leave = await showDialog<bool>(
+          context: context,
+          builder: (c) => AlertDialog(
+            title: Text(syncText(c, '离开编辑？', 'Leave the editor?')),
+            content: Text(
+              syncText(
+                c,
+                '未同步的文字和图片会保留为本机草稿。',
+                'Unsynced text and images are retained in the local draft.',
               ),
-            );
-          }
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(c, false),
+                child: Text(m.t('cancel')),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(c, true),
+                child: Text(syncText(c, '保留草稿并离开', 'Keep draft and leave')),
+              ),
+            ],
+          ),
+        );
+        if (leave == true && mounted) {
+          await persist();
+          if (!mounted) return;
+          setState(() => leaving = true);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) Navigator.pop(context);
+          });
         }
       },
-      child: Scaffold(
-        appBar: appBar(
-          context,
-          m.t(widget.kind == 'vendor' ? 'myBooth' : 'addProduct'),
-        ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const NativeJoinGuide(),
-              if (issues.isNotEmpty)
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  margin: const EdgeInsets.only(bottom: 20),
-                  color: const Color(0xffffeeee),
+      child: Theme(
+        data: merchantTheme(context),
+        child: Scaffold(
+          appBar: appBar(
+            context,
+            product
+                ? syncText(
+                    context,
+                    current == null ? '发布产品' : '编辑产品',
+                    current == null ? 'Publish product' : 'Edit product',
+                  )
+                : m.t('myBooth'),
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 840),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        m.language == 'zh'
-                            ? '请修改以下项目，填写内容已保留'
-                            : 'Correct these fields; input retained.',
-                      ),
-                      for (final entry in issues.entries)
-                        TextButton(
-                          onPressed: () {
-                            final ctx = fieldKeys[entry.key]?.currentContext;
-                            if (ctx != null) {
-                              Scrollable.ensureVisible(ctx, alignment: .3);
-                            }
-                          },
-                          child: Text(
-                            '${formRules[entry.key.replaceAll(RegExp(r"\.\d+\."), ".*.")]?[m.language] ?? entry.key}：${fieldIssueText(m, entry.value)}',
+                      if (!product) const NativeJoinGuide(),
+                      if (product)
+                        Wrap(
+                          spacing: 8,
+                          children: [
+                            for (var i = 0; i < 3; i++)
+                              ChoiceChip(
+                                label: Text(
+                                  '${i + 1}. ${m.language == 'zh' ? ['基础信息', '图片与展示资料', '预览并提交'][i] : ['Basics', 'Images', 'Preview & submit'][i]}',
+                                ),
+                                selected: productStep == i,
+                                onSelected: busy
+                                    ? null
+                                    : (_) {
+                                        setState(() => productStep = i);
+                                        scheduleSave();
+                                      },
+                              ),
+                          ],
+                        ),
+                      space(),
+                      if (current != null)
+                        Text(
+                          '${m.t(current!['status'])}${(current!['review_note'] ?? '').toString().isEmpty ? '' : ' · ${current!['review_note']}'}',
+                        ),
+                      if (issues.isNotEmpty)
+                        UpgradeNotice(
+                          syncText(
+                            context,
+                            '请修改以下项目，填写内容已保留',
+                            'Correct these fields; input retained.',
                           ),
                         ),
-                    ],
-                  ),
-                ),
-              if (m.token.isEmpty) message(context, m.t('localDraft')),
-              if (current != null)
-                message(
-                  context,
-                  '${m.t(current!['status'])}${(current!['review_note'] ?? '').toString().isEmpty ? '' : '\n${current!['review_note'] == 'offline' ? m.t('offline') : current!['review_note']}'}',
-                ),
-              KeyedSubtree(
-                key: sectionKeys['basic'],
-                child: field(
-                  context,
-                  'name',
-                  widget.kind == 'vendor' ? 'company' : 'productName',
-                ),
-              ),
-              Text(
-                m.t('basicInfo'),
-                style: const TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              if (widget.kind == 'vendor') ...[
-                field(context, 'region_name', 'regionName'),
-                field(context, 'main_products', 'mainProducts'),
-                Text(
-                  key: sectionKeys['contact'],
-                  m.t('contactInfo'),
-                  style: const TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                field(context, 'phone', 'phone'),
-                field(context, 'wechat', 'wechat'),
-                message(context, m.t('contactRequired')),
-                field(context, 'address', 'address'),
-              ],
-              NativeCategoryPicker(
-                kind: widget.kind,
-                key: fieldKeys.putIfAbsent('category_id', () => GlobalKey()),
-                value: data['category_id'] ?? 0,
-                enabled: !busy && !pending,
-                issue: issues['category_id'],
-                onChanged: (id) {
-                  setState(() => data['category_id'] = id);
-                  scheduleSave();
-                },
-              ),
-              if (widget.kind == 'product')
-                message(context, m.t('optionalName')),
-              field(
-                context,
-                'description',
-                widget.kind == 'vendor' ? 'about' : 'description',
-                multiline: true,
-              ),
-              field(
-                context,
-                'description_en',
-                'englishDescription',
-                multiline: true,
-              ),
-              if (widget.kind == 'product')
-                field(context, 'parameters', 'parameters', multiline: true),
-              Text(
-                key: sectionKeys['gallery'],
-                m.t('photos'),
-                style: const TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              space(),
-              ...imageIDs(data).map(
-                (id) => Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Photo(id: id, height: 140),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: pending || busy
-                          ? null
-                          : () {
-                              setState(() {
-                                data['media_ids'] = imageIDs(
-                                  data,
-                                ).where((mid) => mid != id).toList();
-                                photos.removeWhere((p) => p['id'] == id);
-                                final profile = asMap(
-                                  data['company_profile'] ?? {},
-                                );
-                                if (profile['gallery_annotations'] != null) {
-                                  data['company_profile'] = {
-                                    ...profile,
-                                    'gallery_annotations':
-                                        rows(profile['gallery_annotations'])
-                                            .where((r) => r['media_id'] != id)
-                                            .toList(),
-                                  };
-                                }
-                              });
-                              scheduleSave();
-                            },
-                      icon: const Icon(Icons.close),
-                    ),
-                  ],
-                ),
-              ),
-              ...photos
-                  .where((p) => p['id'] == null && p['slot'] == null)
-                  .map(
-                    (p) => Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Image.file(
-                              File(p['path']),
-                              height: 140,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, _, _) =>
-                                  Text(m.t('photoRetry')),
+                      if (issues.isNotEmpty)
+                        Wrap(
+                          children: [
+                            for (final issue in issues.entries)
+                              TextButton(
+                                onPressed: () {
+                                  setState(
+                                    () => issues = {
+                                      issue.key: issue.value,
+                                      ...issues,
+                                    },
+                                  );
+                                  revealIssues();
+                                },
+                                child: Text(
+                                  '${formRules[issue.key]?[m.language] ?? issue.key}: ${fieldIssueText(m, issue.value)}',
+                                ),
+                              ),
+                          ],
+                        ),
+                      if (!product &&
+                          current == null &&
+                          !m.newlyRegistered &&
+                          m.prefs.containsKey(
+                            'draft.${Uri.encodeComponent(m.baseUrl)}.guest.vendor',
+                          ) &&
+                          guestDraftKey == null)
+                        TextButton(
+                          onPressed: busy ? null : useGuestDraft,
+                          child: Text(
+                            syncText(
+                              context,
+                              '使用本机访客草稿',
+                              'Use a guest draft from this device',
                             ),
                           ),
                         ),
-                        IconButton(
-                          onPressed: busy || pending
-                              ? null
-                              : () {
-                                  setState(() => photos.remove(p));
-                                  scheduleSave();
-                                },
-                          icon: const Icon(Icons.close),
+                      if (creationUncertain)
+                        UpgradeNotice(
+                          syncText(
+                            context,
+                            '上次首次保存结果不明确。请先到工作台核对，未自动重复创建。',
+                            'The initial save could not be confirmed. Check the workspace before creating again; no automatic retry was sent.',
+                          ),
                         ),
-                      ],
-                    ),
+                      if (!product)
+                        companyBasics()
+                      else if (productStep == 0)
+                        productBasics()
+                      else if (productStep == 1)
+                        gallery()
+                      else
+                        previewBody(),
+                      space(18),
+                      Text(
+                        m.t('localSavedHint'),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      Text(
+                        m.t('submitNotice'),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      space(),
+                      if (product)
+                        Wrap(
+                          spacing: 12,
+                          children: [
+                            if (productStep > 0)
+                              OutlinedButton(
+                                onPressed: busy
+                                    ? null
+                                    : () {
+                                        setState(() => productStep--);
+                                        scheduleSave();
+                                      },
+                                child: Text(m.t('previous')),
+                              ),
+                            if (productStep < 2)
+                              FilledButton(
+                                onPressed: busy
+                                    ? null
+                                    : () {
+                                        setState(() => productStep++);
+                                        scheduleSave();
+                                      },
+                                child: Text(m.t('next')),
+                              ),
+                          ],
+                        ),
+                      if (!product)
+                        OutlinedButton(
+                          onPressed: () {
+                            unawaited(persist());
+                            push(
+                              context,
+                              PreviewScreen(
+                                data: Map<String, dynamic>.from(data),
+                                kind: widget.kind,
+                                photos: List<Json>.from(photos),
+                              ),
+                            );
+                          },
+                          child: Text(m.t('preview')),
+                        ),
+                      space(),
+                      OutlinedButton(
+                        onPressed: busy || pending || creationUncertain
+                            ? null
+                            : () => save(),
+                        child: Text(m.t(busy ? 'loading' : 'saveCloud')),
+                      ),
+                      space(),
+                      if (!product || productStep == 2)
+                        FilledButton(
+                          onPressed: busy || pending || creationUncertain
+                              ? null
+                              : () => save(submit: true),
+                          child: Text(m.t(busy ? 'loading' : 'submit')),
+                        ),
+                      if (creationUncertain)
+                        TextButton(
+                          onPressed: () => returnToMerchant(context),
+                          child: Text(
+                            syncText(context, '到工作台核对', 'Check the workspace'),
+                          ),
+                        ),
+                      space(24),
+                    ],
                   ),
-              Wrap(
-                spacing: 12,
-                children: [
-                  OutlinedButton.icon(
-                    onPressed: busy || pending
-                        ? null
-                        : () => pick(ImageSource.camera),
-                    icon: const Icon(Icons.camera_alt_outlined),
-                    label: Text(m.t('camera')),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: busy || pending
-                        ? null
-                        : () => pick(ImageSource.gallery),
-                    icon: const Icon(Icons.photo_library_outlined),
-                    label: Text(m.t('album')),
-                  ),
-                ],
-              ),
-              if (widget.kind == 'vendor')
-                PromotionalProfileEditor(
-                  initialSection: widget.initialSection,
-                  sectionKeys: sectionKeys,
-                  data: data,
-                  issues: issues,
-                  fieldKeys: fieldKeys,
-                  brandProgress: brandProgress,
-                  brandFiles: photos
-                      .where((p) => p['slot'] != null && p['id'] == null)
-                      .toList(),
-                  onBrandPick: (slot, file) => pickBrand(slot, file),
-                  onBrandRetry: retryBrand,
-                  onBrandDiscard: (slot) {
-                    setState(
-                      () => photos.removeWhere((p) => p['slot'] == slot),
-                    );
-                    scheduleSave();
-                  },
-                  enabled: !busy && !pending,
-                  onChanged: (v) {
-                    setState(() {
-                      final old = asMap(data['company_profile'] ?? {}),
-                          next = asMap(v['company_profile'] ?? {});
-                      for (final k in ['logo_media_id', 'cover_media_id']) {
-                        if (old[k] != next[k]) {
-                          photos.removeWhere(
-                            (p) => p['slot'] == k && p['id'] == null,
-                          );
-                        }
-                      }
-                      data = v;
-                    });
-                    scheduleSave();
-                  },
                 ),
-              if (widget.kind == 'vendor')
-                PortalMediaEditor(
-                  initiallyExpanded: widget.initialSection == 'credentials',
-                  key: sectionKeys['credentials'],
-                  data: data,
-                  issues: issues,
-                  enabled: !busy && !pending,
-                  photos: photos,
-                  onPick: pickBrand,
-                  onRetry: retryBrand,
-                  onDiscard: (slot) {
-                    setState(
-                      () => photos.removeWhere((p) => p['slot'] == slot),
-                    );
-                    scheduleSave();
-                  },
-                  onChanged: (v) {
-                    setState(() => data = v);
-                    scheduleSave();
-                  },
-                ),
-              if (widget.kind == 'product' && current != null)
-                ExpansionTile(
-                  title: Text(m.t('manageResources')),
-                  children: [
-                    NativeResourceList(
-                      kind: 'video',
-                      productID: current!['id'],
-                      management: true,
-                    ),
-                    NativeResourceList(
-                      kind: 'catalog',
-                      productID: current!['id'],
-                      management: true,
-                    ),
-                  ],
-                ),
-              message(context, m.t('localSavedHint')),
-              message(context, m.t('submitNotice')),
-              OutlinedButton(
-                onPressed: () {
-                  unawaited(persist());
-                  push(
-                    context,
-                    PreviewScreen(
-                      data: Map<String, dynamic>.from(data),
-                      kind: widget.kind,
-                      photos: List<Json>.from(photos),
-                    ),
-                  );
-                },
-                child: Text(m.t('preview')),
               ),
-              space(),
-              OutlinedButton(
-                onPressed: busy || pending ? null : () => save(),
-                child: Text(m.t('saveCloud')),
-              ),
-              space(),
-              FilledButton(
-                onPressed: busy || pending ? null : () => save(submit: true),
-                child: Text(m.t(busy ? 'loading' : 'submit')),
-              ),
-              space(30),
-            ],
+            ),
           ),
         ),
       ),

@@ -106,7 +106,7 @@ func (a *App) siteIdentity() string {
 func (a *App) publicRuntimeConfig(c *gin.Context) {
 	cfg := a.effectiveConfig(c)
 	c.Header("Cache-Control", "no-store")
-	c.JSON(200, gin.H{"version": cfg.Version, "site": cfg.Site, "uploads": cfg.Uploads, "site_id": a.siteIdentity()})
+	c.JSON(200, gin.H{"version": cfg.Version, "site": cfg.Site, "uploads": cfg.Uploads, "site_id": a.siteIdentity(), "capabilities": gin.H{"administrative_regions": true, "industry_map": true, "product_name_only": true}})
 }
 func (a *App) publicMediaStatus(c *gin.Context) { c.JSON(200, gin.H{"site_id": a.siteIdentity()}) }
 func normalizeConfig(cfg *SystemConfig) {

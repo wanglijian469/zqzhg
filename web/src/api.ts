@@ -6,7 +6,7 @@ export class APIError extends Error { constructor(public code: string, public fi
 export function token(role: 'admin' | 'merchant') { return sessionStorage.getItem('zqzt.' + role) || ''; }
 export async function api<T>(path: string, options: RequestInit = {}, role?: 'admin' | 'merchant'): Promise<T> {
  await loadRuntime();
- const protectedRead=/^\/public\/(?:vendors|products|showrooms|resources|home|favorites\/resolve)(?:\/|\?|$)/.test(path);
+ const protectedRead=/^\/public\/(?:industry-map|vendors|products|showrooms|resources|home|favorites\/resolve)(?:\/|\?|$)/.test(path);
  if(!role&&protectedRead&&publicRetrySeconds()>0)throw new APIError('public_rate_limited');
  const headers = new Headers(options.headers); if (!(options.body instanceof FormData) && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
  if (role && token(role)) headers.set('Authorization', 'Bearer ' + token(role));

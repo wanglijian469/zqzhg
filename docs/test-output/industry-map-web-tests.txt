@@ -1,0 +1,12 @@
+
+ RUN  v5.0.3 D:/workspace-main/codex-zqzt/web
+
+
+ Test Files  28 passed (28)
+      Tests  147 passed (147)
+   Start at  11:20:09
+   Duration  43.12s (tests 44%, environment 39%, import 13%, transform 3%)
+
+    Isolate  28 workers spawned · ~2.50s startup each (spawn + environment, per file)
+             at least ~14.99s faster with isolate: false — reuses workers across files instead of one per file
+

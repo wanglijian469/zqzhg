@@ -1,0 +1,20 @@
+import {beforeEach,expect,it,vi} from 'vitest';
+import type {BoundaryGeometry,RegionStatistics} from './industry-map-types';
+const chart=vi.hoisted(()=>({setOption:vi.fn(),on:vi.fn(),dispose:vi.fn(),resize:vi.fn(),dispatchAction:vi.fn()}));
+const register=vi.hoisted(()=>vi.fn());
+vi.mock('echarts/core',()=>({init:()=>chart,registerMap:register,use:vi.fn()}));
+vi.mock('echarts/charts',()=>({MapChart:{}}));vi.mock('echarts/components',()=>({TooltipComponent:{},VisualMapComponent:{}}));vi.mock('echarts/renderers',()=>({CanvasRenderer:{}}));
+import {renderIndustryMap} from './industry-map-renderer';
+beforeEach(()=>vi.clearAllMocks());
+it('binds duplicate region names by code, preserves zero counts and ignores clicks outside the statistical directory',()=>{
+ const region=(code:string,count:number)=>({code,name:'同名区域',full_name:'同名区域',parent_code:'13',path:['同名区域'],level:2,has_children:true,vendor_count:count});
+ const items=[region('1301',0),region('1305',3)];const statistics:RegionStatistics={region:null,trail:[],items,total:3,unassigned_count:0,version:'2023-06-30',historical:true,coverage:'mainland-31'};
+ const geometry={type:'FeatureCollection',features:items.map(item=>({type:'Feature',properties:{adcode:item.code,name:item.name},geometry:{type:'Polygon',coordinates:[]}}))} as BoundaryGeometry;
+ const navigate=vi.fn();const controls=renderIndustryMap({} as HTMLDivElement,'synthetic-test-only',geometry,statistics,navigate,key=>key);
+ expect(JSON.parse(register.mock.calls[0][1]).features.map((f:{properties:{name:string}})=>f.properties.name)).toEqual(['1301','1305']);
+ const options=chart.setOption.mock.calls[0][0];expect(options.series[0].data).toEqual([{name:'1301',value:0},{name:'1305',value:3}]);
+ expect(options.series[0].label.formatter({name:'1301'})).toContain('0 imCompanies');
+ expect(options.tooltip.formatter({name:'1301',value:0})).toContain('0 imCompanies');expect(options.tooltip.formatter({name:'81',value:NaN})).toContain('imOutsideCoverage');
+ const click=chart.on.mock.calls[0][1];click({name:'81'});expect(navigate).not.toHaveBeenCalled();click({name:'1305'});expect(navigate).toHaveBeenCalledWith('1305');
+ controls.zoom(1.3);expect(chart.dispatchAction).toHaveBeenCalledWith({type:'geoRoam',seriesIndex:0,zoom:1.3});controls.reset();expect(chart.setOption).toHaveBeenLastCalledWith({series:[{id:'factory-map',center:null,zoom:1}]});
+});

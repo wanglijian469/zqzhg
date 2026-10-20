@@ -49,3 +49,6 @@ __pycache__/
 *.pyc
 # Raw vendor intake/contact/authorization material is business data, not source.
 /厂商信息/
+# Generated local download metadata and learning-only geographic screenshots.
+/web/public/downloads/
+/docs/screenshots/factory-map-outline*.png

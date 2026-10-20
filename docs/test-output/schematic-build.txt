@@ -1,0 +1,29 @@
+
+> zqzt-exhibition-web@2.0.0 prebuild
+> node ../scripts/verify-map-resources.mjs && node ../scripts/sync-form-rules.mjs && node ../scripts/prepare-pdf-assets.mjs
+
+{"resources":0,"mode":"map-resources-pending"}
+PASS: resource integrity and evidence presence checked. Legal approval must be verified by the recorded reviewer.
+
+> zqzt-exhibition-web@2.0.0 build
+> tsc -b && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 3677 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                     0.60 kB │ gzip:   0.44 kB
+dist/assets/pdf-worker-PC57fB-y.js              1,524.21 kB
+dist/assets/index-Bwnhm6ho.css                    204.43 kB │ gzip:  36.94 kB
+dist/assets/industry-map-chart-hjph4MPY.js          2.45 kB │ gzip:   1.08 kB
+dist/assets/index-DJjgdCjD.js                     259.68 kB │ gzip:  95.86 kB
+dist/assets/industry-map-schematic-BOqpvqCE.js    476.00 kB │ gzip: 163.51 kB
+dist/assets/pdf-CL8ynlU4.js                       495.58 kB │ gzip: 151.29 kB
+dist/assets/index-BvCumSvD.js                     755.95 kB │ gzip: 240.64 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 18.93s

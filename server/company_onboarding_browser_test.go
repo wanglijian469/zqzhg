@@ -10,6 +10,7 @@ import (
 	"image/png"
 	"net/http/httptest"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 	"time"
@@ -53,6 +54,16 @@ func TestCompanyOnboardingBrowserHarness(t *testing.T) {
 	blob, _ := json.Marshal(map[string]any{"base": srv.URL, "admin_token": admin, "legacy_token": merchant, "legacy_account_id": account.ID, "legacy_id": legacy["id"], "sample_path": sample})
 	if e := os.WriteFile(file, blob, 0600); e != nil {
 		t.Fatal(e)
+	}
+	if os.Getenv("RUN_AUTOMATED_UPGRADE_BROWSER") == "1" {
+		command := exec.CommandContext(t.Context(), "node", filepath.Join(root, "scripts", "verify-company-onboarding.cjs"))
+		command.Dir = root
+		output, err := command.CombinedOutput()
+		t.Log(string(output))
+		if err != nil {
+			t.Fatal(err)
+		}
+		return
 	}
 	deadline := time.After(12 * time.Minute)
 	tick := time.NewTicker(time.Second)
