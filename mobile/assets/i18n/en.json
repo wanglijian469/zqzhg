@@ -466,5 +466,11 @@
   "pause": "Pause",
   "copyright": "© 2026 Hebei Qiyuan Digital Intelligence Technology Co., Ltd.",
   "technicalSupport": "Technical support: Hebei Qiyuan Digital Intelligence Technology Co., Ltd.",
-  "mobileUpgradeRequired": "This server does not support this feature. Upgrade the companion server or switch to the local acceptance server."
+  "mobileUpgradeRequired": "This server does not support this feature. Upgrade the companion server or switch to the local acceptance server.",
+  "phoneAuthUpgradeRequired": "This server does not support mobile password authentication yet. Upgrade the companion service and retry.",
+  "phone_exists": "This mobile number belongs to an account. Sign in to that account, or contact the administrator for a conflict.",
+  "phone_already_bound": "This account already has a linked mobile number. Contact the administrator.",
+  "phone_binding_required": "Verify and link a mobile number first.",
+  "password_setup_unavailable": "This is not an original SMS account without a password. Sign in with your password or contact the administrator.",
+  "confirmation_required": "Confirm before upgrading to a manufacturer account."
 }

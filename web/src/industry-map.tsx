@@ -33,7 +33,7 @@ export function IndustryMapPage(){
  const previousStatistics=useRef<RegionStatistics|undefined>(undefined);if(stats.data)previousStatistics.current=stats.data;const chartStatistics=stats.data||previousStatistics.current;
  const listQuery=new URLSearchParams(filter);for(const key of ['page','unassigned'])if(params.get(key))listQuery.set(key,params.get(key)!);listQuery.set('page_size',String(pageSize||1));
  const results=useLoad<Page>(href('/public/industry-map/vendors?'+listQuery),undefined,!!stats.data&&pageSize!==undefined);
- const taxonomy=useLoad<Taxonomy>(href('/public/taxonomy'));
+ const taxonomy=useLoad<Taxonomy>(href('/public/taxonomy?category_kind=vendor'));
  const navigation=useRef({params,setParams});navigation.current={params,setParams};
  const update=(key:string,value:string,replace=false)=>{const next=new URLSearchParams(params);value?next.set(key,value):next.delete(key);if(!['page','view'].includes(key))next.delete('page');setParams(next,{replace})};
  const selectRegion=useCallback((code:string)=>{const current=navigation.current;const next=new URLSearchParams(current.params);code?next.set('region_code',code):next.delete('region_code');next.delete('page');next.delete('unassigned');current.setParams(next);setPickerOpen(false);setRegionSearch('')},[]);

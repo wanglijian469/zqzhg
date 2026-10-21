@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"gorm.io/gorm"
 	"image"
 	"image/png"
 	"io"
@@ -109,9 +110,9 @@ func TestPlatformOperatorIsolationAndRevocation(t *testing.T) {
 	for _, path := range []string{"/admin/operators", "/admin/accounts", "/admin/storage/profiles", "/admin/backups", "/admin/analytics", "/admin/operation-logs"} {
 		tc.call("GET", path, operator, nil, 403)
 	}
-	tc.call("POST", "/admin/vendors", operator, gin.H{}, 403)
+	tc.fixtureCall("POST", "/admin/vendors", operator, gin.H{}, 403)
 	merchant := resourceTestSession(t, a, "merchant")
-	v := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "权限审核测试", MainProducts: "机械", RegionName: "河北", Phone: "0319-1234567"}}, 201)
+	v := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "权限审核测试", MainProducts: "机械", RegionName: "河北", Phone: "0319-1234567"}}, 201)
 	tc.call("POST", "/merchant/contents/"+number(v["id"])+"/submit", merchant, gin.H{"revision_id": v["revision_id"]}, 200)
 	tc.call("POST", "/admin/revisions/"+number(v["revision_id"])+"/review", operator, gin.H{"decision": "approve"}, 200)
 	var log OperationLog
@@ -221,6 +222,13 @@ func TestCompleteBackupRestoreAndCutover(t *testing.T) {
 	}
 	t.Setenv("OPERATIONS_DIR", a.operations().dir)
 	originalName := a.currentDatabase()
+	verifiedNumber := "13900006666"
+	verifiedAt := time.Now().UTC()
+	phoneOwner := Account{Username: "phone-backup-fixture", Role: "visitor", Phone: &verifiedNumber, PhoneVerifiedAt: &verifiedAt}
+	if e := a.DB.Create(&phoneOwner).Error; e != nil {
+		t.Fatal(e)
+	}
+	phoneFixture(t, a, verifiedNumber, "register", 0)
 	restoredCode := "130528"
 	if e := a.DB.Create(&Region{ID: 88, Name: "河北省 邢台市 宁晋县", Enabled: true, AdministrativeCode: &restoredCode}).Error; e != nil {
 		t.Fatal(e)
@@ -252,6 +260,25 @@ func TestCompleteBackupRestoreAndCutover(t *testing.T) {
 	png.Encode(&hallPhoto, image.NewRGBA(image.Rect(0, 0, 12, 8)))
 	hero := resourceUpload(t, a, admin, "/admin/home-display/media", "restored-hall.png", hallPhoto.Bytes(), 201)
 	tc.call("PUT", "/admin/halls/2", admin, gin.H{"name": "恢复验证电缆厅", "name_en": "Restored Cable Hall", "description": "隔离恢复验证", "description_en": "Isolated restore verification", "status": "preparing", "slug": "cable", "hero_media_id": hero["id"], "version": 1}, 200)
+	var taxonomyCategory Category
+	if e := a.DB.Where("code=?", "agri.vendor.09").First(&taxonomyCategory).Error; e != nil {
+		t.Fatal(e)
+	}
+	if e := a.DB.Transaction(func(tx *gorm.DB) error {
+		return makeDraft(tx, &savedVendor, Payload{Name: "分类备份验收企业", MainProducts: "液压", RegionID: 88, RegionName: "河北省 邢台市 宁晋县", Phone: "0319-1234567", PrimaryCategoryID: taxonomyCategory.ID, SecondaryCategoryIDs: []uint64{}})
+	}); e != nil {
+		t.Fatal(e)
+	}
+	belt := IndustrialBelt{HallID: 1, Name: "备份验收产业带", Enabled: true}
+	if e := a.DB.Create(&belt).Error; e != nil {
+		t.Fatal(e)
+	}
+	if e := a.DB.Create(&VendorIndustrialBelt{VendorID: savedVendor.ID, BeltID: belt.ID}).Error; e != nil {
+		t.Fatal(e)
+	}
+	if e := a.DB.Create(&TaxonomyMapping{RevisionID: savedVendor.DraftRevisionID, ContentID: savedVendor.ID, CategoryKind: "vendor", LegacyCategoryID: 2, TargetID: taxonomyCategory.ID, Status: "manual", UpdatedAt: time.Now().UTC()}).Error; e != nil {
+		t.Fatal(e)
+	}
 	if err := os.WriteFile(filepath.Join(a.Config.MediaDir, "snapshot.txt"), []byte("snapshot media"), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -276,6 +303,10 @@ func TestCompleteBackupRestoreAndCutover(t *testing.T) {
 	var result RestoreResult
 	json.Unmarshal(done.Result, &result)
 	names = append(names, result.Database)
+	var restoredPhone Account
+	if e := a.DB.First(&restoredPhone, phoneOwner.ID).Error; e != nil || !verifiedPhone(restoredPhone) || *restoredPhone.Phone != verifiedNumber {
+		t.Fatal("Schema19 phone backup lost")
+	}
 	data, err := os.ReadFile(filepath.Join(result.MediaDir, "snapshot.txt"))
 	if err != nil || string(data) != "snapshot media" {
 		t.Fatal("restored media mismatch")
@@ -288,12 +319,29 @@ func TestCompleteBackupRestoreAndCutover(t *testing.T) {
 	if done.State != "succeeded" || a.currentDatabase() != result.Database {
 		t.Fatalf("cutover %s", done.Error)
 	}
+	var otpCount int64
+	a.DB.Model(&PhoneVerification{}).Count(&otpCount)
+	if otpCount != 0 {
+		t.Fatal("restored phone codes were not revoked")
+	}
 	testClient{t, a.router()}.call("GET", "/admin/dashboard", admin, nil, 401)
 	restoredHalls, err := a.hallConfigurations()
 	if err != nil || len(restoredHalls) != 2 || restoredHalls[1].Name != "恢复验证电缆厅" || restoredHalls[1].Version != 2 || restoredHalls[1].HeroMediaID != uint64(hero["id"].(float64)) || restoredHalls[1].Status != "preparing" {
 		t.Fatal("hall settings restore mismatch", restoredHalls, err)
 	}
 	homeMediaRead(t, a, "", "/media/"+number(hero["id"]), 200)
+	var restoredAssignment RevisionCategory
+	if e := a.DB.First(&restoredAssignment, "revision_id=?", savedVendor.DraftRevisionID).Error; e != nil || restoredAssignment.CategoryID != taxonomyCategory.ID {
+		t.Fatal("restored taxonomy assignment mismatch", e)
+	}
+	var restoredMapping TaxonomyMapping
+	if e := a.DB.First(&restoredMapping, "revision_id=?", savedVendor.DraftRevisionID).Error; e != nil || restoredMapping.Status != "manual" {
+		t.Fatal("restored mapping mismatch", e)
+	}
+	var beltCount int64
+	if e := a.DB.Model(&VendorIndustrialBelt{}).Where("vendor_id=? AND belt_id=?", savedVendor.ID, belt.ID).Count(&beltCount).Error; e != nil || beltCount != 1 {
+		t.Fatal("restored industrial belt mismatch", e)
+	}
 	if !a.DB.Migrator().HasIndex("contents", "idx_content_hall_vendor_public") {
 		t.Fatal("restored index missing")
 	}
@@ -380,7 +428,7 @@ func TestOperatorPrivateDraftMediaAndImmediateReset(t *testing.T) {
 	tc := testClient{t, a.router()}
 	admin := resourceTestSession(t, a, "admin")
 	merchant := resourceTestSession(t, a, "merchant")
-	v := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "私有媒体厂商", MainProducts: "设备", RegionName: "河北", Phone: "0319-1234567"}}, 201)
+	v := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "私有媒体厂商", MainProducts: "设备", RegionName: "河北", Phone: "0319-1234567"}}, 201)
 	created := tc.call("POST", "/admin/operators", admin, gin.H{"username": "edit-" + randomToken()[:12], "enabled": true, "permissions": []string{"vendor.write"}}, 201)
 	login := tc.call("POST", "/auth/admin", "", gin.H{"username": created["username"], "password": created["initial_password"]}, 200)
 	operator := login["token"].(string)

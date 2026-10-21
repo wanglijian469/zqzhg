@@ -40,7 +40,7 @@ func TestOperationsBrowserFixture(t *testing.T) {
 	login := tc.call("POST", "/auth/admin", "", gin.H{"username": "admin", "password": "Browser-Only-Operations-2026!"}, 200)
 	admin := login["token"].(string)
 	merchant := resourceTestSession(t, a, "merchant")
-	vendor := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "运营升级验收厂商（仅测试）", MainProducts: "测试机械", RegionName: "河北", Phone: "0319-1234567", Wechat: "fixture-only"}}, 201)
+	vendor := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "运营升级验收厂商（仅测试）", MainProducts: "测试机械", RegionName: "河北", Phone: "0319-1234567", Wechat: "fixture-only"}}, 201)
 	var photo bytes.Buffer
 	img := image.NewRGBA(image.Rect(0, 0, 180, 120))
 	for y := 0; y < 120; y++ {
@@ -50,7 +50,7 @@ func TestOperationsBrowserFixture(t *testing.T) {
 	}
 	png.Encode(&photo, img)
 	upload := resourceUpload(t, a, merchant, "/merchant/media", "fixture.png", photo.Bytes(), 201)
-	product := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "运营测试旋耕机", CategoryID: 1, MediaIDs: []uint64{uint64(upload["id"].(float64))}}}, 201)
+	product := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "运营测试旋耕机", CategoryID: 1, MediaIDs: []uint64{uint64(upload["id"].(float64))}}}, 201)
 	for _, item := range []map[string]any{vendor, product} {
 		tc.call("POST", "/merchant/contents/"+number(item["id"])+"/submit", merchant, gin.H{"revision_id": item["revision_id"]}, 200)
 		tc.call("POST", "/admin/revisions/"+number(item["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)

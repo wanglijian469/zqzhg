@@ -75,7 +75,7 @@ describe('Browser workflows',()=>{
     expect(location.pathname+location.search).toBe(original);
     expect((screen.getByRole('textbox',{name:'Keyword'}) as HTMLInputElement).value).toBe('TEST');
     expect((screen.getByRole('combobox',{name:'Product category'}) as HTMLSelectElement).value).toBe('2');
-    expect((screen.getByRole('combobox',{name:'Region / industrial cluster'}) as HTMLSelectElement).value).toBe('1');
+    expect((screen.getByRole('combobox',{name:'Region'}) as HTMLSelectElement).value).toBe('1');
     await user.click(screen.getByRole('link',{name:vendor.data.name}));
     await screen.findByRole('heading',{name:vendor.data.name});
     await user.click(within(document.querySelector('main')!).getByRole('link',{name:uiMessages.en.navProducts}));
@@ -164,12 +164,12 @@ describe('Browser workflows',()=>{
     const user=userEvent.setup();
     await screen.findByRole('option',{name:'农机配件'});
     await user.type(await screen.findByRole('textbox',{name:'关键词'}),'component{Enter}');
-    await user.selectOptions(screen.getByRole('combobox',{name:'产品分类'}),'2');
-    await user.selectOptions(screen.getByRole('combobox',{name:'地区 / 产业带'}),'1');
+    await user.selectOptions(screen.getByRole('combobox',{name:'厂家分类'}),'2');
+    await user.selectOptions(screen.getByRole('combobox',{name:'所在地区'}),'1');
     await user.click(screen.getByRole('button',{name:'English'}));
     expect((screen.getByRole('textbox',{name:'Keyword'}) as HTMLInputElement).value).toBe('component');
-    expect((screen.getByRole('combobox',{name:'Product category'}) as HTMLSelectElement).value).toBe('2');
-    expect((screen.getByRole('combobox',{name:'Region / industrial cluster'}) as HTMLSelectElement).value).toBe('1');
+    expect((screen.getByRole('combobox',{name:'Manufacturer category'}) as HTMLSelectElement).value).toBe('2');
+    expect((screen.getByRole('combobox',{name:'Region'}) as HTMLSelectElement).value).toBe('1');
     const params=new URLSearchParams(location.search);
     expect(params.get('q')).toBe('component');expect(params.get('category_id')).toBe('2');expect(params.get('region_id')).toBe('1');
   });

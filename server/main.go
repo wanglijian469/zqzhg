@@ -160,6 +160,16 @@ func migrate(db *gorm.DB) error {
 				return e
 			}
 		}
+		if version == 18 {
+			if e = compactAgricultureTaxonomy(db); e != nil {
+				return e
+			}
+		}
+		if version == 17 {
+			if e = initializeAgricultureTaxonomy(db); e != nil {
+				return e
+			}
+		}
 		if e = db.Exec("INSERT INTO schema_migrations(version,applied_at) VALUES(?,UTC_TIMESTAMP(3))", version).Error; e != nil {
 			return e
 		}
@@ -325,6 +335,10 @@ func (a *App) router() *gin.Engine {
 	})
 	api.POST("/auth/sms", a.sendCode)
 	api.POST("/auth/phone", a.phoneLogin)
+	api.POST("/auth/phone/code", a.phoneCode)
+	api.POST("/auth/phone/register", a.phoneRegister)
+	api.POST("/auth/phone/password", a.phonePasswordLogin)
+	api.POST("/auth/phone/password/setup", a.setupPhonePassword)
 	api.POST("/auth/merchant", a.merchantLogin)
 	api.POST("/auth/merchant/register", a.merchantRegister)
 	api.POST("/auth/visitor", a.visitorLogin)
@@ -333,6 +347,9 @@ func (a *App) router() *gin.Engine {
 	auth := api.Group("/auth", a.requireAuth(""))
 	auth.GET("/me", func(c *gin.Context) { c.JSON(200, a.accountJSON(actor(c))) })
 	auth.POST("/logout", a.logout)
+	auth.POST("/me/phone/code", a.bindingPhoneCode)
+	auth.PUT("/me/phone", a.bindPhone)
+	auth.POST("/me/merchant-upgrade", a.upgradePhoneMerchant)
 	pub := api.Group("/public")
 	pub.GET("/showrooms/:slug", a.publicShowroom)
 	pub.GET("/administrative-regions", a.administrativeRegions)
@@ -341,6 +358,7 @@ func (a *App) router() *gin.Engine {
 	pub.GET("/halls", a.publicHalls)
 	pub.GET("/home", a.home)
 	pub.GET("/taxonomy", a.taxonomy)
+	pub.POST("/category-recommendations", a.recommendCategories)
 	pub.GET("/vendors", a.searchVendors)
 	pub.GET("/vendors/:id", a.publicDetail("vendor"))
 	pub.GET("/products/:id", a.publicDetail("product"))
@@ -406,6 +424,17 @@ func (a *App) router() *gin.Engine {
 	admin.GET("/taxonomy", a.allTaxonomy)
 	admin.POST("/categories", a.saveCategory)
 	admin.PUT("/categories/:id", a.saveCategory)
+	admin.DELETE("/categories/:id", a.deleteCategory)
+	admin.POST("/category-media", func(c *gin.Context) { c.Set("upload_category_media", true); a.upload(c) })
+	admin.POST("/categories/:id/merge", a.mergeCategory)
+	admin.GET("/taxonomy-mappings", a.taxonomyMappings)
+	admin.POST("/taxonomy-mappings/resolve", a.resolveTaxonomyMappings)
+	admin.GET("/industrial-belts", a.industrialBelts)
+	admin.POST("/industrial-belts", a.saveIndustrialBelt)
+	admin.PUT("/industrial-belts/:id", a.saveIndustrialBelt)
+	admin.GET("/industrial-belts/:id/vendors", a.beltVendors)
+	admin.GET("/industrial-belts/:id/vendor-options", a.beltVendorOptions)
+	admin.PUT("/industrial-belts/:id/vendors", a.saveBeltVendors)
 	admin.POST("/category-suggestions/:id/normalize", a.normalizeCategory)
 	admin.POST("/regions", a.saveRegion)
 	admin.PUT("/regions/:id", a.saveRegion)

@@ -27,10 +27,9 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
     if (!m.isHallPreview && home == null) {
       home = homes[homeScope] = m.publicApi('/public/home');
       unawaited(
-        m.publicTaxonomy().then<void>(
-          (_) {},
-          onError: (Object e, StackTrace s) {},
-        ),
+        m
+            .publicTaxonomy(kind: 'product')
+            .then<void>((_) {}, onError: (Object e, StackTrace s) {}),
       );
     }
   }
@@ -95,7 +94,6 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
                       onKind: (v) => setState(() => kind = v),
                       onSearch: () => browse(kind, term: query.text.trim()),
                     ),
-                    TextButton.icon(onPressed:()=>push(context,const NativeIndustryMapScreen()),icon:const Icon(Icons.map_outlined),label:Text(syncText(context,'厂商地图','Manufacturer map'))),
                     space(12),
                     FutureBuilder<dynamic>(
                       key: ValueKey('hero:$endpoint'),
@@ -545,7 +543,14 @@ class HomeLoadState extends StatelessWidget {
   }
 }
 
-void openManufacturerEntry(BuildContext context){final m=ModelScope.of(context);if(isMerchant(m)){push(context,const MerchantScreen());}else{unawaited(authenticateManufacturerEntry(context));}}
+void openManufacturerEntry(BuildContext context) {
+  final m = ModelScope.of(context);
+  if (isMerchant(m)) {
+    push(context, const MerchantScreen());
+  } else {
+    unawaited(authenticateManufacturerEntry(context));
+  }
+}
 
 class HomeJoinCard extends StatelessWidget {
   const HomeJoinCard({super.key});

@@ -22,6 +22,10 @@ func view(content Content, rev Revision) View {
 func (a *App) privateView(content Content, rev Revision) View {
 	result := view(content, rev)
 	result.Data.CategoryID = canonicalCategory(a.DB, result.Data.CategoryID)
+	items := []View{result}
+	if a.hydrateTaxonomyViews(items) == nil {
+		result = items[0]
+	}
 	if result.PublicVisible && content.Kind == "product" {
 		var count int64
 		result.PublicVisible = a.publicQuery("vendor").Where("contents.id = ?", content.VendorID).Count(&count).Error == nil && count == 1
@@ -36,7 +40,7 @@ func dbFail(c *gin.Context, e error) {
 	var validation *FieldValidationError
 	if errors.As(e, &validation) {
 		status := 400
-		if validation.Code == "login_name_exists" || validation.Code == "vendor_required" {
+		if validation.Code == "phone_exists" || validation.Code == "phone_already_bound" || validation.Code == "login_name_exists" || validation.Code == "vendor_required" {
 			status = 409
 		}
 		c.AbortWithStatusJSON(status, gin.H{"error": gin.H{"code": validation.Code, "fields": validation.Fields}})
@@ -68,7 +72,7 @@ func loadOwned(tx *gorm.DB, contentID uint64, who Account, lock bool) (Content, 
 	}
 	return content, e
 }
-func (a *App) validatePayload(tx *gorm.DB, who Account, kind string, p *Payload) error {
+func (a *App) validatePayload(tx *gorm.DB, who Account, kind string, p *Payload, retained ...Payload) error {
 	if kind == "vendor" && p.RegionCode != "" {
 		if e := resolveAdministrativeRegion(tx, p); e != nil {
 			return e
@@ -87,7 +91,7 @@ func (a *App) validatePayload(tx *gorm.DB, who Account, kind string, p *Payload)
 	}
 	if p.CategoryID > 0 {
 		p.CategoryID = canonicalCategory(tx, p.CategoryID)
-		if !categoryAllowed(tx, p.CategoryID, who.ID) {
+		if !categoryAllowed(tx, p.CategoryID, who.ID) && (len(retained) == 0 || canonicalCategory(tx, retained[0].CategoryID) != p.CategoryID) {
 			return fieldFailure("invalid_category", "category_id", "category_unavailable")
 		}
 	}
@@ -124,8 +128,23 @@ func (a *App) validatePayload(tx *gorm.DB, who Account, kind string, p *Payload)
 	return nil
 }
 func makeDraft(tx *gorm.DB, content *Content, p Payload) error {
+	p.IndustrialBeltIDs = nil
 	if e := validateContentHall(tx, content, p); e != nil {
 		return e
+	}
+	if content.HallID == 1 {
+		if e := lockTaxonomy(tx, content.HallID); e != nil {
+			return e
+		}
+	}
+	if e := validateTaxonomy(tx, *content, &p); e != nil {
+		return e
+	}
+	if content.DraftRevisionID == 0 && content.HallID == 1 {
+		content.TaxonomyRequired = true
+		if e := tx.Model(content).Update("taxonomy_required", true).Error; e != nil {
+			return e
+		}
 	}
 	if e := tx.Model(content).Update("hall_id", content.HallID).Error; e != nil {
 		return e
@@ -145,6 +164,9 @@ func makeDraft(tx *gorm.DB, content *Content, p Payload) error {
 		r.AdministrativeSnapshot = administrativeSnapshot(p, region)
 	}
 	if e = tx.Create(&r).Error; e != nil {
+		return e
+	}
+	if e = indexTaxonomyRevision(tx, *content, r, p, false); e != nil {
 		return e
 	}
 	for _, mid := range payloadMedia(p) {
@@ -255,6 +277,33 @@ func (a *App) saveDraft(c *gin.Context) {
 		if old.Status == "pending" {
 			return fmt.Errorf("pending_review")
 		}
+		var previousTaxonomy Payload
+		if e = json.Unmarshal([]byte(old.Payload), &previousTaxonomy); e != nil {
+			return e
+		}
+		oldView := []View{view(content, old)}
+		// Use the transaction to avoid a pool read outside the locked content.
+		if e = (&App{DB: tx}).hydrateTaxonomyViews(oldView); e != nil {
+			return e
+		}
+		previousTaxonomy.PrimaryCategoryID = oldView[0].Data.PrimaryCategoryID
+		previousTaxonomy.SecondaryCategoryIDs = oldView[0].Data.SecondaryCategoryIDs
+		previousTaxonomy.ProductCategoryID = oldView[0].Data.ProductCategoryID
+		mergeTaxonomyFields(&req.Data, previousTaxonomy)
+		if !content.TaxonomyRequired && ((req.Data.PrimaryCategoryID > 0 && req.Data.PrimaryCategoryID != previousTaxonomy.PrimaryCategoryID) || (req.Data.ProductCategoryID > 0 && req.Data.ProductCategoryID != previousTaxonomy.ProductCategoryID)) {
+			content.TaxonomyRequired = true
+			if e = tx.Model(&content).Update("taxonomy_required", true).Error; e != nil {
+				return e
+			}
+		}
+		if canonicalCategory(tx, req.Data.CategoryID) != canonicalCategory(tx, previousTaxonomy.CategoryID) {
+			if !req.Data.taxonomyFields["primary_category_id"] {
+				req.Data.PrimaryCategoryID = 0
+			}
+			if !req.Data.taxonomyFields["product_category_id"] {
+				req.Data.ProductCategoryID = 0
+			}
+		}
 		if content.Kind == "vendor" {
 			var previous Payload
 			if e = json.Unmarshal([]byte(old.Payload), &previous); e != nil {
@@ -262,7 +311,7 @@ func (a *App) saveDraft(c *gin.Context) {
 			}
 			mergePortalProfile(&req.Data, previous)
 		}
-		if e = a.validatePayload(tx, Account{ID: content.OwnerID}, content.Kind, &req.Data); e != nil {
+		if e = a.validatePayload(tx, Account{ID: content.OwnerID}, content.Kind, &req.Data, previousTaxonomy); e != nil {
 			return e
 		}
 		if e = makeDraft(tx, &content, req.Data); e != nil {
@@ -307,6 +356,9 @@ func (a *App) submit(c *gin.Context) {
 		}
 		if content.Epoch != rev.BaseEpoch {
 			return fmt.Errorf("stale_revision")
+		}
+		if e = submitTaxonomy(tx, content, rev); e != nil {
+			return e
 		}
 		if e = tx.Model(&rev).Update("status", "pending").Error; e != nil {
 			return e
@@ -494,7 +546,14 @@ func (a *App) listContents(c *gin.Context, admin bool) {
 			q = q.Where("contents.vendor_id=?", v)
 		}
 		if ids := a.categoryIDs(c.Query("category_id")); len(ids) > 0 {
-			q = q.Where("dr.category_id IN ?", ids)
+			if _, modern := a.newCategoryFilter(c.Query("category_id"), c.Query("kind")); modern {
+				q = taxonomyFilter(q, "dr", ids)
+			} else {
+				q = q.Where("dr.category_id IN ?", ids)
+			}
+		}
+		if value := c.Query("industrial_belt_id"); value != "" {
+			q = filterBelt(c, q, "CASE WHEN contents.kind='vendor' THEN contents.id ELSE contents.vendor_id END")
 		}
 		if v := c.Query("region_id"); v != "" {
 			q = q.Where("(contents.kind='vendor' AND dr.region_id=?) OR (contents.kind='product' AND EXISTS (SELECT 1 FROM contents bv JOIN revisions br ON br.id=bv.draft_revision_id WHERE bv.id=contents.vendor_id AND br.region_id=?))", v, v)

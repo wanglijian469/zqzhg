@@ -34,7 +34,7 @@ func (a *App) setMerchantLogin(sourceKey, name, password string) (Account, error
 			return e
 		}
 		var collision int64
-		if e := tx.Model(&Account{}).Where("id<>? AND (login_name=? OR username=?)", account.ID, name, name).Count(&collision).Error; e != nil {
+		if e := tx.Model(&Account{}).Where("id<>? AND (login_name=? OR username=? OR phone=?)", account.ID, name, name, name).Count(&collision).Error; e != nil {
 			return e
 		}
 		if collision > 0 {
@@ -81,7 +81,7 @@ func (a *App) passwordLogin(c *gin.Context, role string) {
 	var session gin.H
 	e := a.DB.Transaction(func(tx *gorm.DB) error {
 		var account Account
-		err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("login_name = ? AND role = ?", strings.TrimSpace(req.Username), role).First(&account).Error
+		err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("(login_name = ? OR (phone=? AND phone_verified_at IS NOT NULL)) AND role = ?", strings.TrimSpace(req.Username), strings.TrimSpace(req.Username), role).First(&account).Error
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return err
 		}
@@ -93,7 +93,7 @@ func (a *App) passwordLogin(c *gin.Context, role string) {
 		if err != nil || account.PasswordHash == "" || !matched {
 			return nil
 		}
-		session, err = newSessionIn(tx, account)
+		session, err = a.phoneSession(tx, account, false)
 		return err
 	})
 	if e != nil {

@@ -478,7 +478,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     ),
                     if (m.token.isNotEmpty)
                       Text(
-                        (m.account['login_name'] ?? m.account['username'] ?? '')
+                        (m.account['phone'] ??
+                                m.account['login_name'] ??
+                                m.account['username'] ??
+                                '')
                             .toString(),
                       ),
                     Text(

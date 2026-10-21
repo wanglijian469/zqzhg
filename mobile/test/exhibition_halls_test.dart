@@ -99,8 +99,11 @@ void main() {
       await tester.enterText(find.byType(TextField).first, '440');
       await tester.testTextInput.receiveAction(TextInputAction.search);
       await tester.pumpAndSettle();
-      await nav.tap(tester, find.byType(DropdownButtonFormField<int>).first);
-      await nav.tap(tester, find.text('农业机械').last);
+      await nav.tap(tester, find.byType(ExpansionTile).first);
+      tester
+          .widget<DropdownButton<int>>(find.byType(DropdownButton<int>).first)
+          .onChanged!(1);
+      await tester.pumpAndSettle();
       await nav.tap(tester, find.text('下一页'));
       final controller = tester
           .widget<CustomScrollView>(find.byType(CustomScrollView).last)
@@ -118,8 +121,18 @@ void main() {
         '440',
       );
       expect(find.text('农业机械'), findsOneWidget);
-      expect(find.textContaining('2 /'), findsOneWidget);
       expect(controller.offset, offset);
+      await tester.scrollUntilVisible(
+        find.textContaining('2 /'),
+        350,
+        scrollable: find
+            .descendant(
+              of: find.byType(CustomScrollView).last,
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      );
+      expect(find.textContaining('2 /'), findsOneWidget);
       expect(
         calls.where((u) => u.path.endsWith('/vendors')).length,
         vendorReads,

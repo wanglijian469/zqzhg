@@ -32,7 +32,7 @@ func TestCompanyOnboardingBrowserHarness(t *testing.T) {
 	}
 	merchant := session["token"].(string)
 	tc := testClient{t, a.router()}
-	legacy := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "历史资料验收企业（隔离测试）", MainProducts: "测试机械", RegionName: "旧地区文字（测试）", Phone: "0319-1234567", NameEN: "Legacy company test", Description: "已有真实资料回填测试", CompanyProfile: &CompanyProfile{Summary: "原宣传摘要", SummaryEN: "Existing short summary", Contacts: []CompanyContact{{Area: "测试区域", AreaEN: "Test area", Name: "测试联系人", NameEN: "Test contact", Phone: "0319-7654321"}}}}}, 201)
+	legacy := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "历史资料验收企业（隔离测试）", MainProducts: "测试机械", RegionName: "旧地区文字（测试）", Phone: "0319-1234567", NameEN: "Legacy company test", Description: "已有真实资料回填测试", CompanyProfile: &CompanyProfile{Summary: "原宣传摘要", SummaryEN: "Existing short summary", Contacts: []CompanyContact{{Area: "测试区域", AreaEN: "Test area", Name: "测试联系人", NameEN: "Test contact", Phone: "0319-7654321"}}}}}, 201)
 	tc.call("POST", "/merchant/contents/"+number(legacy["id"])+"/submit", merchant, gin.H{"revision_id": legacy["revision_id"]}, 200)
 	tc.call("POST", "/admin/revisions/"+number(legacy["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
 	pic := image.NewRGBA(image.Rect(0, 0, 640, 480))

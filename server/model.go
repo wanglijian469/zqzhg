@@ -3,12 +3,14 @@ package main
 import "time"
 
 type Account struct {
-	ID           uint64    `json:"id"`
-	Username     string    `json:"username"`
-	LoginName    *string   `json:"login_name,omitempty"`
-	Role         string    `json:"role"`
-	PasswordHash string    `json:"-"`
-	CreatedAt    time.Time `json:"created_at"`
+	ID              uint64     `json:"id"`
+	Username        string     `json:"username"`
+	LoginName       *string    `json:"login_name,omitempty"`
+	Phone           *string    `json:"phone,omitempty"`
+	PhoneVerifiedAt *time.Time `json:"-"`
+	Role            string     `json:"role"`
+	PasswordHash    string     `json:"-"`
+	CreatedAt       time.Time  `json:"created_at"`
 }
 type Session struct {
 	TokenHash string `gorm:"primaryKey"`
@@ -40,13 +42,18 @@ type Hall struct {
 	Slug          string `json:"slug"`
 }
 type Category struct {
-	ID        uint64 `json:"id"`
-	HallID    uint64 `json:"hall_id"`
-	ParentID  uint64 `json:"parent_id"`
-	Name      string `json:"name"`
-	NameEN    string `json:"name_en"`
-	SortOrder int    `json:"sort_order"`
-	Enabled   bool   `json:"enabled"`
+	CategoryKind  string     `json:"category_kind" gorm:"default:legacy"`
+	Code          *string    `json:"code,omitempty"`
+	ImageMediaID  uint64     `json:"image_media_id"`
+	SearchAliases string     `json:"search_aliases"`
+	DeletedAt     *time.Time `json:"deleted_at,omitempty"`
+	ID            uint64     `json:"id"`
+	HallID        uint64     `json:"hall_id"`
+	ParentID      uint64     `json:"parent_id"`
+	Name          string     `json:"name"`
+	NameEN        string     `json:"name_en"`
+	SortOrder     int        `json:"sort_order"`
+	Enabled       bool       `json:"enabled"`
 }
 type Region struct {
 	AdministrativeCode *string `json:"administrative_code,omitempty"`
@@ -56,6 +63,7 @@ type Region struct {
 	Enabled            bool    `json:"enabled"`
 }
 type Content struct {
+	TaxonomyRequired    bool      `json:"taxonomy_required"`
 	HallID              uint64    `gorm:"default:1" json:"hall_id"`
 	ShowroomSlug        *string   `json:"-"`
 	ID                  uint64    `json:"id"`
@@ -73,22 +81,32 @@ type Content struct {
 	UpdatedAt           time.Time `json:"updated_at"`
 }
 type Payload struct {
-	RegionCode     string          `json:"region_code,omitempty"`
-	CompanyProfile *CompanyProfile `json:"company_profile,omitempty"`
-	Name           string          `json:"name"`
-	NameEN         string          `json:"name_en"`
-	MainProducts   string          `json:"main_products"`
-	Keywords       string          `json:"keywords"`
-	RegionID       uint64          `json:"region_id"`
-	RegionName     string          `json:"region_name"`
-	CategoryID     uint64          `json:"category_id"`
-	Description    string          `json:"description"`
-	DescriptionEN  string          `json:"description_en"`
-	Phone          string          `json:"phone"`
-	Wechat         string          `json:"wechat"`
-	Address        string          `json:"address"`
-	Parameters     string          `json:"parameters"`
-	MediaIDs       []uint64        `json:"media_ids"`
+	PrimaryCategoryID    uint64   `json:"primary_category_id"`
+	SecondaryCategoryIDs []uint64 `json:"secondary_category_ids"`
+	BusinessNature       string   `json:"business_nature"`
+	ProductCategoryID    uint64   `json:"product_category_id"`
+	Brand                string   `json:"brand"`
+	Model                string   `json:"model"`
+	ApplicableBrands     []string `json:"applicable_brands"`
+	ApplicableModels     []string `json:"applicable_models"`
+	IndustrialBeltIDs    []uint64 `json:"industrial_belt_ids,omitempty" gorm:"-"`
+	taxonomyFields       map[string]bool
+	RegionCode           string          `json:"region_code,omitempty"`
+	CompanyProfile       *CompanyProfile `json:"company_profile,omitempty"`
+	Name                 string          `json:"name"`
+	NameEN               string          `json:"name_en"`
+	MainProducts         string          `json:"main_products"`
+	Keywords             string          `json:"keywords"`
+	RegionID             uint64          `json:"region_id"`
+	RegionName           string          `json:"region_name"`
+	CategoryID           uint64          `json:"category_id"`
+	Description          string          `json:"description"`
+	DescriptionEN        string          `json:"description_en"`
+	Phone                string          `json:"phone"`
+	Wechat               string          `json:"wechat"`
+	Address              string          `json:"address"`
+	Parameters           string          `json:"parameters"`
+	MediaIDs             []uint64        `json:"media_ids"`
 }
 type Revision struct {
 	AdministrativeSnapshot

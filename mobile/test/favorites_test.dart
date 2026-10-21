@@ -49,6 +49,17 @@ class Cloud {
       'Bearer ',
       '',
     );
+    if (path.endsWith('/public/config')) {
+      return response({
+        'capabilities': {'phone_password_auth': true},
+      });
+    }
+    if (path.endsWith('/auth/phone/register')) {
+      return response(user('a:first'), 201);
+    }
+    if (path.endsWith('/auth/phone/password')) {
+      return response(user('manufacturer:first', id: 9, role: 'merchant'));
+    }
     if (path.endsWith('/auth/visitor/register') ||
         path.endsWith('/auth/visitor')) {
       return response(user('a:first'), 201);
@@ -431,9 +442,13 @@ void main() {
       await nav.tap(tester, find.byKey(const ValueKey('my-favorites')));
       await nav.tap(tester, find.text('登录／注册并同步'));
       await nav.tap(tester, find.text('注册访客账号'));
-      await tester.enterText(find.widgetWithText(TextField, '账号'), '普通访客');
       await tester.enterText(
-        find.widgetWithText(TextField, '密码'),
+        find.widgetWithText(TextField, '手机号'),
+        '13900001111',
+      );
+      await tester.enterText(find.widgetWithText(TextField, '短信验证码'), '123456');
+      await tester.enterText(
+        find.widgetWithText(TextField, '设置密码'),
         'Visitor-Password-2026!',
       );
       await tester.enterText(
@@ -449,7 +464,10 @@ void main() {
       expect(find.text(m.t('visitorMerchantHelp')), findsOneWidget);
       expect(find.byType(MerchantWorkspace), findsNothing);
       await nav.tap(tester, find.widgetWithText(TextButton, '厂商账号登录'));
-      await tester.enterText(find.widgetWithText(TextField, '公司登录账号'), '厂商账号');
+      await tester.enterText(
+        find.widgetWithText(TextField, '手机号'),
+        '13900002222',
+      );
       await tester.enterText(
         find.widgetWithText(TextField, '密码'),
         'Manufacturer-Pass-2026!',
@@ -499,8 +517,14 @@ void main() {
         nav.harness(m, home: const LoginScreen(visitor: true), scale: 1.4),
       );
       await tester.pumpAndSettle();
-      await nav.tap(tester, find.text(m.t('newVisitorRegister')));
-      expect(find.widgetWithText(TextField, m.t('username')), findsOneWidget);
+      await nav.tap(
+        tester,
+        find.text(lang == 'zh' ? '注册访客账号' : 'Register visitor account'),
+      );
+      expect(
+        find.widgetWithText(TextField, lang == 'zh' ? '手机号' : 'Mobile number'),
+        findsOneWidget,
+      );
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     });

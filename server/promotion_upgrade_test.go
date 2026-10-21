@@ -92,7 +92,7 @@ func TestShowroomAddressOwnershipConcurrencyAndHistory(t *testing.T) {
 	merchants := []string{tc.login("13900009501"), tc.login("13900009502")}
 	vendors := []map[string]any{}
 	for i, m := range merchants {
-		v := tc.call("POST", "/merchant/contents", m, gin.H{"kind": "vendor", "data": Payload{Name: fmt.Sprintf("河北真实测试机械企业%d", i), MainProducts: "测试产品", Phone: "13900009501", RegionName: "河北"}}, 201)
+		v := tc.fixtureCall("POST", "/merchant/contents", m, gin.H{"kind": "vendor", "data": Payload{Name: fmt.Sprintf("河北真实测试机械企业%d", i), MainProducts: "测试产品", Phone: "13900009501", RegionName: "河北"}}, 201)
 		vendors = append(vendors, v)
 		tc.call("POST", "/merchant/contents/"+number(v["id"])+"/submit", m, gin.H{"revision_id": v["revision_id"]}, 200)
 		tc.call("POST", "/admin/revisions/"+number(v["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)

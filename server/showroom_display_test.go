@@ -23,7 +23,7 @@ func TestShowroomRepresentativesIsolationVersionsAndVisibility(t *testing.T) {
 			p.RegionName = "河北"
 			p.Phone = "13900008401"
 		}
-		return tc.call("POST", "/merchant/contents", token, gin.H{"kind": kind, "data": p}, 201)
+		return tc.fixtureCall("POST", "/merchant/contents", token, gin.H{"kind": kind, "data": p}, 201)
 	}
 	publish := func(token string, item map[string]any) {
 		tc.call("POST", "/merchant/contents/"+number(item["id"])+"/submit", token, gin.H{"revision_id": item["revision_id"]}, 200)
@@ -85,7 +85,7 @@ func TestShowroomRepresentativesIsolationVersionsAndVisibility(t *testing.T) {
 		t.Fatal("manual order ignored")
 	}
 	p := products[1]
-	changed := tc.call("PUT", "/merchant/contents/"+number(p["id"])+"/draft", merchant, gin.H{"revision_id": p["revision_id"], "data": Payload{Name: "未审核私有改名", CategoryID: 1}}, 200)
+	changed := tc.fixtureCall("PUT", "/merchant/contents/"+number(p["id"])+"/draft", merchant, gin.H{"revision_id": p["revision_id"], "data": Payload{Name: "未审核私有改名", CategoryID: 1}}, 200)
 	tc.call("POST", "/merchant/contents/"+number(p["id"])+"/submit", merchant, gin.H{"revision_id": changed["revision_id"]}, 200)
 	public = tc.call("GET", path, "", nil, 200)
 	if public["representative_products"].([]any)[0].(map[string]any)["data"].(map[string]any)["name"] == "未审核私有改名" {
@@ -132,7 +132,7 @@ func TestShowroomDisplayConcurrentRollbackAndMigration(t *testing.T) {
 	a := importTestApp(t)
 	tc := testClient{t, a.router()}
 	m := tc.login("13900008403")
-	tc.call("POST", "/merchant/contents", m, gin.H{"kind": "vendor", "data": Payload{Name: "并发配置厂商", MainProducts: "机械", RegionName: "河北", Phone: "13900008403"}}, 201)
+	tc.fixtureCall("POST", "/merchant/contents", m, gin.H{"kind": "vendor", "data": Payload{Name: "并发配置厂商", MainProducts: "机械", RegionName: "河北", Phone: "13900008403"}}, 201)
 	codes := make(chan int, 2)
 	var wg sync.WaitGroup
 	for i := 0; i < 2; i++ {

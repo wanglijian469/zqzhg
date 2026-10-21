@@ -42,12 +42,13 @@ func (a *App) adminPasswordReset(c *gin.Context) {
 	}
 	var account Account
 	var revoked int64
+	var loginName string
 	// The SQL logger must not echo the password hash on errors or slow updates.
 	err = a.DB.Session(&gorm.Session{Logger: logger.Default.LogMode(logger.Silent)}).Transaction(func(tx *gorm.DB) error {
-		if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("id=? AND role='merchant'", id(c)).First(&account).Error; e != nil {
+		if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("id=? AND role IN ('merchant','visitor')", id(c)).First(&account).Error; e != nil {
 			return e
 		}
-		if account.LoginName == nil || strings.TrimSpace(*account.LoginName) == "" {
+		if (account.LoginName == nil || strings.TrimSpace(*account.LoginName) == "") && !verifiedPhone(account) {
 			return fieldFailure("invalid_request", "account_id", "password_login_unavailable")
 		}
 		if e := tx.Model(&account).Update("password_hash", string(hash)).Error; e != nil {
@@ -58,12 +59,21 @@ func (a *App) adminPasswordReset(c *gin.Context) {
 			return result.Error
 		}
 		revoked = result.RowsAffected
-		return recordOperation(tx, actor(c).ID, "account", account.ID, "account_password_reset", *account.LoginName)
+		if account.LoginName != nil {
+			loginName = *account.LoginName
+		} else {
+			loginName = *account.Phone
+		}
+		note := loginName
+		if verifiedPhone(account) {
+			note = phoneMask(*account.Phone)
+		}
+		return recordOperation(tx, actor(c).ID, "account", account.ID, "account_password_reset", note)
 	})
 	if err != nil {
 		dbFail(c, err)
 		return
 	}
 	c.Header("Cache-Control", "no-store")
-	c.JSON(200, gin.H{"account_id": account.ID, "login_name": *account.LoginName, "password": password, "revoked_sessions": revoked})
+	c.JSON(200, gin.H{"account_id": account.ID, "login_name": loginName, "password": password, "revoked_sessions": revoked})
 }

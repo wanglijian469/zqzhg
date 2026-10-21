@@ -43,26 +43,26 @@ func TestCompanyOnboardingRegionAndReview(t *testing.T) {
 	payload := Payload{Name: "工作台入驻测试企业", RegionCode: "130528", MainProducts: "测试机械", Phone: "0319-1234567"}
 	bad := payload
 	bad.RegionCode = "999999"
-	tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": bad}, 400)
+	tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": bad}, 400)
 	bad.RegionCode = "13"
-	tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": bad}, 400)
-	v := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": payload}, 201)
+	tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": bad}, 400)
+	v := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": payload}, 201)
 	d := v["data"].(map[string]any)
 	if d["region_id"] != float64(18) || d["region_name"] != legacy.Name {
 		t.Fatal(d)
 	}
 	payload.Description = "真实主营介绍"
-	v = tc.call("PUT", "/merchant/contents/"+number(v["id"])+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": payload}, 200)
+	v = tc.fixtureCall("PUT", "/merchant/contents/"+number(v["id"])+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": payload}, 200)
 	tc.call("POST", "/merchant/contents/"+number(v["id"])+"/submit", merchant, gin.H{"revision_id": v["revision_id"]}, 200)
 	tc.call("POST", "/admin/revisions/"+number(v["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
 	if tc.call("GET", "/public/vendors?region_id=18", "", nil, 200)["total"] != float64(1) {
 		t.Fatal("region filtering lost registered vendor")
 	}
-	tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "既有V22名称最小提交"}}, 201)
+	tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "既有V22名称最小提交"}}, 201)
 	other := resourceTestSession(t, a, "merchant")
 	payload.Name = "市级资料测试"
 	payload.RegionCode = "1305"
-	city := tc.call("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "data": payload}, 201)
+	city := tc.fixtureCall("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "data": payload}, 201)
 	if city["data"].(map[string]any)["region_name"] != "河北省 邢台市" {
 		t.Fatal(city)
 	}
@@ -70,7 +70,7 @@ func TestCompanyOnboardingRegionAndReview(t *testing.T) {
 	payload.RegionCode = ""
 	payload.RegionID = 18
 	payload.RegionName = legacy.Name
-	tc.call("POST", "/merchant/contents", old, gin.H{"kind": "vendor", "data": payload}, 201)
+	tc.fixtureCall("POST", "/merchant/contents", old, gin.H{"kind": "vendor", "data": payload}, 201)
 }
 func TestCompanyRegionConcurrentResolutionAndMigrationRetry(t *testing.T) {
 	a := importTestApp(t)

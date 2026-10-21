@@ -1,0 +1,17 @@
+{
+  "backendPassed": 100,
+  "backendSkipped": 12,
+  "webPassed": 191,
+  "flutterPassed": 165,
+  "flutterSkipped": 7,
+  "nativeFormLayouts": 180,
+  "webLayouts": 32,
+  "physicalDeviceVerified": false,
+  "goVetClean": true,
+  "flutterAnalyzeClean": true,
+  "originalCertificateVerified": true,
+  "websiteMapRetained": true,
+  "backupCreated": true,
+  "localSchema": 19,
+  "businessBeforeAfterEqual": true
+}

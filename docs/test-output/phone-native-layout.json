@@ -1,0 +1,1447 @@
+{
+  "checks": 180,
+  "syntheticFixtures": true,
+  "realDevice": false,
+  "layouts": [
+    {
+      "page": "merchant-login",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 360.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 360.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 390.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 390.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 768.0,
+      "language": "zh",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.0,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.4,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-login",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "merchant-register",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-login",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "visitor-register",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": false,
+      "passed": true
+    },
+    {
+      "page": "binding",
+      "width": 768.0,
+      "language": "en",
+      "scale": 1.6,
+      "keyboard": true,
+      "passed": true
+    }
+  ]
+}

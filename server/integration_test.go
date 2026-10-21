@@ -117,17 +117,17 @@ func TestBusinessAndMediaIsolation(t *testing.T) {
 	tc.call("GET", mediaPath, other, nil, 404)
 	tc.call("GET", mediaPath, merchant, nil, 200)
 	payload := gin.H{"name": "测试厂家（仅测试）", "name_en": "Test manufacturer", "main_products": "测试配件", "region_name": "测试地区", "phone": "13900000001", "media_ids": []float64{media}}
-	vendor := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": payload}, 201)
+	vendor := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": payload}, 201)
 	vendorID := number(vendor["id"])
 	revision := vendor["revision_id"]
 	tc.call("GET", "/merchant/contents/"+vendorID, other, nil, 403)
 	tc.call("GET", "/public/vendors/"+vendorID, "", nil, 404)
 	tc.call("POST", "/merchant/contents/"+vendorID+"/submit", merchant, gin.H{"revision_id": revision}, 200)
-	tc.call("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": revision, "data": payload}, 409)
+	tc.fixtureCall("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": revision, "data": payload}, 409)
 	childCategory := tc.call("POST", "/admin/categories", admin, gin.H{"name": "测试子分类", "parent_id": 2, "enabled": true}, 200)
 	tc.call("PUT", "/admin/categories/2", admin, gin.H{"name": "农机配件", "parent_id": childCategory["id"], "enabled": true}, 400)
 	productPayload := gin.H{"name": "测试产品", "name_en": "Test component", "category_id": childCategory["id"], "keywords": "test component", "media_ids": []float64{media}}
-	product := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": productPayload}, 201)
+	product := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": productPayload}, 201)
 	productID := number(product["id"])
 	tc.call("POST", "/merchant/contents/"+productID+"/submit", merchant, gin.H{"revision_id": product["revision_id"]}, 200)
 	tc.call("POST", "/admin/revisions/"+number(product["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
@@ -158,8 +158,8 @@ func TestBusinessAndMediaIsolation(t *testing.T) {
 	}
 	payload["name"] = "待审新名称"
 	payload["media_ids"] = []float64{newMedia}
-	draft := tc.call("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": revision, "data": payload}, 200)
-	tc.call("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": revision, "data": payload}, 409)
+	draft := tc.fixtureCall("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": revision, "data": payload}, 200)
+	tc.fixtureCall("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": revision, "data": payload}, 409)
 	tc.call("POST", "/merchant/contents/"+vendorID+"/submit", merchant, gin.H{"revision_id": draft["revision_id"]}, 200)
 	pub := tc.call("GET", "/public/vendors/"+vendorID, "", nil, 200)
 	if pub["item"].(map[string]any)["data"].(map[string]any)["name"] != "测试厂家（仅测试）" {
@@ -171,13 +171,13 @@ func TestBusinessAndMediaIsolation(t *testing.T) {
 	tc.call("POST", "/admin/revisions/"+number(draft["revision_id"])+"/review", admin, gin.H{"decision": "reject", "note": "请补充说明"}, 200)
 	tc.call("POST", "/admin/revisions/"+number(draft["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 409)
 	payload["media_ids"] = []float64{foreignMedia}
-	tc.call("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": draft["revision_id"], "data": payload}, 400)
+	tc.fixtureCall("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": draft["revision_id"], "data": payload}, 400)
 	payload["media_ids"] = []float64{newMedia}
-	replacement := tc.call("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": draft["revision_id"], "data": payload}, 200)
+	replacement := tc.fixtureCall("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": draft["revision_id"], "data": payload}, 200)
 	tc.call("POST", "/merchant/contents/"+vendorID+"/submit", merchant, gin.H{"revision_id": replacement["revision_id"]}, 200)
 	tc.call("POST", "/admin/revisions/"+number(replacement["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
 	tc.call("GET", "/media/"+number(newMedia), "", nil, 200)
-	racingDraft := tc.call("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": replacement["revision_id"], "data": payload}, 200)
+	racingDraft := tc.fixtureCall("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": replacement["revision_id"], "data": payload}, 200)
 	tc.call("POST", "/merchant/contents/"+vendorID+"/submit", merchant, gin.H{"revision_id": racingDraft["revision_id"]}, 200)
 	results := make(chan int, 2)
 	for _, request := range []struct {

@@ -29,7 +29,7 @@ func (a *App) publicBase(c *gin.Context) string {
 func canonicalPublic(base, path string, query url.Values) string {
 	q := url.Values{}
 	company := strings.HasPrefix(path, "/v/")
-	keys := []string{"hall", "q", "category_id", "region_id", "vendor_id", "sort", "page"}
+	keys := []string{"hall", "q", "category_id", "region_id", "industrial_belt_id", "business_nature", "vendor_id", "sort", "page"}
 	if path == "/regions" {
 		keys = []string{"hall", "q", "category_id", "region_code", "unassigned", "page"}
 	}

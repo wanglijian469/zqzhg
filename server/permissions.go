@@ -120,7 +120,7 @@ func (a *App) hasPermission(account Account, key string) bool {
 	return false
 }
 func (a *App) accountJSON(account Account) gin.H {
-	return gin.H{"id": account.ID, "username": account.Username, "login_name": account.LoginName, "role": account.Role, "enabled": true, "created_at": account.CreatedAt, "permissions": a.permissions(account)}
+	return gin.H{"id": account.ID, "username": account.Username, "login_name": account.LoginName, "phone": account.Phone, "phone_verified": verifiedPhone(account), "requires_phone_binding": phoneAccount(account) && !verifiedPhone(account), "role": account.Role, "enabled": true, "created_at": account.CreatedAt, "permissions": a.permissions(account)}
 }
 func (a *App) platformPolicy() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -160,7 +160,7 @@ func (a *App) permissionForRequest(c *gin.Context) string {
 		return "home.manage"
 	case path == "taxonomy" && method == "GET":
 		return "platform.taxonomy"
-	case strings.HasPrefix(path, "categories") || strings.HasPrefix(path, "regions") || strings.HasPrefix(path, "category-suggestions"):
+	case strings.HasPrefix(path, "categories") || strings.HasPrefix(path, "regions") || strings.HasPrefix(path, "category-suggestions") || strings.HasPrefix(path, "taxonomy-mappings") || strings.HasPrefix(path, "industrial-belts") || path == "category-media":
 		return "taxonomy.manage"
 	case strings.HasPrefix(path, "resources") || strings.HasPrefix(path, "resource-media") || strings.HasPrefix(path, "resource-revisions"):
 		action := "read"
@@ -215,6 +215,9 @@ func (a *App) permissionForRequest(c *gin.Context) string {
 	return ""
 }
 func (a *App) canReadPrivateMedia(account Account, m Media) bool {
+	if account.ID == m.OwnerID && a.hasPermission(account, "taxonomy.manage") {
+		return true
+	}
 	if account.Role == "admin" || (account.ID == m.OwnerID && account.Role != "operator") {
 		return true
 	}

@@ -15,7 +15,7 @@ func TestPublicProductBrowse(t *testing.T) {
 		tc.call("POST", "/admin/revisions/"+number(item["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
 	}
 	create := func(token, kind string, data Payload) map[string]any {
-		return tc.call("POST", "/merchant/contents", token, gin.H{"kind": kind, "data": data}, 201)
+		return tc.fixtureCall("POST", "/merchant/contents", token, gin.H{"kind": kind, "data": data}, 201)
 	}
 	merchant := tc.login("13900008101")
 	vendorData := Payload{Name: "产品浏览测试厂家（仅测试）", NameEN: "Browse Test Factory", MainProducts: "测试翻转犁", RegionName: "产品浏览测试地区甲", Phone: "13900008101"}
@@ -66,7 +66,7 @@ func TestPublicProductBrowse(t *testing.T) {
 	vendorData.Name = "仅待审的新厂家名称"
 	vendorData.RegionName = "产品浏览测试地区乙"
 	vendorData.RegionID = 0
-	newDraft := tc.call("PUT", "/merchant/contents/"+number(vendor["id"])+"/draft", merchant, gin.H{"revision_id": vendor["revision_id"], "data": vendorData}, 200)
+	newDraft := tc.fixtureCall("PUT", "/merchant/contents/"+number(vendor["id"])+"/draft", merchant, gin.H{"revision_id": vendor["revision_id"], "data": vendorData}, 200)
 	tc.call("POST", "/merchant/contents/"+number(vendor["id"])+"/submit", merchant, gin.H{"revision_id": newDraft["revision_id"]}, 200)
 	public := tc.call("GET", "/public/products?region_id="+region, "", nil, 200)
 	if public["total"].(float64) != 2 || public["items"].([]any)[0].(map[string]any)["vendor"].(map[string]any)["name"] == vendorData.Name {

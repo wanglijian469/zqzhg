@@ -1,0 +1,1192 @@
+{
+  "schema": 17,
+  "vendor_roots": 14,
+  "product_roots": 20,
+  "product_second_level": 114,
+  "categories": [
+    {
+      "code": "agri.vendor.01",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "农机整机",
+      "name_en": "Agricultural machinery manufacturers",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.vendor.02",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "耕整地机械",
+      "name_en": "Tillage machinery",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.vendor.03",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "播种施肥机械",
+      "name_en": "Seeding and fertilizing machinery",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.vendor.04",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "收获机械",
+      "name_en": "Harvesting machinery",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.vendor.05",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "田间管理与植保",
+      "name_en": "Field management and crop protection",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.vendor.06",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "农机具及配套设备",
+      "name_en": "Implements and supporting equipment",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.vendor.07",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "农机零部件",
+      "name_en": "Agricultural machinery parts",
+      "sort_order": 70
+    },
+    {
+      "code": "agri.vendor.08",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "动力与传动",
+      "name_en": "Power and transmission",
+      "sort_order": 80
+    },
+    {
+      "code": "agri.vendor.09",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "液压与底盘",
+      "name_en": "Hydraulics and chassis",
+      "sort_order": 90
+    },
+    {
+      "code": "agri.vendor.10",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "电气与智能控制",
+      "name_en": "Electrical and intelligent control",
+      "sort_order": 100
+    },
+    {
+      "code": "agri.vendor.11",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "灌溉与设施农业",
+      "name_en": "Irrigation and protected agriculture",
+      "sort_order": 110
+    },
+    {
+      "code": "agri.vendor.12",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "畜牧与饲料机械",
+      "name_en": "Livestock and feed machinery",
+      "sort_order": 120
+    },
+    {
+      "code": "agri.vendor.13",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "农产品加工机械",
+      "name_en": "Agricultural processing machinery",
+      "sort_order": 130
+    },
+    {
+      "code": "agri.vendor.14",
+      "category_kind": "vendor",
+      "parent_code": null,
+      "name": "机械加工与定制",
+      "name_en": "Machining and custom manufacturing",
+      "sort_order": 140
+    },
+    {
+      "code": "agri.product.01",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "拖拉机与动力整机",
+      "name_en": "Tractors and power units",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.01.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.01",
+      "name": "轮式拖拉机",
+      "name_en": "Wheeled tractors",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.01.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.01",
+      "name": "履带拖拉机",
+      "name_en": "Crawler tractors",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.01.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.01",
+      "name": "手扶拖拉机",
+      "name_en": "Walking tractors",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.01.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.01",
+      "name": "其他农业动力整机",
+      "name_en": "Other agricultural power units",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.02",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "耕整地机械",
+      "name_en": "Tillage machinery",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.02.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.02",
+      "name": "铧式犁",
+      "name_en": "Mouldboard ploughs",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.02.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.02",
+      "name": "圆盘犁",
+      "name_en": "Disc ploughs",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.02.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.02",
+      "name": "旋耕机",
+      "name_en": "Rotary tillers",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.02.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.02",
+      "name": "深松机",
+      "name_en": "Subsoilers",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.02.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.02",
+      "name": "耙地机械",
+      "name_en": "Harrows",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.02.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.02",
+      "name": "整地镇压机械",
+      "name_en": "Land preparation and rollers",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.03",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "播种施肥机械",
+      "name_en": "Seeding and fertilizing machinery",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.03.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.03",
+      "name": "条播机",
+      "name_en": "Seed drills",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.03.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.03",
+      "name": "精量播种机",
+      "name_en": "Precision planters",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.03.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.03",
+      "name": "免耕播种机",
+      "name_en": "No-till planters",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.03.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.03",
+      "name": "育苗移栽机械",
+      "name_en": "Seedling and transplanting machinery",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.03.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.03",
+      "name": "施肥撒肥机械",
+      "name_en": "Fertilizer spreaders",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.03.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.03",
+      "name": "播种施肥联合作业机械",
+      "name_en": "Combined seeding and fertilizing machinery",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.04",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "田间管理与植保机械",
+      "name_en": "Field management and crop protection machinery",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.04.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.04",
+      "name": "喷雾喷粉机械",
+      "name_en": "Sprayers and dusters",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.04.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.04",
+      "name": "农业植保无人机",
+      "name_en": "Crop protection drones",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.04.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.04",
+      "name": "中耕除草机械",
+      "name_en": "Cultivators and weeders",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.04.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.04",
+      "name": "修剪管理机械",
+      "name_en": "Pruning and field management machinery",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.05",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "收获机械",
+      "name_en": "Harvesting machinery",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.05.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.05",
+      "name": "谷物收获机械",
+      "name_en": "Grain harvesters",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.05.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.05",
+      "name": "玉米收获机械",
+      "name_en": "Maize harvesters",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.05.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.05",
+      "name": "薯类根茎收获机械",
+      "name_en": "Root and tuber harvesters",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.05.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.05",
+      "name": "棉花收获机械",
+      "name_en": "Cotton harvesters",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.05.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.05",
+      "name": "饲草收获机械",
+      "name_en": "Forage harvesters",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.05.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.05",
+      "name": "果蔬收获机械",
+      "name_en": "Fruit and vegetable harvesters",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.06",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "收获后处理与搬运设备",
+      "name_en": "Post-harvest handling equipment",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.06.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.06",
+      "name": "脱粒机械",
+      "name_en": "Threshers",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.06.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.06",
+      "name": "清选分级设备",
+      "name_en": "Cleaning and grading equipment",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.06.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.06",
+      "name": "烘干设备",
+      "name_en": "Dryers",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.06.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.06",
+      "name": "输送装卸设备",
+      "name_en": "Conveying and loading equipment",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.06.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.06",
+      "name": "农用搬运车辆",
+      "name_en": "Agricultural transport vehicles",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.07",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "畜牧养殖与饲料机械",
+      "name_en": "Livestock and feed machinery",
+      "sort_order": 70
+    },
+    {
+      "code": "agri.product.07.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.07",
+      "name": "饲料粉碎设备",
+      "name_en": "Feed grinders",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.07.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.07",
+      "name": "饲料混合制粒设备",
+      "name_en": "Feed mixers and pellet mills",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.07.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.07",
+      "name": "饲喂设备",
+      "name_en": "Feeding equipment",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.07.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.07",
+      "name": "挤奶设备",
+      "name_en": "Milking equipment",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.07.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.07",
+      "name": "养殖清粪设备",
+      "name_en": "Manure removal equipment",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.08",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "农产品加工机械",
+      "name_en": "Agricultural processing machinery",
+      "sort_order": 80
+    },
+    {
+      "code": "agri.product.08.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.08",
+      "name": "粮食加工设备",
+      "name_en": "Grain processing equipment",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.08.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.08",
+      "name": "油料加工设备",
+      "name_en": "Oilseed processing equipment",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.08.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.08",
+      "name": "果蔬加工设备",
+      "name_en": "Fruit and vegetable processing equipment",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.08.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.08",
+      "name": "初加工包装设备",
+      "name_en": "Primary processing and packaging equipment",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.09",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "农机具及配套设备",
+      "name_en": "Implements and supporting equipment",
+      "sort_order": 90
+    },
+    {
+      "code": "agri.product.09.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.09",
+      "name": "挂接与牵引装置",
+      "name_en": "Hitches and towing devices",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.09.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.09",
+      "name": "配重装置",
+      "name_en": "Ballast equipment",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.09.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.09",
+      "name": "农用挂车",
+      "name_en": "Agricultural trailers",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.09.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.09",
+      "name": "装载搬运属具",
+      "name_en": "Loading and handling attachments",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.09.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.09",
+      "name": "其他配套机具",
+      "name_en": "Other supporting implements",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.10",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "农机易损件",
+      "name_en": "Agricultural wear parts",
+      "sort_order": 100
+    },
+    {
+      "code": "agri.product.10.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.10",
+      "name": "耕作刀具与犁铧",
+      "name_en": "Tillage blades and ploughshares",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.10.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.10",
+      "name": "收割刀片与护刃器",
+      "name_en": "Harvesting blades and guards",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.10.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.10",
+      "name": "锤片与粉碎刀",
+      "name_en": "Hammers and shredding blades",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.10.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.10",
+      "name": "植保喷嘴与滤网",
+      "name_en": "Spray nozzles and screens",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.10.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.10",
+      "name": "摩擦片与衬片",
+      "name_en": "Friction plates and linings",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.11",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "传动系统及零部件",
+      "name_en": "Transmission systems and parts",
+      "sort_order": 110
+    },
+    {
+      "code": "agri.product.11.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.11",
+      "name": "齿轮与齿轮轴",
+      "name_en": "Gears and gear shafts",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.11.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.11",
+      "name": "变速箱与减速器",
+      "name_en": "Gearboxes and reducers",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.11.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.11",
+      "name": "传动轴与万向节",
+      "name_en": "Drive shafts and universal joints",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.11.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.11",
+      "name": "离合器与联轴器",
+      "name_en": "Clutches and couplings",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.11.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.11",
+      "name": "链条链轮",
+      "name_en": "Chains and sprockets",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.11.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.11",
+      "name": "皮带带轮",
+      "name_en": "Belts and pulleys",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.11.07",
+      "category_kind": "product",
+      "parent_code": "agri.product.11",
+      "name": "动力输出装置",
+      "name_en": "Power take-off units",
+      "sort_order": 70
+    },
+    {
+      "code": "agri.product.12",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "发动机及配件",
+      "name_en": "Engines and parts",
+      "sort_order": 120
+    },
+    {
+      "code": "agri.product.12.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.12",
+      "name": "柴油发动机",
+      "name_en": "Diesel engines",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.12.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.12",
+      "name": "汽油发动机",
+      "name_en": "Petrol engines",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.12.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.12",
+      "name": "缸体缸盖与曲柄连杆",
+      "name_en": "Blocks heads and crank mechanisms",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.12.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.12",
+      "name": "活塞缸套与配气机构",
+      "name_en": "Pistons liners and valve mechanisms",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.12.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.12",
+      "name": "燃油喷射系统",
+      "name_en": "Fuel injection systems",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.12.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.12",
+      "name": "进排气系统",
+      "name_en": "Intake and exhaust systems",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.12.07",
+      "category_kind": "product",
+      "parent_code": "agri.product.12",
+      "name": "冷却润滑系统",
+      "name_en": "Cooling and lubrication systems",
+      "sort_order": 70
+    },
+    {
+      "code": "agri.product.12.08",
+      "category_kind": "product",
+      "parent_code": "agri.product.12",
+      "name": "滤清器",
+      "name_en": "Filters",
+      "sort_order": 80
+    },
+    {
+      "code": "agri.product.13",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "液压系统及零部件",
+      "name_en": "Hydraulic systems and parts",
+      "sort_order": 130
+    },
+    {
+      "code": "agri.product.13.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.13",
+      "name": "液压油缸",
+      "name_en": "Hydraulic cylinders",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.13.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.13",
+      "name": "液压泵与马达",
+      "name_en": "Hydraulic pumps and motors",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.13.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.13",
+      "name": "液压阀",
+      "name_en": "Hydraulic valves",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.13.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.13",
+      "name": "液压管路与接头",
+      "name_en": "Hydraulic hoses and fittings",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.13.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.13",
+      "name": "液压过滤与油箱",
+      "name_en": "Hydraulic filtration and tanks",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.13.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.13",
+      "name": "液压总成",
+      "name_en": "Hydraulic assemblies",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.14",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "行走底盘与转向制动",
+      "name_en": "Running gear steering and brakes",
+      "sort_order": 140
+    },
+    {
+      "code": "agri.product.14.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.14",
+      "name": "轮胎轮辋",
+      "name_en": "Tyres and rims",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.14.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.14",
+      "name": "履带与支重轮",
+      "name_en": "Tracks and rollers",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.14.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.14",
+      "name": "车桥与驱动桥",
+      "name_en": "Axles and drive axles",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.14.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.14",
+      "name": "车架与悬挂",
+      "name_en": "Frames and suspension",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.14.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.14",
+      "name": "转向机构",
+      "name_en": "Steering mechanisms",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.14.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.14",
+      "name": "制动机构",
+      "name_en": "Brake mechanisms",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.15",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "收获机械专用件",
+      "name_en": "Harvesting machinery components",
+      "sort_order": 150
+    },
+    {
+      "code": "agri.product.15.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.15",
+      "name": "割台与拨禾机构",
+      "name_en": "Headers and reels",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.15.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.15",
+      "name": "脱粒滚筒与凹板",
+      "name_en": "Threshing drums and concaves",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.15.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.15",
+      "name": "分离清选机构",
+      "name_en": "Separation and cleaning mechanisms",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.15.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.15",
+      "name": "输送与升运机构",
+      "name_en": "Conveyors and elevators",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.15.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.15",
+      "name": "粮箱与卸粮机构",
+      "name_en": "Grain tanks and unloading mechanisms",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.15.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.15",
+      "name": "打捆机构",
+      "name_en": "Baling mechanisms",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.16",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "耕作播种专用件",
+      "name_en": "Tillage and seeding components",
+      "sort_order": 160
+    },
+    {
+      "code": "agri.product.16.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.16",
+      "name": "犁架与调幅翻转机构",
+      "name_en": "Plough frames and reversing mechanisms",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.16.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.16",
+      "name": "旋耕轴与刀座",
+      "name_en": "Rotary shafts and blade holders",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.16.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.16",
+      "name": "耙组与镇压机构",
+      "name_en": "Harrow gangs and roller mechanisms",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.16.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.16",
+      "name": "排种器与排肥器",
+      "name_en": "Seed and fertilizer meters",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.16.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.16",
+      "name": "开沟与覆土机构",
+      "name_en": "Furrow openers and covering mechanisms",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.16.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.16",
+      "name": "地轮与播深调节机构",
+      "name_en": "Ground wheels and depth adjustment",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.17",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "轴承密封与标准件",
+      "name_en": "Bearings seals and standard parts",
+      "sort_order": 170
+    },
+    {
+      "code": "agri.product.17.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.17",
+      "name": "滚动轴承",
+      "name_en": "Rolling bearings",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.17.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.17",
+      "name": "轴承座与滑动轴承",
+      "name_en": "Bearing housings and plain bearings",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.17.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.17",
+      "name": "油封与密封圈",
+      "name_en": "Oil seals and sealing rings",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.17.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.17",
+      "name": "垫片与组合密封",
+      "name_en": "Gaskets and composite seals",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.17.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.17",
+      "name": "螺栓螺母与垫圈",
+      "name_en": "Bolts nuts and washers",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.17.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.17",
+      "name": "销键与挡圈",
+      "name_en": "Pins keys and retaining rings",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.17.07",
+      "category_kind": "product",
+      "parent_code": "agri.product.17",
+      "name": "弹簧",
+      "name_en": "Springs",
+      "sort_order": 70
+    },
+    {
+      "code": "agri.product.18",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "电气与智能农业设备",
+      "name_en": "Electrical and smart agriculture equipment",
+      "sort_order": 180
+    },
+    {
+      "code": "agri.product.18.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.18",
+      "name": "起动充电与线束",
+      "name_en": "Starting charging and wiring",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.18.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.18",
+      "name": "照明与仪表",
+      "name_en": "Lighting and instruments",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.18.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.18",
+      "name": "传感器与控制器",
+      "name_en": "Sensors and controllers",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.18.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.18",
+      "name": "导航与自动驾驶",
+      "name_en": "Navigation and automatic guidance",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.18.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.18",
+      "name": "作业监测与终端",
+      "name_en": "Operation monitoring and terminals",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.18.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.18",
+      "name": "农业物联网设备",
+      "name_en": "Agricultural IoT equipment",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.19",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "灌溉排水设备",
+      "name_en": "Irrigation and drainage equipment",
+      "sort_order": 190
+    },
+    {
+      "code": "agri.product.19.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.19",
+      "name": "农用水泵",
+      "name_en": "Agricultural water pumps",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.19.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.19",
+      "name": "喷灌设备",
+      "name_en": "Sprinkler irrigation equipment",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.19.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.19",
+      "name": "滴灌微灌设备",
+      "name_en": "Drip and micro irrigation",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.19.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.19",
+      "name": "管材管件与阀门",
+      "name_en": "Pipes fittings and valves",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.19.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.19",
+      "name": "水肥一体化设备",
+      "name_en": "Fertigation equipment",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.19.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.19",
+      "name": "排水设备",
+      "name_en": "Drainage equipment",
+      "sort_order": 60
+    },
+    {
+      "code": "agri.product.20",
+      "category_kind": "product",
+      "parent_code": null,
+      "name": "设施农业设备及配件",
+      "name_en": "Protected agriculture equipment and parts",
+      "sort_order": 200
+    },
+    {
+      "code": "agri.product.20.01",
+      "category_kind": "product",
+      "parent_code": "agri.product.20",
+      "name": "温室骨架与覆盖材料",
+      "name_en": "Greenhouse frames and coverings",
+      "sort_order": 10
+    },
+    {
+      "code": "agri.product.20.02",
+      "category_kind": "product",
+      "parent_code": "agri.product.20",
+      "name": "通风降温设备",
+      "name_en": "Ventilation and cooling equipment",
+      "sort_order": 20
+    },
+    {
+      "code": "agri.product.20.03",
+      "category_kind": "product",
+      "parent_code": "agri.product.20",
+      "name": "保温加温设备",
+      "name_en": "Insulation and heating equipment",
+      "sort_order": 30
+    },
+    {
+      "code": "agri.product.20.04",
+      "category_kind": "product",
+      "parent_code": "agri.product.20",
+      "name": "补光设备",
+      "name_en": "Supplemental lighting",
+      "sort_order": 40
+    },
+    {
+      "code": "agri.product.20.05",
+      "category_kind": "product",
+      "parent_code": "agri.product.20",
+      "name": "育苗栽培设施",
+      "name_en": "Seedling and cultivation facilities",
+      "sort_order": 50
+    },
+    {
+      "code": "agri.product.20.06",
+      "category_kind": "product",
+      "parent_code": "agri.product.20",
+      "name": "设施环境控制设备",
+      "name_en": "Greenhouse environment controls",
+      "sort_order": 60
+    }
+  ]
+}

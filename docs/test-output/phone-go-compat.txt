@@ -1,0 +1,296 @@
+=== RUN   TestFavoriteDeduplicationAccountIsolationAndBatchRollback
+
+2026/10/21 13:12:17 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:191 [35;1mrecord not found
+[0m[33m[0.998ms] [34;1m[rows:0][0m SELECT * FROM `favorite_operations` WHERE account_id=2 AND operation_id='deviceA_1' ORDER BY `favorite_operations`.`account_id` LIMIT 1
+
+2026/10/21 13:12:17 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:204 [35;1mrecord not found
+[0m[33m[2.209ms] [34;1m[rows:0][0m SELECT * FROM `favorites` WHERE account_id=2 AND kind='vendor' AND content_id=42 ORDER BY `favorites`.`account_id` LIMIT 1
+[GIN] 2026/10/21 - 13:12:17 | 200 | 113.82ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/21 - 13:12:17 | 200 |   1.54ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+
+2026/10/21 13:12:17 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:191 [35;1mrecord not found
+[0m[33m[0.510ms] [34;1m[rows:0][0m SELECT * FROM `favorite_operations` WHERE account_id=2 AND operation_id='deviceB_1' ORDER BY `favorite_operations`.`account_id` LIMIT 1
+[GIN] 2026/10/21 - 13:12:17 | 200 |   2.56ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/21 - 13:12:17 | 200 |   1.02ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/21 - 13:12:17 | 200 |   1.53ms |       192.0.2.1 | GET      "/api/v1/favorites"
+
+2026/10/21 13:12:17 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:191 [35;1mrecord not found
+[0m[33m[0.513ms] [34;1m[rows:0][0m SELECT * FROM `favorite_operations` WHERE account_id=2 AND operation_id='deviceA_2' ORDER BY `favorite_operations`.`account_id` LIMIT 1
+
+2026/10/21 13:12:17 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:191 [35;1mrecord not found
+[0m[33m[0.517ms] [34;1m[rows:0][0m SELECT * FROM `favorite_operations` WHERE account_id=2 AND operation_id='deviceA_3' ORDER BY `favorite_operations`.`account_id` LIMIT 1
+
+2026/10/21 13:12:17 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:204 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `favorites` WHERE account_id=2 AND kind='product' AND content_id=43 ORDER BY `favorites`.`account_id` LIMIT 1
+[GIN] 2026/10/21 - 13:12:17 | 200 |   3.09ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/21 - 13:12:17 | 200 |   1.02ms |       192.0.2.1 | GET      "/api/v1/favorites"
+[GIN] 2026/10/21 - 13:12:17 | 200 |   2.04ms |       192.0.2.1 | GET      "/api/v1/favorites?kind=vendor&page_size=1"
+
+2026/10/21 13:12:17 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:191 [35;1mrecord not found
+[0m[33m[0.520ms] [34;1m[rows:0][0m SELECT * FROM `favorite_operations` WHERE account_id=2 AND operation_id='new_in_failed_batch' ORDER BY `favorite_operations`.`account_id` LIMIT 1
+
+2026/10/21 13:12:17 [31;1mD:/workspace-main/codex-zqzt/server/favorites.go:204 [35;1mrecord not found
+[0m[33m[0.520ms] [34;1m[rows:0][0m SELECT * FROM `favorites` WHERE account_id=2 AND kind='vendor' AND content_id=99 ORDER BY `favorites`.`account_id` LIMIT 1
+[GIN] 2026/10/21 - 13:12:17 | 409 |    2.1ms |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/21 - 13:12:17 | 200 |   4.09ms |       192.0.2.1 | GET      "/api/v1/favorites"
+[GIN] 2026/10/21 - 13:12:17 | 400 |  510.7µs |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/21 - 13:12:17 | 400 |  525.1µs |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/21 - 13:12:17 | 400 |  518.8µs |       192.0.2.1 | POST     "/api/v1/favorites/sync"
+[GIN] 2026/10/21 - 13:12:17 | 400 |  519.2µs |       192.0.2.1 | GET      "/api/v1/favorites?kind=resource"
+
+2026/10/21 13:12:17 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[338.147ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559534681139000`[0m
+--- PASS: TestFavoriteDeduplicationAccountIsolationAndBatchRollback (2.88s)
+=== RUN   TestCompleteBackupRestoreAndCutover
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.532ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.562ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/storage_settings.go:179 [35;1mrecord not found
+[0m[33m[1.349ms] [34;1m[rows:0][0m SELECT * FROM `merchant_storage_quotas` WHERE account_id=3 ORDER BY `merchant_storage_quotas`.`account_id` LIMIT 1 FOR UPDATE
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.531ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.031ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.503ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/21 - 13:12:20 | 201 |   47.4ms |       192.0.2.1 | POST     "/api/v1/admin/home-display/media"
+[GIN] 2026/10/21 - 13:12:20 | 200 |    2.6ms |       192.0.2.1 | PUT      "/api/v1/admin/halls/2"
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='backup_policy' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:20 [31;1mD:/workspace-main/codex-zqzt/server/backups.go:142 [35;1mrecord not found
+[0m[33m[1.264ms] [34;1m[rows:0][0m SELECT * FROM `storage_profiles` WHERE `storage_profiles`.`id` = 0 ORDER BY `storage_profiles`.`id` LIMIT 1
+[GIN] 2026/10/21 - 13:12:22 | 401 |   1.04ms |       192.0.2.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/21 - 13:12:22 | 200 |  10.21ms |       192.0.2.1 | GET      "/api/v1/media/1"
+[GIN] 2026/10/21 - 13:12:22 | 200 |   1.77ms |       192.0.2.1 | HEAD     "/api/v1/media/1"
+
+2026/10/21 13:12:22 [31;1mD:/workspace-main/codex-zqzt/server/import_test.go:28 [35;1msql: database is closed
+[0m[33m[0.000ms] [34;1m[rows:0][0m DROP DATABASE `zqzt_exhibition_test_1792559537565047200`
+--- PASS: TestCompleteBackupRestoreAndCutover (5.37s)
+=== RUN   TestPasswordResetPermissionsSessionsAndOwnership
+[GIN] 2026/10/21 - 13:12:25 | 200 |      9ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/21 - 13:12:25 | 200 |   3.18ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+[GIN] 2026/10/21 - 13:12:25 | 201 |  64.65ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/21 - 13:12:25 | 201 |   9.23ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.546ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/storage_settings.go:179 [35;1mrecord not found
+[0m[33m[1.659ms] [34;1m[rows:0][0m SELECT * FROM `merchant_storage_quotas` WHERE account_id=3 ORDER BY `merchant_storage_quotas`.`account_id` LIMIT 1 FOR UPDATE
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.600ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='active_storage' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.629ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.519ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/21 - 13:12:25 | 201 |  46.91ms |       192.0.2.1 | POST     "/api/v1/merchant/media"
+[GIN] 2026/10/21 - 13:12:25 | 200 |   2.09ms |       192.0.2.1 | GET      "/api/v1/merchant/contents/1"
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/content.go:124 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `media_metadata` WHERE media_id=1 ORDER BY `media_metadata`.`media_id` LIMIT 1
+[GIN] 2026/10/21 - 13:12:25 | 200 |   9.03ms |       192.0.2.1 | PUT      "/api/v1/merchant/contents/1/draft"
+[GIN] 2026/10/21 - 13:12:25 | 401 |       0s |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/21 - 13:12:25 | 403 |  517.8µs |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+[GIN] 2026/10/21 - 13:12:25 | 404 |  51.67ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/1/password-reset"
+[GIN] 2026/10/21 - 13:12:25 | 404 |  51.21ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/999999/password-reset"
+[GIN] 2026/10/21 - 13:12:25 | 400 |  51.02ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/4/password-reset"
+[GIN] 2026/10/21 - 13:12:25 | 200 |   1.61ms |       192.0.2.1 | GET      "/api/v1/admin/accounts?account_id=3"
+[GIN] 2026/10/21 - 13:12:25 | 400 |   1.38ms |       192.0.2.1 | GET      "/api/v1/admin/accounts?account_id=not-a-number"
+[GIN] 2026/10/21 - 13:12:25 | 200 |     54ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:43 [35;1mrecord not found
+[0m[33m[0.033ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = 'bfc988025f55e9f4b1b5ad46fb8a42ab13c05c4cdb788ac218fde96bdd080e87' AND expires_at > '2026-10-21 05:12:25.811' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/21 - 13:12:25 | 401 |  551.9µs |       192.0.2.1 | GET      "/api/v1/merchant/contents/1"
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:43 [35;1mrecord not found
+[0m[33m[0.505ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = 'f4cdd6dd75e1b645d0f20448be9c5d2b074d406ed4406e947810dba5b5c96d27' AND expires_at > '2026-10-21 05:12:25.812' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/21 - 13:12:25 | 401 |  602.4µs |       192.0.2.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/21 - 13:12:25 | 401 |  49.86ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/21 - 13:12:25 | 200 |  52.04ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/21 - 13:12:25 | 200 |   3.47ms |       192.0.2.1 | GET      "/api/v1/merchant/contents/2"
+
+2026/10/21 13:12:25 [31;1mD:/workspace-main/codex-zqzt/server/admin.go:329 [35;1mrecord not found
+[0m[33m[1.000ms] [34;1m[rows:0][0m SELECT * FROM `contents` WHERE kind='vendor' AND owner_id=4 ORDER BY `contents`.`id` LIMIT 1
+[GIN] 2026/10/21 - 13:12:25 | 200 |   3.17ms |       192.0.2.1 | GET      "/api/v1/admin/accounts"
+[GIN] 2026/10/21 - 13:12:25 | 200 |   1.77ms |       192.0.2.1 | GET      "/api/v1/admin/operation-logs"
+
+2026/10/21 13:12:26 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[359.251ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559542931326400`[0m
+--- PASS: TestPasswordResetPermissionsSessionsAndOwnership (3.41s)
+=== RUN   TestPasswordResetSerializesConcurrentLogin
+[GIN] 2026/10/21 - 13:12:28 | 200 |     10ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/21 - 13:12:28 | 200 |   4.05ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+[GIN] 2026/10/21 - 13:12:28 | 201 |  61.47ms |       192.0.2.1 | POST     "/api/v1/admin/vendors"
+[GIN] 2026/10/21 - 13:12:29 | 200 | 200.29ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/21 - 13:12:29 | 200 | 154.21ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+
+2026/10/21 13:12:29 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:43 [35;1mrecord not found
+[0m[33m[0.584ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = 'ebf9c85448ae64df99c2fc390178fd7471a013cb80d95f6ece9e85381e86dbea' AND expires_at > '2026-10-21 05:12:29.051' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/21 - 13:12:29 | 401 |  583.9µs |       192.0.2.1 | GET      "/api/v1/merchant/contents"
+
+2026/10/21 13:12:29 [34;1mD:/workspace-main/codex-zqzt/server/password_reset_test.go:206
+[0m[35m[warn] [0mremoving callback `pause_company_session` from D:/workspace-main/codex-zqzt/server/password_reset_test.go:206
+
+2026/10/21 13:12:29 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[345.594ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559546339965600`[0m
+--- PASS: TestPasswordResetSerializesConcurrentLogin (3.06s)
+=== RUN   TestPhoneRegistrationLoginUpgradeAndMigration
+[GIN] 2026/10/21 - 13:12:31 | 201 |  58.01ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:31 | 400 |  51.62ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:32 | 409 |  53.69ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:32 | 401 |  50.14ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password"
+[GIN] 2026/10/21 - 13:12:32 | 200 |  51.11ms |       192.0.2.1 | POST     "/api/v1/auth/visitor"
+[GIN] 2026/10/21 - 13:12:32 | 200 |  51.04ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password"
+[GIN] 2026/10/21 - 13:12:32 | 400 |  996.1µs |       192.0.2.1 | POST     "/api/v1/auth/me/merchant-upgrade"
+[GIN] 2026/10/21 - 13:12:32 | 200 |   2.73ms |       192.0.2.1 | POST     "/api/v1/auth/me/merchant-upgrade"
+
+2026/10/21 13:12:32 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:43 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = 'b8cc8db44cb27f64e34b921a4f5355f6fb14e98415187070f531710410bd68bf' AND expires_at > '2026-10-21 05:12:32.177' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/21 - 13:12:32 | 401 |       0s |       192.0.2.1 | GET      "/api/v1/auth/me"
+[GIN] 2026/10/21 - 13:12:32 | 200 |  50.86ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/21 - 13:12:32 | 200 |  51.69ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password"
+
+2026/10/21 13:12:32 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[350.402ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559549403485400`[0m
+--- PASS: TestPhoneRegistrationLoginUpgradeAndMigration (3.25s)
+=== RUN   TestPhoneCodePurposesAttemptsExpiryAndCooldown
+[GIN] 2026/10/21 - 13:12:35 | 200 |      7ms |       192.0.2.1 | POST     "/api/v1/auth/phone/code"
+[GIN] 2026/10/21 - 13:12:35 | 429 |   1.81ms |       192.0.2.1 | POST     "/api/v1/auth/phone/code"
+[GIN] 2026/10/21 - 13:12:35 | 429 |   1.54ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/21 - 13:12:35 | 400 |  51.22ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password/setup"
+[GIN] 2026/10/21 - 13:12:35 | 400 |  53.18ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:35 | 400 |  52.49ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:35 | 400 |  51.32ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:35 | 400 |   52.8ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:35 | 400 |  52.18ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:35 | 400 |  52.29ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:35 | 400 |  51.28ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:35 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/code"
+[GIN] 2026/10/21 - 13:12:35 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/code"
+[GIN] 2026/10/21 - 13:12:35 | 200 |    2.2ms |       192.0.2.1 | POST     "/api/v1/auth/phone/code"
+
+2026/10/21 13:12:36 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[350.765ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559552655142600`[0m
+--- PASS: TestPhoneCodePurposesAttemptsExpiryAndCooldown (3.36s)
+=== RUN   TestPhoneLegacyBindingSetupAndRollback
+[GIN] 2026/10/21 - 13:12:38 | 201 |  55.38ms |       192.0.2.1 | POST     "/api/v1/auth/visitor/register"
+[GIN] 2026/10/21 - 13:12:38 | 400 |   1.12ms |       192.0.2.1 | POST     "/api/v1/auth/me/merchant-upgrade"
+[GIN] 2026/10/21 - 13:12:38 | 400 |  53.05ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:38 | 500 |   4.06ms |       192.0.2.1 | PUT      "/api/v1/auth/me/phone"
+
+2026/10/21 13:12:38 [34;1mD:/workspace-main/codex-zqzt/server/phone_accounts_test.go:157
+[0m[35m[warn] [0mremoving callback `phone_audit_failure` from D:/workspace-main/codex-zqzt/server/phone_accounts_test.go:157
+[GIN] 2026/10/21 - 13:12:38 | 200 |    3.6ms |       192.0.2.1 | PUT      "/api/v1/auth/me/phone"
+
+2026/10/21 13:12:38 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:43 [35;1mrecord not found
+[0m[33m[0.516ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = '469961986b8429d966e91e1250584399f24b4043145b9deaabc1b66c4f87951e' AND expires_at > '2026-10-21 05:12:38.558' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/21 - 13:12:38 | 401 |  515.9µs |       192.0.2.1 | GET      "/api/v1/auth/me"
+[GIN] 2026/10/21 - 13:12:38 | 200 |  52.64ms |       192.0.2.1 | POST     "/api/v1/auth/visitor"
+[GIN] 2026/10/21 - 13:12:38 | 201 |  52.65ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:12:38 | 409 |   3.16ms |       192.0.2.1 | PUT      "/api/v1/auth/me/phone"
+[GIN] 2026/10/21 - 13:12:38 | 200 |  53.59ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password/setup"
+
+2026/10/21 13:12:38 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:43 [35;1mrecord not found
+[0m[33m[0.519ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = 'c4586c84ad22ff7bb1c8c035d9d8f7a1d49536198e0ddb55244a794f42357a7e' AND expires_at > '2026-10-21 05:12:38.724' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/21 - 13:12:38 | 401 |  518.8µs |       192.0.2.1 | GET      "/api/v1/auth/me"
+[GIN] 2026/10/21 - 13:12:38 | 400 |   53.6ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password/setup"
+[GIN] 2026/10/21 - 13:12:38 | 200 |  51.88ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password"
+
+2026/10/21 13:12:39 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[344.610ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559556014473400`[0m
+--- PASS: TestPhoneLegacyBindingSetupAndRollback (3.17s)
+=== RUN   TestPhoneConcurrentRegistration
+
+2026/10/21 13:12:39 [32mD:/workspace-main/codex-zqzt/server/main.go:152 [33mSLOW SQL >= 200ms
+[0m[31;1m[376.231ms] [33m[rows:0][35m ALTER TABLE contents ADD COLUMN showroom_slug VARCHAR(64) NULL UNIQUE[0m
+[GIN] 2026/10/21 - 13:12:41 | 201 |  59.39ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:41 | 400 |  62.14ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+
+2026/10/21 13:12:42 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[350.383ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559559183050100`[0m
+--- PASS: TestPhoneConcurrentRegistration (3.15s)
+=== RUN   TestPhoneIdentityConflictsAndAdminReset
+[GIN] 2026/10/21 - 13:12:44 | 201 |  59.01ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:44 | 409 |  51.37ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+
+2026/10/21 13:12:44 [31;1mD:/workspace-main/codex-zqzt/server/admin.go:329 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `contents` WHERE kind='vendor' AND owner_id=3 ORDER BY `contents`.`id` LIMIT 1
+[GIN] 2026/10/21 - 13:12:44 | 200 |   1.44ms |       192.0.2.1 | GET      "/api/v1/admin/accounts?q=13900005555"
+[GIN] 2026/10/21 - 13:12:44 | 200 |  53.63ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+
+2026/10/21 13:12:44 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:43 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = '83ee0391d11bf7ac30d3107741fd053ac3522d9e04e6f1c29fe01af48059421f' AND expires_at > '2026-10-21 05:12:44.919' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/21 - 13:12:44 | 401 |   1.18ms |       192.0.2.1 | GET      "/api/v1/auth/me"
+[GIN] 2026/10/21 - 13:12:44 | 200 |  52.05ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password"
+[GIN] 2026/10/21 - 13:12:45 | 201 |  51.52ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:12:45 | 409 |  51.98ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:45 | 503 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/code"
+[GIN] 2026/10/21 - 13:12:45 | 503 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:45 | 503 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:45 | 503 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:45 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:45 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:12:45 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+
+2026/10/21 13:12:45 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[415.137ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559562333184800`[0m
+--- PASS: TestPhoneIdentityConflictsAndAdminReset (3.17s)
+PASS
+ok  	zqzt/exhibition	32.066s

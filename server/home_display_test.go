@@ -85,7 +85,7 @@ func TestFeaturedVendorLimitConcurrentAndPublicSnapshots(t *testing.T) {
 	var vendors []map[string]any
 	for i := 0; i < 14; i++ {
 		name := fmt.Sprintf("首页精选测试厂商%02d", i)
-		v := tc.call("POST", "/admin/vendors", admin, gin.H{"login_name": name, "data": Payload{Name: name, RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567"}}, 201)["item"].(map[string]any)
+		v := tc.fixtureCall("POST", "/admin/vendors", admin, gin.H{"login_name": name, "data": Payload{Name: name, RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567"}}, 201)["item"].(map[string]any)
 		tc.call("POST", "/admin/contents/"+number(v["id"])+"/submit", admin, gin.H{"revision_id": v["revision_id"]}, 200)
 		tc.call("POST", "/admin/revisions/"+number(v["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
 		vendors = append(vendors, v)
@@ -127,7 +127,7 @@ func TestFeaturedVendorLimitConcurrentAndPublicSnapshots(t *testing.T) {
 	}
 	tc.call("PUT", "/admin/contents/"+number(vendors[13]["id"])+"/featured", admin, gin.H{"featured": true}, 409)
 	v := vendors[0]
-	tc.call("PUT", "/admin/contents/"+number(v["id"])+"/draft", admin, gin.H{"revision_id": v["revision_id"], "data": Payload{Name: "未审核新名称不能进入首页", RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567"}}, 200)
+	tc.fixtureCall("PUT", "/admin/contents/"+number(v["id"])+"/draft", admin, gin.H{"revision_id": v["revision_id"], "data": Payload{Name: "未审核新名称不能进入首页", RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567"}}, 200)
 	home := tc.call("GET", "/public/home", "", nil, 200)
 	if len(home["vendors"].([]any)) != 8 {
 		t.Fatal("home limit")

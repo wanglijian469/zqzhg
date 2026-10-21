@@ -59,32 +59,12 @@ func (a *App) publicViews(q *gorm.DB) ([]View, error) {
 }
 func (a *App) categoryIDs(category string) []uint64 {
 	raw, _ := strconv.ParseUint(category, 10, 64)
-	root := canonicalCategory(a.DB, raw)
-	if root == 0 {
+	if raw == 0 {
 		return nil
 	}
-	ids := []uint64{root}
-	var all []Category
-	a.DB.Find(&all)
-	seen := map[uint64]bool{root: true}
-	for i := 0; i < len(ids); i++ {
-		for _, cat := range all {
-			if cat.ParentID == ids[i] && !seen[cat.ID] && canonicalCategory(a.DB, cat.ID) == cat.ID {
-				seen[cat.ID] = true
-				ids = append(ids, cat.ID)
-			}
-		}
-	}
-	var aliases []CategoryAlias
-	a.DB.Find(&aliases)
-	for _, alias := range aliases {
-		if seen[canonicalCategory(a.DB, alias.SourceID)] && !seen[alias.SourceID] {
-			seen[alias.SourceID] = true
-			ids = append(ids, alias.SourceID)
-		}
-	}
-	return ids
+	return categoryGraphIDs(a.DB, []uint64{raw})
 }
+
 func specKeywordCondition(alias string) string {
 	return fmt.Sprintf("(%s.name LIKE ? OR %s.name_en LIKE ? OR %s.main_products LIKE ? OR %s.keywords LIKE ? OR JSON_UNQUOTE(JSON_EXTRACT(%s.payload, '$.parameters')) LIKE ?)", alias, alias, alias, alias, alias)
 }
@@ -109,9 +89,14 @@ func positiveFilterID(value string) uint64 {
 func (a *App) filterProducts(c *gin.Context, q *gorm.DB) *gorm.DB {
 	if strings.TrimSpace(c.Query("q")) != "" {
 		k := keyword(c)
-		q = q.Where(specKeywordCondition("r"), k, k, k, k, k)
+		q = q.Where("("+specKeywordCondition("r")+" OR JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.brand')) LIKE ? OR JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.model')) LIKE ? OR JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.applicable_brands')) LIKE ? OR JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.applicable_models')) LIKE ? OR EXISTS (SELECT 1 FROM revision_categories rc WHERE rc.revision_id=r.id AND rc.category_id IN ?))", k, k, k, k, k, k, k, k, k, categoryKeywordIDs(a.DB, k))
 	}
-	if ids := a.categoryIDs(c.Query("category_id")); c.Query("category_id") != "" {
+	if ids, modern := a.newCategoryFilter(c.Query("category_id"), "product"); modern {
+		if len(ids) == 0 {
+			return q.Where("1=0")
+		}
+		q = taxonomyFilter(q, "r", ids)
+	} else if ids := a.categoryIDs(c.Query("category_id")); c.Query("category_id") != "" {
 		if len(ids) == 0 {
 			return q.Where("1=0")
 		}
@@ -123,7 +108,7 @@ func (a *App) filterProducts(c *gin.Context, q *gorm.DB) *gorm.DB {
 	if regionID := c.Query("region_id"); regionID != "" {
 		q = q.Where("vr.region_id = ?", positiveFilterID(regionID))
 	}
-	return q
+	return filterBelt(c, q, "contents.vendor_id")
 }
 
 // Read only published vendor snapshots, with one query for the whole product page.
@@ -174,13 +159,21 @@ func (a *App) filterVendors(c *gin.Context, q *gorm.DB) *gorm.DB {
 		k := keyword(c)
 		q = q.Where("("+specKeywordCondition("r")+" OR EXISTS ("+productMatch+" AND "+specKeywordCondition("pr")+"))", k, k, k, k, k, k, k, k, k, k)
 	}
-	if ids := a.categoryIDs(c.Query("category_id")); c.Query("category_id") != "" {
+	if ids, modern := a.newCategoryFilter(c.Query("category_id"), "vendor"); modern {
+		if len(ids) == 0 {
+			return q.Where("1=0")
+		}
+		q = taxonomyFilter(q, "r", ids)
+	} else if ids := a.categoryIDs(c.Query("category_id")); c.Query("category_id") != "" {
 		if len(ids) == 0 {
 			return q.Where("1=0")
 		}
 		q = q.Where("(r.category_id IN ? OR EXISTS ("+productMatch+" AND pr.category_id IN ?))", ids, ids)
 	}
-	return q
+	if nature := c.Query("business_nature"); nature != "" {
+		q = q.Where("JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.business_nature'))=?", nature)
+	}
+	return filterBelt(c, q, "contents.id")
 }
 func (a *App) searchVendors(c *gin.Context) {
 	p, n := publicPage(c, 20)
@@ -364,14 +357,33 @@ func (a *App) taxonomyResult(c *gin.Context, all bool) {
 			return actor(c)
 		}
 		return Account{}
-	}(), !all)
+	}(), !all && c.Query("category_kind") != "all")
 	filtered := []ScopedCategory{}
 	for _, cat := range scoped {
 		if scopedHall == 0 || cat.HallID == scopedHall {
+			kind := c.Query("category_kind")
+			if kind == "" {
+				kind = "legacy"
+			}
+			if kind != "all" && cat.CategoryKind != kind {
+				continue
+			}
 			filtered = append(filtered, cat)
 		}
 	}
-	c.JSON(200, gin.H{"halls": halls, "categories": filtered, "regions": regions, "aliases": a.categoryAliases()})
+	belts := []IndustrialBelt{}
+	bq := a.DB.Order("sort_order,id")
+	if scopedHall > 0 {
+		bq = bq.Where("hall_id=?", scopedHall)
+	}
+	if !all {
+		bq = bq.Where("enabled=1")
+	}
+	if e := bq.Find(&belts).Error; e != nil {
+		dbFail(c, e)
+		return
+	}
+	c.JSON(200, gin.H{"halls": halls, "categories": filtered, "regions": regions, "aliases": a.categoryAliases(), "industrial_belts": belts})
 }
 func (a *App) saveCategory(c *gin.Context) {
 	var req Category
@@ -387,6 +399,38 @@ func (a *App) saveCategory(c *gin.Context) {
 		var hall Hall
 		if tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&hall, req.HallID).Error != nil {
 			return fmt.Errorf("invalid_category")
+		}
+		var previousImage uint64
+		if req.ID > 0 {
+			var existing Category
+			if e := tx.First(&existing, req.ID).Error; e != nil {
+				return e
+			}
+			if req.CategoryKind == "" {
+				req.CategoryKind = existing.CategoryKind
+			}
+			if req.CategoryKind != existing.CategoryKind || existing.DeletedAt != nil {
+				return fmt.Errorf("invalid_category")
+			}
+			if req.Enabled && canonicalCategory(tx, existing.ID) != existing.ID {
+				return fmt.Errorf("invalid_category")
+			}
+			req.Code = existing.Code
+			previousImage = existing.ImageMediaID
+		} else if req.CategoryKind == "" {
+			req.CategoryKind = "legacy"
+		}
+		if e := validateCategoryTree(tx, req); e != nil {
+			return e
+		}
+		if req.ImageMediaID > 0 && req.ImageMediaID != previousImage {
+			var m Media
+			if tx.First(&m, req.ImageMediaID).Error != nil || m.OwnerID != actor(c).ID {
+				return fmt.Errorf("invalid_media")
+			}
+		}
+		if len(req.SearchAliases) > 3000 {
+			return fmt.Errorf("invalid_request")
 		}
 		parent := req.ParentID
 		seen := map[uint64]bool{}
@@ -414,7 +458,7 @@ func (a *App) saveCategory(c *gin.Context) {
 		if old.HallID != req.HallID {
 			return fmt.Errorf("invalid_category")
 		}
-		if e := tx.Model(&old).Select("HallID", "ParentID", "Name", "NameEN", "SortOrder", "Enabled").Updates(req).Error; e != nil {
+		if e := tx.Model(&old).Select("HallID", "ParentID", "Name", "NameEN", "SortOrder", "Enabled", "ImageMediaID", "SearchAliases").Updates(req).Error; e != nil {
 			return e
 		}
 		return recordOperation(tx, actor(c).ID, "category", req.ID, "category_saved", "")
@@ -467,7 +511,7 @@ func spreadHomeProducts(items []View) []View {
 	categories := map[uint64]int{}
 	for len(remaining) > 0 {
 		best := 0
-		score := func(v View) int { return vendors[v.VendorID]*100 + categories[v.Data.CategoryID]*10 }
+		score := func(v View) int { return vendors[v.VendorID]*100 + categories[effectiveViewCategory(v)]*10 }
 		seenVendors := map[uint64]bool{remaining[0].VendorID: true}
 		for i := 1; i < len(remaining); i++ {
 			if seenVendors[remaining[i].VendorID] {
@@ -481,7 +525,7 @@ func spreadHomeProducts(items []View) []View {
 		next := remaining[best]
 		result = append(result, next)
 		vendors[next.VendorID]++
-		categories[next.Data.CategoryID]++
+		categories[effectiveViewCategory(next)]++
 		remaining = append(remaining[:best], remaining[best+1:]...)
 	}
 	return result

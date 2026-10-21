@@ -55,8 +55,13 @@ func (a *App) adminCreateVendor(c *gin.Context) {
 			if req.LoginName == "" || utf8.RuneCountInString(req.LoginName) > 100 {
 				return fieldFailure("invalid_request", "login_name", "login_name_length")
 			}
+			if mainlandPhone.MatchString(req.LoginName) {
+				if e := lockPhoneIdentity(tx, req.LoginName); e != nil {
+					return e
+				}
+			}
 			var count int64
-			if e := tx.Model(&Account{}).Where("login_name=? OR username=?", req.LoginName, req.LoginName).Count(&count).Error; e != nil {
+			if e := tx.Model(&Account{}).Where("login_name=? OR username=? OR phone=?", req.LoginName, req.LoginName, req.LoginName).Count(&count).Error; e != nil {
 				return e
 			}
 			if count > 0 {
@@ -272,6 +277,9 @@ func (a *App) adminDashboard(c *gin.Context) {
 }
 
 type AdminAccountView struct {
+	Role          string    `json:"role"`
+	Phone         *string   `json:"phone"`
+	PhoneVerified bool      `json:"phone_verified"`
 	ID            uint64    `json:"id"`
 	Username      string    `json:"username"`
 	LoginName     *string   `json:"login_name"`
@@ -285,7 +293,7 @@ type AdminAccountView struct {
 
 func (a *App) adminAccounts(c *gin.Context) {
 	p, n := page(c)
-	q := a.DB.Model(&Account{}).Where("accounts.role='merchant'")
+	q := a.DB.Model(&Account{}).Where("accounts.role IN ('merchant','visitor')")
 	if value := c.Query("account_id"); value != "" {
 		target, err := strconv.ParseUint(value, 10, 64)
 		if err != nil || target == 0 {
@@ -296,7 +304,7 @@ func (a *App) adminAccounts(c *gin.Context) {
 	}
 	if s := strings.TrimSpace(c.Query("q")); s != "" {
 		k := keyword(c)
-		q = q.Where("accounts.username LIKE ? OR accounts.login_name LIKE ?", k, k)
+		q = q.Where("accounts.username LIKE ? OR accounts.login_name LIKE ? OR accounts.phone LIKE ?", k, k, k)
 	}
 	if c.Query("unassigned") == "1" {
 		q = q.Where("NOT EXISTS (SELECT 1 FROM contents v WHERE v.owner_id=accounts.id AND v.kind='vendor')")
@@ -313,7 +321,10 @@ func (a *App) adminAccounts(c *gin.Context) {
 	}
 	items := []AdminAccountView{}
 	for _, account := range accounts {
-		row := AdminAccountView{ID: account.ID, Username: account.Username, LoginName: account.LoginName, CreatedAt: account.CreatedAt, PasswordLogin: account.LoginName != nil && account.PasswordHash != "", PhoneLogin: regexp.MustCompile(`^1[3-9][0-9]{9}$`).MatchString(account.Username)}
+		row := AdminAccountView{Role: account.Role, Phone: account.Phone, PhoneVerified: verifiedPhone(account), ID: account.ID, Username: account.Username, LoginName: account.LoginName, CreatedAt: account.CreatedAt, PasswordLogin: (account.LoginName != nil || verifiedPhone(account)) && account.PasswordHash != "", PhoneLogin: regexp.MustCompile(`^1[3-9][0-9]{9}$`).MatchString(account.Username)}
+		if row.LoginName == nil && verifiedPhone(account) {
+			row.LoginName = account.Phone
+		}
 		var content Content
 		e := a.DB.Where("kind='vendor' AND owner_id=?", account.ID).First(&content).Error
 		if e == nil {

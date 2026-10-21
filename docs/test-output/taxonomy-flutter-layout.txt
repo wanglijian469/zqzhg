@@ -1,0 +1,5 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/taxonomy_test.dart
+00:00 +0: Product category search uses full paths and leaf selection; recommendations require confirmation
+00:01 +1: Brand and multiple applicable models update the draft without changing raw parameters
+00:01 +2: Taxonomy fields fit 64 language, width, large-text and simulated-keyboard layouts
+00:05 +3: All tests passed!

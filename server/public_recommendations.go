@@ -91,7 +91,7 @@ func (a *App) homeVendors(hallID uint64) ([]View, error) {
 	for _, scope := range []struct {
 		field string
 		limit int
-	}{{"r.category_id", 24}, {"r.region_id", 16}} {
+	}{{"COALESCE((SELECT hrc.category_id FROM revision_categories hrc WHERE hrc.revision_id=r.id AND hrc.role='primary' LIMIT 1),r.category_id)", 24}, {"r.region_id", 16}} {
 		var groups []struct{ ID uint64 }
 		if e := base().Select("MAX(contents.id) AS id").Group("contents.featured,contents.sort_order," + scope.field).Order("contents.featured DESC,contents.sort_order,MAX(contents.id) DESC").Limit(scope.limit).Scan(&groups).Error; e != nil {
 			return nil, e
@@ -133,13 +133,13 @@ func (a *App) homeVendors(hallID uint64) ([]View, error) {
 				}
 				continue
 			}
-			if cats[x.Data.CategoryID]*10+regions[x.Data.RegionID] < cats[y.Data.CategoryID]*10+regions[y.Data.RegionID] {
+			if cats[effectiveViewCategory(x)]*10+regions[x.Data.RegionID] < cats[effectiveViewCategory(y)]*10+regions[y.Data.RegionID] {
 				best = i
 			}
 		}
 		p := candidates[best]
 		selected = append(selected, p)
-		cats[p.Data.CategoryID]++
+		cats[effectiveViewCategory(p)]++
 		regions[p.Data.RegionID]++
 		candidates = append(candidates[:best], candidates[best+1:]...)
 	}
@@ -153,7 +153,7 @@ func (a *App) homeProducts(hallID uint64) ([]View, error) {
 	}
 	queries := []*gorm.DB{}
 	for _, v := range suppliers {
-		queries = append(queries, base().Where("contents.vendor_id=?", v.VendorID).Select("SUBSTRING_INDEX(GROUP_CONCAT(contents.id ORDER BY contents.featured DESC,contents.sort_order,r.reviewed_at DESC,contents.id DESC SEPARATOR ','),',',3) AS ids").Group("r.category_id").Order("MAX(contents.featured) DESC,MIN(contents.sort_order),MAX(r.reviewed_at) DESC,MAX(contents.id) DESC").Limit(6))
+		queries = append(queries, base().Where("contents.vendor_id=?", v.VendorID).Select("SUBSTRING_INDEX(GROUP_CONCAT(contents.id ORDER BY contents.featured DESC,contents.sort_order,r.reviewed_at DESC,contents.id DESC SEPARATOR ','),',',3) AS ids").Group("COALESCE((SELECT hrc.category_id FROM revision_categories hrc WHERE hrc.revision_id=r.id AND hrc.role='product' LIMIT 1),r.category_id)").Order("MAX(contents.featured) DESC,MIN(contents.sort_order),MAX(r.reviewed_at) DESC,MAX(contents.id) DESC").Limit(6))
 	}
 	ids, e := unionCandidateIDs(a.DB, queries, true)
 	if e != nil {
@@ -186,7 +186,7 @@ func (a *App) homeProducts(hallID uint64) ([]View, error) {
 				if x.SortOrder != y.SortOrder {
 					return x.SortOrder < y.SortOrder
 				}
-				return categoryUse[x.Data.CategoryID] < categoryUse[y.Data.CategoryID]
+				return categoryUse[effectiveViewCategory(x)] < categoryUse[effectiveViewCategory(y)]
 			}
 			for i, p := range candidates {
 				if seen[p.ID] || vendorUse[p.VendorID] >= round {
@@ -203,7 +203,7 @@ func (a *App) homeProducts(hallID uint64) ([]View, error) {
 			selected = append(selected, p)
 			seen[p.ID] = true
 			vendorUse[p.VendorID]++
-			categoryUse[p.Data.CategoryID]++
+			categoryUse[effectiveViewCategory(p)]++
 		}
 	}
 	return selected, nil

@@ -3,7 +3,7 @@
   "info": {
     "title": "中企展馆 · ZQZG",
     "version": "2.0.0",
-    "description": "Published snapshots only. Draft and pending content and media require ownership or administrator access. Error messages are localized by clients using error.code. Resource snapshots have independent review and processing states; anonymous media access also requires a public parent showroom and linked product. Platform operators use effective feature permissions. Administrator-only storage, persistent jobs and encrypted isolated recovery are provided. Anonymous analytics do not identify people.\nPublic data reads use shared per-IP page/API limits, bounded pagination and distinct content budgets; 429 includes Retry-After. Schema14 preserves historical showroom addresses."
+    "description": "Published snapshots only. Draft and pending content and media require ownership or administrator access. Error messages are localized by clients using error.code. Resource snapshots have independent review and processing states; anonymous media access also requires a public parent showroom and linked product. Platform operators use effective feature permissions. Administrator-only storage, persistent jobs and encrypted isolated recovery are provided. Anonymous analytics do not identify people.\nPublic data reads use shared per-IP page/API limits, bounded pagination and distinct content budgets; 429 includes Retry-After. Schema14 preserves historical showroom addresses. Schema18 compacts the official product taxonomy to 10 roots and 35 children; existing IDs resolve through aliases. Search UI removes industrial belt and business nature while APIs preserve legacy filter compatibility. Schema19 adds globally unique verified account phones and purpose-scoped verification; legacy username and SMS endpoints remain compatible. Native App removes map functionality; website maps remain available."
   },
   "servers": [
     {
@@ -899,6 +899,21 @@
               "default": "agriculture"
             },
             "description": "Hall slug. Omitted selects agriculture. Unknown halls return 404; preparing halls return no public content."
+          },
+          {
+            "name": "category_kind",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "legacy",
+                "vendor",
+                "product",
+                "all"
+              ],
+              "default": "legacy"
+            },
+            "description": "Omission preserves the historical shared catalog. vendor/product select separate catalogs. all also supplies official historical labels, including disabled entries, for display; non-public suggestions remain isolated."
           }
         ]
       }
@@ -1046,6 +1061,31 @@
                 "name"
               ],
               "default": "default"
+            }
+          },
+          {
+            "name": "industrial_belt_id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            },
+            "description": "Filter by administrator-managed manufacturer membership."
+          },
+          {
+            "name": "business_nature",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "",
+                "manufacturer",
+                "dealer",
+                "manufacturing_trading",
+                "processing",
+                "other"
+              ]
             }
           }
         ],
@@ -1205,6 +1245,16 @@
               ],
               "default": "default"
             }
+          },
+          {
+            "name": "industrial_belt_id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            },
+            "description": "Filter by administrator-managed manufacturer membership."
           }
         ],
         "description": "Search public product revisions by keyword, descendant category, vendor and the published vendor region. Items include a public vendor summary; unpublished products and products of unpublished vendors are excluded. V2: restricted to the selected hall; keyword search includes published parameter/model text. Server pagination totals are authoritative."
@@ -1651,6 +1701,23 @@
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "category_kind",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "legacy",
+                "vendor",
+                "product",
+                "all"
+              ],
+              "default": "legacy"
+            },
+            "description": "Omission preserves the historical shared catalog. vendor/product select separate catalogs. all also supplies official historical labels, including disabled entries, for display; non-public suggestions remain isolated."
           }
         ]
       }
@@ -2264,6 +2331,23 @@
           {
             "bearerAuth": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "category_kind",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "legacy",
+                "vendor",
+                "product",
+                "all"
+              ],
+              "default": "legacy"
+            },
+            "description": "Omission preserves the historical shared catalog. vendor/product select separate catalogs. all also supplies official historical labels, including disabled entries, for display; non-public suggestions remain isolated."
+          }
         ]
       }
     },
@@ -2448,6 +2532,16 @@
               "default": "agriculture"
             },
             "description": "Hall slug. Omitted selects agriculture. Unknown halls return 404; preparing halls return no public content."
+          },
+          {
+            "name": "industrial_belt_id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            },
+            "description": "Filter by administrator-managed manufacturer membership."
           }
         ]
       }
@@ -3378,6 +3472,44 @@
             }
           }
         }
+      },
+      "delete": {
+        "summary": "Logically delete an unused category; referenced, historical and parent categories are retained",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, category hierarchy, scope or references"
+          },
+          "403": {
+            "description": "Permission denied"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ]
       }
     },
     "/admin/regions": {
@@ -10330,9 +10462,15 @@
                     "capabilities": {
                       "type": "object",
                       "properties": {
-                        "administrative_regions": { "type": "boolean" },
-                        "industry_map": { "type": "boolean" },
-                        "product_name_only": { "type": "boolean" }
+                        "administrative_regions": {
+                          "type": "boolean"
+                        },
+                        "industry_map": {
+                          "type": "boolean"
+                        },
+                        "product_name_only": {
+                          "type": "boolean"
+                        }
                       }
                     }
                   }
@@ -10584,6 +10722,1205 @@
           }
         ]
       }
+    },
+    "/public/category-recommendations": {
+      "post": {
+        "summary": "Recommend up to three enabled official product leaves; applying a result is explicit",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "hall_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 0
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "keywords": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                },
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "maxItems": 3,
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/Category"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "path": {
+                                "type": "string"
+                              },
+                              "path_en": {
+                                "type": "string"
+                              }
+                            },
+                            "required": []
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "required": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, category hierarchy, scope or references"
+          },
+          "403": {
+            "description": "Permission denied"
+          }
+        }
+      }
+    },
+    "/admin/categories/{id}/merge": {
+      "post": {
+        "summary": "Merge within the same hall and purpose, retaining IDs and revision references",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, category hierarchy, scope or references"
+          },
+          "403": {
+            "description": "Permission denied"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "target_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "target_id"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ]
+      }
+    },
+    "/admin/category-media": {
+      "post": {
+        "summary": "Upload a classification image",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Uploaded image",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    }
+                  },
+                  "required": []
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/taxonomy-mappings": {
+      "get": {
+        "summary": "List version-specific historical mapping candidates",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TaxonomyMapping"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "page_size": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    }
+                  },
+                  "required": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, category hierarchy, scope or references"
+          },
+          "403": {
+            "description": "Permission denied"
+          }
+        },
+        "parameters": [
+          {
+            "name": "category_kind",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "vendor",
+                "product"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "automatic",
+                "manual"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ]
+      }
+    },
+    "/admin/taxonomy-mappings/resolve": {
+      "post": {
+        "summary": "Preview or confirm up to 100 historical assignments without rewriting original snapshots",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "preview": {
+                      "type": "boolean"
+                    },
+                    "count": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "target_id": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    }
+                  },
+                  "required": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, category hierarchy, scope or references"
+          },
+          "403": {
+            "description": "Permission denied"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "revision_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "uniqueItems": true
+                  },
+                  "target_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 0
+                  },
+                  "preview": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                },
+                "required": [
+                  "revision_ids",
+                  "target_id"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/industrial-belts": {
+      "get": {
+        "summary": "List industrial belts",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/IndustrialBelt"
+                      }
+                    }
+                  },
+                  "required": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, category hierarchy, scope or references"
+          },
+          "403": {
+            "description": "Permission denied"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an industrial belt",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndustrialBelt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, category hierarchy, scope or references"
+          },
+          "403": {
+            "description": "Permission denied"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IndustrialBelt"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/industrial-belts/{id}": {
+      "put": {
+        "summary": "Edit name, English name, ordering and status",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndustrialBelt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, category hierarchy, scope or references"
+          },
+          "403": {
+            "description": "Permission denied"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IndustrialBelt"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ]
+      }
+    },
+    "/admin/industrial-belts/{id}/vendors": {
+      "get": {
+        "summary": "Read linked manufacturer IDs",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "vendor_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "format": "int64",
+                        "minimum": 0
+                      }
+                    }
+                  },
+                  "required": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, category hierarchy, scope or references"
+          },
+          "403": {
+            "description": "Permission denied"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ]
+      },
+      "put": {
+        "summary": "Replace manufacturer membership transactionally",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, category hierarchy, scope or references"
+          },
+          "403": {
+            "description": "Permission denied"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "vendor_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "maxItems": 10000
+                  }
+                },
+                "required": [
+                  "vendor_ids"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ]
+      }
+    },
+    "/admin/industrial-belts/{id}/vendor-options": {
+      "get": {
+        "summary": "Search manufacturer labels in the industrial belt hall using taxonomy.manage permission",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 0
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": []
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "page_size": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    }
+                  },
+                  "required": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, category hierarchy, scope or references"
+          },
+          "403": {
+            "description": "Permission denied"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ]
+      }
+    },
+    "/auth/phone/code": {
+      "post": {
+        "summary": "Send purpose-scoped mobile verification code",
+        "tags": [
+          "authentication"
+        ],
+        "description": "6 digits, 5 minutes, 60-second global phone cooldown shared with legacy SMS. At most five incorrect attempts; successful use is one-time. Binding uses the authenticated code endpoint.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "pattern": "^1[3-9][0-9]{9}$",
+                    "description": "Verified mainland China mobile number; never inferred from company contacts."
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "enum": [
+                      "register",
+                      "setup_password"
+                    ]
+                  }
+                },
+                "required": [
+                  "phone",
+                  "purpose"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sent": {
+                      "type": "boolean"
+                    },
+                    "expires_in": {
+                      "type": "integer",
+                      "example": 300
+                    },
+                    "retry_after": {
+                      "type": "integer",
+                      "example": 60
+                    },
+                    "development_code": {
+                      "type": "string",
+                      "description": "Only APP_ENV=development and SMS_PROVIDER=development"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid phone, password, verification code, missing explicit confirmation, or setup not available"
+          },
+          "401": {
+            "description": "Invalid password or expired session"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "409": {
+            "description": "Phone already used or account already bound; resolve with administrator, never auto-merge"
+          },
+          "429": {
+            "description": "Rate limit or 60-second SMS cooldown"
+          },
+          "503": {
+            "description": "SMS disabled/unavailable"
+          }
+        }
+      }
+    },
+    "/auth/phone/register": {
+      "post": {
+        "summary": "Register a verified phone account",
+        "tags": [
+          "authentication"
+        ],
+        "description": "Global unique phone. Creates no showroom. On an uncertain network outcome, sign in; do not retry registration automatically.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "pattern": "^1[3-9][0-9]{9}$",
+                    "description": "Verified mainland China mobile number; never inferred from company contacts."
+                  },
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[0-9]{6}$"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "description": "12–72 UTF-8 bytes for registration/setup. Spaces preserved; not all whitespace."
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "merchant",
+                      "visitor"
+                    ]
+                  }
+                },
+                "required": [
+                  "phone",
+                  "code",
+                  "password",
+                  "role"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success. Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid phone, password, verification code, missing explicit confirmation, or setup not available"
+          },
+          "401": {
+            "description": "Invalid password or expired session"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "409": {
+            "description": "Phone already used or account already bound; resolve with administrator, never auto-merge"
+          },
+          "429": {
+            "description": "Rate limit or 60-second SMS cooldown"
+          },
+          "503": {
+            "description": "SMS disabled/unavailable"
+          }
+        }
+      }
+    },
+    "/auth/phone/password": {
+      "post": {
+        "summary": "Sign in by verified phone and password",
+        "tags": [
+          "authentication"
+        ],
+        "description": "Returns actual role. A merchant may use visitor favorites; upgrading a visitor requires a separate confirmation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "pattern": "^1[3-9][0-9]{9}$",
+                    "description": "Verified mainland China mobile number; never inferred from company contacts."
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "description": "12–72 UTF-8 bytes for registration/setup. Spaces preserved; not all whitespace."
+                  }
+                },
+                "required": [
+                  "phone",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid phone, password, verification code, missing explicit confirmation, or setup not available"
+          },
+          "401": {
+            "description": "Invalid password or expired session"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "409": {
+            "description": "Phone already used or account already bound; resolve with administrator, never auto-merge"
+          },
+          "429": {
+            "description": "Rate limit or 60-second SMS cooldown"
+          },
+          "503": {
+            "description": "SMS disabled/unavailable"
+          }
+        }
+      }
+    },
+    "/auth/phone/password/setup": {
+      "post": {
+        "summary": "Set password for an original passwordless SMS account",
+        "tags": [
+          "authentication"
+        ],
+        "description": "setup_password code only. Preserves account ID and data; refuses accounts with an existing password. Revokes old sessions and returns a fresh one atomically.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "pattern": "^1[3-9][0-9]{9}$",
+                    "description": "Verified mainland China mobile number; never inferred from company contacts."
+                  },
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[0-9]{6}$"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "description": "12–72 UTF-8 bytes for registration/setup. Spaces preserved; not all whitespace."
+                  }
+                },
+                "required": [
+                  "phone",
+                  "code",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid phone, password, verification code, missing explicit confirmation, or setup not available"
+          },
+          "401": {
+            "description": "Invalid password or expired session"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "409": {
+            "description": "Phone already used or account already bound; resolve with administrator, never auto-merge"
+          },
+          "429": {
+            "description": "Rate limit or 60-second SMS cooldown"
+          },
+          "503": {
+            "description": "SMS disabled/unavailable"
+          }
+        }
+      }
+    },
+    "/auth/me/phone/code": {
+      "post": {
+        "summary": "Request initial phone-binding code",
+        "tags": [
+          "authentication"
+        ],
+        "description": "Scopes verification to current account and bind purpose.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "pattern": "^1[3-9][0-9]{9}$",
+                    "description": "Verified mainland China mobile number; never inferred from company contacts."
+                  }
+                },
+                "required": [
+                  "phone"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sent": {
+                      "type": "boolean"
+                    },
+                    "expires_in": {
+                      "type": "integer",
+                      "example": 300
+                    },
+                    "retry_after": {
+                      "type": "integer",
+                      "example": 60
+                    },
+                    "development_code": {
+                      "type": "string",
+                      "description": "Only APP_ENV=development and SMS_PROVIDER=development"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid phone, password, verification code, missing explicit confirmation, or setup not available"
+          },
+          "401": {
+            "description": "Invalid password or expired session"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "409": {
+            "description": "Phone already used or account already bound; resolve with administrator, never auto-merge"
+          },
+          "429": {
+            "description": "Rate limit or 60-second SMS cooldown"
+          },
+          "503": {
+            "description": "SMS disabled/unavailable"
+          }
+        }
+      }
+    },
+    "/auth/me/phone": {
+      "put": {
+        "summary": "Verify and bind an original account phone",
+        "tags": [
+          "authentication"
+        ],
+        "description": "Initial binding only. Keeps username/password/ownership; refuses another account phone. Revokes old sessions and returns a fresh session in the same transaction.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "pattern": "^1[3-9][0-9]{9}$",
+                    "description": "Verified mainland China mobile number; never inferred from company contacts."
+                  },
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[0-9]{6}$"
+                  }
+                },
+                "required": [
+                  "phone",
+                  "code"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid phone, password, verification code, missing explicit confirmation, or setup not available"
+          },
+          "401": {
+            "description": "Invalid password or expired session"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "409": {
+            "description": "Phone already used or account already bound; resolve with administrator, never auto-merge"
+          },
+          "429": {
+            "description": "Rate limit or 60-second SMS cooldown"
+          },
+          "503": {
+            "description": "SMS disabled/unavailable"
+          }
+        }
+      }
+    },
+    "/auth/me/merchant-upgrade": {
+      "post": {
+        "summary": "Explicitly upgrade the same visitor account",
+        "tags": [
+          "authentication"
+        ],
+        "description": "Requires verified phone. Preserves ID/favorites/content; creates no showroom. Revokes old sessions and returns a fresh merchant session atomically.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "confirmed": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  }
+                },
+                "required": [
+                  "confirmed"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid phone, password, verification code, missing explicit confirmation, or setup not available"
+          },
+          "401": {
+            "description": "Invalid password or expired session"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "409": {
+            "description": "Phone already used or account already bound; resolve with administrator, never auto-merge"
+          },
+          "429": {
+            "description": "Rate limit or 60-second SMS cooldown"
+          },
+          "503": {
+            "description": "SMS disabled/unavailable"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -10670,12 +12007,79 @@
           "region_code": {
             "type": "string",
             "description": "Optional validated city/county administrative code from the bundled 2023 directory. The server derives region_id and region_name. Omit for legacy ID or manual-text input."
+          },
+          "primary_category_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "secondary_category_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            },
+            "maxItems": 2,
+            "uniqueItems": true
+          },
+          "business_nature": {
+            "type": "string",
+            "enum": [
+              "",
+              "manufacturer",
+              "dealer",
+              "manufacturing_trading",
+              "processing",
+              "other"
+            ]
+          },
+          "product_category_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "brand": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "model": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "applicable_brands": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "type": "string",
+              "maxLength": 200,
+              "minLength": 1
+            }
+          },
+          "applicable_models": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "type": "string",
+              "maxLength": 200,
+              "minLength": 1
+            }
+          },
+          "industrial_belt_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            },
+            "readOnly": true,
+            "description": "Administrator-maintained membership, inherited from the public manufacturer for products."
           }
         },
         "required": [
           "name"
         ],
-        "description": "Product V2.2: only name is required. Category, keywords, photos and English fields are optional for both draft and review submission. Product ownership, hall/category validation, length limits and approval rules remain enforced. Parameters remain legacy-compatible plain text."
+        "description": "Schema17/18 agriculture classification: drafts may omit classifications. New agriculture manufacturers require one primary category when submitted; new products require one product category. Up to two distinct secondary manufacturer categories. New product selections use leaves of a tree of at most three levels. Pre-upgrade content retains its historical classification. Omitted new fields on updates are preserved; explicit zero, empty string or empty array clears the field. Legacy category_id and parameters are retained. Approval and ownership rules are unchanged."
       },
       "View": {
         "type": "object",
@@ -10756,6 +12160,10 @@
             "type": "integer",
             "minimum": 1,
             "description": "Owning hall. Products inherit the manufacturer hall."
+          },
+          "taxonomy_required": {
+            "type": "boolean",
+            "readOnly": true
           }
         },
         "required": []
@@ -10836,6 +12244,18 @@
               "visitor",
               "admin"
             ]
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^1[3-9][0-9]{9}$",
+            "description": "Verified mainland China mobile number; never inferred from company contacts.",
+            "nullable": true
+          },
+          "phone_verified": {
+            "type": "boolean"
+          },
+          "requires_phone_binding": {
+            "type": "boolean"
           }
         },
         "required": []
@@ -10885,6 +12305,12 @@
                   "type": "integer"
                 }
               }
+            }
+          },
+          "industrial_belts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IndustrialBelt"
             }
           }
         },
@@ -10978,6 +12404,38 @@
           },
           "vendor_name": {
             "type": "string"
+          },
+          "category_kind": {
+            "type": "string",
+            "enum": [
+              "legacy",
+              "vendor",
+              "product"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "nullable": true,
+            "description": "Immutable unique seed code; IDs are generated by the database."
+          },
+          "image_media_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "search_aliases": {
+            "type": "string",
+            "description": "Comma-separated or newline-separated category search aliases, up to 3000 UTF-8 bytes."
+          },
+          "deleted_at": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "selectable": {
+            "type": "boolean",
+            "readOnly": true,
+            "description": "Effective enabled state including ancestors."
           }
         },
         "required": [
@@ -12514,6 +13972,94 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "IndustrialBelt": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "hall_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "name_en": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "sort_order": {
+            "type": "integer"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TaxonomyMapping": {
+        "type": "object",
+        "properties": {
+          "revision_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "content_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "category_kind": {
+            "type": "string",
+            "enum": [
+              "vendor",
+              "product"
+            ]
+          },
+          "legacy_category_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "target_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "automatic",
+              "manual"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "legacy_name": {
+            "type": "string"
+          },
+          "revision_status": {
+            "type": "string"
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }

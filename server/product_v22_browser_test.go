@@ -34,7 +34,7 @@ func TestProductV22BrowserHarness(t *testing.T) {
 	merchant := session["token"].(string)
 	admin := resourceTestSession(t, a, "admin")
 	tc := testClient{t, a.router()}
-	vendor := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "V2.2隔离验收企业（测试）", MainProducts: "测试产品", RegionName: "测试地区", Phone: "0319-1234567"}}, 201)
+	vendor := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "V2.2隔离验收企业（测试）", MainProducts: "测试产品", RegionName: "测试地区", Phone: "0319-1234567"}}, 201)
 	tc.call("POST", "/merchant/contents/"+number(vendor["id"])+"/submit", merchant, gin.H{"revision_id": vendor["revision_id"]}, 200)
 	tc.call("POST", "/admin/revisions/"+number(vendor["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
 	var mids []uint64
@@ -47,7 +47,7 @@ func TestProductV22BrowserHarness(t *testing.T) {
 		m := resourceUpload(t, a, merchant, "/merchant/media", "isolated-sample.png", buf.Bytes(), 201)
 		mids = append(mids, uint64(m["id"].(float64)))
 	}
-	product := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "旧产品回填测试 V22-440", NameEN: "Legacy test product V22-440", CategoryID: 1, Description: "已有产品说明（隔离测试）", DescriptionEN: "Existing test description", Parameters: "自定义参数=保留原文\n型号：V22-440", MediaIDs: mids}}, 201)
+	product := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "旧产品回填测试 V22-440", NameEN: "Legacy test product V22-440", CategoryID: 1, Description: "已有产品说明（隔离测试）", DescriptionEN: "Existing test description", Parameters: "自定义参数=保留原文\n型号：V22-440", MediaIDs: mids}}, 201)
 	srv := httptest.NewServer(a.router())
 	defer srv.Close()
 	a.Config.PublicBaseURL = srv.URL

@@ -179,7 +179,7 @@ func (a *App) publicShowroom(c *gin.Context) {
 		dbFail(c, e)
 		return
 	}
-	if e = a.publicQuery("product").Where("contents.vendor_id=?", item.ID).Distinct("r.category_id").Pluck("r.category_id", &ids).Error; e != nil {
+	if e = a.publicQuery("product").Where("contents.vendor_id=?", item.ID).Distinct("COALESCE((SELECT rc.category_id FROM revision_categories rc WHERE rc.revision_id=r.id AND rc.role='product' LIMIT 1),r.category_id)").Pluck("COALESCE((SELECT rc.category_id FROM revision_categories rc WHERE rc.revision_id=r.id AND rc.role='product' LIMIT 1),r.category_id)", &ids).Error; e != nil {
 		dbFail(c, e)
 		return
 	}
@@ -211,7 +211,7 @@ func (a *App) publicShowroom(c *gin.Context) {
 		CategoryID uint64
 		Total      int64
 	}
-	if e = a.publicQuery("product").Where("contents.vendor_id=?", item.ID).Select("r.category_id AS category_id,COUNT(*) AS total").Group("r.category_id").Scan(&counts).Error; e != nil {
+	if e = a.publicQuery("product").Where("contents.vendor_id=?", item.ID).Select("COALESCE((SELECT rc.category_id FROM revision_categories rc WHERE rc.revision_id=r.id AND rc.role='product' LIMIT 1),r.category_id) AS category_id,COUNT(*) AS total").Group("COALESCE((SELECT rc.category_id FROM revision_categories rc WHERE rc.revision_id=r.id AND rc.role='product' LIMIT 1),r.category_id)").Scan(&counts).Error; e != nil {
 		dbFail(c, e)
 		return
 	}
@@ -260,9 +260,13 @@ func (a *App) publicShowroom(c *gin.Context) {
 		Name   string `json:"name"`
 		NameEN string `json:"name_en"`
 	}
-	if item.Data.CategoryID > 0 {
+	businessID := item.Data.PrimaryCategoryID
+	if businessID == 0 {
+		businessID = item.Data.CategoryID
+	}
+	if businessID > 0 {
 		var category Category
-		if a.DB.First(&category, canonicalCategory(a.DB, item.Data.CategoryID)).Error == nil {
+		if a.DB.First(&category, canonicalCategory(a.DB, businessID)).Error == nil {
 			businessCategory = &struct {
 				ID     uint64 `json:"id"`
 				Name   string `json:"name"`

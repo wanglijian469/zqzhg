@@ -30,16 +30,18 @@ void main() {
             jsonDecode(File('assets/i18n/$lang.json').readAsStringSync()),
           ),
       },
-      client: legacyHallClient(MockClient(
-        handler ??
-            (_) async => response({
-              'items': [],
-              'total': 0,
-              'categories': [],
-              'regions': [],
-              'products': {},
-            }),
-      )),
+      client: legacyHallClient(
+        MockClient(
+          handler ??
+              (_) async => response({
+                'items': [],
+                'total': 0,
+                'categories': [],
+                'regions': [],
+                'products': {},
+              }),
+        ),
+      ),
     );
   }
 
@@ -209,6 +211,11 @@ void main() {
       final saved = <Json>[];
       final m = await model(
         handler: (r) async {
+          if (r.url.path.endsWith('/public/config')) {
+            return response({
+              'capabilities': {'phone_password_auth': true},
+            });
+          }
           if (r.url.path.endsWith('/register')) {
             return response({
               'token': 'registered-token',
@@ -244,6 +251,11 @@ void main() {
       await click(tester, find.widgetWithText(OutlinedButton, '保存云端草稿'));
       expect(find.byType(LoginScreen), findsOneWidget);
       await tester.enterText(
+        find.byKey(const ValueKey('auth-phone')),
+        '13900009991',
+      );
+      await tester.enterText(find.byKey(const ValueKey('auth-code')), '123456');
+      await tester.enterText(
         find.widgetWithText(TextField, '设置密码'),
         'fixture-pass-123',
       );
@@ -252,6 +264,10 @@ void main() {
         'fixture-pass-123',
       );
       await click(tester, find.widgetWithText(FilledButton, '注册并继续'));
+      await tester.runAsync(() async {
+        await Future<void>.delayed(const Duration(milliseconds: 300));
+      });
+      await tester.pumpAndSettle();
       expect(saved, hasLength(1));
       expect(saved.single['data']['name'], company()['name']);
       expect(m.account['id'], 7);

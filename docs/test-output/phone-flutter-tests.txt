@@ -1,0 +1,176 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart
+00:00 +0: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: anonymous events use stable IDs, exclude credentials, and stop after three failures
+00:00 +1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:00 +1 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:01 +2 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:01 +3 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:01 +4 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:02 +5 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:02 +6 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:02 +7 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:02 +8 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:02 +9 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:02 +10 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:02 +11 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:02 +12 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:02 +13 ~1: D:/workspace-main/codex-zqzt/mobile/test/analytics_test.dart: only visible tabs and opened detail routes emit page views; requests and rebuilds do not
+00:02 +14 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:03 +15 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:03 +16 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:03 +17 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:03 +18 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:03 +19 ~1: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:03 +19 ~2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:04 +20 ~2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:04 +21 ~2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:04 +22 ~2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:04 +23 ~2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:04 +24 ~2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:04 +25 ~2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:05 +26 ~2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:05 +27 ~2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:05 +28 ~2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:05 +29 ~2: D:/workspace-main/codex-zqzt/mobile/test/app_navigation_test.dart: Four destinations retain independent searches, filters, page and scroll after details
+00:06 +30 ~2: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Registration continues original cloud save and does not store passwords
+00:06 +31 ~2: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Registration continues original cloud save and does not store passwords
+00:06 +32 ~2: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home sends one read; initial search sends one filtered request; state survives tabs and language
+00:06 +33 ~2: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home sends one read; initial search sends one filtered request; state survives tabs and language
+00:06 +34 ~2: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home sends one read; initial search sends one filtered request; state survives tabs and language
+00:07 +35 ~2: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home sends one read; initial search sends one filtered request; state survives tabs and language
+00:07 +35 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home sends one read; initial search sends one filtered request; state survives tabs and language
+00:07 +36 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home sends one read; initial search sends one filtered request; state survives tabs and language
+00:07 +37 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home sends one read; initial search sends one filtered request; state survives tabs and language
+00:07 +38 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home sends one read; initial search sends one filtered request; state survives tabs and language
+00:08 +39 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home sends one read; initial search sends one filtered request; state survives tabs and language
+00:08 +40 ~3: D:/workspace-main/codex-zqzt/mobile/test/home_upgrade_test.dart: Home sends one read; initial search sends one filtered request; state survives tabs and language
+00:08 +41 ~3: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; favorites is available from My
+00:08 +42 ~3: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; favorites is available from My
+00:08 +43 ~3: D:/workspace-main/codex-zqzt/mobile/test/favorites_test.dart: Card and detail buttons share state without opening the card; favorites is available from My
+00:09 +44 ~3: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Upload failure retains files, retry skips successful files and submit failure keeps content ID
+00:09 +45 ~3: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Upload failure retains files, retry skips successful files and submit failure keeps content ID
+00:09 +46 ~3: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Upload failure retains files, retry skips successful files and submit failure keeps content ID
+00:09 +47 ~3: D:/workspace-main/codex-zqzt/mobile/test/android_sync_test.dart: Upload failure retains files, retry skips successful files and submit failure keeps content ID
+00:09 +48 ~3: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:09 +49 ~3: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:09 +50 ~3: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:10 +50 ~3: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_integration_test.dart: Native model uses disposable MySQL for registration, drafts, media, SMS and administrative statistics
+  Skip: Use TestMobileUpgradeIntegration; never point this at a business database
+00:10 +50 ~4: D:/workspace-main/codex-zqzt/mobile/test/merchant_ui_test.dart: My company and independent workspace share the vendor request across language and routes
+00:10 +51 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:10 +52 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:10 +53 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:10 +54 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:11 +55 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:11 +56 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:11 +57 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:11 +58 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:11 +59 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:11 +60 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:11 +61 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:11 +62 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:12 +63 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:12 +64 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:12 +65 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:12 +66 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:12 +67 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:12 +68 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:12 +69 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:13 +70 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:13 +71 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:13 +72 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:13 +73 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:13 +74 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:13 +75 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:13 +76 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:14 +77 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:14 +78 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:14 +79 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:14 +80 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:14 +81 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:14 +82 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:14 +83 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:15 +84 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:15 +85 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:15 +86 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:15 +87 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:15 +88 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:15 +89 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:15 +90 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:15 +91 ~4: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:15 +91 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:16 +92 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:16 +93 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:16 +94 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:16 +95 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:16 +96 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:16 +97 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:16 +98 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:16 +99 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:16 +100 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:17 +101 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:17 +102 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:17 +103 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:17 +104 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:17 +105 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:17 +106 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:18 +107 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:18 +108 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:18 +109 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:18 +110 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:18 +111 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:18 +112 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:18 +113 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:19 +114 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:19 +115 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:19 +116 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:19 +117 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:19 +118 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:19 +119 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:19 +120 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:19 +121 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:19 +122 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:20 +123 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:20 +124 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:20 +125 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:20 +126 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:20 +127 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:20 +128 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:20 +129 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:21 +130 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:21 +131 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:21 +132 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:21 +133 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:21 +134 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:21 +135 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:21 +136 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:22 +137 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:22 +138 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:22 +139 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:22 +140 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:22 +141 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:22 +142 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:23 +143 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:23 +144 ~5: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:23 +144 ~6: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:23 +145 ~6: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:23 +146 ~6: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:23 +147 ~6: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:23 +148 ~6: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:23 +148 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:23 +149 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:23 +150 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:24 +151 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:24 +152 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:24 +153 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:25 +154 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:25 +155 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:25 +156 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:25 +157 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:25 +158 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:26 +159 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:26 +160 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:26 +161 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:26 +162 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:29 +163 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:30 +164 ~7: D:/workspace-main/codex-zqzt/mobile/test/mobile_upgrade_capture_test.dart: Native entry, company, product stages and map layout matrix
+00:31 +165 ~7: All tests passed!

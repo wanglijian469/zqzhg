@@ -558,6 +558,12 @@ func (a *App) deleteUnusedMedia(c *gin.Context) {
 		}
 		refs += n
 	}
+	var categoryRefs int64
+	if e := a.DB.Model(&Category{}).Where("image_media_id=?", media.ID).Count(&categoryRefs).Error; e != nil {
+		dbFail(c, e)
+		return
+	}
+	refs += categoryRefs
 	if refs > 0 {
 		fail(c, 409, "media_in_use")
 		return

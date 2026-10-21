@@ -1,0 +1,18 @@
+{
+  "backendPassed": 94,
+  "backendSkipped": 12,
+  "backendVideoSeparate": true,
+  "webPassed": 189,
+  "webFiles": 35,
+  "flutterPassed": 157,
+  "flutterSkipped": 7,
+  "nativeTaxonomyLayouts": 64,
+  "keyboardVerification": "simulated view insets, no physical device",
+  "browserFlows": 6,
+  "browserLayouts": 24,
+  "browserErrors": [],
+  "goVetClean": true,
+  "flutterAnalyzeClean": true,
+  "webBuild": true,
+  "androidBuild": "Gradle assembleRelease --no-daemon --offline"
+}

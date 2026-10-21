@@ -1,0 +1,3 @@
+00:00 +0: loading D:/workspace-main/codex-zqzt/mobile/test/phone_auth_capture_test.dart
+00:00 +0: Phone forms layout, large text, keyboard and screenshots
+00:08 +1: All tests passed!

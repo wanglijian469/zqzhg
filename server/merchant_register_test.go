@@ -39,7 +39,7 @@ func TestMerchantRegistrationAndExistingLogin(t *testing.T) {
 		t.Fatal("secret in response")
 	}
 	tc.call("GET", "/admin/accounts", token, nil, 403)
-	draft := tc.call("POST", "/merchant/contents", token, gin.H{"kind": "vendor", "data": Payload{Name: "注册厂商", RegionName: "河北", MainProducts: "液压机械", Phone: "0319-1234567"}}, 201)
+	draft := tc.fixtureCall("POST", "/merchant/contents", token, gin.H{"kind": "vendor", "data": Payload{Name: "注册厂商", RegionName: "河北", MainProducts: "液压机械", Phone: "0319-1234567"}}, 201)
 	tc.call("POST", "/merchant/contents/"+number(draft["id"])+"/submit", token, gin.H{"revision_id": draft["revision_id"]}, 200)
 	existing := tc.call("POST", "/auth/merchant", "", gin.H{"username": "新厂商😀", "password": password}, 200)
 	tc.call("GET", "/merchant/contents/"+number(draft["id"]), existing["token"].(string), nil, 200)

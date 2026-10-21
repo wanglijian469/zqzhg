@@ -1,0 +1,160 @@
+{
+  "checks": [
+    "Main business and up to two secondary fields retain values and exclude duplicates",
+    "Rule recommendation requires an explicit click",
+    "Full-screen search selects a leaf using its complete path",
+    "Brand/model attributes survive cloud save, three-step submission and review",
+    "Main/secondary, business nature and belt filters combine and survive language switching",
+    "Historical mapping previews before explicit confirmation and leaves original snapshots intact"
+  ],
+  "layouts": [
+    {
+      "width": 360,
+      "lang": "zh",
+      "route": "company",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "route": "product",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "route": "admin",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "route": "company",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "route": "product",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "route": "admin",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "route": "company",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "route": "product",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "route": "admin",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "route": "company",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "route": "product",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "route": "admin",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "route": "company",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "route": "product",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "route": "admin",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "route": "company",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "route": "product",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "route": "admin",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "route": "company",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "route": "product",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "route": "admin",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "route": "company",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "route": "product",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "route": "admin",
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "isolatedDatabase": true,
+  "productionWrites": false,
+  "realDeviceVerified": false
+}

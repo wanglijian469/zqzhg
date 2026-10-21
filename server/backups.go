@@ -634,7 +634,7 @@ func (a *App) unpackBackup(ctx context.Context, job *OperationJob, destination s
 	}
 	err = json.NewDecoder(io.LimitReader(body, 8<<20)).Decode(&manifest)
 	body.Close()
-	if err != nil || manifest.Format != 1 || manifest.Schema > 16 || manifest.Schema < 10 || len(manifest.Objects) > 100000 {
+	if err != nil || manifest.Format != 1 || manifest.Schema > 19 || manifest.Schema < 10 || len(manifest.Objects) > 100000 {
 		return manifest, errors.New("backup_version_unsupported")
 	}
 	if _, exists := files["database.sql"]; !exists {
@@ -978,7 +978,10 @@ func (a *App) runActivation(ctx context.Context, job *OperationJob, rollback boo
 		if e := tx.Where("1=1").Delete(&Session{}).Error; e != nil {
 			return e
 		}
-		return tx.Where("1=1").Delete(&SMSCode{}).Error
+		if e := tx.Where("1=1").Delete(&SMSCode{}).Error; e != nil {
+			return e
+		}
+		return tx.Where("1=1").Delete(&PhoneVerification{}).Error
 	}); err != nil {
 		restoreOld()
 		return nil, err

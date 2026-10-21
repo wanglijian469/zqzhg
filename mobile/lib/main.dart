@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
-import 'package:crypto/crypto.dart';
 import 'package:qr/qr.dart';
 import 'package:video_player/video_player.dart';
 import 'package:pdfrx/pdfrx.dart';
@@ -20,6 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 part 'analytics.dart';
 part 'form_rules.dart';
 part 'onboarding.dart';
+part 'taxonomy.dart';
 part 'industrial_ui.dart';
 part 'merchant_experience.dart';
 part 'merchant_workspace.dart';
@@ -35,7 +35,6 @@ part 'exhibition_halls.dart';
 part 'app_upgrade.dart';
 part 'native_auth_entry.dart';
 part 'mobile_upgrade.dart';
-part 'native_industry_map.dart';
 
 typedef Json = Map<String, dynamic>;
 const green = industrialBlue;
@@ -54,7 +53,6 @@ class ApiFailure implements Exception {
 }
 
 class AppModel extends ChangeNotifier {
-  late final NativeBoundaryStore boundaryStore = NativeBoundaryStore(this);
   String merchantVendorName = '';
   bool newlyRegistered = false;
   final Map<String, Future<Json>> clientCapabilityCache = {};
@@ -89,7 +87,9 @@ class AppModel extends ChangeNotifier {
   String productCategory(Json data) {
     final supplied = content(data, 'category_name');
     if (supplied.isNotEmpty) return supplied;
-    final category = _categoryLabels['$baseUrl:${data['category_id']}'];
+    final modern = (data['product_category_id'] as num? ?? 0).toInt();
+    final id = modern > 0 ? modern : data['category_id'];
+    final category = _categoryLabels['$baseUrl:$id'];
     return category == null ? '' : content(category, 'name');
   }
 
@@ -117,13 +117,18 @@ class AppModel extends ChangeNotifier {
     return api(publicPath(path, hall: actual));
   }
 
-  Future<dynamic> publicTaxonomy({bool refresh = false}) {
-    final key = '$baseUrl:${activeHall.slug}';
+  Future<dynamic> publicTaxonomy({
+    bool refresh = false,
+    String kind = 'legacy',
+  }) {
+    final key = '$baseUrl:${activeHall.slug}:$kind';
     if (refresh) _taxonomies.remove(key);
     final cached = _taxonomies[key];
     if (cached != null) return cached;
     final source = baseUrl;
-    final request = publicApi('/public/taxonomy').then((value) {
+    final request = publicApi('/public/taxonomy?category_kind=$kind').then((
+      value,
+    ) {
       for (final category in rows(value['categories'])) {
         _categoryLabels['$source:${category['id']}'] = category;
       }
@@ -149,6 +154,7 @@ class AppModel extends ChangeNotifier {
     bool? analyticsEnabled,
   }) : analyticsEnabled = analyticsEnabled ?? Platform.isAndroid,
        client = client ?? http.Client() {
+    unawaited(clearRetiredBoundaryCache());
     language = prefs.getString('language') ?? 'zh';
     const compiledBase = String.fromEnvironment(
       'API_BASE_URL',
@@ -180,6 +186,20 @@ class AppModel extends ChangeNotifier {
       }
     }
   }
+  Future<void> clearRetiredBoundaryCache() async {
+    if (prefs.getBool('retired_boundary_cache_cleared') == true) return;
+    try {
+      final root = await getApplicationSupportDirectory();
+      final cache = Directory('${root.path}/verified-boundaries');
+      if (await cache.exists()) {
+        await cache.delete(recursive: true);
+      }
+      await prefs.setBool('retired_boundary_cache_cleared', true);
+    } catch (_) {
+      /* Retry this optional cache cleanup on the next launch. */
+    }
+  }
+
   String t(String key) =>
       resources[language]?[key]?.toString() ??
       resources['zh']?[key]?.toString() ??
@@ -223,6 +243,10 @@ class AppModel extends ChangeNotifier {
           '/auth/merchant/register',
           '/auth/visitor/register',
           '/auth/phone',
+          '/auth/phone/password',
+          '/auth/phone/register',
+          '/auth/phone/code',
+          '/auth/phone/password/setup',
           '/auth/sms',
           '/auth/admin',
         ].contains(path);
@@ -667,6 +691,7 @@ Widget dataDetails(
           padding: const EdgeInsets.only(top: 12),
           child: Text('${m.t('mainProducts')}: ${data['main_products']}'),
         ),
+      NativeTaxonomySummary(data: data, kind: kind),
       if (ids.isNotEmpty)
         SizedBox(
           height: 240,
@@ -1805,6 +1830,11 @@ class _EditorScreenState extends State<EditorScreen> {
         expandedSections.add('english');
       } else if ([
         'category_id',
+        'product_category_id',
+        'brand',
+        'model',
+        'applicable_brands',
+        'applicable_models',
         'keywords',
         'parameters',
         'address',
@@ -2124,18 +2154,6 @@ class _EditorScreenState extends State<EditorScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         group('more', '经营分类与详细地址', 'Category and detailed address', [
-          NativeCategoryPicker(
-            hallID: editorHallID,
-            kind: 'vendor',
-            key: fieldKeys.putIfAbsent('category_id', () => GlobalKey()),
-            value: data['category_id'] ?? 0,
-            enabled: !busy && !pending,
-            issue: issues['category_id'],
-            onChanged: (id) {
-              setState(() => data['category_id'] = id);
-              scheduleSave();
-            },
-          ),
           field(context, 'address', 'address'),
         ]),
         group('english', '英文资料（选填）', 'English details (optional)', [
@@ -2225,20 +2243,24 @@ class _EditorScreenState extends State<EditorScreen> {
         Text(
           syncText(
             context,
-            '仅产品名称必填，其它资料可稍后补充。',
-            'Only the product name is required; other details can be added later.',
+            '草稿可先填名称；新产品提交审核时须选择产品分类。',
+            'Drafts may start with a name. New products require a category when submitted.',
           ),
         ),
         space(),
-        NativeCategoryPicker(
-          hallID: editorHallID,
+        NativeTaxonomyFields(
           kind: 'product',
-          key: fieldKeys.putIfAbsent('category_id', () => GlobalKey()),
-          value: data['category_id'] ?? 0,
+          hallID: editorHallID,
+          data: data,
           enabled: !busy && !pending,
-          issue: issues['category_id'],
-          onChanged: (id) {
-            setState(() => data['category_id'] = id);
+          issues: issues,
+          onChanged: (patch) {
+            setState(() {
+              data = {...data, ...patch};
+              for (final key in patch.keys) {
+                issues.remove(key);
+              }
+            });
             scheduleSave();
           },
         ),
@@ -2381,6 +2403,22 @@ class _EditorScreenState extends State<EditorScreen> {
           ),
         space(),
         field(context, 'main_products', 'mainProducts'),
+        NativeTaxonomyFields(
+          kind: 'vendor',
+          hallID: editorHallID,
+          data: data,
+          enabled: !busy && current?['status'] != 'pending',
+          issues: issues,
+          onChanged: (patch) {
+            setState(() {
+              data = {...data, ...patch};
+              for (final key in patch.keys) {
+                issues.remove(key);
+              }
+            });
+            scheduleSave();
+          },
+        ),
         field(context, 'phone', 'phone'),
         field(context, 'wechat', 'wechat'),
         Text(m.t('contactRequired')),

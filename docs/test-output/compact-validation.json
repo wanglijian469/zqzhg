@@ -1,0 +1,15 @@
+{
+  "backendPassed": 95,
+  "backendSkipped": 12,
+  "webPassed": 191,
+  "flutterPassed": 159,
+  "flutterSkipped": 7,
+  "browserLayouts": 50,
+  "browserFlows": 6,
+  "nativeTaxonomyLayouts": 64,
+  "mapOutlineBrowserPassed": true,
+  "goVetClean": true,
+  "flutterAnalyzeClean": true,
+  "localMapPersistsAfterRestart": true,
+  "physicalDeviceVerified": false
+}

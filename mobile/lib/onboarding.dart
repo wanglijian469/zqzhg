@@ -294,6 +294,9 @@ class NativeCategoryPicker extends StatefulWidget {
   final bool enabled;
   final ValueChanged<int> onChanged;
   final Json? issue;
+  final String? label;
+  final List<int> excludeIDs;
+  final bool allowSuggest;
   const NativeCategoryPicker({
     super.key,
     required this.value,
@@ -302,6 +305,9 @@ class NativeCategoryPicker extends StatefulWidget {
     required this.enabled,
     required this.onChanged,
     this.issue,
+    this.label,
+    this.excludeIDs = const [],
+    this.allowSuggest = true,
   });
   @override
   State<NativeCategoryPicker> createState() => _NativeCategoryPickerState();
@@ -319,7 +325,11 @@ class _NativeCategoryPickerState extends State<NativeCategoryPicker> {
       );
       if (ok != true || !mounted) return;
       setState(() => version++);
-      cats = rows((await m.api('/merchant/taxonomy'))['categories']);
+      cats = rows(
+        (await m.api(
+          '/merchant/taxonomy?category_kind=${widget.kind}',
+        ))['categories'],
+      );
       if (!mounted) return;
     }
     final formal = cats
@@ -331,7 +341,17 @@ class _NativeCategoryPickerState extends State<NativeCategoryPicker> {
         )
         .toList();
     final name = TextEditingController(), en = TextEditingController();
-    var parent = formal.any((c) => c['id'] == widget.value) ? widget.value : 0;
+    final selectedParent = formal
+        .where((c) => c['id'] == widget.value)
+        .firstOrNull;
+    var parent = widget.kind == 'vendor'
+        ? 0
+        : (selectedParent?['parent_id'] ?? 0);
+    formal.removeWhere(
+      (c) =>
+          widget.kind == 'vendor' ||
+          nativeCategoryPath(cats, c['id'], m).split(' / ').length >= 3,
+    );
     var error = '';
     var busy = false;
     final dialog = DialogRoute<void>(
@@ -421,6 +441,7 @@ class _NativeCategoryPickerState extends State<NativeCategoryPicker> {
                               'name': name.text,
                               'name_en': en.text,
                               'parent_id': parent,
+                              'category_kind': widget.kind,
                               'hall_id': widget.hallID ?? m.activeHall.id,
                             },
                           ),
@@ -456,16 +477,13 @@ class _NativeCategoryPickerState extends State<NativeCategoryPicker> {
     final m = ModelScope.of(context);
     return AsyncPane(
       identity:
-          '${m.baseUrl}:category-picker:${m.scope}:${widget.hallID ?? m.activeHall.id}:${m.token.isNotEmpty}:$version',
+          '${m.baseUrl}:category-picker:${m.scope}:${widget.hallID ?? m.activeHall.id}:${m.token.isNotEmpty}:${widget.kind}:$version',
       load: () {
         final hall = m.availableHalls
             .where((h) => h.id == (widget.hallID ?? m.activeHall.id))
             .firstOrNull;
         return m.api(
-          (m.token.isEmpty ? '/public/taxonomy' : '/merchant/taxonomy') +
-              (hall == null
-                  ? ''
-                  : '?hall=${Uri.encodeQueryComponent(hall.slug)}'),
+          '${m.token.isEmpty ? '/public/taxonomy' : '/merchant/taxonomy'}?category_kind=${widget.kind}${hall == null ? '' : '&hall=${Uri.encodeQueryComponent(hall.slug)}'}',
         );
       },
       builder: (r) {
@@ -489,7 +507,7 @@ class _NativeCategoryPickerState extends State<NativeCategoryPicker> {
               initialValue: selected,
               isExpanded: true,
               decoration: InputDecoration(
-                labelText: m.t('category'),
+                labelText: widget.label ?? m.t('category'),
                 errorText: widget.issue == null
                     ? null
                     : fieldIssueText(m, widget.issue!),
@@ -499,9 +517,15 @@ class _NativeCategoryPickerState extends State<NativeCategoryPicker> {
                 ...cats.map(
                   (c) => DropdownMenuItem<int>(
                     value: c['id'],
-                    enabled: c['enabled'] == true || c['id'] == widget.value,
+                    enabled:
+                        c['id'] == widget.value ||
+                        (c['enabled'] == true &&
+                            c['selectable'] != false &&
+                            !widget.excludeIDs.contains(c['id']) &&
+                            (widget.kind != 'product' ||
+                                !cats.any((v) => v['parent_id'] == c['id']))),
                     child: Text(
-                      '${m.content(c, 'name')}${c['suggestion_status'] == 'pending' ? (m.language == 'zh' ? '（待管理员规范）' : ' (pending)') : ''}',
+                      '${nativeCategoryPath(cats, c['id'], m)}${c['suggestion_status'] == 'pending' ? (m.language == 'zh' ? '（待管理员规范）' : ' (pending)') : ''}',
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -513,16 +537,34 @@ class _NativeCategoryPickerState extends State<NativeCategoryPicker> {
                   ? (v) => widget.onChanged(v ?? 0)
                   : null,
             ),
-            TextButton(
-              onPressed: widget.enabled ? () => suggest(m, cats) : null,
-              child: Text(
-                m.language == 'zh'
-                    ? (widget.kind == 'vendor' ? '＋ 新增经营分类' : '＋ 新增产品分类')
-                    : (widget.kind == 'vendor'
-                          ? 'Add business category'
-                          : 'Add product category'),
-              ),
+            OutlinedButton.icon(
+              onPressed: widget.enabled
+                  ? () async {
+                      final id = await searchNativeCategories(
+                        context,
+                        cats,
+                        widget.kind,
+                        widget.excludeIDs,
+                      );
+                      if (id != null && mounted && widget.enabled) {
+                        widget.onChanged(id);
+                      }
+                    }
+                  : null,
+              icon: const Icon(Icons.search),
+              label: Text(m.language == 'zh' ? '搜索分类' : 'Search categories'),
             ),
+            if (widget.allowSuggest)
+              TextButton(
+                onPressed: widget.enabled ? () => suggest(m, cats) : null,
+                child: Text(
+                  m.language == 'zh'
+                      ? (widget.kind == 'vendor' ? '＋ 新增经营分类' : '＋ 新增产品分类')
+                      : (widget.kind == 'vendor'
+                            ? 'Add business category'
+                            : 'Add product category'),
+                ),
+              ),
           ],
         );
       },

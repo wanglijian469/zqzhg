@@ -140,41 +140,6 @@ void main() {
         method: 'POST',
         data: {'revision_id': company['revision_id']},
       );
-      final stats = asMap(
-        await m.api(
-          '/public/industry-map/regions?hall=agriculture&region_code=1305',
-        ),
-      );
-      expect(stats['total'], 2);
-      expect(stats['unassigned_count'], 1);
-      expect(
-        rows(
-          stats['items'],
-        ).firstWhere((r) => r['code'] == '130528')['vendor_count'],
-        1,
-      );
-      final county = asMap(
-        await m.api(
-          nativeIndustryVendorPath(
-            'hall=agriculture&region_code=130528',
-            1,
-            false,
-          ),
-        ),
-      );
-      expect(county['total'], 1);
-      expect(rows(county['items']), hasLength(1));
-      final unassigned = asMap(
-        await m.api(
-          nativeIndustryVendorPath(
-            'hall=agriculture&region_code=1305',
-            1,
-            true,
-          ),
-        ),
-      );
-      expect(unassigned['total'], 1);
-      expect(rows(unassigned['items']), hasLength(1));
       final region = asMap(
         await m.api('/public/administrative-regions?code=130528'),
       );

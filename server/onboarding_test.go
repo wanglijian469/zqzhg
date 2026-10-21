@@ -74,8 +74,8 @@ func TestCompanyCategorySuggestionsAndAliases(t *testing.T) {
 	if !contains(owner, "/merchant/taxonomy") || contains(other, "/merchant/taxonomy") || contains("", "/public/taxonomy") {
 		t.Fatal("category scope")
 	}
-	v := tc.call("POST", "/merchant/contents", owner, gin.H{"kind": "vendor", "data": Payload{Name: "分类企业", RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567", CategoryID: uint64(cat["id"].(float64))}}, 201)
-	tc.call("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "data": Payload{Name: "其他企业", RegionName: "河北", MainProducts: "机械", Phone: "13900001111", CategoryID: uint64(cat["id"].(float64))}}, 400)
+	v := tc.fixtureCall("POST", "/merchant/contents", owner, gin.H{"kind": "vendor", "data": Payload{Name: "分类企业", RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567", CategoryID: uint64(cat["id"].(float64))}}, 201)
+	tc.fixtureCall("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "data": Payload{Name: "其他企业", RegionName: "河北", MainProducts: "机械", Phone: "13900001111", CategoryID: uint64(cat["id"].(float64))}}, 400)
 	approve := func(item map[string]any) {
 		tc.call("POST", "/merchant/contents/"+number(item["id"])+"/submit", owner, gin.H{"revision_id": item["revision_id"]}, 200)
 		tc.call("POST", "/admin/revisions/"+number(item["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
@@ -84,7 +84,7 @@ func TestCompanyCategorySuggestionsAndAliases(t *testing.T) {
 	if tc.call("GET", "/public/vendors?category_id="+cid, "", nil, 200)["total"] != float64(1) {
 		t.Fatal("vendor classification ignored")
 	}
-	product := tc.call("POST", "/merchant/contents", owner, gin.H{"kind": "product", "data": Payload{Name: "分类展品", CategoryID: uint64(cat["id"].(float64))}}, 201)
+	product := tc.fixtureCall("POST", "/merchant/contents", owner, gin.H{"kind": "product", "data": Payload{Name: "分类展品", CategoryID: uint64(cat["id"].(float64))}}, 201)
 	approve(product)
 	tc.call("POST", "/admin/category-suggestions/"+cid+"/normalize", admin, gin.H{"action": "merge", "target_id": 2}, 200)
 	for _, query := range []string{cid, "2"} {
@@ -96,7 +96,7 @@ func TestCompanyCategorySuggestionsAndAliases(t *testing.T) {
 	found := false
 	for _, row := range show["categories"].([]any) {
 		c := row.(map[string]any)
-		if c["id"] == float64(2) && c["product_count"] == float64(1) {
+		if c["id"] == product["data"].(map[string]any)["product_category_id"] && c["product_count"] == float64(1) {
 			found = true
 		}
 	}
@@ -128,7 +128,7 @@ func TestAdminBrandImagesOutsideGalleryQuota(t *testing.T) {
 	a := importTestApp(t)
 	tc := testClient{t, a.router()}
 	admin := resourceTestSession(t, a, "admin")
-	item := tc.call("POST", "/admin/vendors", admin, gin.H{"login_name": "品牌图片账号", "data": Payload{Name: "品牌图片企业", RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567"}}, 201)["item"].(map[string]any)
+	item := tc.fixtureCall("POST", "/admin/vendors", admin, gin.H{"login_name": "品牌图片账号", "data": Payload{Name: "品牌图片企业", RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567"}}, 201)["item"].(map[string]any)
 	var b bytes.Buffer
 	png.Encode(&b, image.NewRGBA(image.Rect(0, 0, 32, 32)))
 	ids := []uint64{}
@@ -141,12 +141,12 @@ func TestAdminBrandImagesOutsideGalleryQuota(t *testing.T) {
 	}
 	logo, cover := upload(), upload()
 	p := Payload{Name: "品牌图片企业", RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567", MediaIDs: ids, CompanyProfile: &CompanyProfile{LogoMediaID: logo, CoverMediaID: cover}}
-	draft := tc.call("PUT", "/admin/contents/"+number(item["id"])+"/draft", admin, gin.H{"revision_id": item["revision_id"], "data": p}, 200)
+	draft := tc.fixtureCall("PUT", "/admin/contents/"+number(item["id"])+"/draft", admin, gin.H{"revision_id": item["revision_id"], "data": p}, 200)
 	tc.call("GET", fmt.Sprintf("/media/%d", logo), "", nil, 404)
 	tc.call("POST", "/admin/contents/"+number(item["id"])+"/submit", admin, gin.H{"revision_id": draft["revision_id"]}, 200)
 	tc.call("POST", "/admin/revisions/"+number(draft["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
 	p.CompanyProfile.LogoMediaID = upload()
-	next := tc.call("PUT", "/admin/contents/"+number(item["id"])+"/draft", admin, gin.H{"revision_id": draft["revision_id"], "data": p}, 200)
+	next := tc.fixtureCall("PUT", "/admin/contents/"+number(item["id"])+"/draft", admin, gin.H{"revision_id": draft["revision_id"], "data": p}, 200)
 	tc.call("POST", "/admin/contents/"+number(item["id"])+"/submit", admin, gin.H{"revision_id": next["revision_id"]}, 200)
 	pub := tc.call("GET", "/public/showrooms/v-"+number(item["id"]), "", nil, 200)
 	profile := pub["item"].(map[string]any)["data"].(map[string]any)["company_profile"].(map[string]any)

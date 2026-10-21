@@ -78,8 +78,8 @@ func TestPortalReviewImagesIsolationAndOldClient(t *testing.T) {
 	gallery := Media{OwnerID: owner.ID, Path: "gallery.png", ThumbPath: "gallery-thumb.png"}
 	a.DB.Create(&gallery)
 	d := Payload{Name: "企业门户测试", MainProducts: "机械", Phone: "123", RegionName: "河北", MediaIDs: []uint64{gallery.ID}, CompanyProfile: &CompanyProfile{Credentials: []CompanyCredential{{GalleryAnnotation: GalleryAnnotation{MediaID: image.ID, Title: "原公开证书"}, Kind: "qualification"}}, GalleryAnnotations: []GalleryAnnotation{{MediaID: gallery.ID, Title: "原车间"}}}}
-	tc.call("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "data": d}, 400)
-	v := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": d}, 201)
+	tc.fixtureCall("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "data": d}, 400)
+	v := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": d}, 201)
 	path := "/merchant/contents/" + number(v["id"])
 	read("", 404)
 	read(other, 404)
@@ -92,7 +92,7 @@ func TestPortalReviewImagesIsolationAndOldClient(t *testing.T) {
 	read("", 200)
 	legacy := d
 	legacy.CompanyProfile = &CompanyProfile{Summary: "旧App修改"}
-	v = tc.call("PUT", path+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": legacy}, 200)
+	v = tc.fixtureCall("PUT", path+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": legacy}, 200)
 	raw, _ := json.Marshal(v["data"])
 	var saved Payload
 	json.Unmarshal(raw, &saved)
@@ -100,18 +100,18 @@ func TestPortalReviewImagesIsolationAndOldClient(t *testing.T) {
 		t.Fatal("old App erased portal content")
 	}
 	saved.CompanyProfile.Credentials[0].Title = "待审证书"
-	v = tc.call("PUT", path+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": saved}, 200)
+	v = tc.fixtureCall("PUT", path+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": saved}, 200)
 	tc.call("POST", path+"/submit", merchant, gin.H{"revision_id": v["revision_id"]}, 200)
 	pub := tc.call("GET", "/public/showrooms/v-"+number(v["id"]), "", nil, 200)
 	blob, _ := json.Marshal(pub)
 	if strings.Contains(string(blob), "待审证书") || !strings.Contains(string(blob), "原公开证书") {
 		t.Fatal("review snapshot leaked")
 	}
-	tc.call("PUT", path+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": saved}, 409)
+	tc.fixtureCall("PUT", path+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": saved}, 409)
 	tc.call("POST", "/admin/revisions/"+number(v["revision_id"])+"/review", admin, gin.H{"decision": "reject", "note": "测试驳回"}, 200)
 	saved.CompanyProfile.Credentials = []CompanyCredential{}
 	saved.MediaIDs = nil
-	v = tc.call("PUT", path+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": saved}, 200)
+	v = tc.fixtureCall("PUT", path+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": saved}, 200)
 	publish(v)
 	read("", 404)
 	tc.call("POST", path+"/offline", merchant, gin.H{}, 200)

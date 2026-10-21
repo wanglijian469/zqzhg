@@ -11,9 +11,9 @@ func TestMerchantSpecificationSearchIsScopedAndCompatible(t *testing.T) {
 	a := importTestApp(t)
 	tc := testClient{t, a.router()}
 	merchant, other := tc.login("13900009511"), tc.login("13900009512")
-	tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "规格检索测试厂家", RegionName: "测试地区", MainProducts: "机械", Phone: "13900009511"}}, 201)
+	tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "规格检索测试厂家", RegionName: "测试地区", MainProducts: "机械", Phone: "13900009511"}}, 201)
 	for i := 0; i < 23; i++ {
-		tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: fmt.Sprintf("检索设备 %02d", i), CategoryID: 1, Parameters: "型号：1LF-440\n规格：液压设备\n特殊：A%_\\", Description: "PRIVATE_ONLY_DESCRIPTION"}}, 201)
+		tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: fmt.Sprintf("检索设备 %02d", i), CategoryID: 1, Parameters: "型号：1LF-440\n规格：液压设备\n特殊：A%_\\", Description: "PRIVATE_ONLY_DESCRIPTION"}}, 201)
 	}
 	for _, test := range []struct {
 		query             string
@@ -62,7 +62,7 @@ func TestMerchantDashboardFiltersAndPublication(t *testing.T) {
 		t.Fatal(e)
 	}
 	admin := adminSession["token"].(string)
-	vendor := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "工作台测试厂商", RegionName: "测试地区", MainProducts: "工作台农机", Phone: "13900009501"}}, 201)
+	vendor := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "工作台测试厂商", RegionName: "测试地区", MainProducts: "工作台农机", Phone: "13900009501"}}, 201)
 	approve := func(item map[string]any) {
 		tc.call("POST", "/merchant/contents/"+number(item["id"])+"/submit", merchant, gin.H{"revision_id": item["revision_id"]}, 200)
 		tc.call("POST", "/admin/revisions/"+number(item["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
@@ -70,10 +70,10 @@ func TestMerchantDashboardFiltersAndPublication(t *testing.T) {
 	approve(vendor)
 	var products []map[string]any
 	for i := 0; i < 23; i++ {
-		products = append(products, tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: fmt.Sprintf("MATCH 工作台产品 %02d", i), CategoryID: 1}}, 201))
+		products = append(products, tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: fmt.Sprintf("MATCH 工作台产品 %02d", i), CategoryID: 1}}, 201))
 	}
 	approve(products[0])
-	revised := tc.call("PUT", "/merchant/contents/"+number(products[0]["id"])+"/draft", merchant, gin.H{"revision_id": products[0]["revision_id"], "data": Payload{Name: "MATCH 新待审文字", CategoryID: 1}}, 200)
+	revised := tc.fixtureCall("PUT", "/merchant/contents/"+number(products[0]["id"])+"/draft", merchant, gin.H{"revision_id": products[0]["revision_id"], "data": Payload{Name: "MATCH 新待审文字", CategoryID: 1}}, 200)
 	for _, item := range []map[string]any{revised, products[1], products[2]} {
 		tc.call("POST", "/merchant/contents/"+number(item["id"])+"/submit", merchant, gin.H{"revision_id": item["revision_id"]}, 200)
 	}

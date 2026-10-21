@@ -52,8 +52,13 @@ func (a *App) registerAccount(c *gin.Context, role string) {
 	}
 	var result gin.H
 	e = a.DB.Session(&gorm.Session{Logger: logger.Default.LogMode(logger.Silent)}).Transaction(func(tx *gorm.DB) error {
+		if mainlandPhone.MatchString(req.LoginName) {
+			if e := lockPhoneIdentity(tx, req.LoginName); e != nil {
+				return e
+			}
+		}
 		var count int64
-		if e := tx.Model(&Account{}).Where("login_name=? OR username=?", req.LoginName, req.LoginName).Count(&count).Error; e != nil {
+		if e := tx.Model(&Account{}).Where("login_name=? OR username=? OR phone=?", req.LoginName, req.LoginName, req.LoginName).Count(&count).Error; e != nil {
 			return e
 		}
 		if count > 0 {
@@ -68,7 +73,7 @@ func (a *App) registerAccount(c *gin.Context, role string) {
 			return e
 		}
 		var e error
-		result, e = newSessionIn(tx, account)
+		result, e = a.phoneSession(tx, account, false)
 		if e != nil {
 			return e
 		}

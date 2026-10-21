@@ -26,8 +26,12 @@ type CategoryAlias struct {
 func (a *App) categoryAliases() []CategoryAlias {
 	aliases := []CategoryAlias{}
 	a.DB.Find(&aliases)
+	links := map[uint64]uint64{}
+	for _, alias := range aliases {
+		links[alias.SourceID] = alias.TargetID
+	}
 	for i := range aliases {
-		aliases[i].TargetID = canonicalCategory(a.DB, aliases[i].TargetID)
+		aliases[i].TargetID = canonicalAliasID(links, aliases[i].TargetID)
 	}
 	return aliases
 }
@@ -50,6 +54,7 @@ func categoryDescends(tx *gorm.DB, node, ancestor uint64) bool {
 
 type ScopedCategory struct {
 	Category
+	Selectable     bool   `json:"selectable"`
 	Status         string `json:"suggestion_status,omitempty"`
 	OwnerID        uint64 `json:"owner_id,omitempty"`
 	ReferenceCount int64  `json:"reference_count,omitempty"`
@@ -71,7 +76,7 @@ func canonicalCategory(tx *gorm.DB, id uint64) uint64 {
 }
 func categoryAllowed(tx *gorm.DB, id, owner uint64) bool {
 	var cat Category
-	if tx.First(&cat, id).Error != nil || !cat.Enabled {
+	if tx.First(&cat, id).Error != nil || !cat.Enabled || cat.DeletedAt != nil {
 		return false
 	}
 	var s CategorySuggestion
@@ -89,6 +94,9 @@ func (a *App) scopedCategories(who Account, public bool) []ScopedCategory {
 	}
 	result := []ScopedCategory{}
 	for _, cat := range all {
+		if cat.DeletedAt != nil {
+			continue
+		}
 		s := meta[cat.ID]
 		if s.Status == "merged" {
 			continue
@@ -96,16 +104,20 @@ func (a *App) scopedCategories(who Account, public bool) []ScopedCategory {
 		if public && (!cat.Enabled || (s.CategoryID > 0 && s.Status != "approved")) {
 			continue
 		}
+		available := categoryBranchEnabled(all, cat.ID)
+		if public && !available {
+			continue
+		}
 		if !public && !platformAccount(who) && s.CategoryID > 0 && s.Status != "approved" && s.OwnerID != who.ID {
 			continue
 		}
-		r := ScopedCategory{Category: cat}
+		r := ScopedCategory{Category: cat, Selectable: available}
 		if !public {
 			sCopy := s
 			r.Status = sCopy.Status
 			if platformAccount(who) {
 				r.OwnerID = s.OwnerID
-				a.DB.Model(&Content{}).Joins("JOIN revisions r ON r.id=contents.draft_revision_id OR r.id=contents.published_revision_id").Where("r.category_id=?", cat.ID).Distinct("contents.id").Count(&r.ReferenceCount)
+				r.ReferenceCount = categoryReferenceCount(a.DB, cat.ID)
 				if s.OwnerID > 0 {
 					var row struct{ Name string }
 					a.DB.Table("contents c").Joins("JOIN revisions r ON r.id=c.draft_revision_id").Where("c.owner_id=? AND c.kind='vendor'", s.OwnerID).Select("r.name").Limit(1).Scan(&row)
@@ -119,10 +131,11 @@ func (a *App) scopedCategories(who Account, public bool) []ScopedCategory {
 }
 func (a *App) suggestCategory(c *gin.Context) {
 	var req struct {
-		Name     string `json:"name"`
-		NameEN   string `json:"name_en"`
-		HallID   uint64 `json:"hall_id"`
-		ParentID uint64 `json:"parent_id"`
+		Name         string `json:"name"`
+		NameEN       string `json:"name_en"`
+		HallID       uint64 `json:"hall_id"`
+		ParentID     uint64 `json:"parent_id"`
+		CategoryKind string `json:"category_kind"`
 	}
 	if c.ShouldBindJSON(&req) != nil {
 		fail(c, 400, "invalid_request")
@@ -171,7 +184,14 @@ func (a *App) suggestCategory(c *gin.Context) {
 			return fieldFailure("invalid_category", "parent_id", "formal_parent_required")
 		}
 		var matches []Category
-		if e := tx.Where("hall_id=? AND parent_id=? AND name=? AND enabled=1", parent.HallID, req.ParentID, req.Name).Find(&matches).Error; e != nil {
+		requestedKind := req.CategoryKind
+		if requestedKind == "" {
+			requestedKind = "legacy"
+		}
+		if parent.ID > 0 && parent.CategoryKind != requestedKind {
+			return fmt.Errorf("invalid_category")
+		}
+		if e := tx.Where("hall_id=? AND parent_id=? AND name=? AND enabled=1 AND category_kind=? AND deleted_at IS NULL", parent.HallID, req.ParentID, req.Name, requestedKind).Find(&matches).Error; e != nil {
 			return e
 		}
 		for _, v := range matches {
@@ -183,7 +203,14 @@ func (a *App) suggestCategory(c *gin.Context) {
 				return nil
 			}
 		}
-		cat = Category{HallID: parent.HallID, ParentID: parent.ID, Name: req.Name, NameEN: req.NameEN, Enabled: true}
+		kind := req.CategoryKind
+		if kind == "" {
+			kind = "legacy"
+		}
+		cat = Category{HallID: parent.HallID, ParentID: parent.ID, Name: req.Name, NameEN: req.NameEN, Enabled: true, CategoryKind: kind}
+		if e := validateCategoryTree(tx, cat); e != nil {
+			return e
+		}
 		if e := tx.Create(&cat).Error; e != nil {
 			return e
 		}
@@ -245,9 +272,14 @@ func (a *App) normalizeCategory(c *gin.Context) {
 				if e := tx.First(&parent, req.ParentID).Error; e != nil {
 					return e
 				}
-				if parent.HallID != cat.HallID {
+				if parent.HallID != cat.HallID || parent.CategoryKind != cat.CategoryKind {
 					return fmt.Errorf("invalid_category")
 				}
+			}
+			changed := cat
+			changed.ParentID = req.ParentID
+			if e := validateCategoryTree(tx, changed); e != nil {
+				return e
 			}
 			if e := tx.Model(&cat).Updates(map[string]any{"name": req.Name, "name_en": req.NameEN, "parent_id": req.ParentID, "enabled": true}).Error; e != nil {
 				return e
@@ -263,7 +295,7 @@ func (a *App) normalizeCategory(c *gin.Context) {
 			}
 			var t Category
 			tx.First(&t, target)
-			if t.HallID != cat.HallID {
+			if t.HallID != cat.HallID || t.CategoryKind != cat.CategoryKind {
 				return fmt.Errorf("invalid_category")
 			}
 			if e := tx.Create(&CategoryAlias{SourceID: cat.ID, TargetID: target}).Error; e != nil {
@@ -296,6 +328,9 @@ func (a *App) normalizeCategory(c *gin.Context) {
 	c.JSON(200, gin.H{"ok": true})
 }
 func (a *App) resolveCategoryViews(items []View) error {
+	if e := a.hydrateTaxonomyViews(items); e != nil {
+		return e
+	}
 	if len(items) == 0 {
 		return nil
 	}

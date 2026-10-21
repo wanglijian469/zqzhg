@@ -176,15 +176,35 @@ Widget harness(
 );
 
 Future<void> tap(WidgetTester tester, Finder finder) async {
+  FocusManager.instance.primaryFocus?.unfocus();
+  await tester.pumpAndSettle();
   bool empty = false;
   try {
     empty = finder.evaluate().isEmpty;
-  } on StateError {
+  } catch (_) {
     empty = true;
   }
-  if (empty && find.byType(ExpansionTile).evaluate().isNotEmpty) {
-    await tester.tap(find.byType(ExpansionTile).first);
+  if (empty &&
+      finder.describeMatch(Plurality.one).contains('DropdownButton') &&
+      find.byType(ExpansionTile).evaluate().isNotEmpty) {
+    final title = tester
+        .widget<ExpansionTile>(find.byType(ExpansionTile).first)
+        .title;
+    await tester.tap(find.byWidget(title));
     await tester.pumpAndSettle();
+  }
+  if (finder.evaluate().isEmpty) {
+    await tester.scrollUntilVisible(
+      finder,
+      350,
+      scrollable: find
+          .descendant(
+            of: find.byType(CustomScrollView).last,
+            matching: find.byType(Scrollable),
+          )
+          .first,
+      maxScrolls: 30,
+    );
   }
   await Scrollable.ensureVisible(tester.element(finder.first), alignment: .5);
   await tester.pumpAndSettle();
@@ -217,7 +237,7 @@ void main() {
       await tester.enterText(find.byType(TextField).first, '旋耕机');
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
-      await tap(tester, find.byType(DropdownButtonFormField<int>).last);
+      await tap(tester, find.byType(DropdownButtonFormField<int>).at(1));
       await tap(tester, find.text('河北').last);
       await tap(tester, find.text('下一页'));
       expect(
@@ -347,7 +367,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
       await tester.tap(find.byType(BackButton).first);
       await tester.pumpAndSettle();
-      await tap(tester,find.text('保留草稿并离开'));
+      await tap(tester, find.text('保留草稿并离开'));
       await tap(tester, find.text('基本信息'));
       expect(find.text('修改后企业'), findsOneWidget);
       await tester.tap(find.byType(BackButton).first);

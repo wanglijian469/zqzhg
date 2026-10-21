@@ -169,6 +169,9 @@ func (a *App) upload(c *gin.Context) {
 		if e := tx.Create(&media).Error; e != nil {
 			return e
 		}
+		if _, ok := c.Get("upload_category_media"); ok {
+			return recordOperation(tx, actor(c).ID, "media", media.ID, "category_image_uploaded", "")
+		}
 		if _, ok := c.Get("upload_home_display"); ok {
 			if e := tx.Create(&HomeDisplayMedia{MediaID: media.ID, CreatedAt: media.CreatedAt}).Error; e != nil {
 				return e
@@ -227,7 +230,21 @@ func (a *App) mediaRead(c *gin.Context) {
 	}
 	if count == 0 {
 		account, e := a.readAccount(c)
-		if e != nil || !a.canReadPrivateMedia(account, media) {
+		var cats []Category
+		if err := a.DB.Where("image_media_id=? AND deleted_at IS NULL", mediaID).Find(&cats).Error; err != nil {
+			fail(c, 500, "internal_error")
+			return
+		}
+		for _, cat := range cats {
+			if selectableCategory(a.DB, cat.ID, cat.CategoryKind, cat.HallID, 0, false) {
+				var h Hall
+				if a.DB.First(&h, cat.HallID).Error == nil && h.Status == "open" {
+					count = 1
+					break
+				}
+			}
+		}
+		if count == 0 && (e != nil || !a.canReadPrivateMedia(account, media)) {
 			fail(c, 404, "not_found")
 			return
 		}

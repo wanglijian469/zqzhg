@@ -19,7 +19,7 @@ func TestIndustryMapBrowser(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	a.Config.WebDir = filepath.Join(root, "web", "dist")
+	a.Config.WebDir = env("BROWSER_WEB_DIR", filepath.Join(root, "web", "dist"))
 	if _, e = os.Stat(filepath.Join(a.Config.WebDir, "index.html")); e != nil {
 		t.Fatal("build web before browser verification", e)
 	}
@@ -51,7 +51,7 @@ func TestMapPreviewBrowser(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	a.Config.WebDir = filepath.Join(root, "web", "dist")
+	a.Config.WebDir = env("BROWSER_WEB_DIR", filepath.Join(root, "web", "dist"))
 	a.Config.Env = "development"
 	a.Config.MapPreviewEnabled = true
 	a.Config.MapPreviewDir = filepath.Join(root, ".local", "map-preview")

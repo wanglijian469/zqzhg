@@ -183,7 +183,7 @@ func TestIndustryMapPublishedSnapshotAndAuthorization(t *testing.T) {
 	other := resourceTestSession(t, a, "merchant")
 	admin := resourceTestSession(t, a, "admin")
 	p := Payload{Name: "修订版隔离测试厂商", MainProducts: "测试机械", RegionCode: "130528", Phone: "0319-1234567"}
-	v := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": p}, 201)
+	v := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": p}, 201)
 	vendorID := number(v["id"])
 	publish := func(v map[string]any) {
 		tc.call("POST", "/merchant/contents/"+vendorID+"/submit", merchant, gin.H{"revision_id": v["revision_id"]}, 200)
@@ -191,13 +191,13 @@ func TestIndustryMapPublishedSnapshotAndAuthorization(t *testing.T) {
 	}
 	publish(v)
 	p.RegionCode = "110108"
-	v = tc.call("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": p}, 200)
-	tc.call("PUT", "/merchant/contents/"+vendorID+"/draft", other, gin.H{"revision_id": v["revision_id"], "data": p}, 403)
+	v = tc.fixtureCall("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": p}, 200)
+	tc.fixtureCall("PUT", "/merchant/contents/"+vendorID+"/draft", other, gin.H{"revision_id": v["revision_id"], "data": p}, 403)
 	if mapCount(t, tc.call("GET", "/public/industry-map/regions", "", nil, 200), "13") != 1 {
 		t.Fatal("draft changed public location")
 	}
 	tc.call("POST", "/merchant/contents/"+vendorID+"/submit", merchant, gin.H{"revision_id": v["revision_id"]}, 200)
-	tc.call("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": p}, 409)
+	tc.fixtureCall("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": p}, 409)
 	tc.call("POST", "/admin/revisions/"+number(v["revision_id"])+"/review", admin, gin.H{"decision": "reject", "note": "仅测试驳回"}, 200)
 	if mapCount(t, tc.call("GET", "/public/industry-map/regions", "", nil, 200), "13") != 1 {
 		t.Fatal("rejection changed public location")
@@ -206,7 +206,7 @@ func TestIndustryMapPublishedSnapshotAndAuthorization(t *testing.T) {
 	p.RegionCode = ""
 	p.RegionID = uint64(v["data"].(map[string]any)["region_id"].(float64))
 	p.RegionName = "北京市 海淀区"
-	v = tc.call("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": p}, 200)
+	v = tc.fixtureCall("PUT", "/merchant/contents/"+vendorID+"/draft", merchant, gin.H{"revision_id": v["revision_id"], "data": p}, 200)
 	publish(v)
 	if mapCount(t, tc.call("GET", "/public/industry-map/regions", "", nil, 200), "11") != 1 {
 		t.Fatal("legacy client lost location")

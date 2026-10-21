@@ -40,8 +40,8 @@ func TestResourceBrowserFixture(t *testing.T) {
 	tc := testClient{t, a.router()}
 	merchant := resourceTestSession(t, a, "merchant")
 	admin := resourceTestSession(t, a, "admin")
-	vendor := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "多媒体验收厂商（仅测试）", NameEN: "Multimedia QA", MainProducts: "测试农机", RegionName: "河北", Phone: "13900009910", Description: "这是独立测试库中的企业介绍。", CompanyProfile: &CompanyProfile{Capacity: "每月100台（仅测试）", Equipment: "测试生产设备", Established: "2020", Staff: "50人"}}}, 201)
-	product := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "测试农机展品", CategoryID: 1}}, 201)
+	vendor := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "多媒体验收厂商（仅测试）", NameEN: "Multimedia QA", MainProducts: "测试农机", RegionName: "河北", Phone: "13900009910", Description: "这是独立测试库中的企业介绍。", CompanyProfile: &CompanyProfile{Capacity: "每月100台（仅测试）", Equipment: "测试生产设备", Established: "2020", Staff: "50人"}}}, 201)
+	product := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "测试农机展品", CategoryID: 1}}, 201)
 	for _, item := range []map[string]any{vendor, product} {
 		tc.call("POST", "/merchant/contents/"+number(item["id"])+"/submit", merchant, gin.H{"revision_id": item["revision_id"]}, 200)
 		tc.call("POST", "/admin/revisions/"+number(item["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)

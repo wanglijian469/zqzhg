@@ -43,7 +43,7 @@ func TestVisitorRegistrationAndFavoritePermissions(t *testing.T) {
 	tc.call("POST", "/auth/merchant/register", "", gin.H{"login_name": "普通访客", "password": password}, 409)
 	tc.call("POST", "/auth/visitor/register", "", gin.H{"login_name": "短密码", "password": "short"}, 400)
 	tc.call("GET", "/merchant/contents", token, nil, 403)
-	tc.call("POST", "/merchant/contents", token, gin.H{"kind": "vendor"}, 403)
+	tc.fixtureCall("POST", "/merchant/contents", token, gin.H{"kind": "vendor"}, 403)
 	tc.call("POST", "/merchant/media", token, nil, 403)
 	tc.call("GET", "/admin/accounts", token, nil, 403)
 	tc.call("GET", "/favorites", "", nil, 401)
@@ -105,9 +105,9 @@ func TestFavoriteResolutionNeverExposesDraftsOrWithdrawnParents(t *testing.T) {
 	tc := testClient{t, a.router()}
 	merchant := tc.login("13900009401")
 	admin := tc.call("POST", "/auth/admin", "", gin.H{"username": "admin", "password": "Import-Test-Admin-2026!"}, 200)["token"].(string)
-	vendor := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "公开厂商", RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567"}}, 201)
-	product := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "公开产品", CategoryID: 1}}, 201)
-	draft := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "PRIVATE_SECRET_DRAFT", CategoryID: 1}}, 201)
+	vendor := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "公开厂商", RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567"}}, 201)
+	product := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "公开产品", CategoryID: 1}}, 201)
+	draft := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "PRIVATE_SECRET_DRAFT", CategoryID: 1}}, 201)
 	for _, item := range []map[string]any{vendor, product} {
 		tc.call("POST", "/merchant/contents/"+number(item["id"])+"/submit", merchant, gin.H{"revision_id": item["revision_id"]}, 200)
 		tc.call("POST", "/admin/revisions/"+number(item["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
@@ -131,7 +131,7 @@ func TestFavoriteResolutionNeverExposesDraftsOrWithdrawnParents(t *testing.T) {
 		t.Fatal("draft leaked")
 	}
 	// Old public snapshots remain selected while a new private revision is edited.
-	tc.call("PUT", "/merchant/contents/"+number(vendor["id"])+"/draft", merchant, gin.H{"revision_id": vendor["revision_id"], "data": Payload{Name: "PRIVATE_NEW_VENDOR", RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567"}}, 200)
+	tc.fixtureCall("PUT", "/merchant/contents/"+number(vendor["id"])+"/draft", merchant, gin.H{"revision_id": vendor["revision_id"], "data": Payload{Name: "PRIVATE_NEW_VENDOR", RegionName: "河北", MainProducts: "机械", Phone: "0319-1234567"}}, 200)
 	raw, _ = json.Marshal(resolve())
 	if strings.Contains(string(raw), "PRIVATE_NEW_VENDOR") {
 		t.Fatal("unpublished edit leaked")

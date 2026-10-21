@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:crypto/crypto.dart';
 import 'package:dalunongji/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -42,6 +41,7 @@ Future<AppModel> upgradeModel({
             'administrative_regions': true,
             'industry_map': true,
             'product_name_only': true,
+            'phone_password_auth': true,
           },
         });
       }
@@ -127,6 +127,9 @@ Widget upgradeApp(
   ),
 );
 Future<void> tapReachable(WidgetTester t, Finder finder) async {
+  FocusManager.instance.primaryFocus?.unfocus();
+  await t.pumpAndSettle();
+
   await t.ensureVisible(finder.first);
   await t.pumpAndSettle();
   await t.tap(finder.first);
@@ -478,133 +481,6 @@ void main() {
       );
     },
   );
-  test(
-    'Polygon holes, multiple polygons and projected proportions are preserved',
-    () {
-      final shapes = nativeGeoShapes({
-        'features': [
-          {
-            'properties': {
-              'adcode': 'test',
-              'name': 'Only synthetic geometry for unit testing',
-            },
-            'geometry': {
-              'type': 'MultiPolygon',
-              'coordinates': [
-                [
-                  [
-                    [0, 0],
-                    [4, 0],
-                    [4, 4],
-                    [0, 4],
-                    [0, 0],
-                  ],
-                  [
-                    [1, 1],
-                    [3, 1],
-                    [3, 3],
-                    [1, 3],
-                    [1, 1],
-                  ],
-                ],
-                [
-                  [
-                    [10, 0],
-                    [11, 0],
-                    [11, 1],
-                    [10, 1],
-                    [10, 0],
-                  ],
-                ],
-              ],
-            },
-          },
-        ],
-      });
-      expect(shapes.single.path.contains(const Offset(.035, -.035)), isFalse);
-      expect(shapes.single.path.contains(const Offset(.008, -.008)), isTrue);
-      expect(shapes.single.path.contains(const Offset(.18, -.008)), isTrue);
-    },
-  );
-  test(
-    'Unapproved resources never download geometry; verified files cache and repair corrupted bytes',
-    () async {
-      final dir = Directory.systemTemp.createTempSync('zqzt-boundary-unit-');
-      addTearDown(() => dir.deleteSync(recursive: true));
-      final geo = utf8.encode(
-        jsonEncode({
-          'type': 'FeatureCollection',
-          'features': [
-            {
-              'type': 'Feature',
-              'properties': {'adcode': '130000'},
-              'geometry': {
-                'type': 'Polygon',
-                'coordinates': [
-                  [
-                    [0, 0],
-                    [1, 0],
-                    [1, 1],
-                    [0, 0],
-                  ],
-                ],
-              },
-            },
-          ],
-        }),
-      );
-      final hash = sha256.convert(geo).toString();
-      bool approved = false;
-      int downloads = 0;
-      final m = await upgradeModel(
-        handler: (r) async {
-          if (r.url.path == '/maps/manifest.json') {
-            return jsonResponse({
-              'version': 1,
-              'catalog_version': '2023-06-30',
-              'resources': {
-                'national': {
-                  'approved': approved,
-                  'presentation': 'industry-choropleth',
-                  'catalog_version': '2023-06-30',
-                  'sha256': hash,
-                  'url': '/maps/unit.json',
-                  'version': 'test-only',
-                  'source': 'synthetic unit fixture, not a map',
-                  'license': 'unit testing only',
-                  'review_number': 'TEST-NOT-A-REAL-APPROVAL',
-                  'review_evidence': 'unit fixture',
-                  'publication_scope': 'unit-only',
-                  'verified_by': 'automated fixture',
-                  'verified_at': '2026-10-20',
-                  'coordinate_system': 'WGS84',
-                  'platforms': ['android'],
-                  'cache_allowed': true,
-                  'code_map': {'130000': '13'},
-                },
-              },
-            });
-          }
-          if (r.url.path == '/maps/unit.json') {
-            downloads++;
-            return http.Response.bytes(geo, 200);
-          }
-          return null;
-        },
-      );
-      final store = NativeBoundaryStore(m, directory: dir);
-      await expectLater(store.load(''), throwsA(isA<ApiFailure>()));
-      expect(downloads, 0);
-      approved = true;
-      final result = await store.load('');
-      expect(result!['geometry']['features'][0]['properties']['adcode'], '13');
-      await NativeBoundaryStore(m, directory: dir).load('');
-      expect(downloads, 1);
-      dir.listSync().whereType<File>().single.writeAsStringSync('corrupt');
-      await NativeBoundaryStore(m, directory: dir).load('');
-      expect(downloads, 2);
-    },
-  );
   testWidgets(
     'Registration validates focus, independent visibility, reset and single uncertain request',
     (t) async {
@@ -622,9 +498,10 @@ void main() {
       await t.pumpWidget(upgradeApp(m, const LoginScreen(register: true)));
       await t.pumpAndSettle();
       await tapReachable(t, find.widgetWithText(FilledButton, '注册并继续'));
-      final name = find.widgetWithText(TextField, '公司登录账号');
+      final name = find.widgetWithText(TextField, '手机号');
       expect(t.widget<TextField>(name).focusNode!.hasFocus, isTrue);
-      await t.enterText(name, 'test-company');
+      await t.enterText(name, '13900009991');
+      await t.enterText(find.widgetWithText(TextField, '短信验证码'), '123456');
       await t.enterText(
         find.widgetWithText(TextField, '设置密码'),
         'Entry-password-2026!',
@@ -738,32 +615,6 @@ void main() {
       await tapReachable(t, find.widgetWithText(OutlinedButton, '保存云端草稿'));
       expect(writes, 0);
       expect(find.textContaining('当前服务器尚未支持'), findsOneWidget);
-      await t.pumpWidget(const SizedBox());
-    },
-  );
-  testWidgets(
-    'Map counts and region navigation work without claiming boundary completion',
-    (t) async {
-      final calls = <Uri>[];
-      final m = await upgradeModel(
-        handler: (r) async {
-          calls.add(r.url);
-          return null;
-        },
-      );
-      await t.pumpWidget(upgradeApp(m, const NativeIndustryMapScreen()));
-      await t.pumpAndSettle();
-      expect(find.textContaining('正式真实轮廓尚未开放'), findsOneWidget);
-      await tapReachable(t, find.text('选择地区').first);
-      await tapReachable(t, find.text('河北省').last);
-      expect(
-        calls.any((url) => url.queryParameters['region_code'] == '13'),
-        isTrue,
-      );
-      expect(
-        calls.any((url) => url.path.contains('/dev/map-preview')),
-        isFalse,
-      );
       await t.pumpWidget(const SizedBox());
     },
   );

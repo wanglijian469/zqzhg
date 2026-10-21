@@ -19,7 +19,7 @@ func TestShowroomProfileAndPublication(t *testing.T) {
 	merchant := tc.login("13900009101")
 	other := tc.login("13900009102")
 	d := Payload{Name: "展台测试厂家（仅测试）", MainProducts: "型号 TEST", Phone: "13900009101", RegionName: "测试地区", CompanyProfile: &CompanyProfile{ShortName: "展台测试", Summary: "旧公开简介", Website: "https://example.com", Contacts: []CompanyContact{{Area: "测试区域", Name: "业务员", Phone: "13900009101"}}}}
-	vendor := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": d}, 201)
+	vendor := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": d}, 201)
 	vid := number(vendor["id"])
 	if vendor["showroom_slug"] != "v-"+vid {
 		t.Fatal("missing default URL")
@@ -29,7 +29,7 @@ func TestShowroomProfileAndPublication(t *testing.T) {
 	tc.call("PUT", "/admin/vendors/"+vid+"/showroom-slug", admin, gin.H{"slug": "v-999"}, 400)
 	tc.call("PUT", "/admin/vendors/"+vid+"/showroom-slug", admin, gin.H{"slug": "sample"}, 200)
 	tc.call("PUT", "/admin/vendors/"+vid+"/showroom-slug", admin, gin.H{"slug": "changed"}, 409)
-	v2 := tc.call("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "data": Payload{Name: "另一个测试厂", MainProducts: "TEST", Phone: "13900009102", RegionName: "测试地区"}}, 201)
+	v2 := tc.fixtureCall("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "data": Payload{Name: "另一个测试厂", MainProducts: "TEST", Phone: "13900009102", RegionName: "测试地区"}}, 201)
 	tc.call("PUT", "/admin/vendors/"+number(v2["id"])+"/showroom-slug", admin, gin.H{"slug": "sample"}, 409)
 	approve := func(v map[string]any) {
 		tc.call("POST", "/merchant/contents/"+number(v["id"])+"/submit", merchant, gin.H{"revision_id": v["revision_id"]}, 200)
@@ -46,15 +46,15 @@ func TestShowroomProfileAndPublication(t *testing.T) {
 	legacy := d
 	legacy.CompanyProfile = nil
 	legacy.Name = "旧客户端编辑"
-	draft := tc.call("PUT", "/merchant/contents/"+vid+"/draft", merchant, gin.H{"revision_id": vendor["revision_id"], "data": legacy}, 200)
+	draft := tc.fixtureCall("PUT", "/merchant/contents/"+vid+"/draft", merchant, gin.H{"revision_id": vendor["revision_id"], "data": legacy}, 200)
 	profile := draft["data"].(map[string]any)["company_profile"].(map[string]any)
 	if profile["summary"] != "旧公开简介" {
 		t.Fatal("legacy save erased profile")
 	}
 	d.CompanyProfile.Summary = "仅待审的新简介"
-	next := tc.call("PUT", "/merchant/contents/"+vid+"/draft", merchant, gin.H{"revision_id": draft["revision_id"], "data": d}, 200)
+	next := tc.fixtureCall("PUT", "/merchant/contents/"+vid+"/draft", merchant, gin.H{"revision_id": draft["revision_id"], "data": d}, 200)
 	tc.call("POST", "/merchant/contents/"+vid+"/submit", merchant, gin.H{"revision_id": next["revision_id"]}, 200)
-	tc.call("PUT", "/merchant/contents/"+vid+"/draft", merchant, gin.H{"revision_id": next["revision_id"], "data": d}, 409)
+	tc.fixtureCall("PUT", "/merchant/contents/"+vid+"/draft", merchant, gin.H{"revision_id": next["revision_id"], "data": d}, 409)
 	pub = tc.call("GET", "/public/showrooms/sample", "", nil, 200)
 	if pub["item"].(map[string]any)["data"].(map[string]any)["company_profile"].(map[string]any)["summary"] != "旧公开简介" {
 		t.Fatal("pending profile leaked")
@@ -85,10 +85,10 @@ func TestShowroomMediaAndThousandProductCatalog(t *testing.T) {
 	foreign := Media{OwnerID: owner.ID + 999, Path: "foreign.png", ThumbPath: "foreign-thumb.png"}
 	a.DB.Create(&foreign)
 	d := Payload{Name: "千款目录测试厂", RegionName: "测试地区", Phone: "13900009103", MainProducts: "TEST", CompanyProfile: &CompanyProfile{CoverMediaID: foreign.ID}}
-	tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": d}, 400)
+	tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": d}, 400)
 	d.CompanyProfile.CoverMediaID = logo.ID
 	d.CompanyProfile.LogoMediaID = logo.ID
-	vendor := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": d}, 201)
+	vendor := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": d}, 201)
 	var refs int64
 	a.DB.Model(&MediaReference{}).Where("revision_id=? AND media_id=?", vendor["revision_id"], logo.ID).Count(&refs)
 	if refs != 1 {

@@ -74,8 +74,8 @@ func TestResourcesIndependentReviewAndVisibility(t *testing.T) {
 	merchant := resourceTestSession(t, a, "merchant")
 	other := resourceTestSession(t, a, "merchant")
 	admin := resourceTestSession(t, a, "admin")
-	vendor := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "资源测试企业", MainProducts: "测试机械", RegionName: "河北", Phone: "13900009901"}}, 201)
-	product := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "资源关联产品", CategoryID: 1}}, 201)
+	vendor := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "资源测试企业", MainProducts: "测试机械", RegionName: "河北", Phone: "13900009901"}}, 201)
+	product := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "资源关联产品", CategoryID: 1}}, 201)
 	approveContent := func(item map[string]any) {
 		tc.call("POST", "/merchant/contents/"+number(item["id"])+"/submit", merchant, gin.H{"revision_id": item["revision_id"]}, 200)
 		tc.call("POST", "/admin/revisions/"+number(item["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
@@ -113,9 +113,9 @@ func TestResourcesIndependentReviewAndVisibility(t *testing.T) {
 		t.Fatal(pub)
 	}
 	payload.Title = "待审新标题"
-	draft := tc.call("PUT", "/merchant/resources/"+rid+"/draft", merchant, gin.H{"revision_id": r["revision_id"], "data": payload}, 200)
+	draft := tc.fixtureCall("PUT", "/merchant/resources/"+rid+"/draft", merchant, gin.H{"revision_id": r["revision_id"], "data": payload}, 200)
 	tc.call("POST", "/merchant/resources/"+rid+"/submit", merchant, gin.H{"revision_id": draft["revision_id"]}, 200)
-	tc.call("PUT", "/merchant/resources/"+rid+"/draft", merchant, gin.H{"revision_id": draft["revision_id"], "data": payload}, 409)
+	tc.fixtureCall("PUT", "/merchant/resources/"+rid+"/draft", merchant, gin.H{"revision_id": draft["revision_id"], "data": payload}, 409)
 	if p := tc.call("GET", "/public/resources/"+rid, "", nil, 200); p["data"].(map[string]any)["title"] != "测试PDF图册" {
 		t.Fatal("pending data leaked", p)
 	}
@@ -128,13 +128,13 @@ func TestResourcesIndependentReviewAndVisibility(t *testing.T) {
 	a.DB.Last(&foreign)
 	bad := payload
 	bad.CoverMediaID = foreign.ID
-	tc.call("PUT", "/merchant/resources/"+rid+"/draft", merchant, gin.H{"revision_id": draft["revision_id"], "data": bad}, 400)
+	tc.fixtureCall("PUT", "/merchant/resources/"+rid+"/draft", merchant, gin.H{"revision_id": draft["revision_id"], "data": bad}, 400)
 	pages := ResourcePayload{Title: "图片册", Format: "images", PageMediaIDs: []uint64{uint64(img["id"].(float64))}}
 	imageCatalog := tc.call("POST", "/merchant/resources", merchant, gin.H{"kind": "catalog", "data": pages}, 201)
 	approve(imageCatalog)
 	t.Setenv("MAX_VENDOR_CATALOGS", "2")
 	tc.call("POST", "/merchant/resources", merchant, gin.H{"kind": "catalog", "data": pages}, 409)
-	tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "非法文件当图片", CategoryID: 1, MediaIDs: []uint64{payload.FileMediaID}}}, 400)
+	tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "非法文件当图片", CategoryID: 1, MediaIDs: []uint64{payload.FileMediaID}}}, 400)
 	for _, method := range []string{"GET", "HEAD"} {
 		req := httptest.NewRequest(method, "/api/v1/media/"+number(pdf["media_id"]), nil)
 		req.Header.Set("Range", "bytes=0-15")
@@ -195,7 +195,7 @@ func TestVideoWorkerProcessingRetryAndRecovery(t *testing.T) {
 	}
 	token := resourceTestSession(t, a, "merchant")
 	tc := testClient{t, a.router()}
-	vendor := tc.call("POST", "/merchant/contents", token, gin.H{"kind": "vendor", "data": Payload{Name: "视频企业", MainProducts: "机械", RegionName: "河北", Phone: "13900009902"}}, 201)
+	vendor := tc.fixtureCall("POST", "/merchant/contents", token, gin.H{"kind": "vendor", "data": Payload{Name: "视频企业", MainProducts: "机械", RegionName: "河北", Phone: "13900009902"}}, 201)
 	_ = vendor
 	for _, size := range []string{"320x180", "180x320"} {
 		file := filepath.Join(t.TempDir(), "silent.mov")

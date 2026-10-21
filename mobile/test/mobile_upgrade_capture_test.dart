@@ -44,13 +44,7 @@ void main() {
       t.view.devicePixelRatio = 1;
       for (final language in ['zh', 'en']) {
         for (final scale in [1.0, 1.4]) {
-          for (final mode in [
-            'register',
-            'login',
-            'company',
-            'product',
-            'map',
-          ]) {
+          for (final mode in ['register', 'login', 'company', 'product']) {
             final m = await fixture.upgradeModel(
               signed: mode == 'company' || mode == 'product',
             );
@@ -60,8 +54,6 @@ void main() {
                 ? const LoginScreen(register: true)
                 : mode == 'login'
                 ? const LoginScreen()
-                : mode == 'map'
-                ? const NativeIndustryMapScreen()
                 : EditorScreen(kind: mode == 'company' ? 'vendor' : 'product');
             await t.pumpWidget(
               fixture.upgradeApp(m, page, scale: scale, boundary: boundary),

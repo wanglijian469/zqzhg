@@ -39,8 +39,8 @@ func TestMerchantRootCategoriesScopePublishAndNormalization(t *testing.T) {
 	}
 	tc.call("POST", "/merchant/categories", owner, gin.H{"name": "错误上级", "parent_id": 999999}, 400)
 	tc.call("POST", "/merchant/categories", owner, gin.H{"name": "待规范不能为上级", "parent_id": root["id"]}, 400)
-	v := tc.call("POST", "/merchant/contents", owner, gin.H{"kind": "vendor", "data": Payload{Name: "一级分类验收企业", RegionName: "河北", MainProducts: "齿轮", Phone: "0319-1234567", CategoryID: uint64(root["id"].(float64))}}, 201)
-	product := tc.call("POST", "/merchant/contents", owner, gin.H{"kind": "product", "data": Payload{Name: "齿轮展品", CategoryID: uint64(root["id"].(float64))}}, 201)
+	v := tc.fixtureCall("POST", "/merchant/contents", owner, gin.H{"kind": "vendor", "data": Payload{Name: "一级分类验收企业", RegionName: "河北", MainProducts: "齿轮", Phone: "0319-1234567", CategoryID: uint64(root["id"].(float64))}}, 201)
+	product := tc.fixtureCall("POST", "/merchant/contents", owner, gin.H{"kind": "product", "data": Payload{Name: "齿轮展品", CategoryID: uint64(root["id"].(float64))}}, 201)
 	for _, item := range []map[string]any{v, product} {
 		tc.call("POST", "/merchant/contents/"+number(item["id"])+"/submit", owner, gin.H{"revision_id": item["revision_id"]}, 200)
 		tc.call("POST", "/admin/revisions/"+number(item["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)

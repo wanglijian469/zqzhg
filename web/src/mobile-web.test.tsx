@@ -21,14 +21,14 @@ const fetcher=vi.fn(async(url:string)=>{calls.push(url);let data:unknown;
 beforeEach(()=>{calls.length=0;localStorage.clear();sessionStorage.clear();vi.stubGlobal('scrollTo',vi.fn());vi.stubGlobal('fetch',withHallFixture(fetcher));vi.stubGlobal('matchMedia',vi.fn(()=>({matches:true,addEventListener:vi.fn(),removeEventListener:vi.fn()})))});
 afterEach(()=>{cleanup();vi.unstubAllGlobals()});
 function mount(path:string){history.replaceState(null,'',path);render(<BrowserRouter><App/></BrowserRouter>)}
-it('keeps search outside collapsed filters with debounced and explicit submission',async()=>{
- mount('/browse?hall=agriculture&page=3');const user=userEvent.setup();const input=await screen.findByRole('textbox',{name:'关键词'});const details=document.querySelector('details')!;expect(details.open).toBe(false);expect(details.contains(input)).toBe(false);
- await user.type(input,'M-100');await user.click(screen.getByText('筛选条件'));await user.selectOptions(screen.getByRole('combobox',{name:'产品分类'}),'1');await waitFor(()=>expect(new URLSearchParams(location.search).get('q')).toBe('M-100'));expect(input).toHaveProperty('value','M-100');expect(location.search).not.toContain('page=3');
+it('keeps compact filters visible with debounced and explicit submission',async()=>{
+ mount('/browse?hall=agriculture&page=3');const user=userEvent.setup();const input=await screen.findByRole('textbox',{name:'关键词'});expect(document.querySelector('.browse-page .responsive-filters')).toBeNull();
+ await user.type(input,'M-100');await user.selectOptions(screen.getByRole('combobox',{name:'厂家分类'}),'1');await waitFor(()=>expect(new URLSearchParams(location.search).get('q')).toBe('M-100'));expect(input).toHaveProperty('value','M-100');expect(location.search).not.toContain('page=3');
  await user.type(input,'{Enter}');await waitFor(()=>expect(location.search).toContain('q=M-100'));expect(location.search).toContain('hall=agriculture');
  await user.click(screen.getByRole('button',{name:'移除条件: M-100'}));expect(new URLSearchParams(location.search).has('q')).toBe(false);expect(location.search).toContain('category_id=1');expect(input).toHaveProperty('value','');
 });
-it('opens desktop filters and returns focus when closing platform navigation',async()=>{
- vi.stubGlobal('matchMedia',vi.fn(()=>({matches:false,addEventListener:vi.fn(),removeEventListener:vi.fn()})));mount('/browse');await screen.findByRole('combobox',{name:'排序方式'});expect(document.querySelector('details')).toHaveProperty('open',true);
+it('shows desktop controls and returns focus when closing platform navigation',async()=>{
+ vi.stubGlobal('matchMedia',vi.fn(()=>({matches:false,addEventListener:vi.fn(),removeEventListener:vi.fn()})));mount('/browse');await screen.findByRole('combobox',{name:'排序方式'});expect(document.querySelector('.browse-compact-options')).toBeTruthy();
  const button=document.querySelector<HTMLButtonElement>('.menu-button')!;await userEvent.click(button);expect(button.getAttribute('aria-expanded')).toBe('true');fireEvent.keyDown(document,{key:'Escape'});expect(button.getAttribute('aria-expanded')).toBe('false');expect(document.activeElement).toBe(button);
 });
 it('keeps six direct tabs, deduplicates company products and uses bounded requests',async()=>{
@@ -39,4 +39,11 @@ it('selects complete product images and closes the lightbox by keyboard',async()
 });
 it('offers real numbers without remarks and a manual copy fallback',async()=>{
  expect(phoneNumbers('0319-1234567 / 13800000001（王经理）')).toEqual(['03191234567','13800000001']);expect(phoneNumbers('销售经理')).toEqual([]);mount('/v/mobile?tab=contact');await screen.findByRole('heading',{name:vendor.data.name});await userEvent.click(within(document.querySelector('.sr-contact-card')!).getByRole('button',{name:vendor.data.phone}));const dialog=screen.getByRole('dialog');expect(within(dialog).getByRole('link',{name:'03191234567'}).getAttribute('href')).toBe('tel:03191234567');const user=userEvent.setup();vi.spyOn(navigator.clipboard,'writeText').mockRejectedValueOnce(Error('denied'));await user.click(within(dialog).getByRole('button',{name:'复制电话'}));expect(await within(dialog).findByRole('textbox',{name:'电话'})).toHaveProperty('value',vendor.data.phone);
+});
+
+for(const route of ['/browse','/browse/products'])it('clears obsolete hidden query conditions before requesting '+route,async()=>{
+ mount(route+'?q=test&industrial_belt_id=77&business_nature=dealer&page=3');await screen.findByRole('combobox',{name:'排序方式'});
+ await waitFor(()=>expect(location.search).not.toContain('industrial_belt_id'));expect(location.search).not.toContain('business_nature');expect(location.search).not.toContain('page=3');expect(location.search).toContain('q=test');
+ expect(screen.queryByRole('combobox',{name:'产业带'})).toBeNull();expect(screen.queryByRole('combobox',{name:'经营性质'})).toBeNull();
+ const requests=calls.filter(u=>u.includes(route==='/browse'?'/public/vendors?':'/public/products?'));expect(requests.length).toBeGreaterThan(0);expect(requests.every(u=>!u.includes('industrial_belt_id')&&!u.includes('business_nature')&&!u.includes('page=3'))).toBe(true)
 });

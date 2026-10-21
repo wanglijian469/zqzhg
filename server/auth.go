@@ -9,6 +9,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -130,6 +131,14 @@ func (a *App) sendCode(c *gin.Context) {
 	salt := randomToken()
 	now := time.Now().UTC()
 	e = a.DB.Transaction(func(tx *gorm.DB) error {
+		if e := lockPhoneIdentity(tx, req.Phone); e != nil {
+			return e
+		}
+		var recent PhoneVerification
+		tx.Where("phone=?", req.Phone).Order("sent_at DESC").Limit(1).Find(&recent)
+		if now.Sub(recent.SentAt) < 60*time.Second {
+			return fmt.Errorf("rate_limited")
+		}
 		if e := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&SMSCode{Phone: req.Phone, Digest: "", Salt: "", ExpiresAt: now, SentAt: time.Unix(0, 0).UTC()}).Error; e != nil {
 			return e
 		}
@@ -178,7 +187,11 @@ func (a *App) phoneLogin(c *gin.Context) {
 	}
 	valid := false
 	var account Account
+	var session gin.H
 	e := a.DB.Transaction(func(tx *gorm.DB) error {
+		if e := lockPhoneIdentity(tx, req.Phone); e != nil {
+			return e
+		}
 		var s SMSCode
 		if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&s, "phone = ?", req.Phone).Error; e != nil {
 			if e == gorm.ErrRecordNotFound {
@@ -198,11 +211,29 @@ func (a *App) phoneLogin(c *gin.Context) {
 		if e := tx.Model(&s).Update("used", true).Error; e != nil {
 			return e
 		}
-		if e := tx.Where("username = ?", req.Phone).FirstOrCreate(&account, Account{Username: req.Phone, Role: "merchant"}).Error; e != nil {
-			return e
+		find := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("phone=? OR username=?", req.Phone, req.Phone).First(&account).Error
+		if errors.Is(find, gorm.ErrRecordNotFound) {
+			collision, e := phoneCollision(tx, req.Phone, 0)
+			if e != nil {
+				return e
+			}
+			if collision {
+				return nil
+			}
+			account = Account{Username: req.Phone, Role: "merchant"}
+			if e := tx.Create(&account).Error; e != nil {
+				return e
+			}
+		} else if find != nil {
+			return find
 		}
 		if account.Role != "merchant" {
 			return nil
+		}
+		var e error
+		session, e = a.phoneSession(tx, account, false)
+		if e != nil {
+			return e
 		}
 		valid = true
 		return nil
@@ -215,19 +246,6 @@ func (a *App) phoneLogin(c *gin.Context) {
 		fail(c, 401, "invalid_code")
 		return
 	}
-	if account.Role == "operator" {
-		var op PlatformOperator
-		if a.DB.First(&op, "account_id=? AND enabled=1", account.ID).Error != nil {
-			fail(c, 401, "invalid_credentials")
-			return
-		}
-	}
-	session, e := a.newSession(account)
-	if e != nil {
-		fail(c, 500, "internal_error")
-		return
-	}
-	session["account"] = a.accountJSON(account)
 	c.JSON(200, session)
 }
 func (a *App) adminLogin(c *gin.Context) {

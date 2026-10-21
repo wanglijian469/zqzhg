@@ -1,0 +1,142 @@
+=== RUN   TestMerchantRegistrationAndExistingLogin
+[GIN] 2026/10/21 - 13:16:29 | 201 | 208.14ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:16:29 | 403 |      2ms |       192.0.2.1 | GET      "/api/v1/admin/accounts"
+[GIN] 2026/10/21 - 13:16:30 | 200 |  24.71ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/21 - 13:16:30 | 200 |   6.93ms |       192.0.2.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+[GIN] 2026/10/21 - 13:16:30 | 201 |  58.69ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/21 - 13:16:30 | 200 |   8.66ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/21 - 13:16:30 | 200 |  62.82ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/21 - 13:16:30 | 200 |   2.74ms |       192.0.2.1 | GET      "/api/v1/merchant/contents/1"
+[GIN] 2026/10/21 - 13:16:30 | 401 |  60.53ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/21 - 13:16:30 | 409 |  56.02ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+
+2026/10/21 13:16:31 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[823.624ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559786209885800`[0m
+--- PASS: TestMerchantRegistrationAndExistingLogin (4.88s)
+=== RUN   TestMerchantRegistrationBoundariesRateAndRollback
+[GIN] 2026/10/21 - 13:16:34 | 400 |      1ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:16:34 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:16:34 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:16:34 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:16:34 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:16:34 | 429 |       0s |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:16:34 | 201 |  63.75ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:16:34 | 201 |   52.6ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:16:34 | 500 |   55.7ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+
+2026/10/21 13:16:34 [34;1mD:/workspace-main/codex-zqzt/server/merchant_register_test.go:79
+[0m[35m[warn] [0mremoving callback `registration_rollback` from D:/workspace-main/codex-zqzt/server/merchant_register_test.go:79
+
+2026/10/21 13:16:35 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[623.796ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559791093241100`[0m
+--- PASS: TestMerchantRegistrationBoundariesRateAndRollback (4.16s)
+=== RUN   TestPhoneRegistrationLoginUpgradeAndMigration
+
+2026/10/21 13:16:36 [32mD:/workspace-main/codex-zqzt/server/main.go:152 [33mSLOW SQL >= 200ms
+[0m[31;1m[327.775ms] [33m[rows:0][35m ALTER TABLE contents ADD COLUMN showroom_slug VARCHAR(64) NULL UNIQUE[0m
+[GIN] 2026/10/21 - 13:16:39 | 201 |  99.68ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:39 | 400 |  53.62ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:39 | 409 |  64.21ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:39 | 401 |  61.72ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password"
+[GIN] 2026/10/21 - 13:16:39 | 200 |  64.19ms |       192.0.2.1 | POST     "/api/v1/auth/visitor"
+[GIN] 2026/10/21 - 13:16:39 | 200 |  63.38ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password"
+[GIN] 2026/10/21 - 13:16:39 | 400 |   1.61ms |       192.0.2.1 | POST     "/api/v1/auth/me/merchant-upgrade"
+[GIN] 2026/10/21 - 13:16:39 | 200 |   5.71ms |       192.0.2.1 | POST     "/api/v1/auth/me/merchant-upgrade"
+
+2026/10/21 13:16:39 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:43 [35;1mrecord not found
+[0m[33m[0.551ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = '18009f695c436704a72cd0c3d5e7b512c9259dcc99518c21bf47906ca45a2d13' AND expires_at > '2026-10-21 05:16:39.744' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/21 - 13:16:39 | 401 |   1.14ms |       192.0.2.1 | GET      "/api/v1/auth/me"
+[GIN] 2026/10/21 - 13:16:39 | 200 |  65.06ms |       192.0.2.1 | POST     "/api/v1/auth/merchant"
+[GIN] 2026/10/21 - 13:16:39 | 200 |  63.02ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password"
+
+2026/10/21 13:16:40 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[557.341ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559795257347800`[0m
+--- PASS: TestPhoneRegistrationLoginUpgradeAndMigration (5.21s)
+=== RUN   TestPhoneCodePurposesAttemptsExpiryAndCooldown
+
+2026/10/21 13:16:41 [32mD:/workspace-main/codex-zqzt/server/main.go:152 [33mSLOW SQL >= 200ms
+[0m[31;1m[265.187ms] [33m[rows:0][35m 
+CREATE TABLE IF NOT EXISTS system_settings (
+ setting_key VARCHAR(100) PRIMARY KEY, value LONGTEXT NOT NULL,
+ updated_at DATETIME(3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4[0m
+[GIN] 2026/10/21 - 13:16:43 | 200 |   9.95ms |       192.0.2.1 | POST     "/api/v1/auth/phone/code"
+[GIN] 2026/10/21 - 13:16:43 | 429 |   2.12ms |       192.0.2.1 | POST     "/api/v1/auth/phone/code"
+[GIN] 2026/10/21 - 13:16:43 | 429 |   1.59ms |       192.0.2.1 | POST     "/api/v1/auth/sms"
+[GIN] 2026/10/21 - 13:16:43 | 400 |  52.85ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password/setup"
+[GIN] 2026/10/21 - 13:16:43 | 400 |  56.49ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:43 | 400 |  58.38ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:44 | 400 |  60.59ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:44 | 400 |  55.61ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:44 | 400 |  54.31ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:44 | 400 |  52.27ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:44 | 400 |  53.08ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:44 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/code"
+[GIN] 2026/10/21 - 13:16:44 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/code"
+[GIN] 2026/10/21 - 13:16:44 | 200 |   4.12ms |       192.0.2.1 | POST     "/api/v1/auth/phone/code"
+
+2026/10/21 13:16:44 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[475.169ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559800472071500`[0m
+--- PASS: TestPhoneCodePurposesAttemptsExpiryAndCooldown (4.28s)
+=== RUN   TestPhoneLegacyBindingSetupAndRollback
+[GIN] 2026/10/21 - 13:16:47 | 201 |  56.57ms |       192.0.2.1 | POST     "/api/v1/auth/visitor/register"
+[GIN] 2026/10/21 - 13:16:47 | 400 |   1.08ms |       192.0.2.1 | POST     "/api/v1/auth/me/merchant-upgrade"
+[GIN] 2026/10/21 - 13:16:47 | 400 |  55.54ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:47 | 500 |    4.1ms |       192.0.2.1 | PUT      "/api/v1/auth/me/phone"
+
+2026/10/21 13:16:47 [34;1mD:/workspace-main/codex-zqzt/server/phone_accounts_test.go:157
+[0m[35m[warn] [0mremoving callback `phone_audit_failure` from D:/workspace-main/codex-zqzt/server/phone_accounts_test.go:157
+[GIN] 2026/10/21 - 13:16:47 | 200 |   4.68ms |       192.0.2.1 | PUT      "/api/v1/auth/me/phone"
+
+2026/10/21 13:16:47 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:43 [35;1mrecord not found
+[0m[33m[0.294ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = 'bbb4a457a03fc58a6cf92bc481449c4a4f5095e246c9f2c411701c398653d66f' AND expires_at > '2026-10-21 05:16:47.863' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/21 - 13:16:47 | 401 |  294.4µs |       192.0.2.1 | GET      "/api/v1/auth/me"
+[GIN] 2026/10/21 - 13:16:47 | 200 |   53.5ms |       192.0.2.1 | POST     "/api/v1/auth/visitor"
+[GIN] 2026/10/21 - 13:16:47 | 201 |  53.98ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:16:47 | 409 |   3.59ms |       192.0.2.1 | PUT      "/api/v1/auth/me/phone"
+[GIN] 2026/10/21 - 13:16:48 | 200 |  59.01ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password/setup"
+
+2026/10/21 13:16:48 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:43 [35;1mrecord not found
+[0m[33m[0.650ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = 'abc9994bf9e5515df1e61b6dd4e5f866c503f136cc157281dbc90ce744dfe16c' AND expires_at > '2026-10-21 05:16:48.036' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/21 - 13:16:48 | 401 |  650.5µs |       192.0.2.1 | GET      "/api/v1/auth/me"
+[GIN] 2026/10/21 - 13:16:48 | 400 |   55.4ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password/setup"
+[GIN] 2026/10/21 - 13:16:48 | 200 |  54.11ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password"
+
+2026/10/21 13:16:48 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[349.926ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559804747702400`[0m
+--- PASS: TestPhoneLegacyBindingSetupAndRollback (3.75s)
+=== RUN   TestPhoneConcurrentRegistration
+[GIN] 2026/10/21 - 13:16:52 | 201 |  81.48ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:52 | 400 |  83.05ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+
+2026/10/21 13:16:53 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[868.130ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559808502425700`[0m
+--- PASS: TestPhoneConcurrentRegistration (4.54s)
+=== RUN   TestPhoneIdentityConflictsAndAdminReset
+[GIN] 2026/10/21 - 13:16:56 | 201 |  57.57ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:56 | 409 |   52.5ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+
+2026/10/21 13:16:56 [31;1mD:/workspace-main/codex-zqzt/server/admin.go:329 [35;1mrecord not found
+[0m[33m[0.509ms] [34;1m[rows:0][0m SELECT * FROM `contents` WHERE kind='vendor' AND owner_id=3 ORDER BY `contents`.`id` LIMIT 1
+[GIN] 2026/10/21 - 13:16:56 | 200 |   1.81ms |       192.0.2.1 | GET      "/api/v1/admin/accounts?q=13900005555"
+[GIN] 2026/10/21 - 13:16:56 | 200 |  53.64ms |       192.0.2.1 | POST     "/api/v1/admin/accounts/3/password-reset"
+
+2026/10/21 13:16:56 [31;1mD:/workspace-main/codex-zqzt/server/auth.go:43 [35;1mrecord not found
+[0m[33m[0.529ms] [34;1m[rows:0][0m SELECT * FROM `sessions` WHERE token_hash = '3879f312b8f040e43e4efec4303dbecf75896f77bcf3eece80dab5f793ef4b25' AND expires_at > '2026-10-21 05:16:56.727' ORDER BY `sessions`.`token_hash` LIMIT 1
+[GIN] 2026/10/21 - 13:16:56 | 401 |   1.05ms |       192.0.2.1 | GET      "/api/v1/auth/me"
+[GIN] 2026/10/21 - 13:16:56 | 200 |  53.19ms |       192.0.2.1 | POST     "/api/v1/auth/phone/password"
+[GIN] 2026/10/21 - 13:16:56 | 201 |  53.29ms |       192.0.2.1 | POST     "/api/v1/auth/merchant/register"
+[GIN] 2026/10/21 - 13:16:56 | 409 |  51.93ms |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:56 | 503 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/code"
+[GIN] 2026/10/21 - 13:16:56 | 503 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:56 | 503 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:56 | 503 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:56 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:56 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+[GIN] 2026/10/21 - 13:16:56 | 400 |       0s |       192.0.2.1 | POST     "/api/v1/auth/phone/register"
+
+2026/10/21 13:16:57 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[347.544ms] [33m[rows:42][35m DROP DATABASE `zqzt_exhibition_test_1792559813044447200`[0m
+--- PASS: TestPhoneIdentityConflictsAndAdminReset (4.20s)
+PASS
+ok  	zqzt/exhibition	32.404s

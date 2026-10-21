@@ -34,11 +34,11 @@ func TestHallV2MigrationIsolationAndLegacyDefaults(t *testing.T) {
 	}
 	merchant := resourceTestSession(t, a, "merchant")
 	data := Payload{Name: "V2真实接口测试厂商", MainProducts: "机械", RegionName: "测试地区", Phone: "13900009111"}
-	vendor := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": data}, 201)
+	vendor := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": data}, 201)
 	if vendor["hall_id"] != float64(1) {
 		t.Fatal("legacy default hall", vendor)
 	}
-	product := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "参数型号测试", Keywords: "机械", CategoryID: 1, Parameters: "型号：V2-MODEL-991"}}, 201)
+	product := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "参数型号测试", Keywords: "机械", CategoryID: 1, Parameters: "型号：V2-MODEL-991"}}, 201)
 	if product["hall_id"] != float64(1) {
 		t.Fatal("product hall inheritance", product)
 	}
@@ -70,7 +70,7 @@ func TestHallV2MigrationIsolationAndLegacyDefaults(t *testing.T) {
 	}
 	cableCategory := Category{HallID: cable.ID, Name: "电缆", Enabled: true}
 	a.DB.Create(&cableCategory)
-	tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "跨厅拒绝", CategoryID: cableCategory.ID}}, 400)
+	tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "跨厅拒绝", CategoryID: cableCategory.ID}}, 400)
 	// An open second hall still must not expose agriculture in any query.
 	a.DB.Model(&cable).Update("status", "open")
 	for _, endpoint := range []string{"vendors", "products"} {
@@ -86,8 +86,8 @@ func TestHallV2MigrationIsolationAndLegacyDefaults(t *testing.T) {
 		t.Fatal("hall settings version leaked", ag)
 	}
 	other := resourceTestSession(t, a, "merchant")
-	second := tc.call("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "hall_id": cable.ID, "data": data}, 201)
-	inherited := tc.call("POST", "/merchant/contents", other, gin.H{"kind": "product", "hall_id": 1, "data": Payload{Name: "电缆产品", CategoryID: cableCategory.ID}}, 201)
+	second := tc.fixtureCall("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "hall_id": cable.ID, "data": data}, 201)
+	inherited := tc.fixtureCall("POST", "/merchant/contents", other, gin.H{"kind": "product", "hall_id": 1, "data": Payload{Name: "电缆产品", CategoryID: cableCategory.ID}}, 201)
 	if inherited["hall_id"] != float64(cable.ID) {
 		t.Fatal("client overrode parent hall", inherited)
 	}

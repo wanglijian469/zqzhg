@@ -28,7 +28,7 @@ func TestAdminOperationsOwnershipAuditAndFilters(t *testing.T) {
 	var unassigned Account
 	a.DB.Where("username=?", "13900003001").First(&unassigned)
 	payload := Payload{Name: "后台代录测试厂商（仅测试）", RegionName: "后台测试地区", MainProducts: "犁具", Phone: "13900003001"}
-	created := tc.call("POST", "/admin/vendors", admin, gin.H{"login_name": payload.Name, "data": payload}, 201)
+	created := tc.fixtureCall("POST", "/admin/vendors", admin, gin.H{"login_name": payload.Name, "data": payload}, 201)
 	password := created["initial_password"].(string)
 	vendor := created["item"].(map[string]any)
 	vendorID := number(vendor["id"])
@@ -40,23 +40,23 @@ func TestAdminOperationsOwnershipAuditAndFilters(t *testing.T) {
 	}
 	merchant := tc.call("POST", "/auth/merchant", "", gin.H{"username": payload.Name, "password": password}, 200)["token"].(string)
 	tc.call("GET", "/merchant/contents/"+vendorID, merchant, nil, 200)
-	tc.call("POST", "/admin/vendors", admin, gin.H{"login_name": payload.Name, "data": payload}, 409)
+	tc.fixtureCall("POST", "/admin/vendors", admin, gin.H{"login_name": payload.Name, "data": payload}, 409)
 	var before int64
 	a.DB.Model(&Account{}).Count(&before)
-	tc.call("POST", "/admin/vendors", admin, gin.H{"login_name": "失败事务测试", "data": Payload{Name: "资料不完整"}}, 400)
+	tc.fixtureCall("POST", "/admin/vendors", admin, gin.H{"login_name": "失败事务测试", "data": Payload{Name: "资料不完整"}}, 400)
 	var after int64
 	a.DB.Model(&Account{}).Count(&after)
 	if before != after {
 		t.Fatal("failed vendor creation leaked account")
 	}
-	linked := tc.call("POST", "/admin/vendors", admin, gin.H{"account_id": unassigned.ID, "data": payload}, 201)
+	linked := tc.fixtureCall("POST", "/admin/vendors", admin, gin.H{"account_id": unassigned.ID, "data": payload}, 201)
 	if _, ok := linked["initial_password"]; ok {
 		t.Fatal("existing account must not get a password")
 	}
-	tc.call("POST", "/admin/vendors", admin, gin.H{"account_id": unassigned.ID, "data": payload}, 409)
+	tc.fixtureCall("POST", "/admin/vendors", admin, gin.H{"account_id": unassigned.ID, "data": payload}, 409)
 	tc.call("GET", "/admin/accounts?unassigned=1", admin, nil, 200)
 	tc.call("GET", "/merchant/contents/"+number(linked["item"].(map[string]any)["id"]), accountToken, nil, 200)
-	product := tc.call("POST", "/admin/vendors/"+vendorID+"/products", admin, gin.H{"data": Payload{Name: "ADMIN-440 测试产品", CategoryID: 1}}, 201)
+	product := tc.fixtureCall("POST", "/admin/vendors/"+vendorID+"/products", admin, gin.H{"data": Payload{Name: "ADMIN-440 测试产品", CategoryID: 1}}, 201)
 	productID := number(product["id"])
 	if uint64(product["owner_id"].(float64)) != owner {
 		t.Fatal("administrator became product owner")
@@ -85,18 +85,18 @@ func TestAdminOperationsOwnershipAuditAndFilters(t *testing.T) {
 		t.Fatal("wrong media owner")
 	}
 	pp := Payload{Name: "ADMIN-440 测试产品", CategoryID: 1, MediaIDs: []uint64{mediaID}}
-	saved := tc.call("PUT", "/admin/contents/"+productID+"/draft", admin, gin.H{"revision_id": product["revision_id"], "data": pp}, 200)
-	tc.call("PUT", "/admin/contents/"+productID+"/draft", admin, gin.H{"revision_id": product["revision_id"], "data": pp}, 409)
+	saved := tc.fixtureCall("PUT", "/admin/contents/"+productID+"/draft", admin, gin.H{"revision_id": product["revision_id"], "data": pp}, 200)
+	tc.fixtureCall("PUT", "/admin/contents/"+productID+"/draft", admin, gin.H{"revision_id": product["revision_id"], "data": pp}, 409)
 	foreign := Media{OwnerID: unassigned.ID, Path: "foreign", ThumbPath: "foreign"}
 	a.DB.Create(&foreign)
 	pp.MediaIDs = []uint64{foreign.ID}
-	tc.call("PUT", "/admin/contents/"+productID+"/draft", admin, gin.H{"revision_id": saved["revision_id"], "data": pp}, 400)
+	tc.fixtureCall("PUT", "/admin/contents/"+productID+"/draft", admin, gin.H{"revision_id": saved["revision_id"], "data": pp}, 400)
 	pp.MediaIDs = []uint64{mediaID}
 	tc.call("POST", "/admin/contents/"+productID+"/submit", admin, gin.H{"revision_id": saved["revision_id"]}, 200)
-	tc.call("PUT", "/admin/contents/"+productID+"/draft", admin, gin.H{"revision_id": saved["revision_id"], "data": pp}, 409)
+	tc.fixtureCall("PUT", "/admin/contents/"+productID+"/draft", admin, gin.H{"revision_id": saved["revision_id"], "data": pp}, 409)
 	tc.call("POST", "/admin/revisions/"+number(saved["revision_id"])+"/review", admin, gin.H{"decision": "reject", "note": ""}, 400)
 	tc.call("POST", "/admin/revisions/"+number(saved["revision_id"])+"/review", admin, gin.H{"decision": "reject", "note": "请补充资料"}, 200)
-	saved = tc.call("PUT", "/merchant/contents/"+productID+"/draft", merchant, gin.H{"revision_id": saved["revision_id"], "data": pp}, 200)
+	saved = tc.fixtureCall("PUT", "/merchant/contents/"+productID+"/draft", merchant, gin.H{"revision_id": saved["revision_id"], "data": pp}, 200)
 	publish := func(contentID string, revision any) {
 		tc.call("POST", "/admin/contents/"+contentID+"/submit", admin, gin.H{"revision_id": revision}, 200)
 		tc.call("POST", "/admin/revisions/"+number(revision)+"/review", admin, gin.H{"decision": "approve"}, 200)
@@ -112,7 +112,7 @@ func TestAdminOperationsOwnershipAuditAndFilters(t *testing.T) {
 		t.Fatal("missing comparison / manufacturer")
 	}
 	pp.Name = "ADMIN-550 新草稿"
-	edited := tc.call("PUT", "/admin/contents/"+productID+"/draft", admin, gin.H{"revision_id": saved["revision_id"], "data": pp}, 200)
+	edited := tc.fixtureCall("PUT", "/admin/contents/"+productID+"/draft", admin, gin.H{"revision_id": saved["revision_id"], "data": pp}, 200)
 	tc.call("POST", "/admin/contents/"+productID+"/submit", admin, gin.H{"revision_id": edited["revision_id"]}, 200)
 	public := tc.call("GET", "/public/products/"+productID, "", nil, 200)
 	if public["item"].(map[string]any)["data"].(map[string]any)["name"] != "ADMIN-440 测试产品" {
@@ -180,7 +180,7 @@ func TestAdminQuotaAndCategoryCycle(t *testing.T) {
 	a.DB.Where("role='admin'").First(&account)
 	session, _ := a.newSession(account)
 	admin := session["token"].(string)
-	v := tc.call("POST", "/admin/vendors", admin, gin.H{"login_name": "配额测试公司", "data": Payload{Name: "配额测试公司", RegionName: "测试地区", MainProducts: "机械", Wechat: "test"}}, 201)["item"].(map[string]any)
+	v := tc.fixtureCall("POST", "/admin/vendors", admin, gin.H{"login_name": "配额测试公司", "data": Payload{Name: "配额测试公司", RegionName: "测试地区", MainProducts: "机械", Wechat: "test"}}, 201)["item"].(map[string]any)
 	owner := uint64(v["owner_id"].(float64))
 	vendorID := uint64(v["id"].(float64))
 	fixtures := make([]Content, maxVendorProducts)
@@ -190,10 +190,10 @@ func TestAdminQuotaAndCategoryCycle(t *testing.T) {
 	if e := a.DB.CreateInBatches(fixtures, 100).Error; e != nil {
 		t.Fatal(e)
 	}
-	tc.call("POST", "/admin/vendors/"+number(v["id"])+"/products", admin, gin.H{"data": Payload{Name: "第1001款", CategoryID: 1}}, 409)
+	tc.fixtureCall("POST", "/admin/vendors/"+number(v["id"])+"/products", admin, gin.H{"data": Payload{Name: "第1001款", CategoryID: 1}}, 409)
 	child := tc.call("POST", "/admin/categories", admin, gin.H{"name": "下级（测试）", "parent_id": 1, "enabled": true}, 200)
 	tc.call("PUT", "/admin/categories/1", admin, gin.H{"name": "父类（测试）", "parent_id": child["id"], "enabled": true}, 400)
-	tc.call("POST", "/admin/vendors", "", gin.H{}, 401)
+	tc.fixtureCall("POST", "/admin/vendors", "", gin.H{}, 401)
 	merchant := tc.login("13900003002")
-	tc.call("POST", "/admin/vendors", merchant, gin.H{}, 403)
+	tc.fixtureCall("POST", "/admin/vendors", merchant, gin.H{}, 403)
 }

@@ -1,0 +1,1988 @@
+=== RUN   TestMapPreviewBrowser
+
+2026/10/20 18:26:56 [32mD:/workspace-main/codex-zqzt/server/main.go:152 [33mSLOW SQL >= 200ms
+[0m[31;1m[249.090ms] [33m[rows:0][35m ALTER TABLE storage_profiles ADD COLUMN root_key VARCHAR(100) NOT NULL DEFAULT ''[0m
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.539ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.531ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.024ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.533ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.503ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:26:59 | 200 |   7.36ms |       127.0.0.1 | GET      "/regions"
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.042ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.524ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[4.241ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:26:59 | 200 | 237.71ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:26:59 | 200 | 240.34ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:26:59 | 200 |  25.32ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:26:59 | 200 |  11.97ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions"
+[GIN] 2026/10/20 - 18:26:59 | 200 |  13.06ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.626ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.536ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:26:59 | 200 |   2.29ms |       127.0.0.1 | GET      "/assets/industry-map-chart-Cx90FcMI.js"
+[GIN] 2026/10/20 - 18:26:59 | 200 |  28.75ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=5"
+[GIN] 2026/10/20 - 18:26:59 | 200 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:26:59 | 200 |  505.6µs |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:26:59 | 200 |  41.68ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions"
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.529ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.531ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.531ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:26:59 | 200 |   1.59ms |       127.0.0.1 | GET      "/assets/industry-map-outline-Bty3R9Ra.js"
+
+2026/10/20 18:26:59 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.067ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:26:59 | 200 |   3.21ms |       127.0.0.1 | GET      "/assets/installSVGRenderer-DqorZC_8.js"
+[GIN] 2026/10/20 - 18:27:00 | 200 |  37.95ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions"
+[GIN] 2026/10/20 - 18:27:00 | 200 |   6.43ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?q=%E4%BA%A7%E4%B8%9A%E5%AF%BC%E8%88%AA%E9%AA%8C%E6%94%B6%E4%BC%81%E4%B8%9A00"
+[GIN] 2026/10/20 - 18:27:00 | 200 |  15.24ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?q=%E4%BA%A7%E4%B8%9A%E5%AF%BC%E8%88%AA%E9%AA%8C%E6%94%B6%E4%BC%81%E4%B8%9A00&page_size=5"
+[GIN] 2026/10/20 - 18:27:01 | 200 |   3.99ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions"
+[GIN] 2026/10/20 - 18:27:01 | 200 |  11.65ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=5"
+[GIN] 2026/10/20 - 18:27:01 | 200 |   6.41ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page=2&page_size=5"
+[GIN] 2026/10/20 - 18:27:01 | 200 |   2.15ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=13"
+[GIN] 2026/10/20 - 18:27:01 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:01 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:01 | 200 |  10.47ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=13&page_size=5"
+[GIN] 2026/10/20 - 18:27:01 | 200 |  27.44ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=13"
+[GIN] 2026/10/20 - 18:27:01 | 200 |   2.12ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=1305"
+[GIN] 2026/10/20 - 18:27:01 | 304 |   1.02ms |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:01 | 200 |  536.3µs |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:02 | 200 |   8.96ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=1305&page_size=5"
+[GIN] 2026/10/20 - 18:27:02 | 200 |  25.46ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=1305"
+[GIN] 2026/10/20 - 18:27:02 | 200 |   7.89ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=1305&unassigned=1&page_size=5"
+[GIN] 2026/10/20 - 18:27:02 | 200 |    5.4ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=1305&page_size=5"
+[GIN] 2026/10/20 - 18:27:02 | 200 |   2.36ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=130528"
+[GIN] 2026/10/20 - 18:27:02 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:02 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:02 | 200 |   7.28ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=130528&page_size=5"
+[GIN] 2026/10/20 - 18:27:02 | 200 |  17.17ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=130528"
+[GIN] 2026/10/20 - 18:27:02 | 200 |   1.41ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=1305"
+[GIN] 2026/10/20 - 18:27:02 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:02 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:02 | 200 |   5.88ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=1305&page_size=5"
+[GIN] 2026/10/20 - 18:27:02 | 200 |   2.04ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=130528"
+[GIN] 2026/10/20 - 18:27:02 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:02 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:02 | 200 |   6.79ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=130528&page_size=5"
+[GIN] 2026/10/20 - 18:27:02 | 200 |   5.37ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/20 18:27:02 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:02 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:26 [35;1mrecord not found
+[0m[33m[2.085ms] [34;1m[rows:0][0m SELECT * FROM `showroom_display_settings` WHERE vendor_id=24 AND `showroom_display_settings`.`vendor_id` = 24 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/20 18:27:02 [31;1mD:/workspace-main/codex-zqzt/server/showroom_display.go:26 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `showroom_display_settings` WHERE vendor_id=24 AND `showroom_display_settings`.`vendor_id` = 24 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/20 - 18:27:02 | 200 |  28.39ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/v-24"
+[GIN] 2026/10/20 - 18:27:03 | 200 |   2.73ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=130528"
+[GIN] 2026/10/20 - 18:27:03 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:03 | 200 |  10.17ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:03 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:03 | 200 |   8.82ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=130528&page_size=5"
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.576ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.053ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.531ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:03 | 200 |   4.78ms |       127.0.0.1 | GET      "/regions?region_code=130505"
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.188ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.152ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.175ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.070ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.077ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:03 | 304 |   2.25ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.070ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:03 | 304 |   2.14ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:03 | 202 |  23.22ms |       127.0.0.1 | POST     "/api/v1/public/analytics/events"
+[GIN] 2026/10/20 - 18:27:03 | 200 |  17.12ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:03 | 200 |   2.63ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=130505"
+[GIN] 2026/10/20 - 18:27:03 | 200 |   2.77ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=130505&page_size=5"
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[6.639ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.062ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:03 | 304 |    7.7ms |       127.0.0.1 | GET      "/assets/industry-map-chart-Cx90FcMI.js"
+[GIN] 2026/10/20 - 18:27:03 | 200 |  19.82ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:03 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:03 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:03 | 200 |  21.31ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=130505"
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.611ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.549ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:03 | 304 |   1.66ms |       127.0.0.1 | GET      "/assets/industry-map-outline-Bty3R9Ra.js"
+
+2026/10/20 18:27:03 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.060ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:03 | 304 |   2.11ms |       127.0.0.1 | GET      "/assets/installSVGRenderer-DqorZC_8.js"
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.515ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.502ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.520ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:04 | 200 |   3.09ms |       127.0.0.1 | GET      "/regions?region_code=11"
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.075ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.608ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:04 | 202 |   4.43ms |       127.0.0.1 | POST     "/api/v1/public/analytics/events"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   1.27ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   2.15ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=11"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   8.14ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:04 | 304 |  523.3µs |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   7.01ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=11&page_size=5"
+[GIN] 2026/10/20 - 18:27:04 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:04 | 200 |  20.55ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=11"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   2.44ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=1101"
+[GIN] 2026/10/20 - 18:27:04 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   7.14ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=1101&page_size=5"
+[GIN] 2026/10/20 - 18:27:04 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:04 | 200 |  24.59ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=1101"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   1.83ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=110108"
+[GIN] 2026/10/20 - 18:27:04 | 304 |  530.5µs |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:04 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   7.47ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=110108&page_size=5"
+[GIN] 2026/10/20 - 18:27:04 | 200 |  20.01ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=110108"
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.550ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.524ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.561ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.525ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:04 | 200 |   3.21ms |       127.0.0.1 | GET      "/regions?region_code=42"
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.068ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.531ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:04 | 202 |   5.34ms |       127.0.0.1 | POST     "/api/v1/public/analytics/events"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   1.07ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   2.13ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=42"
+[GIN] 2026/10/20 - 18:27:04 | 200 |  15.28ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:04 | 200 |    7.7ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=42&page_size=5"
+[GIN] 2026/10/20 - 18:27:04 | 304 |  587.6µs |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:04 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:04 | 200 |  28.98ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=42"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   1.62ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=429004"
+[GIN] 2026/10/20 - 18:27:04 | 304 |  529.6µs |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   32.6µs |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   6.72ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=429004&page_size=5"
+[GIN] 2026/10/20 - 18:27:04 | 200 |  20.48ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=429004"
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.529ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:04 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:04 | 200 |   3.69ms |       127.0.0.1 | GET      "/regions?region_code=50"
+[GIN] 2026/10/20 - 18:27:04 | 200 |  550.6µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   2.19ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=50"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   6.11ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   3.45ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=50&page_size=5"
+[GIN] 2026/10/20 - 18:27:04 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:04 | 200 |   29.9µs |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:04 | 200 |  27.55ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=50"
+[GIN] 2026/10/20 - 18:27:05 | 200 |  22.34ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=50"
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.522ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.512ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.514ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.510ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:05 | 200 |   3.09ms |       127.0.0.1 | GET      "/regions?region_code=5001"
+[GIN] 2026/10/20 - 18:27:05 | 200 |    807µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:05 | 200 |   2.13ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=5001"
+[GIN] 2026/10/20 - 18:27:05 | 200 |   6.39ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:05 | 200 |   2.64ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=5001&page_size=5"
+[GIN] 2026/10/20 - 18:27:05 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:05 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:05 | 200 |  21.48ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=5001"
+[GIN] 2026/10/20 - 18:27:05 | 200 |  20.08ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=5001"
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.537ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.514ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.516ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.515ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.520ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:05 | 200 |   3.63ms |       127.0.0.1 | GET      "/regions?region_code=5002"
+[GIN] 2026/10/20 - 18:27:05 | 200 |   4.61ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:05 | 200 |   2.11ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions?region_code=5002"
+[GIN] 2026/10/20 - 18:27:05 | 200 |   6.96ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:05 | 200 |   3.76ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?region_code=5002&page_size=5"
+[GIN] 2026/10/20 - 18:27:05 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:05 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:05 | 200 |  19.81ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=5002"
+[GIN] 2026/10/20 - 18:27:05 | 200 |  17.73ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions?region_code=5002"
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.531ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.529ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.504ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:05 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.533ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:05 | 200 |   4.27ms |       127.0.0.1 | GET      "/regions"
+[GIN] 2026/10/20 - 18:27:05 | 200 |   2.88ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:05 | 200 |   2.08ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions"
+[GIN] 2026/10/20 - 18:27:05 | 200 |   6.32ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:05 | 200 |   6.38ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=5"
+[GIN] 2026/10/20 - 18:27:05 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:05 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:05 | 200 |   40.6ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions"
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.575ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.524ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.518ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.533ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:06 | 200 |   3.19ms |       127.0.0.1 | GET      "/regions"
+[GIN] 2026/10/20 - 18:27:06 | 200 |  847.5µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:06 | 200 |   2.08ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions"
+[GIN] 2026/10/20 - 18:27:06 | 200 |   5.39ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:06 | 200 |    7.6ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=4"
+[GIN] 2026/10/20 - 18:27:06 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:06 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:06 | 200 |  34.17ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions"
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.143ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.042ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.058ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.064ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.070ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:06 | 200 |   5.94ms |       127.0.0.1 | GET      "/regions"
+[GIN] 2026/10/20 - 18:27:06 | 200 |  24.59ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:06 | 200 |   2.68ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions"
+[GIN] 2026/10/20 - 18:27:06 | 200 |   7.49ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.531ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.062ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:06 | 304 |   1.61ms |       127.0.0.1 | GET      "/assets/industry-map-chart-Cx90FcMI.js"
+[GIN] 2026/10/20 - 18:27:06 | 200 |   7.92ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=5"
+[GIN] 2026/10/20 - 18:27:06 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:06 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:06 | 200 |  52.63ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions"
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.113ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.060ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:06 | 304 |   2.17ms |       127.0.0.1 | GET      "/assets/industry-map-outline-Bty3R9Ra.js"
+
+2026/10/20 18:27:06 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.067ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:06 | 304 |   2.68ms |       127.0.0.1 | GET      "/assets/installSVGRenderer-DqorZC_8.js"
+
+2026/10/20 18:27:07 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.630ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:07 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:07 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:07 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:07 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.520ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:07 | 200 |   3.23ms |       127.0.0.1 | GET      "/regions"
+
+2026/10/20 18:27:07 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.693ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:07 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.693ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:07 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.532ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:07 | 304 |   1.22ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:07 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.532ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:07 | 304 |   1.74ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:07 | 200 | 172.93ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:07 | 200 |   2.28ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions"
+[GIN] 2026/10/20 - 18:27:07 | 200 |   7.14ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:07 | 304 |  526.2µs |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:07 | 200 |   6.44ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=3"
+[GIN] 2026/10/20 - 18:27:07 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:07 | 200 |  32.02ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions"
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.602ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.059ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.516ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.536ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:08 | 200 |   3.76ms |       127.0.0.1 | GET      "/regions"
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/industry_map.go:148 [35;1mcontext canceled
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT COUNT(DISTINCT(`contents`.`id`)) FROM `contents` JOIN revisions r ON r.id = contents.published_revision_id AND r.status = 'approved' WHERE (EXISTS (SELECT 1 FROM halls h WHERE h.id=contents.hall_id AND h.status='open')) AND (contents.kind = 'vendor' AND contents.visible = 1) AND contents.hall_id=1
+[GIN] 2026/10/20 - 18:27:08 | 500 |   1.14ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=1"
+[GIN] 2026/10/20 - 18:27:08 | 200 |   1.05ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:08 | 200 |   1.61ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions"
+[GIN] 2026/10/20 - 18:27:08 | 200 |   6.46ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:08 | 200 |   5.84ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=1"
+[GIN] 2026/10/20 - 18:27:08 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:08 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:08 | 200 |   35.9ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions"
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.653ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.534ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.542ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.523ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:08 | 200 |   4.89ms |       127.0.0.1 | GET      "/regions"
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.060ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.532ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:08 | 200 |   2.65ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[2.152ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:08 | 200 |   4.23ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:08 | 200 |  17.42ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:08 | 200 |   2.35ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions"
+[GIN] 2026/10/20 - 18:27:08 | 200 |    6.1ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.538ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.533ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:08 | 200 |    1.6ms |       127.0.0.1 | GET      "/assets/industry-map-chart-Cx90FcMI.js"
+[GIN] 2026/10/20 - 18:27:08 | 200 |   5.33ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=5"
+[GIN] 2026/10/20 - 18:27:08 | 200 |  523.5µs |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:08 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.052ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.541ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.541ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:08 | 200 |   2.11ms |       127.0.0.1 | GET      "/assets/industry-map-schematic-C1tGX6tI.js"
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.057ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:08 | 200 |   3.23ms |       127.0.0.1 | GET      "/assets/installSVGRenderer-DqorZC_8.js"
+[GIN] 2026/10/20 - 18:27:08 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:08 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:08 | 200 |  36.76ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions"
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.534ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.525ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.616ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.535ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.049ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:08 | 200 |   4.32ms |       127.0.0.1 | GET      "/regions"
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.520ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.024ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.517ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:08 | 200 |   2.07ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:08 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[1.545ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:08 | 200 |   3.09ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:09 | 200 |  535.6µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:09 | 200 |   6.54ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:09 | 200 |   2.67ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions"
+[GIN] 2026/10/20 - 18:27:09 | 200 |   4.83ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=5"
+[GIN] 2026/10/20 - 18:27:09 | 304 |  481.7µs |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:09 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:09 | 200 |   35.5ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions"
+[GIN] 2026/10/20 - 18:27:09 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:09 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:09 | 200 |   5.52ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=3"
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.636ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.516ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.515ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.518ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.518ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:09 | 200 |   3.22ms |       127.0.0.1 | GET      "/regions"
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.522ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.523ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:09 | 200 |   2.63ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.112ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.523ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:09 | 200 |   3.15ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:09 | 200 |   1.05ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:09 | 200 |   1.88ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions"
+[GIN] 2026/10/20 - 18:27:09 | 200 |   5.83ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.503ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:09 | 200 |   1.05ms |       127.0.0.1 | GET      "/assets/industry-map-chart-Cx90FcMI.js"
+[GIN] 2026/10/20 - 18:27:09 | 200 |   4.56ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=5"
+[GIN] 2026/10/20 - 18:27:09 | 200 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:09 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:09 | 200 |  34.18ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions"
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.599ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:09 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.523ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:09 | 200 |   1.66ms |       127.0.0.1 | GET      "/assets/installSVGRenderer-DqorZC_8.js"
+
+2026/10/20 18:27:10 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:10 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.521ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:10 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.524ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:10 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.520ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:10 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.516ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:10 | 200 |   2.61ms |       127.0.0.1 | GET      "/regions"
+[GIN] 2026/10/20 - 18:27:10 | 200 |  879.8µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:10 | 200 |   2.07ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/regions"
+[GIN] 2026/10/20 - 18:27:10 | 200 |   7.43ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:10 | 200 |   5.42ms |       127.0.0.1 | GET      "/api/v1/public/industry-map/vendors?page_size=5"
+[GIN] 2026/10/20 - 18:27:10 | 304 |       0s |       127.0.0.1 | GET      "/maps/manifest.json"
+[GIN] 2026/10/20 - 18:27:10 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/dev/map-preview/config"
+[GIN] 2026/10/20 - 18:27:10 | 200 |  35.08ms |       127.0.0.1 | GET      "/api/v1/dev/map-preview/regions"
+
+2026/10/20 18:27:10 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:10 [31;1mD:/workspace-main/codex-zqzt/server/operations_runtime.go:177 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='previous_site_origins' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:10 | 200 |   1.05ms |       127.0.0.1 | GET      "/assets/industry-map-outline-Bty3R9Ra.js"
+    industry_map_browser_test.go:70: PASS: real adjacent national/province/city/county outlines and north-up projection; actual polygon-label clicks to Ningjin, correct totals, missing development-zone outline, direct-admin and municipality groups, zero/partial records, filter camera preservation, history/showroom return, paging, five viewport sizes, bilingual UI and boundary/API/chunk recovery. Preview is local learning only.
+        
+
+2026/10/20 18:27:11 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[625.437ms] [33m[rows:40][35m DROP DATABASE `zqzt_exhibition_test_1792492014280418600`[0m
+--- PASS: TestMapPreviewBrowser (17.02s)
+=== RUN   TestTaxonomyBrowserHarness
+
+2026/10/20 18:27:13 [32mD:/workspace-main/codex-zqzt/server/main.go:152 [33mSLOW SQL >= 200ms
+[0m[31;1m[341.896ms] [33m[rows:0][35m 
+ALTER TABLE halls ADD COLUMN theme VARCHAR(32) NOT NULL DEFAULT 'blue'[0m
+[GIN] 2026/10/20 - 18:27:14 | 201 |  72.19ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/20 - 18:27:14 | 200 |   8.62ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/1/submit"
+[GIN] 2026/10/20 - 18:27:14 | 200 |   4.48ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/1/review"
+[GIN] 2026/10/20 - 18:27:14 | 201 |   9.21ms |       192.0.2.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/20 - 18:27:14 | 200 |   6.16ms |       192.0.2.1 | POST     "/api/v1/merchant/contents/2/submit"
+[GIN] 2026/10/20 - 18:27:14 | 200 |   5.22ms |       192.0.2.1 | POST     "/api/v1/admin/revisions/2/review"
+[GIN] 2026/10/20 - 18:27:14 | 200 |   4.61ms |       192.0.2.1 | POST     "/api/v1/admin/industrial-belts"
+[GIN] 2026/10/20 - 18:27:14 | 200 |   3.29ms |       192.0.2.1 | PUT      "/api/v1/admin/industrial-belts/1/vendors"
+
+2026/10/20 18:27:15 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.583ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:15 | 200 |    1.1ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 18:27:15 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:15 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.107ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:15 | 200 |   2.19ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:15 | 200 |   1.67ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:15 | 200 |   5.01ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:15 | 200 |  12.83ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:15 | 200 |  18.15ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:16 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 18:27:16 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%B2%B3%E5%8C%97%E7%9C%81%20%E9%82%A2%E5%8F%B0%E5%B8%82%20%E5%AE%81%E6%99%8B%E5%8E%BF"
+[GIN] 2026/10/20 - 18:27:16 | 200 |  12.56ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:16 | 200 |  17.86ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:16 | 200 |  23.65ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:16 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 18:27:16 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+[GIN] 2026/10/20 - 18:27:16 | 200 |  28.36ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:16 | 200 |  26.23ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+
+2026/10/20 18:27:16 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[11.330ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:16 | 200 |  11.32ms |       127.0.0.1 | GET      "/merchant/products/new"
+
+2026/10/20 18:27:16 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.531ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:16 | 200 |   2.12ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:16 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[7.909ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:16 | 200 |   8.94ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:16 | 200 |  525.1µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:16 | 200 |   9.05ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:16 | 200 |   8.54ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:16 | 200 |   9.46ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:16 | 200 |  16.91ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:16 | 200 |     18ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:16 | 200 |  19.38ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:16 | 200 |  21.12ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 18:27:16 | 200 |   24.8ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=product&page_size=1"
+
+2026/10/20 18:27:16 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.592ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:16 | 200 | 551.08ms |       127.0.0.1 | POST     "/api/v1/public/category-recommendations"
+
+2026/10/20 18:27:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.103ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:17 | 201 |  29.36ms |       127.0.0.1 | POST     "/api/v1/merchant/contents"
+[GIN] 2026/10/20 - 18:27:17 | 200 |   9.49ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=product&q=%E6%B5%8F%E8%A7%88%E5%99%A8%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95"
+[GIN] 2026/10/20 - 18:27:17 | 200 |  30.85ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=video&page=1&status=&q=&product_id=4"
+[GIN] 2026/10/20 - 18:27:17 | 200 |  31.19ms |       127.0.0.1 | GET      "/api/v1/merchant/resources?kind=catalog&page=1&status=&q=&product_id=4"
+
+2026/10/20 18:27:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[18.920ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:17 | 200 |  57.51ms |       127.0.0.1 | PUT      "/api/v1/merchant/contents/4/draft"
+
+2026/10/20 18:27:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:17 | 200 |  27.91ms |       127.0.0.1 | POST     "/api/v1/merchant/contents/4/submit"
+[GIN] 2026/10/20 - 18:27:17 | 200 |   5.83ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/4"
+[GIN] 2026/10/20 - 18:27:17 | 200 |   4.82ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=1"
+[GIN] 2026/10/20 - 18:27:17 | 200 |  11.65ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=1"
+[GIN] 2026/10/20 - 18:27:17 | 200 |  16.06ms |       127.0.0.1 | POST     "/api/v1/admin/revisions/5/review"
+
+2026/10/20 18:27:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.570ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:17 | 200 |  19.89ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=product&page_size=20"
+
+2026/10/20 18:27:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.071ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.109ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.536ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.538ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:17 | 200 |   6.98ms |       127.0.0.1 | GET      "/browse?category_id=10&industrial_belt_id=1&business_nature=manufacturer"
+
+2026/10/20 18:27:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.573ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:17 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.532ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:17 | 200 |    1.6ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:17 | 200 |   2.71ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:17 | 200 |  11.46ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:17 | 200 |  13.02ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:17 | 200 |  15.13ms |       127.0.0.1 | GET      "/api/v1/public/vendors?category_id=10&page_size=20"
+
+2026/10/20 18:27:18 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.788ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:18 | 200 |  788.3µs |       127.0.0.1 | GET      "/admin/categories"
+
+2026/10/20 18:27:18 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:18 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.060ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:18 | 200 |   1.59ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:18 | 200 |   2.16ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:18 | 200 | 126.45ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:18 | 200 | 130.19ms |       127.0.0.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/20 - 18:27:18 | 200 |   1.64ms |       127.0.0.1 | GET      "/api/v1/admin/industrial-belts"
+[GIN] 2026/10/20 - 18:27:18 | 200 |   6.31ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy-mappings?category_kind=product&status=pending&q=&page=1"
+[GIN] 2026/10/20 - 18:27:18 | 200 | 375.57ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=all"
+[GIN] 2026/10/20 - 18:27:18 | 200 | 377.72ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=vendor"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36298: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:18 | 200 |  402.3ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=product"
+
+2026/10/20 18:27:19 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:19 | 200 |  11.46ms |       127.0.0.1 | POST     "/api/v1/admin/taxonomy-mappings/resolve"
+
+2026/10/20 18:27:19 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.682ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:19 | 200 |  17.62ms |       127.0.0.1 | POST     "/api/v1/admin/taxonomy-mappings/resolve"
+[GIN] 2026/10/20 - 18:27:19 | 200 |   2.97ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy-mappings?category_kind=product&status=pending&q=&page=1"
+
+2026/10/20 18:27:19 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.037ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:19 | 200 |    1.6ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 18:27:19 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.042ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:19 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:19 | 200 |   1.59ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:19 | 200 |   3.22ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:19 | 200 |   1.06ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:19 | 200 |   3.79ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:19 | 200 |   6.69ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:19 | 200 |    542µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 18:27:19 | 200 |  523.7µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%B2%B3%E5%8C%97%E7%9C%81%20%E9%82%A2%E5%8F%B0%E5%B8%82%20%E5%AE%81%E6%99%8B%E5%8E%BF"
+[GIN] 2026/10/20 - 18:27:19 | 200 |  10.67ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:19 | 200 |  11.17ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:19 | 200 |   11.7ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:19 | 200 |  11.76ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:19 | 200 |  17.62ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:19 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 18:27:19 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+
+2026/10/20 18:27:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.521ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:20 | 200 |   1.04ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 18:27:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.524ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.536ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:20 | 200 |   2.62ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:20 | 200 |   1.63ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:20 | 200 |   2.87ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:20 | 200 |   6.76ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 18:27:20 | 200 |   7.79ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:20 | 200 |   6.72ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:20 | 200 |  10.71ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:20 | 200 |  10.06ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:20 | 200 |  11.68ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:20 | 200 |  13.25ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 18:27:20 | 200 |  13.81ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+
+2026/10/20 18:27:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.116ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:20 | 200 |   1.62ms |       127.0.0.1 | GET      "/admin/categories"
+
+2026/10/20 18:27:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.635ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:20 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.534ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:20 | 200 |   2.24ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:20 | 200 |    1.6ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:20 | 200 |   3.45ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:20 | 200 |  29.09ms |       127.0.0.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/20 - 18:27:21 | 200 |   1.78ms |       127.0.0.1 | GET      "/api/v1/admin/industrial-belts"
+[GIN] 2026/10/20 - 18:27:21 | 200 | 314.04ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=all"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36355: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:21 | 200 | 317.22ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=vendor"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36348: wsasend: An established connection was aborted by the software in your host machine.
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.790ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.070ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.059ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:21 | 200 |    4.5ms |       127.0.0.1 | GET      "/browse"
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.523ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:21 | 200 |   2.09ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:21 | 200 |   1.05ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:21 | 200 |   5.97ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:21 | 200 |   6.39ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:21 | 200 |  13.71ms |       127.0.0.1 | GET      "/api/v1/public/vendors?page_size=20"
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.299ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.533ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.535ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.099ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:21 | 200 |   5.59ms |       127.0.0.1 | GET      "/browse/products"
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.616ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:21 | 200 |    2.2ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:21 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.533ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:21 | 200 |   1.59ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:21 | 200 |   20.1ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:21 | 200 |   7.62ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:21 | 200 |   9.19ms |       127.0.0.1 | GET      "/api/v1/public/products?page_size=24"
+
+2026/10/20 18:27:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.334ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:22 | 200 |   1.87ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 18:27:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.537ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.537ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:22 | 200 |    1.6ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:22 | 200 |   2.14ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:22 | 200 |   6.72ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:22 | 200 |   17.6ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:22 | 200 |  20.37ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:22 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 18:27:22 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%B2%B3%E5%8C%97%E7%9C%81%20%E9%82%A2%E5%8F%B0%E5%B8%82%20%E5%AE%81%E6%99%8B%E5%8E%BF"
+[GIN] 2026/10/20 - 18:27:22 | 200 |   7.96ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:22 | 200 |   8.49ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:22 | 200 |   9.05ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:22 | 200 |  10.12ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:22 | 200 |  16.51ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:22 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 18:27:22 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+
+2026/10/20 18:27:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.933ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:22 | 200 |   1.43ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 18:27:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.514ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:22 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.522ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:22 | 200 |   1.07ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:22 | 200 |   1.58ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:22 | 200 |   2.67ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:22 | 200 |   5.92ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 18:27:22 | 200 |   6.45ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:22 | 200 |  14.26ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:22 | 200 |   7.21ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 18:27:22 | 200 |  10.13ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:22 | 200 |   9.92ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:22 | 200 |  11.08ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:22 | 200 |  11.52ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+
+2026/10/20 18:27:23 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.139ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:23 | 200 |    1.7ms |       127.0.0.1 | GET      "/admin/categories"
+
+2026/10/20 18:27:23 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:23 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.524ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:23 | 200 |   1.63ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:23 | 200 |   2.69ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:23 | 200 |  629.3µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:23 | 200 |   6.14ms |       127.0.0.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/20 - 18:27:23 | 200 |   2.11ms |       127.0.0.1 | GET      "/api/v1/admin/industrial-belts"
+
+2026/10/20 18:27:23 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.065ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:23 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.104ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:23 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.069ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:23 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.529ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:23 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.532ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:23 | 200 |   6.99ms |       127.0.0.1 | GET      "/browse"
+
+2026/10/20 18:27:23 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.577ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:23 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.603ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:23 | 200 |   1.67ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:23 | 200 |   3.35ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:23 | 200 | 400.74ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=vendor"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36375: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:23 | 200 | 401.83ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=all"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36377: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:23 | 200 |   1.24ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:23 | 200 |    8.2ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:23 | 200 |  19.45ms |       127.0.0.1 | GET      "/api/v1/public/vendors?page_size=20"
+
+2026/10/20 18:27:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.540ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.544ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.533ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.045ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.536ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:24 | 200 |   4.31ms |       127.0.0.1 | GET      "/browse/products"
+
+2026/10/20 18:27:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.053ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:24 | 200 |   2.71ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.542ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:24 | 200 |   1.63ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:24 | 200 |   1.07ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:24 | 200 |   8.63ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:24 | 200 |  11.31ms |       127.0.0.1 | GET      "/api/v1/public/products?page_size=24"
+
+2026/10/20 18:27:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.531ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:24 | 200 |   1.05ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 18:27:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.068ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:24 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.090ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:24 | 200 |   3.27ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:24 | 200 |    2.2ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:24 | 200 |   3.81ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:24 | 200 |  800.8µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:24 | 200 |  10.24ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:24 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 18:27:24 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%B2%B3%E5%8C%97%E7%9C%81%20%E9%82%A2%E5%8F%B0%E5%B8%82%20%E5%AE%81%E6%99%8B%E5%8E%BF"
+[GIN] 2026/10/20 - 18:27:24 | 200 |  507.3µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 18:27:24 | 200 |   12.6ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:24 | 200 |  12.02ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:24 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+[GIN] 2026/10/20 - 18:27:24 | 200 |  13.12ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:24 | 200 |  18.41ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:24 | 200 |  24.52ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+
+2026/10/20 18:27:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.487ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:25 | 200 |   1.48ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 18:27:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.546ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:25 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.694ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:25 | 200 |   1.78ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:25 | 200 |   2.85ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:25 | 200 |  32.28ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:25 | 200 |  43.12ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:25 | 200 |  72.98ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 18:27:25 | 200 |  92.56ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:25 | 200 |  13.53ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 18:27:25 | 200 |  13.53ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:25 | 200 |  14.11ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:25 | 200 |  15.36ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:25 | 200 |  21.12ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+
+2026/10/20 18:27:26 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.557ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:26 | 200 |   1.66ms |       127.0.0.1 | GET      "/admin/categories"
+
+2026/10/20 18:27:26 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.544ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:26 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.539ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:26 | 200 |   2.69ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:26 | 200 |   1.61ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:26 | 200 |   1.06ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:26 | 200 |    7.1ms |       127.0.0.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/20 - 18:27:26 | 200 |    1.6ms |       127.0.0.1 | GET      "/api/v1/admin/industrial-belts"
+
+2026/10/20 18:27:26 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.524ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:26 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.522ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:26 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.521ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:26 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:26 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.545ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:26 | 200 |   4.77ms |       127.0.0.1 | GET      "/browse"
+
+2026/10/20 18:27:26 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:26 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.535ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:26 | 200 |    1.6ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:26 | 200 |   3.19ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:27 | 200 | 374.53ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=vendor"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36398: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:27 | 200 | 373.93ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=all"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36400: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:27 | 200 |  19.88ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:27 | 200 |    7.3ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:27 | 200 |  15.01ms |       127.0.0.1 | GET      "/api/v1/public/vendors?page_size=20"
+
+2026/10/20 18:27:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.651ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.515ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.516ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.517ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.517ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:27 | 200 |   3.23ms |       127.0.0.1 | GET      "/browse/products"
+
+2026/10/20 18:27:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.609ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.552ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:27 | 200 |   1.69ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:27 | 200 |    2.3ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:27 | 200 |    4.2ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:27 | 200 |   7.02ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:27 | 200 |   8.57ms |       127.0.0.1 | GET      "/api/v1/public/products?page_size=24"
+
+2026/10/20 18:27:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.552ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:27 | 200 |    1.1ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 18:27:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.525ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:27 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.532ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:27 | 200 |   2.11ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:27 | 200 |   1.58ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:28 | 200 |    1.2ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:28 | 200 |   3.13ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:28 | 200 |   8.77ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:28 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 18:27:28 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%B2%B3%E5%8C%97%E7%9C%81%20%E9%82%A2%E5%8F%B0%E5%B8%82%20%E5%AE%81%E6%99%8B%E5%8E%BF"
+[GIN] 2026/10/20 - 18:27:28 | 200 |  16.01ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:28 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 18:27:28 | 200 |  15.16ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:28 | 200 |     44µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+[GIN] 2026/10/20 - 18:27:28 | 200 |  16.72ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:28 | 200 |  18.65ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:28 | 200 |  19.67ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+
+2026/10/20 18:27:28 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.658ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:28 | 200 |   1.18ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 18:27:28 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.539ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:28 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.740ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:28 | 200 |   2.76ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:28 | 200 |   2.38ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:28 | 200 |   2.56ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:28 | 200 |   4.23ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:28 | 200 |  14.28ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:28 | 200 |  17.87ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 18:27:28 | 200 |  21.09ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 18:27:28 | 200 |  23.81ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:28 | 200 |   23.1ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:28 | 200 |  20.63ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:28 | 200 |  24.04ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+
+2026/10/20 18:27:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.593ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:29 | 200 |   2.17ms |       127.0.0.1 | GET      "/admin/categories"
+
+2026/10/20 18:27:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.926ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.268ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:29 | 200 |   2.34ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:29 | 200 |    4.8ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:29 | 200 |   1.43ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:29 | 200 |  12.33ms |       127.0.0.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/20 - 18:27:29 | 200 |   2.55ms |       127.0.0.1 | GET      "/api/v1/admin/industrial-belts"
+
+2026/10/20 18:27:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.280ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.553ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.560ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.723ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.090ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:29 | 200 |   7.59ms |       127.0.0.1 | GET      "/browse"
+
+2026/10/20 18:27:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.121ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:29 | 200 |   2.49ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+
+2026/10/20 18:27:29 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[7.390ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:29 | 200 |  12.83ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:30 | 200 |   5.72ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:30 | 200 |  15.42ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:30 | 200 |  26.18ms |       127.0.0.1 | GET      "/api/v1/public/vendors?page_size=20"
+[GIN] 2026/10/20 - 18:27:30 | 200 | 688.31ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=all"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36427: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:30 | 200 | 699.57ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=vendor"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36423: wsasend: An established connection was aborted by the software in your host machine.
+
+2026/10/20 18:27:30 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:30 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[4.702ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:30 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.437ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:30 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.075ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:30 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.657ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:30 | 200 |  19.87ms |       127.0.0.1 | GET      "/browse/products"
+
+2026/10/20 18:27:30 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.796ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:30 | 200 |   6.83ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:30 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.519ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:30 | 200 |   7.28ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:30 | 200 |   1.69ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:30 | 200 |  35.17ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:30 | 200 |  60.33ms |       127.0.0.1 | GET      "/api/v1/public/products?page_size=24"
+
+2026/10/20 18:27:31 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.611ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:31 | 200 |   1.66ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 18:27:31 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.579ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:31 | 200 |   2.72ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:31 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.059ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:31 | 200 |   2.22ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:31 | 200 |   1.72ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:31 | 200 |   1.64ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:31 | 200 |   6.03ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:31 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 18:27:31 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%B2%B3%E5%8C%97%E7%9C%81%20%E9%82%A2%E5%8F%B0%E5%B8%82%20%E5%AE%81%E6%99%8B%E5%8E%BF"
+[GIN] 2026/10/20 - 18:27:31 | 200 |   11.2ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:31 | 200 |  11.24ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:31 | 200 |  16.56ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:31 | 200 |  505.3µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 18:27:31 | 200 |    530µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+[GIN] 2026/10/20 - 18:27:31 | 200 |  23.64ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:31 | 200 |  29.47ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+
+2026/10/20 18:27:31 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.524ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:31 | 200 |   1.04ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 18:27:31 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.521ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:31 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.534ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:31 | 200 |   2.16ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:31 | 200 |   1.64ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:31 | 200 |   1.62ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:31 | 200 |   4.17ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:31 | 200 |   7.49ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 18:27:31 | 200 |   10.2ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:31 | 200 |  10.23ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:31 | 200 |  10.21ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:31 | 200 |  10.04ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:31 | 200 |  12.38ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:31 | 200 |  21.74ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+
+2026/10/20 18:27:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.524ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:32 | 200 |   1.04ms |       127.0.0.1 | GET      "/admin/categories"
+
+2026/10/20 18:27:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.680ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:32 | 200 |   2.26ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.540ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:32 | 200 |   1.59ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:32 | 200 |   5.11ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:32 | 200 |   8.34ms |       127.0.0.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/20 - 18:27:32 | 200 |   3.95ms |       127.0.0.1 | GET      "/api/v1/admin/industrial-belts"
+
+2026/10/20 18:27:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.719ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.527ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.524ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.531ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.529ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:32 | 200 |    4.4ms |       127.0.0.1 | GET      "/browse"
+
+2026/10/20 18:27:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:32 | 200 |   2.77ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:32 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.562ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:32 | 200 |   1.08ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:32 | 200 |  344.8ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=vendor"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36450: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:32 | 200 | 370.39ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=all"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36454: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:32 | 200 |  15.34ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:32 | 200 |   8.15ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:32 | 200 |  16.58ms |       127.0.0.1 | GET      "/api/v1/public/vendors?page_size=20"
+
+2026/10/20 18:27:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.061ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.525ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.535ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.540ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:33 | 200 |   4.25ms |       127.0.0.1 | GET      "/browse/products"
+
+2026/10/20 18:27:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.542ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:33 | 200 |   2.16ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.535ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:33 | 200 |    1.6ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:33 | 200 |   1.13ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:33 | 200 |   5.43ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:33 | 200 |   8.09ms |       127.0.0.1 | GET      "/api/v1/public/products?page_size=24"
+
+2026/10/20 18:27:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.595ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:33 | 200 |   1.13ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 18:27:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.599ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:33 | 200 |   2.19ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.523ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:33 | 200 |   1.62ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:33 | 200 |   1.12ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:33 | 200 |   3.48ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:33 | 200 |   8.54ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:33 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 18:27:33 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%B2%B3%E5%8C%97%E7%9C%81%20%E9%82%A2%E5%8F%B0%E5%B8%82%20%E5%AE%81%E6%99%8B%E5%8E%BF"
+[GIN] 2026/10/20 - 18:27:33 | 200 |  11.74ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:33 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 18:27:33 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+[GIN] 2026/10/20 - 18:27:33 | 200 |   12.4ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:33 | 200 |  12.93ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:33 | 200 |  13.47ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:33 | 200 |     13ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+
+2026/10/20 18:27:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.548ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:33 | 200 |   1.08ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 18:27:33 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.077ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:34 | 200 |   3.27ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:34 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.545ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:34 | 200 |   1.66ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:34 | 200 |   1.47ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:34 | 200 |   9.26ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:34 | 200 |   8.22ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:34 | 200 |  10.95ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 18:27:34 | 200 |   9.98ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 18:27:34 | 200 |  10.52ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:34 | 200 |  11.05ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:34 | 200 |  11.05ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:34 | 200 |  14.37ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+
+2026/10/20 18:27:34 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.550ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:34 | 200 |   1.07ms |       127.0.0.1 | GET      "/admin/categories"
+
+2026/10/20 18:27:34 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.537ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:34 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.558ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:34 | 200 |    2.1ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:34 | 200 |   2.78ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:34 | 200 |   5.59ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:34 | 200 |   8.54ms |       127.0.0.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/20 - 18:27:34 | 200 |   3.37ms |       127.0.0.1 | GET      "/api/v1/admin/industrial-belts"
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.572ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.530ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.065ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.075ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:35 | 200 |   5.92ms |       127.0.0.1 | GET      "/browse"
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.567ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.062ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:35 | 200 |   2.15ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:35 | 200 |   1.58ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:35 | 200 |   2.73ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:35 | 200 | 422.17ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=vendor"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36472: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:35 | 200 |   6.39ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:35 | 200 |  442.2ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=all"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36474: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:35 | 200 |  31.31ms |       127.0.0.1 | GET      "/api/v1/public/vendors?page_size=20"
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.817ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.521ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.517ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.522ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:35 | 200 |   4.94ms |       127.0.0.1 | GET      "/browse/products"
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.534ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.529ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:35 | 200 |   2.12ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:35 | 200 |   1.59ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:35 | 200 |  878.2µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:35 | 200 |   5.56ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:35 | 200 |   7.81ms |       127.0.0.1 | GET      "/api/v1/public/products?page_size=24"
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.529ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:35 | 200 |   1.06ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:35 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:35 | 200 |   2.16ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:35 | 200 |   1.63ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:36 | 200 |   5.49ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:36 | 200 |   7.46ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:36 | 200 |   8.56ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:36 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 18:27:36 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%B2%B3%E5%8C%97%E7%9C%81%20%E9%82%A2%E5%8F%B0%E5%B8%82%20%E5%AE%81%E6%99%8B%E5%8E%BF"
+[GIN] 2026/10/20 - 18:27:36 | 200 |  10.29ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:36 | 200 |   10.1ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:36 | 200 |   10.1ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:36 | 200 |  11.22ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:36 | 200 |  11.13ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:36 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 18:27:36 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+
+2026/10/20 18:27:36 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[4.851ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:36 | 200 |   5.89ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 18:27:36 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.507ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:36 | 200 |   3.45ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:36 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.858ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:36 | 200 |   5.64ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:36 | 200 |   3.45ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:36 | 200 |  28.11ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:36 | 200 |  31.58ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 18:27:36 | 200 |  29.51ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:36 | 200 |  48.17ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 18:27:36 | 200 |  48.25ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:36 | 200 | 117.67ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:36 | 200 | 120.93ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:37 | 200 | 154.14ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+
+2026/10/20 18:27:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.288ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:37 | 200 |   1.79ms |       127.0.0.1 | GET      "/admin/categories"
+
+2026/10/20 18:27:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.065ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.539ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:37 | 200 |   1.61ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:37 | 200 |   3.21ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:37 | 200 |  531.5µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:37 | 200 |   8.43ms |       127.0.0.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/20 - 18:27:37 | 200 |   3.08ms |       127.0.0.1 | GET      "/api/v1/admin/industrial-belts"
+
+2026/10/20 18:27:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.576ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.590ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.065ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.532ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.100ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:37 | 200 |   5.47ms |       127.0.0.1 | GET      "/browse"
+
+2026/10/20 18:27:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.664ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:37 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.551ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:37 | 200 |   3.48ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:37 | 200 |   2.51ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:38 | 200 | 441.07ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=vendor"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36494: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:38 | 200 | 438.62ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=all"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36496: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:38 | 200 |   1.52ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:38 | 200 |   6.92ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:38 | 200 |  15.47ms |       127.0.0.1 | GET      "/api/v1/public/vendors?page_size=20"
+
+2026/10/20 18:27:38 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:38 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.098ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:38 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.009ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:38 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[34.720ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:38 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[20.957ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:38 | 200 |  64.26ms |       127.0.0.1 | GET      "/browse/products"
+
+2026/10/20 18:27:38 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.146ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:38 | 200 |   4.04ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+
+2026/10/20 18:27:38 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.146ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:38 | 200 |   6.08ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:38 | 200 |  15.13ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:38 | 200 |  35.16ms |       127.0.0.1 | GET      "/api/v1/public/products?page_size=24"
+[GIN] 2026/10/20 - 18:27:38 | 200 | 139.03ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+
+2026/10/20 18:27:39 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:39 | 200 |   1.07ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 18:27:39 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.544ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:39 | 200 |   2.68ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:39 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.543ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:39 | 200 |   1.61ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:39 | 200 |   2.16ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:39 | 200 |   2.73ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:39 | 200 |   7.77ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:39 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 18:27:39 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%B2%B3%E5%8C%97%E7%9C%81%20%E9%82%A2%E5%8F%B0%E5%B8%82%20%E5%AE%81%E6%99%8B%E5%8E%BF"
+[GIN] 2026/10/20 - 18:27:39 | 200 |  20.76ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:39 | 200 |  22.81ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:39 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+[GIN] 2026/10/20 - 18:27:39 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 18:27:39 | 200 |   55.3ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:39 | 200 |   58.2ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:39 | 200 |  64.73ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+
+2026/10/20 18:27:39 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.991ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:39 | 200 |   5.02ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 18:27:39 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[7.386ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:39 | 200 |  21.96ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:39 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.858ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:39 | 200 |  14.31ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:40 | 200 |   1.16ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:40 | 200 |   3.85ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:40 | 200 |   8.41ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 18:27:40 | 200 |   8.92ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:40 | 200 |   7.13ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 18:27:40 | 200 |  10.96ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:40 | 200 |  10.44ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:40 | 200 |   9.87ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:40 | 200 |   13.6ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+
+2026/10/20 18:27:40 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.673ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:40 | 200 |    1.2ms |       127.0.0.1 | GET      "/admin/categories"
+
+2026/10/20 18:27:40 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.150ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:40 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.548ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:40 | 200 |   1.63ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:40 | 200 |   2.78ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:40 | 200 |   1.22ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:40 | 200 |  22.44ms |       127.0.0.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/20 - 18:27:40 | 200 |   3.06ms |       127.0.0.1 | GET      "/api/v1/admin/industrial-belts"
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.716ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.081ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.071ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.073ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.046ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:41 | 200 |   6.61ms |       127.0.0.1 | GET      "/browse"
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.124ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.706ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:41 | 200 |   3.95ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:41 | 200 |   2.87ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:41 | 200 |   1.55ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:41 | 200 |   8.64ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:41 | 200 |   16.3ms |       127.0.0.1 | GET      "/api/v1/public/vendors?page_size=20"
+[GIN] 2026/10/20 - 18:27:41 | 200 | 474.26ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=vendor"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36514: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:41 | 200 |  471.5ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=all"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36518: wsasend: An established connection was aborted by the software in your host machine.
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[4.009ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[10.317ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[8.375ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[4.115ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.564ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:41 | 200 |  32.58ms |       127.0.0.1 | GET      "/browse/products"
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[7.048ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:41 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.797ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:41 | 200 |   9.57ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:41 | 200 |   7.72ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:41 | 200 |      3ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:41 | 200 |  20.84ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:41 | 200 |  48.21ms |       127.0.0.1 | GET      "/api/v1/public/products?page_size=24"
+
+2026/10/20 18:27:42 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.000ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:42 | 200 |      3ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 18:27:42 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.135ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:42 | 200 |   7.34ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:42 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.647ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:42 | 200 |  11.29ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:42 | 200 |   1.74ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:42 | 200 |   3.34ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:42 | 200 |   8.12ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:42 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 18:27:42 | 200 |     28µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%B2%B3%E5%8C%97%E7%9C%81%20%E9%82%A2%E5%8F%B0%E5%B8%82%20%E5%AE%81%E6%99%8B%E5%8E%BF"
+[GIN] 2026/10/20 - 18:27:42 | 200 |  11.66ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:42 | 200 |  11.14ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:42 | 200 |   12.2ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:42 | 200 |  10.72ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:42 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 18:27:42 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+[GIN] 2026/10/20 - 18:27:42 | 200 |  31.31ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+
+2026/10/20 18:27:43 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.138ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:43 | 200 |   1.69ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 18:27:43 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.609ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:43 | 200 |    2.2ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:43 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.058ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:43 | 200 |   1.59ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:43 | 200 |   1.24ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:43 | 200 |   3.38ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:43 | 200 |    7.8ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 18:27:43 | 200 |   8.26ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:43 | 200 |     13ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+[GIN] 2026/10/20 - 18:27:43 | 200 |  14.18ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:43 | 200 |  11.88ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:43 | 200 |  15.67ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:43 | 200 |  15.68ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+
+2026/10/20 18:27:43 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[2.241ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:43 | 200 |   2.24ms |       127.0.0.1 | GET      "/admin/categories"
+
+2026/10/20 18:27:44 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.536ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:44 | 200 |   2.68ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:44 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.536ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:44 | 200 |   1.62ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:44 | 200 |    1.1ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:44 | 200 |  13.84ms |       127.0.0.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/20 - 18:27:44 | 200 |   3.47ms |       127.0.0.1 | GET      "/api/v1/admin/industrial-belts"
+
+2026/10/20 18:27:44 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.233ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:44 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.528ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:44 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.534ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:44 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.533ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:44 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.641ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:44 | 200 |   5.09ms |       127.0.0.1 | GET      "/browse"
+
+2026/10/20 18:27:44 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.542ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:44 | 200 |   2.14ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:44 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.081ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:44 | 200 |   1.64ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:44 | 200 | 438.48ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=all"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36540: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:44 | 200 | 449.93ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=vendor"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36536: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:44 | 200 |   1.07ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:44 | 200 |   6.84ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:44 | 200 |  13.09ms |       127.0.0.1 | GET      "/api/v1/public/vendors?page_size=20"
+
+2026/10/20 18:27:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.057ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.523ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.551ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.525ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.538ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:45 | 200 |   4.25ms |       127.0.0.1 | GET      "/browse/products"
+
+2026/10/20 18:27:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.533ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.534ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:45 | 200 |   1.59ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:45 | 200 |   2.68ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:45 | 200 |   7.48ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:45 | 200 |   6.66ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:45 | 200 |   9.36ms |       127.0.0.1 | GET      "/api/v1/public/products?page_size=24"
+
+2026/10/20 18:27:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.707ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:45 | 200 |   1.24ms |       127.0.0.1 | GET      "/merchant/booth/edit"
+
+2026/10/20 18:27:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.536ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:45 | 200 |   2.67ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:45 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.546ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:45 | 200 |   1.63ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:45 | 200 |    3.4ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:45 | 200 |   3.43ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:45 | 200 |  11.13ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:46 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions"
+[GIN] 2026/10/20 - 18:27:46 | 200 |    537µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?name=%E6%B2%B3%E5%8C%97%E7%9C%81%20%E9%82%A2%E5%8F%B0%E5%B8%82%20%E5%AE%81%E6%99%8B%E5%8E%BF"
+[GIN] 2026/10/20 - 18:27:46 | 200 |       0s |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=13"
+[GIN] 2026/10/20 - 18:27:46 | 200 |  15.98ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:46 | 200 |   57.1µs |       127.0.0.1 | GET      "/api/v1/public/administrative-regions?parent_code=1305"
+[GIN] 2026/10/20 - 18:27:46 | 200 |  20.43ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:46 | 200 |  18.24ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:46 | 200 |  19.89ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:46 | 200 |  23.68ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+
+2026/10/20 18:27:46 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[7.173ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:46 | 200 |   9.31ms |       127.0.0.1 | GET      "/merchant/products/2/edit"
+
+2026/10/20 18:27:46 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.049ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:46 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.568ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:46 | 200 |   1.66ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:46 | 200 |   3.28ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:46 | 200 |   3.97ms |       127.0.0.1 | GET      "/api/v1/merchant/dashboard?workspace=0"
+[GIN] 2026/10/20 - 18:27:46 | 200 |   4.92ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:46 | 200 |   9.06ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1&workspace=0"
+[GIN] 2026/10/20 - 18:27:46 | 200 |  23.22ms |       127.0.0.1 | GET      "/api/v1/merchant/contents/2"
+[GIN] 2026/10/20 - 18:27:46 | 200 |  53.93ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:46 | 200 |  35.41ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:46 | 200 |  36.58ms |       127.0.0.1 | GET      "/api/v1/merchant/contents?kind=vendor&page_size=1"
+[GIN] 2026/10/20 - 18:27:46 | 200 |  58.55ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:46 | 200 |  45.16ms |       127.0.0.1 | GET      "/api/v1/merchant/taxonomy"
+
+2026/10/20 18:27:47 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[3.239ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:47 | 200 |   4.38ms |       127.0.0.1 | GET      "/admin/categories"
+
+2026/10/20 18:27:47 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.142ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:47 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.837ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:47 | 200 |   3.71ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:47 | 200 |   3.15ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:47 | 200 |   1.29ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:47 | 200 |   8.29ms |       127.0.0.1 | GET      "/api/v1/admin/dashboard"
+[GIN] 2026/10/20 - 18:27:47 | 200 |   1.65ms |       127.0.0.1 | GET      "/api/v1/admin/industrial-belts"
+
+2026/10/20 18:27:47 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.548ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:47 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.056ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:47 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.061ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:47 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.070ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:47 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.533ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:47 | 200 |   4.79ms |       127.0.0.1 | GET      "/browse"
+
+2026/10/20 18:27:47 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.508ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:47 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.046ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:47 | 200 |   1.61ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:47 | 200 |   2.68ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+[GIN] 2026/10/20 - 18:27:47 | 200 | 411.79ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=all"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36566: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:47 | 200 | 413.97ms |       127.0.0.1 | GET      "/api/v1/admin/taxonomy?category_kind=vendor"
+Error #01: write tcp 127.0.0.1:36296->127.0.0.1:36564: wsasend: An established connection was aborted by the software in your host machine.
+[GIN] 2026/10/20 - 18:27:47 | 200 |  863.3µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:47 | 200 |   9.42ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=vendor"
+[GIN] 2026/10/20 - 18:27:47 | 200 |  16.91ms |       127.0.0.1 | GET      "/api/v1/public/vendors?page_size=20"
+
+2026/10/20 18:27:48 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.072ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:48 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.595ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:48 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.539ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:48 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.526ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/20 18:27:48 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[1.059ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:48 | 200 |   5.41ms |       127.0.0.1 | GET      "/browse/products"
+
+2026/10/20 18:27:48 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.774ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:48 | 200 |   2.95ms |       127.0.0.1 | GET      "/assets/index-Dg6bYFaP.js"
+
+2026/10/20 18:27:48 [31;1mD:/workspace-main/codex-zqzt/server/system_settings.go:53 [35;1mrecord not found
+[0m[33m[0.524ms] [34;1m[rows:0][0m SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/20 - 18:27:48 | 200 |   1.58ms |       127.0.0.1 | GET      "/assets/index-BJIWGi3s.css"
+[GIN] 2026/10/20 - 18:27:48 | 200 |   1.06ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/20 - 18:27:48 | 200 |   8.95ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=product"
+[GIN] 2026/10/20 - 18:27:48 | 200 |  12.12ms |       127.0.0.1 | GET      "/api/v1/public/products?page_size=24"
+    taxonomy_browser_test.go:82: {"checks":6,"layouts":50,"errors":[]}
+        
+
+2026/10/20 18:27:49 [32mD:/workspace-main/codex-zqzt/server/import_test.go:28 [33mSLOW SQL >= 200ms
+[0m[31;1m[503.927ms] [33m[rows:40][35m DROP DATABASE `zqzt_exhibition_test_1792492031297631100`[0m
+--- PASS: TestTaxonomyBrowserHarness (38.01s)
+PASS
+ok  	zqzt/exhibition	56.282s

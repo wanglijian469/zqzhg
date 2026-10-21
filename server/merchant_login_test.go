@@ -21,9 +21,9 @@ func TestNamedMerchantLoginOwnershipAndEditing(t *testing.T) {
 	}
 	oldToken := session["token"].(string)
 	vendorData := Payload{Name: "厂商账号测试厂家（仅测试）", MainProducts: "测试农机", RegionName: "测试地区", Phone: "13900009090"}
-	vendor := tc.call("POST", "/merchant/contents", oldToken, gin.H{"kind": "vendor", "data": vendorData}, 201)
+	vendor := tc.fixtureCall("POST", "/merchant/contents", oldToken, gin.H{"kind": "vendor", "data": vendorData}, 201)
 	productData := Payload{Name: "账号编辑测试产品", CategoryID: 1, Parameters: "测试原始参数"}
-	product := tc.call("POST", "/merchant/contents", oldToken, gin.H{"kind": "product", "data": productData}, 201)
+	product := tc.fixtureCall("POST", "/merchant/contents", oldToken, gin.H{"kind": "product", "data": productData}, 201)
 	admin := tc.call("POST", "/auth/admin", "", gin.H{"username": "admin", "password": "Import-Test-Admin-2026!"}, 200)["token"].(string)
 	for _, item := range []map[string]any{vendor, product} {
 		tc.call("POST", "/merchant/contents/"+number(item["id"])+"/submit", oldToken, gin.H{"revision_id": item["revision_id"]}, 200)
@@ -60,12 +60,12 @@ func TestNamedMerchantLoginOwnershipAndEditing(t *testing.T) {
 	}
 	tc.call("GET", "/admin/contents", token, nil, 403)
 	other := tc.login("13900009091")
-	foreign := tc.call("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "data": Payload{Name: "另一个测试厂商", MainProducts: "测试产品", RegionName: "测试地区", Phone: "13900009091"}}, 201)
+	foreign := tc.fixtureCall("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "data": Payload{Name: "另一个测试厂商", MainProducts: "测试产品", RegionName: "测试地区", Phone: "13900009091"}}, 201)
 	tc.call("GET", "/merchant/contents/"+number(foreign["id"]), token, nil, 403)
 	vendorData.Description = "厂商账号修改的测试介绍"
-	tc.call("PUT", "/merchant/contents/"+number(vendor["id"])+"/draft", token, gin.H{"revision_id": vendor["revision_id"], "data": vendorData}, 200)
+	tc.fixtureCall("PUT", "/merchant/contents/"+number(vendor["id"])+"/draft", token, gin.H{"revision_id": vendor["revision_id"], "data": vendorData}, 200)
 	productData.Parameters = "厂商账号修改的测试参数"
-	tc.call("PUT", "/merchant/contents/"+number(product["id"])+"/draft", token, gin.H{"revision_id": product["revision_id"], "data": productData}, 200)
+	tc.fixtureCall("PUT", "/merchant/contents/"+number(product["id"])+"/draft", token, gin.H{"revision_id": product["revision_id"], "data": productData}, 200)
 	published := tc.call("GET", "/public/products/"+number(product["id"]), "", nil, 200)
 	if published["item"].(map[string]any)["data"].(map[string]any)["parameters"] != "测试原始参数" {
 		t.Fatal("saving a merchant draft changed public content")

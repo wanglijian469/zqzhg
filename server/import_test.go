@@ -48,7 +48,7 @@ func TestThousandProductsAndConcurrentLastSlot(t *testing.T) {
 	router := a.router()
 	tc := testClient{t, router}
 	merchant := tc.login("13900001001")
-	v := tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "配额测试厂商（仅测试）", RegionName: "测试地区", MainProducts: "测试机械", Phone: "13900001001"}}, 201)
+	v := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "配额测试厂商（仅测试）", RegionName: "测试地区", MainProducts: "测试机械", Phone: "13900001001"}}, 201)
 	var vendor Content
 	a.DB.First(&vendor, uint64(v["id"].(float64)))
 	// Explicit test fixtures count drafts/offline products as occupied slots.
@@ -105,11 +105,11 @@ func TestThousandProductsAndConcurrentLastSlot(t *testing.T) {
 	if count != 1000 {
 		t.Fatalf("quota exceeded: %d", count)
 	}
-	tc.call("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "第1001款（测试）", CategoryID: 1}}, 409)
-	tc.call("PUT", "/merchant/contents/"+number(product["id"])+"/draft", merchant, gin.H{"revision_id": product["revision_id"], "data": Payload{Name: "满额仍可修改（测试）", CategoryID: 1}}, 200)
+	tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "第1001款（测试）", CategoryID: 1}}, 409)
+	tc.fixtureCall("PUT", "/merchant/contents/"+number(product["id"])+"/draft", merchant, gin.H{"revision_id": product["revision_id"], "data": Payload{Name: "满额仍可修改（测试）", CategoryID: 1}}, 200)
 	other := tc.login("13900001002")
-	tc.call("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "data": Payload{Name: "另一测试厂商", RegionName: "测试地区", MainProducts: "测试机械", Phone: "13900001002"}}, 201)
-	tc.call("POST", "/merchant/contents", other, gin.H{"kind": "product", "data": Payload{Name: "独立配额测试", CategoryID: 1}}, 201)
+	tc.fixtureCall("POST", "/merchant/contents", other, gin.H{"kind": "vendor", "data": Payload{Name: "另一测试厂商", RegionName: "测试地区", MainProducts: "测试机械", Phone: "13900001002"}}, 201)
+	tc.fixtureCall("POST", "/merchant/contents", other, gin.H{"kind": "product", "data": Payload{Name: "独立配额测试", CategoryID: 1}}, 201)
 }
 
 func TestVendorImportAtomicAndIdempotent(t *testing.T) {

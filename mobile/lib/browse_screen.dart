@@ -60,10 +60,23 @@ class _BrowseScreenState extends State<BrowseScreen> {
       category = old?['category'] ?? (old == null ? widget.category : null);
       region = old?['region'];
       order = (old?['order'] ?? '').toString();
-      page = (old?['page'] ?? 1) as int;
+      final obsolete =
+          old?['belt'] != null ||
+          (old?['business_nature'] ?? '').toString().isNotEmpty;
+      page = obsolete ? 1 : (old?['page'] ?? 1) as int;
+      if (obsolete) {
+        final cleaned = Map<String, dynamic>.from(old!);
+        cleaned.remove('belt');
+        cleaned.remove('business_nature');
+        cleaned['page'] = 1;
+        cleaned['offset'] = 0.0;
+        m.browseMemory[scope] = cleaned;
+      }
       requestKey = null;
-      taxonomy = m.publicTaxonomy();
-      final offset = (old?['offset'] as num?)?.toDouble() ?? 0;
+      taxonomy = m.publicTaxonomy(kind: widget.kind);
+      final offset = obsolete
+          ? 0.0
+          : ((old?['offset'] as num?)?.toDouble() ?? 0);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && endpoint == scope && scroll.hasClients) {
           scroll.jumpTo(min(offset, scroll.position.maxScrollExtent));
@@ -147,14 +160,18 @@ class _BrowseScreenState extends State<BrowseScreen> {
           key: ValueKey('category:$category'),
           initialValue: cats.any((c) => c['id'] == category) ? category : null,
           isExpanded: true,
-          decoration: InputDecoration(labelText: m.t('category')),
+          decoration: InputDecoration(
+            labelText: widget.kind == 'vendor'
+                ? syncText(context, '厂家分类', 'Manufacturer category')
+                : m.t('category'),
+          ),
           items: [
             DropdownMenuItem(value: null, child: Text(m.t('allCategories'))),
             for (final c in cats)
               DropdownMenuItem(
                 value: c['id'],
                 child: Text(
-                  m.content(c, 'name'),
+                  nativeCategoryPath(cats, c['id'], m),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -168,7 +185,9 @@ class _BrowseScreenState extends State<BrowseScreen> {
           key: ValueKey('region:$region'),
           initialValue: regions.any((r) => r['id'] == region) ? region : null,
           isExpanded: true,
-          decoration: InputDecoration(labelText: m.t('region')),
+          decoration: InputDecoration(
+            labelText: syncText(context, '所在地区', 'Region'),
+          ),
           items: [
             DropdownMenuItem(value: null, child: Text(m.t('allRegions'))),
             for (final r in regions)
@@ -227,7 +246,6 @@ class _BrowseScreenState extends State<BrowseScreen> {
       appBar: appBar(
         context,
         m.t(widget.kind == 'product' ? 'navProducts' : 'navManufacturers'),
-        extraActions:[if(widget.kind=='vendor')IconButton(tooltip:syncText(context,'厂商地图','Manufacturer map'),onPressed:()=>push(context,const NativeIndustryMapScreen()),icon:const Icon(Icons.map_outlined))],
       ),
       body: SafeArea(
         top: false,
@@ -235,7 +253,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
         child: RefreshIndicator(
           onRefresh: () async {
             setState(() {
-              taxonomy = m.publicTaxonomy(refresh: true);
+              taxonomy = m.publicTaxonomy(refresh: true, kind: widget.kind);
               load(force: true);
             });
             await Future.wait(
@@ -279,7 +297,10 @@ class _BrowseScreenState extends State<BrowseScreen> {
                           return HomeLoadState(
                             error: snap.error,
                             onRetry: () => setState(
-                              () => taxonomy = m.publicTaxonomy(refresh: true),
+                              () => taxonomy = m.publicTaxonomy(
+                                refresh: true,
+                                kind: widget.kind,
+                              ),
                             ),
                           );
                         }

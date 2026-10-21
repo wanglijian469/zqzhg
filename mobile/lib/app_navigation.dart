@@ -328,7 +328,8 @@ class PersonalScreen extends StatelessWidget {
                         Text(
                           m.token.isEmpty
                               ? m.t('guestFavorites')
-                              : (m.account['login_name'] ??
+                              : (m.account['phone'] ??
+                                        m.account['login_name'] ??
                                         m.account['username'] ??
                                         m.t('accountMenu'))
                                     .toString(),
@@ -405,6 +406,25 @@ class AccountSettingsScreen extends StatelessWidget {
                   onTap: () => showEndpointSettings(context),
                 ),
               ),
+              if (m.token.isNotEmpty &&
+                  ['merchant', 'visitor'].contains(m.account['role']))
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.phone_android),
+                    title: Text(syncText(context, '手机号', 'Mobile number')),
+                    subtitle: Text(
+                      m.account['phone_verified'] == true
+                          ? m.account['phone'].toString()
+                          : syncText(context, '尚未绑定', 'Not linked'),
+                    ),
+                    trailing: m.account['phone_verified'] == true
+                        ? const Icon(Icons.verified_outlined)
+                        : const Icon(Icons.chevron_right),
+                    onTap: m.account['phone_verified'] == true
+                        ? null
+                        : () => push(context, const LoginScreen(binding: true)),
+                  ),
+                ),
               if (m.token.isNotEmpty)
                 OutlinedButton(
                   onPressed: () async {

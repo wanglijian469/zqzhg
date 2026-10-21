@@ -100,7 +100,9 @@ void main() {
       );
       await tester.tap(find.text('已有公司账号登录'));
       await tester.pumpAndSettle();
-      await tester.enterText(find.widgetWithText(TextField, '公司登录账号'), '公司账号');
+      await tester.tap(find.text('原账号登录'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.widgetWithText(TextField, '原登录账号'), '公司账号');
       await tester.enterText(
         find.widgetWithText(TextField, '密码'),
         'Example-Pass-2026!',

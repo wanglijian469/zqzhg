@@ -26,7 +26,7 @@ func resetFixture(t *testing.T) (*App, *gin.Engine, string, Account, map[string]
 	admin := resourceTestSession(t, a, "admin")
 	r := a.router()
 	tc := testClient{t, r}
-	created := tc.call("POST", "/admin/vendors", admin, gin.H{"login_name": "重置密码测试公司", "data": Payload{Name: "重置密码测试公司", RegionName: "河北", MainProducts: "液压机械", Phone: "0319-1234567"}}, 201)
+	created := tc.fixtureCall("POST", "/admin/vendors", admin, gin.H{"login_name": "重置密码测试公司", "data": Payload{Name: "重置密码测试公司", RegionName: "河北", MainProducts: "液压机械", Phone: "0319-1234567"}}, 201)
 	var owner Account
 	a.DB.First(&owner, uint64(created["account_id"].(float64)))
 	return a, r, admin, owner, created["item"].(map[string]any), created["initial_password"].(string)
@@ -47,11 +47,11 @@ func TestPasswordResetPermissionsSessionsAndOwnership(t *testing.T) {
 	session, _ := a.newSession(owner)
 	old := session["token"].(string)
 	second, _ := a.newSession(owner)
-	product := tc.call("POST", "/merchant/contents", old, gin.H{"kind": "product", "data": Payload{Name: "既有液压产品", CategoryID: 1}}, 201)
+	product := tc.fixtureCall("POST", "/merchant/contents", old, gin.H{"kind": "product", "data": Payload{Name: "既有液压产品", CategoryID: 1}}, 201)
 	var imageBytes bytes.Buffer
 	png.Encode(&imageBytes, image.NewRGBA(image.Rect(0, 0, 2, 2)))
 	image := resourceUpload(t, a, old, "/merchant/media", "original.png", imageBytes.Bytes(), 201)
-	tc.call("PUT", "/merchant/contents/"+number(vendor["id"])+"/draft", old, gin.H{"revision_id": vendor["revision_id"], "data": Payload{Name: "重置密码测试公司", RegionName: "河北", MainProducts: "液压机械", Phone: "0319-1234567", MediaIDs: []uint64{uint64(image["id"].(float64))}}}, 200)
+	tc.fixtureCall("PUT", "/merchant/contents/"+number(vendor["id"])+"/draft", old, gin.H{"revision_id": vendor["revision_id"], "data": Payload{Name: "重置密码测试公司", RegionName: "河北", MainProducts: "液压机械", Phone: "0319-1234567", MediaIDs: []uint64{uint64(image["id"].(float64))}}}, 200)
 	var before []Revision
 	a.DB.Order("id").Find(&before)
 	tc.call("POST", path, "", gin.H{"mode": "generate"}, 401)

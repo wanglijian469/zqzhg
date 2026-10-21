@@ -466,5 +466,11 @@
   "pause": "暂停",
   "copyright": "© 2026 河北企元数智科技有限公司 版权所有",
   "technicalSupport": "技术支持：河北企元数智科技有限公司",
-  "mobileUpgradeRequired": "当前服务器尚未支持此功能，请升级配套服务或切换到本地验收服务。"
+  "mobileUpgradeRequired": "当前服务器尚未支持此功能，请升级配套服务或切换到本地验收服务。",
+  "phoneAuthUpgradeRequired": "当前服务器尚未支持手机号密码认证，请升级配套服务后重试。",
+  "phone_exists": "该手机号已关联账号。请登录原账号；如有冲突，请联系管理员核对。",
+  "phone_already_bound": "当前账号已有绑定手机号，请联系管理员核对。",
+  "phone_binding_required": "请先验证并绑定手机号。",
+  "password_setup_unavailable": "该手机号不是未设置密码的原短信账号，请使用密码登录或联系管理员。",
+  "confirmation_required": "请确认后再升级厂商账号。"
 }

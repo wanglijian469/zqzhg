@@ -1,0 +1,679 @@
+{
+  "schema": 18,
+  "previous_product_categories": 134,
+  "current_product_categories": 45,
+  "mappings": [
+    {
+      "source_code": "agri.product.01",
+      "source_name": "拖拉机与动力整机",
+      "target_code": "agri.product.compact.01.01"
+    },
+    {
+      "source_code": "agri.product.01.01",
+      "source_name": "轮式拖拉机",
+      "target_code": "agri.product.compact.01.01"
+    },
+    {
+      "source_code": "agri.product.01.02",
+      "source_name": "履带拖拉机",
+      "target_code": "agri.product.compact.01.01"
+    },
+    {
+      "source_code": "agri.product.01.03",
+      "source_name": "手扶拖拉机",
+      "target_code": "agri.product.compact.01.01"
+    },
+    {
+      "source_code": "agri.product.01.04",
+      "source_name": "其他农业动力整机",
+      "target_code": "agri.product.compact.01.01"
+    },
+    {
+      "source_code": "agri.product.02",
+      "source_name": "耕整地机械",
+      "target_code": "agri.product.compact.01.02"
+    },
+    {
+      "source_code": "agri.product.02.01",
+      "source_name": "铧式犁",
+      "target_code": "agri.product.compact.01.02"
+    },
+    {
+      "source_code": "agri.product.02.02",
+      "source_name": "圆盘犁",
+      "target_code": "agri.product.compact.01.02"
+    },
+    {
+      "source_code": "agri.product.02.03",
+      "source_name": "旋耕机",
+      "target_code": "agri.product.compact.01.02"
+    },
+    {
+      "source_code": "agri.product.02.04",
+      "source_name": "深松机",
+      "target_code": "agri.product.compact.01.02"
+    },
+    {
+      "source_code": "agri.product.02.05",
+      "source_name": "耙地机械",
+      "target_code": "agri.product.compact.01.02"
+    },
+    {
+      "source_code": "agri.product.02.06",
+      "source_name": "整地镇压机械",
+      "target_code": "agri.product.compact.01.02"
+    },
+    {
+      "source_code": "agri.product.03",
+      "source_name": "播种施肥机械",
+      "target_code": "agri.product.compact.01.03"
+    },
+    {
+      "source_code": "agri.product.03.01",
+      "source_name": "条播机",
+      "target_code": "agri.product.compact.01.03"
+    },
+    {
+      "source_code": "agri.product.03.02",
+      "source_name": "精量播种机",
+      "target_code": "agri.product.compact.01.03"
+    },
+    {
+      "source_code": "agri.product.03.03",
+      "source_name": "免耕播种机",
+      "target_code": "agri.product.compact.01.03"
+    },
+    {
+      "source_code": "agri.product.03.04",
+      "source_name": "育苗移栽机械",
+      "target_code": "agri.product.compact.01.03"
+    },
+    {
+      "source_code": "agri.product.03.05",
+      "source_name": "施肥撒肥机械",
+      "target_code": "agri.product.compact.01.03"
+    },
+    {
+      "source_code": "agri.product.03.06",
+      "source_name": "播种施肥联合作业机械",
+      "target_code": "agri.product.compact.01.03"
+    },
+    {
+      "source_code": "agri.product.04",
+      "source_name": "田间管理与植保机械",
+      "target_code": "agri.product.compact.01.04"
+    },
+    {
+      "source_code": "agri.product.04.01",
+      "source_name": "喷雾喷粉机械",
+      "target_code": "agri.product.compact.01.04"
+    },
+    {
+      "source_code": "agri.product.04.02",
+      "source_name": "农业植保无人机",
+      "target_code": "agri.product.compact.01.04"
+    },
+    {
+      "source_code": "agri.product.04.03",
+      "source_name": "中耕除草机械",
+      "target_code": "agri.product.compact.01.04"
+    },
+    {
+      "source_code": "agri.product.04.04",
+      "source_name": "修剪管理机械",
+      "target_code": "agri.product.compact.01.04"
+    },
+    {
+      "source_code": "agri.product.05",
+      "source_name": "收获机械",
+      "target_code": "agri.product.compact.01.05"
+    },
+    {
+      "source_code": "agri.product.05.01",
+      "source_name": "谷物收获机械",
+      "target_code": "agri.product.compact.01.05"
+    },
+    {
+      "source_code": "agri.product.05.02",
+      "source_name": "玉米收获机械",
+      "target_code": "agri.product.compact.01.05"
+    },
+    {
+      "source_code": "agri.product.05.03",
+      "source_name": "薯类根茎收获机械",
+      "target_code": "agri.product.compact.01.05"
+    },
+    {
+      "source_code": "agri.product.05.04",
+      "source_name": "棉花收获机械",
+      "target_code": "agri.product.compact.01.05"
+    },
+    {
+      "source_code": "agri.product.05.05",
+      "source_name": "饲草收获机械",
+      "target_code": "agri.product.compact.01.05"
+    },
+    {
+      "source_code": "agri.product.05.06",
+      "source_name": "果蔬收获机械",
+      "target_code": "agri.product.compact.01.05"
+    },
+    {
+      "source_code": "agri.product.06",
+      "source_name": "收获后处理与搬运设备",
+      "target_code": "agri.product.compact.02.01"
+    },
+    {
+      "source_code": "agri.product.06.01",
+      "source_name": "脱粒机械",
+      "target_code": "agri.product.compact.02.01"
+    },
+    {
+      "source_code": "agri.product.06.02",
+      "source_name": "清选分级设备",
+      "target_code": "agri.product.compact.02.01"
+    },
+    {
+      "source_code": "agri.product.06.03",
+      "source_name": "烘干设备",
+      "target_code": "agri.product.compact.02.01"
+    },
+    {
+      "source_code": "agri.product.06.04",
+      "source_name": "输送装卸设备",
+      "target_code": "agri.product.compact.02.01"
+    },
+    {
+      "source_code": "agri.product.06.05",
+      "source_name": "农用搬运车辆",
+      "target_code": "agri.product.compact.02.01"
+    },
+    {
+      "source_code": "agri.product.07",
+      "source_name": "畜牧养殖与饲料机械",
+      "target_code": "agri.product.compact.03"
+    },
+    {
+      "source_code": "agri.product.07.01",
+      "source_name": "饲料粉碎设备",
+      "target_code": "agri.product.compact.03.01"
+    },
+    {
+      "source_code": "agri.product.07.02",
+      "source_name": "饲料混合制粒设备",
+      "target_code": "agri.product.compact.03.01"
+    },
+    {
+      "source_code": "agri.product.07.03",
+      "source_name": "饲喂设备",
+      "target_code": "agri.product.compact.03.02"
+    },
+    {
+      "source_code": "agri.product.07.04",
+      "source_name": "挤奶设备",
+      "target_code": "agri.product.compact.03.02"
+    },
+    {
+      "source_code": "agri.product.07.05",
+      "source_name": "养殖清粪设备",
+      "target_code": "agri.product.compact.03.02"
+    },
+    {
+      "source_code": "agri.product.08",
+      "source_name": "农产品加工机械",
+      "target_code": "agri.product.compact.02"
+    },
+    {
+      "source_code": "agri.product.08.01",
+      "source_name": "粮食加工设备",
+      "target_code": "agri.product.compact.02.02"
+    },
+    {
+      "source_code": "agri.product.08.02",
+      "source_name": "油料加工设备",
+      "target_code": "agri.product.compact.02.02"
+    },
+    {
+      "source_code": "agri.product.08.03",
+      "source_name": "果蔬加工设备",
+      "target_code": "agri.product.compact.02.03"
+    },
+    {
+      "source_code": "agri.product.08.04",
+      "source_name": "初加工包装设备",
+      "target_code": "agri.product.compact.02.03"
+    },
+    {
+      "source_code": "agri.product.09",
+      "source_name": "农机具及配套设备",
+      "target_code": "agri.product.compact.04.01"
+    },
+    {
+      "source_code": "agri.product.09.01",
+      "source_name": "挂接与牵引装置",
+      "target_code": "agri.product.compact.04.01"
+    },
+    {
+      "source_code": "agri.product.09.02",
+      "source_name": "配重装置",
+      "target_code": "agri.product.compact.04.01"
+    },
+    {
+      "source_code": "agri.product.09.03",
+      "source_name": "农用挂车",
+      "target_code": "agri.product.compact.04.01"
+    },
+    {
+      "source_code": "agri.product.09.04",
+      "source_name": "装载搬运属具",
+      "target_code": "agri.product.compact.04.01"
+    },
+    {
+      "source_code": "agri.product.09.05",
+      "source_name": "其他配套机具",
+      "target_code": "agri.product.compact.04.01"
+    },
+    {
+      "source_code": "agri.product.10",
+      "source_name": "农机易损件",
+      "target_code": "agri.product.compact.04"
+    },
+    {
+      "source_code": "agri.product.10.01",
+      "source_name": "耕作刀具与犁铧",
+      "target_code": "agri.product.compact.04.02"
+    },
+    {
+      "source_code": "agri.product.10.02",
+      "source_name": "收割刀片与护刃器",
+      "target_code": "agri.product.compact.04.02"
+    },
+    {
+      "source_code": "agri.product.10.03",
+      "source_name": "锤片与粉碎刀",
+      "target_code": "agri.product.compact.04.02"
+    },
+    {
+      "source_code": "agri.product.10.04",
+      "source_name": "植保喷嘴与滤网",
+      "target_code": "agri.product.compact.04.03"
+    },
+    {
+      "source_code": "agri.product.10.05",
+      "source_name": "摩擦片与衬片",
+      "target_code": "agri.product.compact.04.03"
+    },
+    {
+      "source_code": "agri.product.11",
+      "source_name": "传动系统及零部件",
+      "target_code": "agri.product.compact.05"
+    },
+    {
+      "source_code": "agri.product.11.01",
+      "source_name": "齿轮与齿轮轴",
+      "target_code": "agri.product.compact.05.01"
+    },
+    {
+      "source_code": "agri.product.11.02",
+      "source_name": "变速箱与减速器",
+      "target_code": "agri.product.compact.05.01"
+    },
+    {
+      "source_code": "agri.product.11.03",
+      "source_name": "传动轴与万向节",
+      "target_code": "agri.product.compact.05.02"
+    },
+    {
+      "source_code": "agri.product.11.04",
+      "source_name": "离合器与联轴器",
+      "target_code": "agri.product.compact.05.02"
+    },
+    {
+      "source_code": "agri.product.11.05",
+      "source_name": "链条链轮",
+      "target_code": "agri.product.compact.05.03"
+    },
+    {
+      "source_code": "agri.product.11.06",
+      "source_name": "皮带带轮",
+      "target_code": "agri.product.compact.05.03"
+    },
+    {
+      "source_code": "agri.product.11.07",
+      "source_name": "动力输出装置",
+      "target_code": "agri.product.compact.05.03"
+    },
+    {
+      "source_code": "agri.product.12",
+      "source_name": "发动机及配件",
+      "target_code": "agri.product.compact.06"
+    },
+    {
+      "source_code": "agri.product.12.01",
+      "source_name": "柴油发动机",
+      "target_code": "agri.product.compact.06.01"
+    },
+    {
+      "source_code": "agri.product.12.02",
+      "source_name": "汽油发动机",
+      "target_code": "agri.product.compact.06.01"
+    },
+    {
+      "source_code": "agri.product.12.03",
+      "source_name": "缸体缸盖与曲柄连杆",
+      "target_code": "agri.product.compact.06.02"
+    },
+    {
+      "source_code": "agri.product.12.04",
+      "source_name": "活塞缸套与配气机构",
+      "target_code": "agri.product.compact.06.02"
+    },
+    {
+      "source_code": "agri.product.12.05",
+      "source_name": "燃油喷射系统",
+      "target_code": "agri.product.compact.06.03"
+    },
+    {
+      "source_code": "agri.product.12.06",
+      "source_name": "进排气系统",
+      "target_code": "agri.product.compact.06.03"
+    },
+    {
+      "source_code": "agri.product.12.07",
+      "source_name": "冷却润滑系统",
+      "target_code": "agri.product.compact.06.04"
+    },
+    {
+      "source_code": "agri.product.12.08",
+      "source_name": "滤清器",
+      "target_code": "agri.product.compact.06.04"
+    },
+    {
+      "source_code": "agri.product.13",
+      "source_name": "液压系统及零部件",
+      "target_code": "agri.product.compact.07"
+    },
+    {
+      "source_code": "agri.product.13.01",
+      "source_name": "液压油缸",
+      "target_code": "agri.product.compact.07.01"
+    },
+    {
+      "source_code": "agri.product.13.02",
+      "source_name": "液压泵与马达",
+      "target_code": "agri.product.compact.07.02"
+    },
+    {
+      "source_code": "agri.product.13.03",
+      "source_name": "液压阀",
+      "target_code": "agri.product.compact.07.02"
+    },
+    {
+      "source_code": "agri.product.13.04",
+      "source_name": "液压管路与接头",
+      "target_code": "agri.product.compact.07.02"
+    },
+    {
+      "source_code": "agri.product.13.05",
+      "source_name": "液压过滤与油箱",
+      "target_code": "agri.product.compact.07.02"
+    },
+    {
+      "source_code": "agri.product.13.06",
+      "source_name": "液压总成",
+      "target_code": "agri.product.compact.07.02"
+    },
+    {
+      "source_code": "agri.product.14",
+      "source_name": "行走底盘与转向制动",
+      "target_code": "agri.product.compact.07"
+    },
+    {
+      "source_code": "agri.product.14.01",
+      "source_name": "轮胎轮辋",
+      "target_code": "agri.product.compact.07.03"
+    },
+    {
+      "source_code": "agri.product.14.02",
+      "source_name": "履带与支重轮",
+      "target_code": "agri.product.compact.07.03"
+    },
+    {
+      "source_code": "agri.product.14.03",
+      "source_name": "车桥与驱动桥",
+      "target_code": "agri.product.compact.07.03"
+    },
+    {
+      "source_code": "agri.product.14.04",
+      "source_name": "车架与悬挂",
+      "target_code": "agri.product.compact.07.03"
+    },
+    {
+      "source_code": "agri.product.14.05",
+      "source_name": "转向机构",
+      "target_code": "agri.product.compact.07.04"
+    },
+    {
+      "source_code": "agri.product.14.06",
+      "source_name": "制动机构",
+      "target_code": "agri.product.compact.07.04"
+    },
+    {
+      "source_code": "agri.product.15",
+      "source_name": "收获机械专用件",
+      "target_code": "agri.product.compact.08.01"
+    },
+    {
+      "source_code": "agri.product.15.01",
+      "source_name": "割台与拨禾机构",
+      "target_code": "agri.product.compact.08.01"
+    },
+    {
+      "source_code": "agri.product.15.02",
+      "source_name": "脱粒滚筒与凹板",
+      "target_code": "agri.product.compact.08.01"
+    },
+    {
+      "source_code": "agri.product.15.03",
+      "source_name": "分离清选机构",
+      "target_code": "agri.product.compact.08.01"
+    },
+    {
+      "source_code": "agri.product.15.04",
+      "source_name": "输送与升运机构",
+      "target_code": "agri.product.compact.08.01"
+    },
+    {
+      "source_code": "agri.product.15.05",
+      "source_name": "粮箱与卸粮机构",
+      "target_code": "agri.product.compact.08.01"
+    },
+    {
+      "source_code": "agri.product.15.06",
+      "source_name": "打捆机构",
+      "target_code": "agri.product.compact.08.01"
+    },
+    {
+      "source_code": "agri.product.16",
+      "source_name": "耕作播种专用件",
+      "target_code": "agri.product.compact.08"
+    },
+    {
+      "source_code": "agri.product.16.01",
+      "source_name": "犁架与调幅翻转机构",
+      "target_code": "agri.product.compact.08.02"
+    },
+    {
+      "source_code": "agri.product.16.02",
+      "source_name": "旋耕轴与刀座",
+      "target_code": "agri.product.compact.08.02"
+    },
+    {
+      "source_code": "agri.product.16.03",
+      "source_name": "耙组与镇压机构",
+      "target_code": "agri.product.compact.08.02"
+    },
+    {
+      "source_code": "agri.product.16.04",
+      "source_name": "排种器与排肥器",
+      "target_code": "agri.product.compact.08.03"
+    },
+    {
+      "source_code": "agri.product.16.05",
+      "source_name": "开沟与覆土机构",
+      "target_code": "agri.product.compact.08.03"
+    },
+    {
+      "source_code": "agri.product.16.06",
+      "source_name": "地轮与播深调节机构",
+      "target_code": "agri.product.compact.08.03"
+    },
+    {
+      "source_code": "agri.product.17",
+      "source_name": "轴承密封与标准件",
+      "target_code": "agri.product.compact.04.04"
+    },
+    {
+      "source_code": "agri.product.17.01",
+      "source_name": "滚动轴承",
+      "target_code": "agri.product.compact.04.04"
+    },
+    {
+      "source_code": "agri.product.17.02",
+      "source_name": "轴承座与滑动轴承",
+      "target_code": "agri.product.compact.04.04"
+    },
+    {
+      "source_code": "agri.product.17.03",
+      "source_name": "油封与密封圈",
+      "target_code": "agri.product.compact.04.04"
+    },
+    {
+      "source_code": "agri.product.17.04",
+      "source_name": "垫片与组合密封",
+      "target_code": "agri.product.compact.04.04"
+    },
+    {
+      "source_code": "agri.product.17.05",
+      "source_name": "螺栓螺母与垫圈",
+      "target_code": "agri.product.compact.04.04"
+    },
+    {
+      "source_code": "agri.product.17.06",
+      "source_name": "销键与挡圈",
+      "target_code": "agri.product.compact.04.04"
+    },
+    {
+      "source_code": "agri.product.17.07",
+      "source_name": "弹簧",
+      "target_code": "agri.product.compact.04.04"
+    },
+    {
+      "source_code": "agri.product.18",
+      "source_name": "电气与智能农业设备",
+      "target_code": "agri.product.compact.09"
+    },
+    {
+      "source_code": "agri.product.18.01",
+      "source_name": "起动充电与线束",
+      "target_code": "agri.product.compact.09.01"
+    },
+    {
+      "source_code": "agri.product.18.02",
+      "source_name": "照明与仪表",
+      "target_code": "agri.product.compact.09.01"
+    },
+    {
+      "source_code": "agri.product.18.03",
+      "source_name": "传感器与控制器",
+      "target_code": "agri.product.compact.09.02"
+    },
+    {
+      "source_code": "agri.product.18.04",
+      "source_name": "导航与自动驾驶",
+      "target_code": "agri.product.compact.09.03"
+    },
+    {
+      "source_code": "agri.product.18.05",
+      "source_name": "作业监测与终端",
+      "target_code": "agri.product.compact.09.03"
+    },
+    {
+      "source_code": "agri.product.18.06",
+      "source_name": "农业物联网设备",
+      "target_code": "agri.product.compact.09.03"
+    },
+    {
+      "source_code": "agri.product.19",
+      "source_name": "灌溉排水设备",
+      "target_code": "agri.product.compact.10"
+    },
+    {
+      "source_code": "agri.product.19.01",
+      "source_name": "农用水泵",
+      "target_code": "agri.product.compact.10.01"
+    },
+    {
+      "source_code": "agri.product.19.02",
+      "source_name": "喷灌设备",
+      "target_code": "agri.product.compact.10.01"
+    },
+    {
+      "source_code": "agri.product.19.03",
+      "source_name": "滴灌微灌设备",
+      "target_code": "agri.product.compact.10.01"
+    },
+    {
+      "source_code": "agri.product.19.04",
+      "source_name": "管材管件与阀门",
+      "target_code": "agri.product.compact.10.01"
+    },
+    {
+      "source_code": "agri.product.19.05",
+      "source_name": "水肥一体化设备",
+      "target_code": "agri.product.compact.10.02"
+    },
+    {
+      "source_code": "agri.product.19.06",
+      "source_name": "排水设备",
+      "target_code": "agri.product.compact.10.01"
+    },
+    {
+      "source_code": "agri.product.20",
+      "source_name": "设施农业设备及配件",
+      "target_code": "agri.product.compact.10"
+    },
+    {
+      "source_code": "agri.product.20.01",
+      "source_name": "温室骨架与覆盖材料",
+      "target_code": "agri.product.compact.10.03"
+    },
+    {
+      "source_code": "agri.product.20.02",
+      "source_name": "通风降温设备",
+      "target_code": "agri.product.compact.10.04"
+    },
+    {
+      "source_code": "agri.product.20.03",
+      "source_name": "保温加温设备",
+      "target_code": "agri.product.compact.10.04"
+    },
+    {
+      "source_code": "agri.product.20.04",
+      "source_name": "补光设备",
+      "target_code": "agri.product.compact.10.04"
+    },
+    {
+      "source_code": "agri.product.20.05",
+      "source_name": "育苗栽培设施",
+      "target_code": "agri.product.compact.10.03"
+    },
+    {
+      "source_code": "agri.product.20.06",
+      "source_name": "设施环境控制设备",
+      "target_code": "agri.product.compact.10.04"
+    }
+  ],
+  "existing_merge_policy": "resolve existing canonical destination before applying fixed mapping",
+  "custom_category_policy": "reparent only when known and at most three levels; otherwise retain and provide manual mapping"
+}
