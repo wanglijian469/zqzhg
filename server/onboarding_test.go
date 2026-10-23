@@ -150,7 +150,8 @@ func TestAdminBrandImagesOutsideGalleryQuota(t *testing.T) {
 	tc.call("POST", "/admin/contents/"+number(item["id"])+"/submit", admin, gin.H{"revision_id": next["revision_id"]}, 200)
 	pub := tc.call("GET", "/public/showrooms/v-"+number(item["id"]), "", nil, 200)
 	profile := pub["item"].(map[string]any)["data"].(map[string]any)["company_profile"].(map[string]any)
-	if profile["logo_media_id"] != float64(logo) || profile["cover_media_id"] != float64(cover) {
+	publishedCover := draft["data"].(map[string]any)["company_profile"].(map[string]any)["cover_media_id"]
+	if profile["logo_media_id"] != float64(logo) || profile["cover_media_id"] != publishedCover {
 		t.Fatal("draft brand image leaked")
 	}
 }

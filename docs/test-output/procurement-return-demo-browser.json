@@ -1,0 +1,66 @@
+{
+  "checks": [
+    "Three dynamic-code UI logins",
+    "Buyer/supplier workspaces and old links",
+    "Read-only snapshots; no reset, quotes, intent or message mutations",
+    "Normal supplier logout and login continuation"
+  ],
+  "layouts": [
+    {
+      "name": "buyer-comparison",
+      "width": 360
+    },
+    {
+      "name": "supplier-quote",
+      "width": 360
+    },
+    {
+      "name": "request-hall",
+      "width": 360
+    },
+    {
+      "name": "buyer-comparison",
+      "width": 390
+    },
+    {
+      "name": "supplier-quote",
+      "width": 390
+    },
+    {
+      "name": "request-hall",
+      "width": 390
+    },
+    {
+      "name": "buyer-comparison",
+      "width": 768
+    },
+    {
+      "name": "supplier-quote",
+      "width": 768
+    },
+    {
+      "name": "request-hall",
+      "width": 768
+    },
+    {
+      "name": "buyer-comparison",
+      "width": 1440
+    },
+    {
+      "name": "supplier-quote",
+      "width": 1440
+    },
+    {
+      "name": "request-hall",
+      "width": 1440
+    },
+    {
+      "name": "supplier-login",
+      "width": 390
+    }
+  ],
+  "errors": [],
+  "businessRecordsWritten": false,
+  "datasetReset": false,
+  "realSMS": false
+}

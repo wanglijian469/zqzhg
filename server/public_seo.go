@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -28,20 +29,13 @@ func (a *App) publicBase(c *gin.Context) string {
 }
 func canonicalPublic(base, path string, query url.Values) string {
 	q := url.Values{}
-	company := strings.HasPrefix(path, "/v/")
 	keys := []string{"hall", "q", "category_id", "region_id", "industrial_belt_id", "business_nature", "vendor_id", "sort", "page"}
 	if path == "/regions" {
 		keys = []string{"hall", "q", "category_id", "region_code", "unassigned", "page"}
 	}
-	if company {
-		keys = []string{"tab", "q", "category_id", "sort", "page"}
-	}
-	if company || path == "/regions" || path == "/" || path == "/browse" || path == "/browse/products" {
+	if path == "/regions" || path == "/" || path == "/browse" || path == "/browse/products" {
 		for _, k := range keys {
 			v := strings.TrimSpace(query.Get(k))
-			if k == "tab" && (v == "home" || !strings.Contains("|about|products|videos|catalogs|contact|", "|"+v+"|")) {
-				continue
-			}
 			if v == "" || (k == "hall" && v == "agriculture") || (k == "page" && v == "1") {
 				continue
 			}
@@ -61,13 +55,22 @@ func canonicalPublic(base, path string, query url.Values) string {
 	}
 	return strings.TrimRight(base, "/") + path + suffix
 }
+func showroomSearchVariant(query url.Values) bool {
+	for _, key := range []string{"q", "category_id", "region_id", "vendor_id", "sort"} {
+		if strings.TrimSpace(query.Get(key)) != "" {
+			return true
+		}
+	}
+	page, _ := strconv.Atoi(query.Get("page"))
+	return page > 1
+}
 func cleanHTMLMetadata(source string) string {
-	for _, pattern := range []string{`(?is)<title[^>]*>.*?</title\s*>`, `(?is)<meta\b[^>]*(?:name\s*=\s*["'](?:description|robots|zqzg-public-base)["']|property\s*=\s*["']og:[^"']+["'])[^>]*>`, `(?is)<link\b[^>]*rel\s*=\s*["']canonical["'][^>]*>`} {
+	for _, pattern := range []string{`(?is)<title[^>]*>.*?</title\s*>`, `(?is)<meta\b[^>]*(?:name\s*=\s*["'](?:description|robots|zqzg-public-base)["']|property\s*=\s*["']og:[^"']+["'])[^>]*>`, `(?is)<link\b[^>]*rel\s*=\s*["']canonical["'][^>]*>`, `(?is)<script\b[^>]*type\s*=\s*["']application/ld\+json["'][^>]*>.*?</script\s*>`} {
 		source = regexp.MustCompile(pattern).ReplaceAllString(source, "")
 	}
 	return source
 }
-func (a *App) sendPublicHTML(c *gin.Context, index string, status int, title, desc, canonical, robots string) bool {
+func (a *App) sendPublicHTML(c *gin.Context, index string, status int, title, desc, canonical, robots string, content ...seoContent) bool {
 	source, e := os.ReadFile(index)
 	if e != nil {
 		return false
@@ -77,11 +80,30 @@ func (a *App) sendPublicHTML(c *gin.Context, index string, status int, title, de
 	for k, v := range map[string]string{"og:title": title, "og:description": desc, "og:url": canonical, "og:type": "website"} {
 		meta += "<meta property='" + k + "' content='" + escape(v) + "'>"
 	}
+	page := cleanHTMLMetadata(string(source))
+	if len(content) > 0 {
+		detail := content[0]
+		if detail.Image != "" {
+			meta += "<meta property='og:image' content='" + escape(detail.Image) + "'>"
+		}
+		if detail.Structured != nil {
+			structured, err := json.Marshal(detail.Structured)
+			if err != nil {
+				fail(c, 500, "internal_error")
+				return true
+			}
+			meta += `<script type="application/ld+json">` + string(structured) + `</script>`
+		}
+		// React replaces this container on mount; all clients receive the same public HTML.
+		page = seoRoot.ReplaceAllStringFunc(page, func(root string) string {
+			return root[:strings.Index(root, ">")+1] + detail.Body + "</div>"
+		})
+	}
 	c.Header("Cache-Control", "no-store")
 	if robots == "noindex,follow" {
 		c.Header("X-Robots-Tag", robots)
 	}
-	c.Data(status, "text/html; charset=utf-8", []byte(a.runtimeHTML(c, strings.Replace(cleanHTMLMetadata(string(source)), "<head>", "<head>"+meta, 1))))
+	c.Data(status, "text/html; charset=utf-8", []byte(a.runtimeHTML(c, strings.Replace(page, "<head>", "<head>"+meta, 1))))
 	return true
 }
 func (a *App) publicHTML(c *gin.Context, index string) bool {
@@ -91,6 +113,7 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 	}
 	title, desc, robots, status := a.brandName(), "汇聚制造企业，展示特色产品，连接采购需求", "index,follow", 200
 	canonical := canonicalPublic(a.publicBase(c), path, c.Request.URL.Query())
+	var content []seoContent
 	if strings.HasPrefix(path, "/products/") {
 		id, e := strconv.ParseUint(strings.TrimPrefix(path, "/products/"), 10, 64)
 		if e != nil || id == 0 {
@@ -109,21 +132,28 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 			return a.sendPublicHTML(c, index, 503, title, desc, canonical, "noindex,follow")
 		}
 		vendors, e := a.publicViews(a.publicQuery("vendor").Where("contents.id=?", p.VendorID))
-		if e != nil || len(vendors) == 0 {
+		if e != nil {
+			return a.sendPublicHTML(c, index, 503, "服务暂不可用 | "+a.brandName(), "请稍后重试。", canonical, "noindex,follow")
+		}
+		if len(vendors) == 0 {
 			return a.sendPublicHTML(c, index, 404, "产品暂未公开 | "+a.brandName(), "产品不存在、暂未公开或已下架。", canonical, "noindex,follow")
 		}
 		title = p.Data.Name + " | " + a.brandName() + " · " + hall.Name
 
 		parts := []string{p.Data.Name}
-		model := regexp.MustCompile(`(?im)^\s*(?:型号|model)\s*[:：]\s*([^\r\n]+)`).FindStringSubmatch(p.Data.Parameters)
-		if len(model) > 1 {
-			parts = append(parts, "型号 "+model[1])
+		if model := seoProductModel(p.Data); model != "" {
+			parts = append(parts, "型号 "+model)
 		}
 		parts = append(parts, vendors[0].Data.Name, hall.Name)
 		if strings.TrimSpace(p.Data.Description) != "" {
 			parts = append(parts, p.Data.Description)
 		}
 		desc = strings.Join(parts, " · ")
+		detail, err := a.productSEO(c, p, vendors[0], canonical)
+		if err != nil {
+			return a.sendPublicHTML(c, index, 500, "服务暂不可用 | "+a.brandName(), "请稍后重试。", canonical, "noindex,follow")
+		}
+		content = append(content, detail)
 	} else {
 		var hall Hall
 		if e := a.DB.Where("slug=?", c.DefaultQuery("hall", "agriculture")).First(&hall).Error; e != nil {
@@ -164,5 +194,5 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 	if len(runes) > 160 {
 		desc = string(runes[:160])
 	}
-	return a.sendPublicHTML(c, index, status, title, desc, canonical, robots)
+	return a.sendPublicHTML(c, index, status, title, desc, canonical, robots, content...)
 }

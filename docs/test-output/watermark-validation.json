@@ -1,0 +1,22 @@
+{
+  "backendFullSuitePassed": 110,
+  "backendFullSuiteSkipped": 11,
+  "watermarkFinalCasesPassed": 6,
+  "additionalAdministratorPurposeCasePassed": true,
+  "watermarkBackupRestoreVerified": true,
+  "goVetClean": true,
+  "webPassed": 194,
+  "webTypecheckClean": true,
+  "webWatermarkLayouts": 8,
+  "localWebRegressionLayouts": 32,
+  "flutterPassed": 166,
+  "flutterSkipped": 7,
+  "flutterAnalyzeClean": true,
+  "originalCertificateVerified": true,
+  "physicalDeviceVerified": false,
+  "localSchema": 20,
+  "businessBeforeAfterEqual": true,
+  "oldMediaAndReviewHashesUnchanged": true,
+  "stableDownloadUnchanged": true,
+  "productionDeployed": false
+}

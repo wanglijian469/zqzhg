@@ -634,7 +634,7 @@ func (a *App) unpackBackup(ctx context.Context, job *OperationJob, destination s
 	}
 	err = json.NewDecoder(io.LimitReader(body, 8<<20)).Decode(&manifest)
 	body.Close()
-	if err != nil || manifest.Format != 1 || manifest.Schema > 19 || manifest.Schema < 10 || len(manifest.Objects) > 100000 {
+	if err != nil || manifest.Format != 1 || manifest.Schema > 21 || manifest.Schema < 10 || len(manifest.Objects) > 100000 {
 		return manifest, errors.New("backup_version_unsupported")
 	}
 	if _, exists := files["database.sql"]; !exists {

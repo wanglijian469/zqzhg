@@ -1451,6 +1451,9 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
           },
         );
         request.headers['Authorization'] = 'Bearer ${m.token}';
+        if (path == '/merchant/media') {
+          request.fields['purpose'] = 'resource_cover';
+        }
         request.files.add(
           await http.MultipartFile.fromPath(
             'file',

@@ -1,0 +1,30 @@
+Procurement demo stopped; primary service unchanged.
+
+2026/10/23 10:21:36 D:/workspace-main/codex-zqzt/server/main.go:245 SLOW SQL >= 200ms
+[473.456ms] [rows:57] DROP DATABASE `zqzt_procurement_demo`
+
+2026/10/23 10:21:41 D:/workspace-main/codex-zqzt/server/procurement_notifications.go:15 record not found
+[1.741ms] [rows:0] SELECT * FROM `procurement_preferences` WHERE account_id=3 AND `procurement_preferences`.`account_id` = 3 ORDER BY `procurement_preferences`.`account_id` LIMIT 1
+
+2026/10/23 10:21:41 D:/workspace-main/codex-zqzt/server/procurement_matching.go:219 record not found
+[1.725ms] [rows:0] SELECT * FROM `procurement_participants` WHERE project_id=1 AND vendor_id=1 ORDER BY `procurement_participants`.`id` LIMIT 1
+
+2026/10/23 10:21:41 D:/workspace-main/codex-zqzt/server/procurement_notifications.go:15 record not found
+[0.642ms] [rows:0] SELECT * FROM `procurement_preferences` WHERE account_id=3 AND `procurement_preferences`.`account_id` = 3 ORDER BY `procurement_preferences`.`account_id` LIMIT 1
+
+2026/10/23 10:21:41 D:/workspace-main/codex-zqzt/server/procurement_matching.go:219 record not found
+[0.589ms] [rows:0] SELECT * FROM `procurement_participants` WHERE project_id=2 AND vendor_id=1 ORDER BY `procurement_participants`.`id` LIMIT 1
+
+2026/10/23 10:21:41 D:/workspace-main/codex-zqzt/server/procurement_notifications.go:15 record not found
+[0.642ms] [rows:0] SELECT * FROM `procurement_preferences` WHERE account_id=3 AND `procurement_preferences`.`account_id` = 3 ORDER BY `procurement_preferences`.`account_id` LIMIT 1
+
+2026/10/23 10:21:41 D:/workspace-main/codex-zqzt/server/procurement_notifications.go:15 record not found
+[0.523ms] [rows:0] SELECT * FROM `procurement_preferences` WHERE account_id=4 AND `procurement_preferences`.`account_id` = 4 ORDER BY `procurement_preferences`.`account_id` LIMIT 1
+
+2026/10/23 10:21:41 D:/workspace-main/codex-zqzt/server/procurement_matching.go:219 record not found
+[0.576ms] [rows:0] SELECT * FROM `procurement_participants` WHERE project_id=2 AND vendor_id=3 ORDER BY `procurement_participants`.`id` LIMIT 1
+
+2026/10/23 10:21:41 D:/workspace-main/codex-zqzt/server/procurement_notifications.go:15 record not found
+[0.565ms] [rows:0] SELECT * FROM `procurement_preferences` WHERE account_id=4 AND `procurement_preferences`.`account_id` = 4 ORDER BY `procurement_preferences`.`account_id` LIMIT 1
+2026/10/23 10:21:41 Procurement demo initialized
+Procurement demo: http://localhost:8081/buyer; select an account and request the dynamic code. No real SMS is sent.

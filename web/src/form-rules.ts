@@ -118,8 +118,8 @@ export const formRules:Record<string,{max:number;unit:string;zh:string;en:string
   "company_profile.short_name": {
     "max": 200,
     "unit": "characters",
-    "zh": "企业展示简称",
-    "en": "Brand name",
+    "zh": "企业简称用于展示图轻水印，未填写时暂用企业名称；可选填。",
+    "en": "Used in subtle image watermarks; the company name is used if omitted. Optional.",
     "sample_zh": "冀农",
     "sample_en": "Jinong",
     "required": []

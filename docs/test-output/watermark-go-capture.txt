@@ -1,0 +1,8 @@
+{"Time":"2026-10-22T11:52:54.3072253+08:00","Action":"start","Package":"zqzt/exhibition"}
+{"Time":"2026-10-22T11:52:55.7499735+08:00","Action":"run","Package":"zqzt/exhibition","Test":"TestWatermarkRenderingAndAlpha"}
+{"Time":"2026-10-22T11:52:55.7499735+08:00","Action":"output","Package":"zqzt/exhibition","Test":"TestWatermarkRenderingAndAlpha","Output":"=== RUN   TestWatermarkRenderingAndAlpha\n"}
+{"Time":"2026-10-22T11:52:56.7930666+08:00","Action":"output","Package":"zqzt/exhibition","Test":"TestWatermarkRenderingAndAlpha","Output":"--- PASS: TestWatermarkRenderingAndAlpha (1.04s)\n"}
+{"Time":"2026-10-22T11:52:56.7931759+08:00","Action":"pass","Package":"zqzt/exhibition","Test":"TestWatermarkRenderingAndAlpha","Elapsed":1.04}
+{"Time":"2026-10-22T11:52:56.7931759+08:00","Action":"output","Package":"zqzt/exhibition","Output":"PASS\n"}
+{"Time":"2026-10-22T11:52:56.8044948+08:00","Action":"output","Package":"zqzt/exhibition","Output":"ok  \tzqzt/exhibition\t2.497s\n"}
+{"Time":"2026-10-22T11:52:56.8044948+08:00","Action":"pass","Package":"zqzt/exhibition","Elapsed":2.497}

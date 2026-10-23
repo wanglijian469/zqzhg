@@ -1,0 +1,18 @@
+{
+  "schema": 20,
+  "business": {
+    "media": 178,
+    "vendors": 11,
+    "accounts": 13,
+    "products": 46,
+    "favorites": 0,
+    "revisions": 67,
+    "media_hash": "0c4b963f7712e2061e076ccd9b0ac684ac9a6d9a325085be6d22c0f4cb8c5116",
+    "revision_hash": "13522fedcd9a12ba5764276d26a19e1abc518bae5f15bd5f5a0a6c67b8e04887",
+    "ownership_hash": "741cbace99236999e16fd50f47d28d1bf001e067853caa4c457320a5c9598898"
+  },
+  "backupCreated": true,
+  "productionDeployed": false,
+  "newWatermarkRecordsAfterMigration": 0,
+  "startedAt": "2026-10-22T11:54:32.7798009+08:00"
+}

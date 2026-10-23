@@ -144,6 +144,9 @@ func (g *publicGuard) check(ip, kind string, refs map[string]string) int {
 	return 0
 }
 func guardKind(path string) string {
+	if path == "/sitemap.xml" || strings.HasPrefix(path, "/sitemaps/") {
+		return "list"
+	}
 	if path == "/api/v1/favorites" {
 		return "list"
 	}
@@ -152,7 +155,7 @@ func guardKind(path string) string {
 	}
 	p := strings.TrimPrefix(path, "/api/v1/public")
 	if p != path {
-		if p == "/industry-map/regions" || p == "/industry-map/vendors" || p == "/vendors" || p == "/products" || p == "/home" || p == "/resources" || p == "/favorites/resolve" || strings.HasSuffix(p, "/resources") {
+		if p == "/procurements" || p == "/procurement-vendors" || p == "/industry-map/regions" || p == "/industry-map/vendors" || p == "/vendors" || p == "/products" || p == "/home" || p == "/resources" || p == "/favorites/resolve" || strings.HasSuffix(p, "/resources") {
 			return "list"
 		}
 		if strings.HasPrefix(p, "/vendors/") || strings.HasPrefix(p, "/products/") || strings.HasPrefix(p, "/showrooms/") || strings.HasPrefix(p, "/resources/") {
@@ -181,7 +184,8 @@ func deniedAgent(ua string) bool {
 	return false
 }
 func robotsPolicy() string {
-	s := "User-agent: *\nDisallow: /api/\nDisallow: /admin\nDisallow: /merchant\n\n"
+	// Public runtime APIs are needed when a search crawler renders the React page.
+	s := "User-agent: *\nDisallow: /api/\nAllow: /api/v1/public/\nAllow: /api/v1/media/\nDisallow: /admin\nDisallow: /merchant\n\n"
 	for _, ua := range deniedAgents {
 		s += "User-agent: " + ua + "\nDisallow: /\n\n"
 	}

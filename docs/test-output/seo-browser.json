@@ -1,0 +1,61 @@
+{
+  "checks": [
+    {
+      "width": 390,
+      "javaScript": false,
+      "companyAndProductBody": true,
+      "crossLinks": true,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "javaScript": false,
+      "companyAndProductBody": true,
+      "crossLinks": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "javaScript": true,
+      "rootReplaced": true,
+      "navigation": true,
+      "canonical": true,
+      "paginatedNoindex": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "javaScript": true,
+      "rootReplaced": true,
+      "navigation": true,
+      "canonical": true,
+      "paginatedNoindex": true,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "javaScript": true,
+      "rootReplaced": true,
+      "navigation": true,
+      "canonical": true,
+      "paginatedNoindex": true,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "javaScript": true,
+      "rootReplaced": true,
+      "navigation": true,
+      "canonical": true,
+      "paginatedNoindex": true,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "isolatedDatabase": true,
+  "physicalDeviceVerified": false
+}

@@ -1,0 +1,21 @@
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 3710 modules transformed.
+rendering chunks...
+computing gzip size...
+../.local/watermark-dist/index.html                                     0.60 kB │ gzip:   0.44 kB
+../.local/watermark-dist/assets/pdf-worker-PC57fB-y.js              1,524.21 kB
+../.local/watermark-dist/assets/index-D1Kpv1Ju.css                    221.38 kB │ gzip:  39.95 kB
+../.local/watermark-dist/assets/industry-map-chart-DwNL8JzS.js          8.01 kB │ gzip:   3.32 kB
+../.local/watermark-dist/assets/industry-map-schematic-C1tGX6tI.js     50.59 kB │ gzip:  17.93 kB
+../.local/watermark-dist/assets/industry-map-outline-Bty3R9Ra.js       81.27 kB │ gzip:  28.14 kB
+../.local/watermark-dist/assets/index-BANB8cfU.js                     259.68 kB │ gzip:  95.86 kB
+../.local/watermark-dist/assets/installSVGRenderer-DqorZC_8.js        431.37 kB │ gzip: 148.59 kB
+../.local/watermark-dist/assets/pdf-CL8ynlU4.js                       495.58 kB │ gzip: 151.29 kB
+../.local/watermark-dist/assets/index-BA8th8uX.js                     796.30 kB │ gzip: 253.11 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 26.94s

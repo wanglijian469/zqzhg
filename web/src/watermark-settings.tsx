@@ -1,0 +1,32 @@
+import {useEffect,useRef,useState} from 'react';
+import {api,APIError,token} from './api';
+import {apiURL,type ImageWatermarkConfig} from './runtime-config';
+import {useLanguage} from './main';
+import './watermark-settings.css';
+type Vendor={id:number;name:string;short_name:string};
+export function WatermarkSettings({value,onChange,disabled}:{value?:ImageWatermarkConfig;onChange:(next:ImageWatermarkConfig)=>void;disabled:boolean}){
+ const {lang}=useLanguage(),zh=lang==='zh';const text=(z:string,e:string)=>zh?z:e;
+ const [query,setQuery]=useState(''),[vendors,setVendors]=useState<Vendor[]>([]),[selected,setSelected]=useState<Vendor>(),[vendorID,setVendorID]=useState(0),[urls,setUrls]=useState<string[]>([]),[error,setError]=useState(''),[searchError,setSearchError]=useState(false),[loading,setLoading]=useState(false);const sequence=useRef(0);
+ useEffect(()=>{if(!value)return;let active=true;const ctrl=new AbortController();const timer=setTimeout(()=>{api<{items:Vendor[]}>('/admin/settings/watermark/vendors?q='+encodeURIComponent(query),{signal:ctrl.signal},'admin').then(r=>{if(active){setVendors(r.items);setSearchError(false)}}).catch(()=>{if(active)setSearchError(true)})},250);return()=>{active=false;clearTimeout(timer);ctrl.abort()}},[query,!!value]);
+ useEffect(()=>{if(!value)return;const n=++sequence.current,ctrl=new AbortController();const objectURLs:string[]=[];let active=true;
+  if(!value.text.trim() || Array.from(value.text).length>20 || /[\r\n\t]/.test(value.text) || value.opacity<5 || value.opacity>40 || value.width_percent<10 || value.width_percent>30){setError(text('请检查水印文字、透明度和大小范围。','Check the text, opacity and size ranges.'));return}
+  const timer=setTimeout(()=>{setLoading(true);setError('');Promise.all([false,true].map(async dark=>{const r=await fetch(apiURL('/admin/settings/watermark/preview'),{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token('admin')},body:JSON.stringify({watermark:value,vendor_id:vendorID,dark}),signal:ctrl.signal});if(!r.ok){if(r.status===401)window.dispatchEvent(new Event('zqzt.admin.expired'));const v=await r.json().catch(()=>({}));throw new APIError(v.error?.code||'network_error')}const blob=await r.blob();const url=URL.createObjectURL(blob);objectURLs.push(url);return url})).then(next=>{if(active&&sequence.current===n)setUrls(next)}).catch(e=>{if(active)setError((e as Error).name==='AbortError'?'':text('预览失败，请检查设置或重新选择厂商。','Preview failed. Check the settings or select a manufacturer again.'))}).finally(()=>{if(active)setLoading(false)})},400);
+  return()=>{active=false;clearTimeout(timer);ctrl.abort();objectURLs.forEach(URL.revokeObjectURL)};
+ },[value?.enabled,value?.text,value?.opacity,value?.width_percent,value?.position,vendorID,lang]);
+ if(!value)return <p className="admin-notice">{text('配套服务升级后可设置图片水印。','Upgrade the companion service to configure image watermarks.')}</p>;
+ const update=<K extends keyof ImageWatermarkConfig>(key:K,v:ImageWatermarkConfig[K])=>onChange({...value,[key]:v});
+ const options=selected&&!vendors.some(v=>v.id===selected.id)?[selected,...vendors]:vendors;
+ return <div className="watermark-settings"><h2>{text('图片轻水印','Subtle image watermark')}</h2><p className="admin-notice">{text('单行显示“平台文字 · 厂商简称”。未填简称时暂用企业名称。仅处理之后新上传的展示图，修改设置不会重做已有图片。','One line: platform text · manufacturer short name. The company name is used when the short name is missing. Changes apply only to future uploads.')}</p>
+ <fieldset disabled={disabled}><div className="watermark-grid">
+ <label className="watermark-switch"><input type="checkbox" checked={value.enabled} onChange={e=>update('enabled',e.target.checked)}/>{text('开启图片水印','Enable image watermark')}</label>
+ <label>{text('平台文字','Platform text')}<input value={value.text} maxLength={20} onChange={e=>update('text',e.target.value)}/><small>{text('默认“中企展馆”，厂商名称由服务端自动追加。','Default: 中企展馆. The server adds the manufacturer name.')}</small></label>
+ <label>{text('不透明度 (%)','Opacity (%)')}<input type="number" min={5} max={40} step={1} value={value.opacity} onChange={e=>update('opacity',Number(e.target.value))}/><small>{text('默认15%，数值越小越淡。','Default 15%; lower values are subtler.')}</small></label>
+ <label>{text('图片宽度占比 (%)','Width relative to image (%)')}<input type="number" min={10} max={30} step={1} value={value.width_percent} onChange={e=>update('width_percent',Number(e.target.value))}/></label>
+ <label>{text('水印位置','Position')}<select value={value.position} onChange={e=>update('position',e.target.value as ImageWatermarkConfig['position'])}>{[['bottom_right','右下角','Bottom right'],['bottom_left','左下角','Bottom left'],['top_right','右上角','Top right'],['top_left','左上角','Top left']].map(([id,z,en])=><option key={id} value={id}>{text(z,en)}</option>)}</select></label>
+ </div></fieldset><h3>{text('效果预览','Preview')}</h3><div className="watermark-grid watermark-vendor-search"><label>{text('搜索预览厂商','Find a manufacturer')}<input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder={text('企业名称或简称','Company name or short name')}/></label><label>{text('预览厂商','Preview manufacturer')}<select value={vendorID} onChange={e=>{const id=Number(e.target.value);setVendorID(id);setSelected(options.find(v=>v.id===id))}}><option value={0}>{text('示例农机厂','Sample manufacturer')}</option>{options.map(v=><option key={v.id} value={v.id}>{v.short_name||v.name}</option>)}</select></label></div>
+ {selected&&<p className="muted">{text('实际名称：','Name: ')}{selected.name}{!selected.short_name&&' · '+text('未填写简称，暂用企业名称','No short name; company name used')}</p>}
+ {searchError&&<p role="alert">{text('厂商列表暂时无法读取，请重新搜索。','Manufacturer lookup failed. Search again to retry.')}</p>}
+ {error&&<p className="notice error" role="alert">{error}</p>}
+ <div className="watermark-previews" aria-busy={loading}>{[false,true].map((dark,i)=><figure key={i}><figcaption>{text(dark?'深色背景':'浅色背景',dark?'Dark background':'Light background')}</figcaption>{urls[i]?<img src={urls[i]} alt={text(dark?'深色背景水印预览':'浅色背景水印预览',dark?'Watermark on dark background':'Watermark on light background')}/>:<div className="watermark-preview-placeholder">{text('正在生成预览…','Generating preview…')}</div>}</figure>)}</div>
+ <p className="muted" role="status">{loading?text('正在更新预览…','Updating preview…'):text('预览不会保存设置，请点击下方“保存”后生效。Logo、证照、横幅及分类图不加水印。','Preview does not save changes. Save below to apply. Logos, certificates, banners and category images are excluded.')}</p></div>;
+}

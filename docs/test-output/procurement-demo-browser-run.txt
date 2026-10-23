@@ -1,0 +1,1 @@
+{"checks":["Three real dynamic-code UI logins; direct quote/revision; buyer comparison; intent contact release; private supplier quotes/conversations; legacy route query/hash preservation","24 bilingual layouts across 360/390/768/1440, supplier subscriptions remain in procurement, normal logout for account switching"],"layouts":25,"errors":[]}

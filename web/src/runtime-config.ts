@@ -1,5 +1,6 @@
 import {useSyncExternalStore} from 'react';
-export interface RuntimeConfig{version:number;site:{name:string;name_en:string;web_url:string;api_url:string;media_url:string};uploads:{image_mib:number;video_mib:number;pdf_mib:number;default_quota_bytes:number}}
+export interface ImageWatermarkConfig{enabled:boolean;text:string;opacity:number;width_percent:number;position:'top_left'|'top_right'|'bottom_left'|'bottom_right'}
+export interface RuntimeConfig{demo_accounts?:{label:string;phone:string}[];capabilities?:{procurement?:boolean;phone_sms_auth?:boolean;development_sms?:boolean;procurement_demo?:boolean};watermark?:ImageWatermarkConfig;version:number;site:{name:string;name_en:string;web_url:string;api_url:string;media_url:string};uploads:{image_mib:number;video_mib:number;pdf_mib:number;default_quota_bytes:number}}
 const initial:RuntimeConfig={version:0,site:{name:'',name_en:'',web_url:'',api_url:'',media_url:''},uploads:{image_mib:10,video_mib:200,pdf_mib:50,default_quota_bytes:2*1024**3}};
 let current=initial,pending:Promise<RuntimeConfig>|undefined;const listeners=new Set<()=>void>();
 export function runtimeConfig(){return current}

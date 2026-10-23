@@ -47,7 +47,7 @@ it('creates and immediately selects top-level business and product categories wi
  await user.click(screen.getByRole('link',{name:'产品管理'}));if(screen.queryByRole('dialog'))await user.click(within(screen.getByRole('dialog')).getByRole('button',{name:'离开页面'}));await user.click(await screen.findByRole('link',{name:'添加产品'}));await user.click(screen.getByRole('button',{name:'新增产品分类'}));dialog=screen.getByRole('dialog');
  expect((within(dialog).getByRole('combobox',{name:'上级分类'}) as HTMLSelectElement).value).toBe('0');await user.type(within(dialog).getByRole('textbox',{name:'中文分类名称'}),'动力传动');await user.click(within(dialog).getByRole('button',{name:'保存并选中'}));
  await waitFor(()=>expect(screen.queryByRole('dialog')).toBeNull());expect(pending[1].parent_id).toBe(0);expect((screen.getByRole('combobox',{name:'产品分类'}) as HTMLSelectElement).value).toBe('71');
- await user.click(screen.getByRole('button',{name:'English'}));await user.click(screen.getByRole('button',{name:'Add product category'}));expect(screen.getByRole('option',{name:'Top-level (level 1) category'})).toBeTruthy();
+ await user.click(screen.getByRole('button',{name:'Switch to English'}));await user.click(screen.getByRole('button',{name:'Add product category'}));expect(screen.getByRole('option',{name:'Top-level (level 1) category'})).toBeTruthy();
 });
 
 it('keeps workspace material when a new category dialog is cancelled',async()=>{const user=userEvent.setup();signed();mount('/merchant/booth/edit');const name=await screen.findByRole('textbox',{name:'企业 / 工厂名称'});await user.clear(name);await user.type(name,'保留填写的企业');await user.click(document.querySelector('.company-more-basics>summary')!);await user.selectOptions(screen.getByRole('combobox',{name:'主营分类'}),'2');await user.click(screen.getByRole('button',{name:'新增经营分类'}));await user.click(within(screen.getByRole('dialog')).getByRole('button',{name:'取消'}));expect((name as HTMLInputElement).value).toBe('保留填写的企业');expect((screen.getByRole('combobox',{name:'主营分类'}) as HTMLSelectElement).value).toBe('2');expect(fetchMock.mock.calls.some(([url,opts])=>url.includes('/merchant/contents')&&opts?.method==='POST')).toBe(false)});
@@ -72,6 +72,6 @@ it('reuses an existing suggestion and its official parent without creating dupli
 
 it('disables pending product category creation and provides contextual English labels',async()=>{
  const user=userEvent.setup();signed();productStatus='pending';mount('/join?tab=productManage');await user.click(await screen.findByRole('link',{name:'编辑'}));
- expect((screen.getByRole('button',{name:'新增产品分类'}) as HTMLButtonElement).disabled).toBe(true);await user.click(screen.getByRole('button',{name:'English'}));
+ expect((screen.getByRole('button',{name:'新增产品分类'}) as HTMLButtonElement).disabled).toBe(true);await user.click(screen.getByRole('button',{name:'Switch to English'}));
  expect(screen.getByRole('combobox',{name:'Product category'})).toBeTruthy();expect((screen.getByRole('button',{name:'Add product category'}) as HTMLButtonElement).disabled).toBe(true);expect(screen.queryByRole('dialog')).toBeNull();
 });

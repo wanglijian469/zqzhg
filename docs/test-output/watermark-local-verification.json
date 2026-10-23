@@ -1,0 +1,205 @@
+{
+  "layouts": [
+    {
+      "path": "/merchant/login",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/join",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/browse",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/browse/products",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/merchant/login",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/join",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/browse",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/browse/products",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/merchant/login",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/join",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/browse",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/browse/products",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/merchant/login",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/join",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/browse",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/browse/products",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/merchant/login",
+      "width": 768,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/join",
+      "width": 768,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/browse",
+      "width": 768,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/browse/products",
+      "width": 768,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/merchant/login",
+      "width": 768,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/join",
+      "width": 768,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/browse",
+      "width": 768,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/browse/products",
+      "width": 768,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/merchant/login",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/join",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/browse",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/browse/products",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "path": "/merchant/login",
+      "width": 1440,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/join",
+      "width": 1440,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/browse",
+      "width": 1440,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "path": "/browse/products",
+      "width": 1440,
+      "lang": "en",
+      "overflow": false
+    }
+  ],
+  "checks": [
+    "Website outline map retained",
+    "Watermark defaults and phone authentication capabilities advertised",
+    "Compact taxonomy retained"
+  ],
+  "errors": [],
+  "outlinePaths": 63,
+  "readOnly": true,
+  "verifiedAt": "2026-10-22T03:57:22.488Z"
+}

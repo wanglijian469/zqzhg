@@ -1,0 +1,46 @@
+/* Shared workspace presentation; public navigation and admin remain independent. */
+.merchant-workspace{--workspace-sidebar:236px;--workspace-blue:#1769c2;--workspace-border:#e3eaf3;background:#f5f7fa;color:#182d46}
+.merchant-workspace.is-collapsed{--workspace-sidebar:76px}
+.merchant-workspace .workspace-sidebar nav{position:static;inset:auto;display:grid;align-items:stretch;gap:6px;padding:8px 14px;background:transparent;border:0}
+.merchant-workspace .workspace-sidebar nav>a{min-height:48px;box-sizing:border-box;padding:12px 14px;line-height:1.5;border-radius:9px;font-size:14px;text-decoration:none}
+.merchant-workspace .workspace-sidebar nav>a::after,.merchant-workspace .workspace-sidebar nav>a::before{display:none}
+.merchant-workspace .workspace-sidebar nav>a.active{background:var(--workspace-blue);color:white;box-shadow:0 4px 12px #00000012}
+.merchant-workspace .workspace-sidebar nav>a:hover:not(.active){background:#153858;color:#fff}
+.merchant-workspace :is(a,button,input,select,textarea,summary):focus-visible{outline:3px solid #79b6fa;outline-offset:3px}
+.merchant-workspace .workspace-brand small,.merchant-workspace .workspace-topbar-title small{display:block}
+.merchant-workspace .workspace-topbar{height:72px;min-height:72px;box-sizing:border-box;gap:16px;padding:12px 28px}
+.merchant-workspace .workspace-topbar-title{flex:1;min-width:0;max-width:none}
+.merchant-workspace .workspace-topbar-title strong{display:block;font-size:15px;line-height:1.4}
+.merchant-workspace .workspace-topbar-title small{font-size:12px;line-height:1.5;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.merchant-workspace .workspace-topbar-actions{gap:16px}
+.merchant-workspace .workspace-topbar-actions>a,.merchant-workspace .workspace-topbar-actions>button{min-height:44px;font-size:13px;width:auto;white-space:nowrap}
+.merchant-workspace .workspace-content{padding:28px;max-width:1560px;min-width:0;box-sizing:border-box}
+.merchant-workspace :is(.workspace-panel,.proc-card){border:1px solid var(--workspace-border);border-radius:12px;box-shadow:0 4px 18px #122d4804;padding:24px;margin:0 0 24px}
+.merchant-workspace .proc-auth{max-width:560px;margin-inline:auto}
+.merchant-workspace :is(.workspace-page-heading h1,.proc-card h1,.proc-title h1,.workspace-content>section>h1){font-size:26px;line-height:1.4;margin:0 0 18px}
+.merchant-workspace .workspace-page-heading h1,.merchant-workspace .proc-title h1{margin-bottom:0}
+.merchant-workspace .proc-title,.merchant-workspace .workspace-page-heading{margin-bottom:20px}
+.merchant-workspace .proc-title h2{margin-bottom:0}
+.merchant-workspace .workspace-content :is(input:not([type=checkbox]):not([type=radio]):not([type=file]),select:not([multiple])){height:44px;min-height:44px;box-sizing:border-box}
+.merchant-workspace .workspace-content .button{min-height:44px;box-sizing:border-box;line-height:1.5;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.merchant-workspace .proc-module>.proc-nav{position:static;inset:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:0;margin:0 0 24px;border:0;background:transparent}
+.merchant-workspace .proc-module>.proc-nav>a{position:static;display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box;padding:10px 16px;border:1px solid #dce5f1;border-radius:8px;background:white;line-height:1.5;text-decoration:none;font-size:14px}
+.merchant-workspace .proc-module>.proc-nav>a.active{background:#eaf3ff;border-color:#abd0f7;color:#1769c2;font-weight:600}
+.merchant-workspace .proc-module>.proc-nav>a::after,.merchant-workspace .proc-module>.proc-nav>a::before{display:none;content:none}
+.merchant-workspace .workspace-content .proc-filter{display:flex;flex-direction:column;gap:8px;margin:0 0 20px;font-size:14px;font-weight:600}
+.merchant-workspace .proc-request-list{display:grid;gap:16px}
+.merchant-workspace .proc-request-list>.proc-card{margin-bottom:0}
+.merchant-workspace .proc-request-list+.notice{margin-top:20px}
+.merchant-workspace .proc-hall-filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:start;gap:16px 20px;margin-top:20px}
+.merchant-workspace .proc-hall-filters>label{margin:0;font-size:14px}
+.merchant-workspace .proc-hall-filters>.proc-region{grid-column:span 3;margin:0;min-width:0}
+.merchant-workspace .proc-hall-filters .proc-region .proc-grid{gap:12px}
+.merchant-workspace .proc-hall-filters .proc-region label{margin:8px 0 0}
+.merchant-workspace .proc-filter-actions{display:flex;gap:10px;align-self:end;justify-content:flex-end;flex-wrap:wrap}
+.merchant-workspace .proc-filter-actions>.button{height:44px;flex:1 1 76px;align-self:end;padding:10px 16px}
+.merchant-workspace .workspace-empty,.merchant-workspace .proc-empty{padding:32px 20px;border:1px dashed #d9e4f0;border-radius:10px;background:#fafcff;color:#6b7f97}
+.merchant-workspace.is-collapsed .workspace-sidebar nav{padding-inline:10px}
+.merchant-workspace.is-collapsed .workspace-sidebar nav>a{justify-content:center;padding-inline:12px}
+@media(max-width:1199px){.merchant-workspace .proc-hall-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.merchant-workspace .proc-hall-filters>.proc-region{grid-column:1/-1}.merchant-workspace .proc-filter-actions{grid-column:1/-1}.merchant-workspace .proc-filter-actions>.button{flex:0 1 auto;min-width:88px}}
+@media(max-width:900px){.merchant-workspace,.merchant-workspace.is-collapsed{--workspace-sidebar:236px}.merchant-workspace .workspace-topbar{height:64px;min-height:64px;padding:10px 16px;gap:10px}.merchant-workspace .workspace-menu,.merchant-workspace .workspace-drawer-close{min-width:44px;min-height:44px}.merchant-workspace .workspace-topbar-actions{gap:10px}.merchant-workspace .workspace-topbar-actions>a{display:flex}.merchant-workspace .workspace-topbar-actions>a span{display:none}.merchant-workspace .workspace-topbar-actions>button{font-size:12px}.merchant-workspace .workspace-content{padding:24px 20px}.merchant-workspace.is-collapsed .workspace-sidebar nav>a{justify-content:flex-start}.merchant-workspace .workspace-sidebar{overflow-y:auto}.merchant-workspace .workspace-brand{min-height:88px;padding-block:22px}}
+@media(max-width:600px){.merchant-workspace .workspace-content{padding:20px 12px 40px}.merchant-workspace :is(.workspace-panel,.proc-card){padding:20px 16px;margin-bottom:20px}.merchant-workspace :is(.workspace-page-heading h1,.proc-card h1,.proc-title h1,.workspace-content>section>h1){font-size:23px}.merchant-workspace .workspace-topbar{padding-inline:12px}.merchant-workspace .workspace-topbar-title strong{font-size:13px}.merchant-workspace .workspace-topbar-title small{font-size:11px}.merchant-workspace .workspace-topbar-actions{gap:8px}.merchant-workspace .proc-hall-filters{grid-template-columns:1fr;gap:16px}.merchant-workspace .proc-hall-filters>.proc-region{grid-column:auto}.merchant-workspace .proc-filter-actions{grid-column:auto}.merchant-workspace .proc-filter-actions>.button{flex:1}.merchant-workspace .proc-module>.proc-nav{gap:6px;margin-bottom:20px}.merchant-workspace .proc-module>.proc-nav>a{font-size:13px;padding:10px 12px}}

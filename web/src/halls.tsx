@@ -1,6 +1,6 @@
 import {runtimeConfig} from './runtime-config';
 import {mediaURL} from './runtime-config';
-import {canonicalPublicURL,filteredSearch} from './seo';
+import {canonicalPublicURL,filteredSearch,showroomSearchVariant} from './seo';
 import {HomeVisual} from './home-display';
 import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from 'react';
 import {Link,useLocation,useNavigate} from 'react-router-dom';
@@ -38,7 +38,7 @@ export function usePageMetadata(title:string,description:string,canonical?:strin
  const location=useLocation();const {hall}=useHall();
  useEffect(()=>{if(!title)return;const base=runtimeConfig().site.web_url||document.querySelector<HTMLMetaElement>('meta[name="zqzg-public-base"]')?.content||window.location.origin;
  const url=canonicalPublicURL(location.pathname,location.search,base,canonical);
- const robots=unavailable||!hall||hall.status==='preparing'||filteredSearch(location.search)||/^\/(admin|merchant|join)(\/|$)/.test(location.pathname)?'noindex,follow':'index,follow';
+ const robots=unavailable||!hall||hall.status==='preparing'||filteredSearch(location.search)||showroomSearchVariant(location.pathname,location.search)||/^\/(admin|merchant|join|buyer|procurement)(\/|$)/.test(location.pathname)?'noindex,follow':'index,follow';
  document.title=title;const meta=(key:string,value:string,property=false)=>{const selector=property?'property':'name';let node=document.querySelector<HTMLMetaElement>('meta['+selector+'="'+key+'"]');if(!node){node=document.createElement('meta');node.setAttribute(selector,key);document.head.append(node)}node.content=value;document.querySelectorAll('meta['+selector+'="'+key+'"]').forEach(other=>{if(other!==node)other.remove()})};
  meta('description',description);meta('robots',robots);meta('og:title',title,true);meta('og:description',description,true);meta('og:url',url,true);
  if(imageID)meta('og:image',new URL(mediaURL(imageID),base).href,true);else document.querySelectorAll('meta[property="og:image"]').forEach(n=>n.remove());

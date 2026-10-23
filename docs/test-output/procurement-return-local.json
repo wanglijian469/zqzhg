@@ -1,0 +1,13 @@
+{
+  "demo_reset": false,
+  "demo_loopback": true,
+  "main_status": 200,
+  "demo_accounts": 3,
+  "main_public_data_unchanged": true,
+  "demo_public_data_unchanged": true,
+  "main_demo_disabled": true,
+  "demo_health": "ok",
+  "main_health": "ok",
+  "asset_tags_match": true,
+  "demo_status": 200
+}

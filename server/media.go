@@ -72,6 +72,11 @@ func (a *App) upload(c *gin.Context) {
 		fail(c, 400, "invalid_image")
 		return
 	}
+	purpose, err := uploadImagePurpose(c)
+	if err != nil {
+		dbFail(c, err)
+		return
+	}
 	f, e := file.Open()
 	if e != nil {
 		fail(c, 400, "invalid_image")
@@ -169,6 +174,9 @@ func (a *App) upload(c *gin.Context) {
 		if e := tx.Create(&media).Error; e != nil {
 			return e
 		}
+		if e := stampWatermarkSnapshot(tx, media, purpose); e != nil {
+			return e
+		}
 		if _, ok := c.Get("upload_category_media"); ok {
 			return recordOperation(tx, actor(c).ID, "media", media.ID, "category_image_uploaded", "")
 		}
@@ -229,6 +237,18 @@ func (a *App) mediaRead(c *gin.Context) {
 		}
 	}
 	if count == 0 {
+		alias, err := a.publicWatermarkAlias(media.ID)
+		if err != nil {
+			dbFail(c, err)
+			return
+		}
+		if alias.ID > 0 {
+			media = alias
+			mediaID = alias.ID
+			count = 1
+		}
+	}
+	if count == 0 {
 		account, e := a.readAccount(c)
 		var cats []Category
 		if err := a.DB.Where("image_media_id=? AND deleted_at IS NULL", mediaID).Find(&cats).Error; err != nil {
@@ -254,6 +274,17 @@ func (a *App) mediaRead(c *gin.Context) {
 	if a.DB.First(&meta, "media_id=?", mediaID).Error == nil && meta.State != "ready" {
 		fail(c, 404, "media_not_ready")
 		return
+	}
+	if count > 0 {
+		blocked, err := a.watermarkSourceIsPublicDisplay(media.ID)
+		if err != nil {
+			dbFail(c, err)
+			return
+		}
+		if blocked {
+			fail(c, 404, "watermark_not_ready")
+			return
+		}
 	}
 	path := media.Path
 	if c.Query("thumb") == "1" {

@@ -124,6 +124,13 @@ func selectableCategory(tx *gorm.DB, id uint64, kind string, hall uint64, owner 
 	return true
 }
 func validateTaxonomy(tx *gorm.DB, content Content, p *Payload) error {
+	if p.CompanyProfile != nil {
+		for _, category := range p.CompanyProfile.SupplyProductCategoryIDs {
+			if !selectableCategory(tx, canonicalCategory(tx, category), "product", content.HallID, 0, false) {
+				return fieldFailure("invalid_category", "company_profile.supply_product_category_ids", "category_unavailable")
+			}
+		}
+	}
 	if content.HallID != 1 {
 		return nil
 	}

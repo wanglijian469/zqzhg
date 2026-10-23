@@ -1,0 +1,1 @@
+go build: PASS; local verification binary .tools/bin/zqzt-procurement.exe

@@ -46,7 +46,7 @@ func (a *App) adminCreateVendor(c *gin.Context) {
 	var account Account
 	var content Content
 	var password string
-	e := a.DB.Transaction(func(tx *gorm.DB) error {
+	e := a.watermarkTransaction(func(tx *gorm.DB) error {
 		if req.AccountID != 0 {
 			if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("id=? AND role='merchant'", req.AccountID).First(&account).Error; e != nil {
 				return e
@@ -95,7 +95,7 @@ func (a *App) adminCreateVendor(c *gin.Context) {
 		if e := tx.Create(&content).Error; e != nil {
 			return e
 		}
-		if e := makeDraft(tx, &content, req.Data); e != nil {
+		if e := a.makeDraft(tx, &content, req.Data); e != nil {
 			return e
 		}
 		if e := recordOperation(tx, actor(c).ID, "account", account.ID, func() string {
@@ -131,7 +131,7 @@ func (a *App) adminCreateProduct(c *gin.Context) {
 		return
 	}
 	var content Content
-	e := a.DB.Transaction(func(tx *gorm.DB) error {
+	e := a.watermarkTransaction(func(tx *gorm.DB) error {
 		vendor, e := loadOwned(tx, id(c), actor(c), true)
 		if e != nil {
 			return e
@@ -150,7 +150,7 @@ func (a *App) adminCreateProduct(c *gin.Context) {
 		if e = tx.Create(&content).Error; e != nil {
 			return e
 		}
-		if e = makeDraft(tx, &content, req.Data); e != nil {
+		if e = a.makeDraft(tx, &content, req.Data); e != nil {
 			return e
 		}
 		return recordOperation(tx, actor(c).ID, "product", content.ID, "content_created", "")

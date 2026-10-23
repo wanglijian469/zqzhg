@@ -1,0 +1,264 @@
+{
+  "checks": [
+    "Existing account buyer registration, product inquiry, private attachment upload/download/preview, direct delivery, online quote, shortlist contact release, isolated two-way messages, reviewed expansion of the same project, independent second supplier quote and safe public summary",
+    "Merged guest/signed-in entry, six ordered workspace menus, private-role supplier routing, active detail navigation, independent desktop collapse, mobile drawer overlay/Escape/focus trap/navigation closing, bilingual responsive layouts",
+    "Closing disables new supplier quotes and messages while preserving quotation history"
+  ],
+  "layouts": [
+    {
+      "label": "guest-center",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "mobile-drawer",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "mobile-drawer",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "mobile-drawer",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "mobile-drawer",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "mobile-drawer",
+      "width": 768,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 768,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 768,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 768,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 768,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "mobile-drawer",
+      "width": 768,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 768,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 768,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 768,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 768,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "desktop-collapsed",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "desktop-collapsed",
+      "width": 1440,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 1440,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 1440,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 1440,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 1440,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "admin-statistics",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "isolatedDatabase": true,
+  "physicalDeviceVerified": false
+}

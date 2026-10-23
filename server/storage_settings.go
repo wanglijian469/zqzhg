@@ -196,6 +196,15 @@ func (a *App) syncOwnerInventory(tx *gorm.DB, owner uint64) error {
 		seen[m.Path] = true
 		seen[m.ThumbPath] = true
 	}
+	if tx.Migrator().HasTable(&ProcurementAttachment{}) {
+		var attachments []ProcurementAttachment
+		if e := tx.Where("owner_id=?", owner).Find(&attachments).Error; e != nil {
+			return e
+		}
+		for _, attachment := range attachments {
+			seen[attachment.ObjectKey] = true
+		}
+	}
 	for _, m := range metas {
 		seen[m.SourcePath] = true
 		if m.Kind == "video" && m.SourcePath == "" {
@@ -288,7 +297,7 @@ func (a *App) reserveUpload(owner uint64, bytes int64) (*UploadLease, error) {
 		if e != nil {
 			return e
 		}
-		if acc.Role == "merchant" && used+reserved+bytes > limit {
+		if phoneAccount(acc) && used+reserved+bytes > limit {
 			return errors.New("storage_quota_exceeded")
 		}
 		return tx.Create(&MediaUploadReservation{ID: lease.ID, OwnerID: owner, Bytes: bytes, ExpiresAt: time.Now().UTC().Add(2 * time.Hour)}).Error
@@ -337,7 +346,7 @@ func (l *UploadLease) Commit(keys ...string) error {
 		if e != nil {
 			return e
 		}
-		if account.Role == "merchant" && used+reserved+extra > limit {
+		if phoneAccount(account) && used+reserved+extra > limit {
 			return errors.New("storage_quota_exceeded")
 		}
 		for _, obj := range objects {
@@ -549,6 +558,15 @@ func (a *App) deleteUnusedMedia(c *gin.Context) {
 		fail(c, 404, "not_found")
 		return
 	}
+	var dependents int64
+	if e := a.DB.Model(&MediaWatermark{}).Where("source_media_id=?", media.ID).Count(&dependents).Error; e != nil {
+		dbFail(c, e)
+		return
+	}
+	if dependents > 0 {
+		fail(c, 409, "media_in_use")
+		return
+	}
 	var refs int64
 	for _, table := range []string{"media_references", "resource_media_references", "home_display_media"} {
 		var n int64
@@ -620,6 +638,7 @@ func (a *App) deleteUnusedMedia(c *gin.Context) {
 		a.DB.Where("object_key=?", key).Delete(&MediaObjectOwner{})
 		a.DB.Where("object_key=?", key).Delete(&StoredObjectReplica{})
 	}
+	a.DB.Where("media_id=?", media.ID).Delete(&MediaWatermark{})
 	a.DB.Where("media_id=?", media.ID).Delete(&MediaMetadata{})
 	a.DB.Delete(&media)
 	a.audit(actor(c).ID, "media", media.ID, "unused_media_deleted")

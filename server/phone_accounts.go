@@ -113,7 +113,7 @@ func (a *App) sendPhoneVerification(c *gin.Context, binding bool) {
 		dbFail(c, fieldFailure("invalid_phone", "phone", "invalid"))
 		return
 	}
-	if req.Purpose != "register" && req.Purpose != "setup_password" && !(binding && req.Purpose == "bind") {
+	if req.Purpose != "register" && req.Purpose != "setup_password" && req.Purpose != "login" && !(binding && req.Purpose == "bind") {
 		fail(c, 400, "invalid_request")
 		return
 	}

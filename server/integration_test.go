@@ -222,8 +222,10 @@ func TestBusinessAndMediaIsolation(t *testing.T) {
 		t.Fatal(e)
 	}
 	defer archive.Close()
-	if len(archive.File) != 6 {
-		t.Fatalf("expected 3 originals and 3 thumbnails, got %d", len(archive.File))
+	var watermarkVariants int64
+	db.Model(&MediaWatermark{}).Where("source_media_id>0").Count(&watermarkVariants)
+	if len(archive.File) != 6+int(watermarkVariants)*2 {
+		t.Fatalf("expected source images and independent watermark derivatives, got %d", len(archive.File))
 	}
 	for _, entry := range archive.File {
 		reader, e := entry.Open()
@@ -264,7 +266,7 @@ func TestBusinessAndMediaIsolation(t *testing.T) {
 			t.Fatal("restored media differs from the source")
 		}
 	}
-	for _, table := range []string{"contents", "revisions", "media", "media_references", "review_logs", "operation_logs"} {
+	for _, table := range []string{"contents", "revisions", "media", "media_references", "media_watermarks", "review_logs", "operation_logs"} {
 		var originalCount, restoredCount int64
 		db.Table(table).Count(&originalCount)
 		if e := db.Table(restoredName + "." + table).Count(&restoredCount).Error; e != nil {
@@ -287,5 +289,5 @@ func TestBusinessAndMediaIsolation(t *testing.T) {
 	restoredClient.call("GET", "/media/"+number(newMedia), "", nil, 404)
 	restoredClient.call("GET", "/media/"+number(newMedia), admin, nil, 200)
 	restoredClient.call("GET", "/admin/contents/"+vendorID, admin, nil, 200)
-	t.Log("Backup and restore verified: checksums, populated isolated database, 3 images and 3 thumbnails restored byte-for-byte, revision and audit counts, restored API and media permissions")
+	t.Log("Backup and restore verified: checksums, populated isolated database, sources, watermark derivatives and thumbnails restored byte-for-byte, revision and audit counts, restored API and media permissions")
 }

@@ -50,11 +50,11 @@ func dbFail(c *gin.Context, e error) {
 	switch code {
 	case "forbidden":
 		fail(c, 403, code)
-	case "storage_quota_exceeded", "disk_space_insufficient", "media_in_use", "pending_review", "stale_revision", "already_reviewed", "vendor_required", "product_limit_reached", "login_name_exists", "showroom_slug_exists", "showroom_slug_locked", "resource_limit_reached", "media_not_ready", "featured_limit_reached", "representative_limit_reached":
+	case "watermark_not_ready", "watermark_vendor_required", "storage_quota_exceeded", "disk_space_insufficient", "media_in_use", "pending_review", "stale_revision", "already_reviewed", "vendor_required", "product_limit_reached", "login_name_exists", "showroom_slug_exists", "showroom_slug_locked", "resource_limit_reached", "media_not_ready", "featured_limit_reached", "representative_limit_reached":
 		fail(c, 409, code)
 	case "storage_unavailable":
 		fail(c, 503, e.Error())
-	case "invalid_system_settings", "mixed_content_address", "address_probe_required", "storage_root_not_registered", "storage_mount_missing", "invalid_request", "invalid_media", "invalid_category", "invalid_region", "invalid_showroom_slug", "rejection_reason_required":
+	case "invalid_watermark", "invalid_system_settings", "mixed_content_address", "address_probe_required", "storage_root_not_registered", "storage_mount_missing", "invalid_request", "invalid_media", "invalid_category", "invalid_region", "invalid_showroom_slug", "rejection_reason_required":
 		fail(c, 400, code)
 	default:
 		fail(c, 500, "internal_error")
@@ -211,7 +211,7 @@ func (a *App) createContent(c *gin.Context) {
 	}
 	who := actor(c)
 	content := Content{Kind: req.Kind, OwnerID: who.ID, HallID: req.HallID}
-	e := a.DB.Transaction(func(tx *gorm.DB) error {
+	e := a.watermarkTransaction(func(tx *gorm.DB) error {
 		if e := a.validatePayload(tx, who, req.Kind, &req.Data); e != nil {
 			return e
 		}
@@ -240,7 +240,7 @@ func (a *App) createContent(c *gin.Context) {
 		if e := tx.Create(&content).Error; e != nil {
 			return e
 		}
-		return makeDraft(tx, &content, req.Data)
+		return a.makeDraft(tx, &content, req.Data)
 	})
 	if e != nil {
 		dbFail(c, e)
@@ -261,7 +261,7 @@ func (a *App) saveDraft(c *gin.Context) {
 	}
 	who := actor(c)
 	var content Content
-	e := a.DB.Transaction(func(tx *gorm.DB) error {
+	e := a.watermarkTransaction(func(tx *gorm.DB) error {
 		var e error
 		content, e = loadOwned(tx, id(c), who, true)
 		if e != nil {
@@ -314,7 +314,7 @@ func (a *App) saveDraft(c *gin.Context) {
 		if e = a.validatePayload(tx, Account{ID: content.OwnerID}, content.Kind, &req.Data, previousTaxonomy); e != nil {
 			return e
 		}
-		if e = makeDraft(tx, &content, req.Data); e != nil {
+		if e = a.makeDraft(tx, &content, req.Data); e != nil {
 			return e
 		}
 		if platformAccount(who) {
@@ -339,7 +339,7 @@ func (a *App) submit(c *gin.Context) {
 		return
 	}
 	who := actor(c)
-	e := a.DB.Transaction(func(tx *gorm.DB) error {
+	e := a.watermarkTransaction(func(tx *gorm.DB) error {
 		content, e := loadOwned(tx, id(c), who, true)
 		if e != nil {
 			return e
@@ -385,7 +385,7 @@ func (a *App) review(c *gin.Context) {
 		return
 	}
 	who := actor(c)
-	e := a.DB.Transaction(func(tx *gorm.DB) error {
+	e := a.watermarkTransaction(func(tx *gorm.DB) error {
 		var initial Revision
 		if e := tx.First(&initial, id(c)).Error; e != nil {
 			return e
@@ -443,7 +443,7 @@ func (a *App) review(c *gin.Context) {
 func (a *App) offline(admin bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		who := actor(c)
-		e := a.DB.Transaction(func(tx *gorm.DB) error {
+		e := a.watermarkTransaction(func(tx *gorm.DB) error {
 			content, e := loadOwned(tx, id(c), who, true)
 			if e != nil {
 				return e
@@ -614,7 +614,7 @@ func (a *App) featured(c *gin.Context) {
 		fail(c, 400, "invalid_request")
 		return
 	}
-	e := a.DB.Transaction(func(tx *gorm.DB) error {
+	e := a.watermarkTransaction(func(tx *gorm.DB) error {
 		var target Content
 		if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&target, id(c)).Error; e != nil {
 			return e

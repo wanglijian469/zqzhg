@@ -270,13 +270,14 @@ class AppModel extends ChangeNotifier {
     }
   }
 
-  Future<int> upload(String path) async {
+  Future<int> upload(String path, {String purpose = 'unknown'}) async {
     try {
       final req = http.MultipartRequest(
         'POST',
         Uri.parse('$baseUrl/api/v1/merchant/media'),
       );
       req.headers['Authorization'] = 'Bearer $token';
+      req.fields['purpose'] = purpose;
       req.files.add(await http.MultipartFile.fromPath('file', path));
       final response = await http.Response.fromStream(
         await req.send().timeout(const Duration(seconds: 60)),
@@ -1420,6 +1421,13 @@ class _EditorScreenState extends State<EditorScreen> {
       request.files.add(
         await http.MultipartFile.fromPath('file', photo['path']),
       );
+      request.fields['purpose'] = photo['slot'] == null
+          ? (widget.kind == 'product' ? 'product_image' : 'company_gallery')
+          : photo['slot'] == 'logo_media_id'
+          ? 'company_logo'
+          : photo['slot'] == 'cover_media_id'
+          ? 'company_cover'
+          : 'credential';
       photo.remove('error');
       http.Response response;
       try {
@@ -1655,8 +1663,15 @@ class _EditorScreenState extends State<EditorScreen> {
               : {'revision_id': current!['revision_id'], 'data': data},
         ),
       );
+      final normalized = credentialEditorData(asMap(saved['data']));
+      final previousIDs = (data['media_ids'] as List? ?? []).toList();
+      final nextIDs = normalized['media_ids'] as List? ?? [];
+      for (var i = 0; i < previousIDs.length && i < nextIDs.length; i++) {
+        final position = galleryOrder.indexOf('m:${previousIDs[i]}');
+        if (position >= 0) galleryOrder[position] = 'm:${nextIDs[i]}';
+      }
       current = saved;
-      data = credentialEditorData(asMap(saved['data']));
+      data = normalized;
       final oldKey = draftKey;
       draftKey = 'draft.${m.scope}.${saved['id']}';
       await persist();

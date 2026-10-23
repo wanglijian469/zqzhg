@@ -27,6 +27,7 @@ var migrations embed.FS
 
 type Config struct {
 	Env, Addr, MediaDir, WebDir, CORS, SMSProvider, PublicBaseURL string
+	ProcurementDemo                                               bool
 	MapPreviewEnabled                                             bool
 	MapPreviewDir                                                 string
 }
@@ -205,6 +206,13 @@ func seed(db *gorm.DB) error {
 func main() {
 	loadEnv()
 	cfg := Config{Env: env("APP_ENV", "development"), Addr: env("HTTP_ADDR", "0.0.0.0:8080"), MediaDir: env("MEDIA_DIR", "./data/media"), WebDir: env("WEB_DIR", "../web/dist"), CORS: env("CORS_ORIGIN", "http://localhost:5173"), SMSProvider: env("SMS_PROVIDER", "development"), PublicBaseURL: strings.TrimRight(env("PUBLIC_BASE_URL", ""), "/")}
+	cfg.ProcurementDemo = env("PROCUREMENT_DEMO", "false") == "true"
+	if len(os.Args) == 2 && (os.Args[1] == "seed-procurement-demo" || os.Args[1] == "reset-procurement-demo") && !cfg.ProcurementDemo {
+		log.Fatal("demo commands require explicit PROCUREMENT_DEMO=true before connecting to a database")
+	}
+	if e := validateProcurementDemo(cfg, env("DB_NAME", "zqzt_exhibition")); e != nil {
+		log.Fatal(e)
+	}
 	cfg.MapPreviewEnabled = env("MAP_PREVIEW_ENABLED", "false") == "true"
 	cfg.MapPreviewDir = env("MAP_PREVIEW_DIR", "../.local/map-preview")
 	if e := validateSMSMode(cfg.Env, cfg.SMSProvider); e != nil {
@@ -223,9 +231,21 @@ func main() {
 		log.Fatal(e)
 	}
 	cfg.MediaDir = target.MediaDir
+	if e := validateProcurementDemo(cfg, target.Database); e != nil {
+		log.Fatal(e)
+	}
 	db, e := openDB(target.Database)
 	if e != nil {
 		log.Fatal(e)
+	}
+	if len(os.Args) == 2 && os.Args[1] == "reset-procurement-demo" {
+		if !cfg.ProcurementDemo {
+			log.Fatal("demo mode required")
+		}
+		if e = db.Exec("DROP DATABASE `zqzt_procurement_demo`").Error; e != nil {
+			log.Fatal(e)
+		}
+		return
 	}
 	if e = migrate(db); e != nil {
 		log.Fatal(e)
@@ -237,6 +257,16 @@ func main() {
 		log.Fatal(e)
 	}
 	a := &App{DB: db, Config: cfg, SMS: DevelopmentSMS{}}
+	if len(os.Args) == 2 && os.Args[1] == "seed-procurement-demo" {
+		if !cfg.ProcurementDemo {
+			log.Fatal("demo mode required")
+		}
+		if e = a.seedProcurementDemo(); e != nil {
+			log.Fatal(e)
+		}
+		log.Print("Procurement demo initialized")
+		return
+	}
 	saved, settingsErr := a.systemConfig()
 	if settingsErr != nil {
 		log.Fatal("system settings invalid")
@@ -278,6 +308,7 @@ func main() {
 		log.Fatal("unknown SMS_PROVIDER")
 	}
 	a.startMediaWorker(context.Background())
+	a.startProcurementWorker(context.Background())
 	a.startOperations(context.Background())
 	srv := &http.Server{Addr: cfg.Addr, Handler: a.router(), ReadHeaderTimeout: 10 * time.Second, ReadTimeout: 15 * time.Minute, WriteTimeout: 15 * time.Minute, IdleTimeout: 60 * time.Second}
 	log.Printf("中企展馆 API listening on %s (%s)", cfg.Addr, cfg.Env)
@@ -298,7 +329,7 @@ func (a *App) router() *gin.Engine {
 		panic("Invalid TRUSTED_PROXIES: " + err.Error())
 	}
 	r.Use(func(c *gin.Context) {
-		if strings.HasPrefix(c.Request.URL.Path, "/api/") && !strings.HasSuffix(c.Request.URL.Path, "/media") && !strings.HasSuffix(c.Request.URL.Path, "/resource-media") && !(strings.HasPrefix(c.Request.URL.Path, "/api/v1/admin/backups/imports/") && strings.Contains(c.Request.URL.Path, "/chunks/")) {
+		if strings.HasPrefix(c.Request.URL.Path, "/api/") && !strings.HasSuffix(c.Request.URL.Path, "/media") && !strings.HasSuffix(c.Request.URL.Path, "/attachments") && !strings.HasSuffix(c.Request.URL.Path, "/resource-media") && !(strings.HasPrefix(c.Request.URL.Path, "/api/v1/admin/backups/imports/") && strings.Contains(c.Request.URL.Path, "/chunks/")) {
 			c.Request.Body = httpMaxBody(c, 1<<20)
 		}
 		c.Header("X-Content-Type-Options", "nosniff")
@@ -306,10 +337,13 @@ func (a *App) router() *gin.Engine {
 		if strings.HasPrefix(c.Request.URL.Path, "/api/") {
 			c.Header("Cache-Control", "no-store")
 		}
+		if strings.HasPrefix(c.Request.URL.Path, "/api/v1/procurement/") || strings.HasPrefix(c.Request.URL.Path, "/api/v1/admin/procurement/") {
+			c.Header("X-Robots-Tag", "noindex")
+		}
 		if a.allowedSiteOrigin(c.GetHeader("Origin")) {
 			c.Header("Access-Control-Allow-Origin", c.GetHeader("Origin"))
 			c.Header("Vary", "Origin")
-			c.Header("Access-Control-Allow-Headers", "Authorization, Content-Type, Range, If-Range")
+			c.Header("Access-Control-Allow-Headers", "Authorization, Content-Type, Range, If-Range, Idempotency-Key")
 			c.Header("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges, Retry-After")
 			c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		}
@@ -320,7 +354,12 @@ func (a *App) router() *gin.Engine {
 		c.Next()
 	})
 	r.Use(a.publicProtection())
-	r.GET("/robots.txt", func(c *gin.Context) { c.Data(200, "text/plain; charset=utf-8", []byte(robotsPolicy())) })
+	r.GET("/robots.txt", a.publicRobots)
+	r.HEAD("/robots.txt", a.publicRobots)
+	r.GET("/sitemap.xml", a.sitemapIndex)
+	r.HEAD("/sitemap.xml", a.sitemapIndex)
+	r.GET("/sitemaps/:file", a.sitemapPage)
+	r.HEAD("/sitemaps/:file", a.sitemapPage)
 	api := r.Group("/api/v1")
 	api.GET("/dev/map-preview/config", a.mapPreviewConfiguration)
 	api.GET("/dev/map-preview/regions", a.mapPreviewRegions)
@@ -337,6 +376,7 @@ func (a *App) router() *gin.Engine {
 	api.POST("/auth/phone", a.phoneLogin)
 	api.POST("/auth/phone/code", a.phoneCode)
 	api.POST("/auth/phone/register", a.phoneRegister)
+	api.POST("/auth/phone/login", a.phoneSMSLogin)
 	api.POST("/auth/phone/password", a.phonePasswordLogin)
 	api.POST("/auth/phone/password/setup", a.setupPhonePassword)
 	api.POST("/auth/merchant", a.merchantLogin)
@@ -398,6 +438,7 @@ func (a *App) router() *gin.Engine {
 	a.analyticsRoutes(pub, admin)
 	a.backupRoutes(admin)
 	a.backupDownloadRoutes(admin, api)
+	a.procurementRoutes(api, pub, admin)
 	admin.GET("/dashboard", a.adminDashboard)
 	admin.GET("/accounts", a.adminAccounts)
 	admin.POST("/accounts/:id/password-reset", a.adminPasswordReset)
@@ -462,6 +503,11 @@ func (a *App) router() *gin.Engine {
 		}
 		if a.showroomHTML(c, index) {
 			return
+		}
+		if strings.HasPrefix(c.Request.URL.Path, "/buyer") || c.Request.URL.Path == "/procurement" {
+			if a.sendPublicHTML(c, index, 200, "采购询比价 | "+a.brandName(), "采购需求与厂商在线询比价", a.publicBase(c)+c.Request.URL.Path, "noindex,follow") {
+				return
+			}
 		}
 		raw, err := os.ReadFile(index)
 		if err != nil {

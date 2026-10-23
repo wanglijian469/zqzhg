@@ -930,6 +930,45 @@ func sameStorageLocation(first, second StorageProfile) bool {
 // Confirm the SQL snapshot can resolve every media object, including queued
 // sources. Outputs not yet produced by transcoding are deliberately excluded.
 func validateMediaInventory(db *gorm.DB, objects []StoredObject) error {
+	if db.Migrator().HasTable(&ProcurementAttachment{}) {
+		known := map[string]bool{}
+		for _, object := range objects {
+			known[object.Key] = true
+		}
+		var attachments []ProcurementAttachment
+		if e := db.Find(&attachments).Error; e != nil {
+			return e
+		}
+		for _, attachment := range attachments {
+			if !known[attachment.ObjectKey] {
+				return errors.New("object_missing_procurement_attachment")
+			}
+		}
+		var invalid int64
+		if e := db.Table("procurement_attachments pa").
+			Joins("LEFT JOIN procurement_projects p ON p.id=pa.project_id").
+			Joins("LEFT JOIN accounts a ON a.id=pa.owner_id").
+			Joins("LEFT JOIN procurement_revisions r ON pa.scope='requirement' AND r.id=pa.scope_id AND r.project_id=pa.project_id").
+			Joins("LEFT JOIN procurement_quote_revisions qr ON pa.scope='quote' AND qr.id=pa.scope_id").
+			Joins("LEFT JOIN procurement_quotes q ON q.id=qr.quote_id AND q.project_id=pa.project_id").
+			Joins("LEFT JOIN procurement_messages m ON pa.scope='message' AND m.id=pa.scope_id AND m.project_id=pa.project_id").
+			Where("p.id IS NULL OR a.id IS NULL OR pa.object_key NOT LIKE 'procurement/%' OR (pa.scope='' AND pa.scope_id<>0) OR (pa.scope='requirement' AND r.id IS NULL) OR (pa.scope='quote' AND q.id IS NULL) OR (pa.scope='message' AND m.id IS NULL) OR pa.scope NOT IN ('','requirement','quote','message')").Count(&invalid).Error; e != nil {
+			return e
+		}
+		if invalid > 0 {
+			return errors.New("invalid_procurement_attachment_scope")
+		}
+	}
+	if db.Migrator().HasTable(&MediaWatermark{}) {
+		var missing int64
+		if e := db.Table("media_watermarks mw").Joins("LEFT JOIN media m ON m.id=mw.media_id LEFT JOIN media s ON s.id=mw.source_media_id").Where("m.id IS NULL OR (mw.source_media_id>0 AND s.id IS NULL)").Count(&missing).Error; e != nil {
+			return e
+		}
+		if missing > 0 {
+			return errors.New("object_missing_watermark_source")
+		}
+	}
+
 	keys := map[string]bool{}
 	for _, object := range objects {
 		keys[object.Key] = true

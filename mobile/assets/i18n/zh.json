@@ -472,5 +472,8 @@
   "phone_already_bound": "当前账号已有绑定手机号，请联系管理员核对。",
   "phone_binding_required": "请先验证并绑定手机号。",
   "password_setup_unavailable": "该手机号不是未设置密码的原短信账号，请使用密码登录或联系管理员。",
-  "confirmation_required": "请确认后再升级厂商账号。"
+  "confirmation_required": "请确认后再升级厂商账号。",
+  "invalid_watermark": "图片水印设置无效，请联系管理员。",
+  "watermark_vendor_required": "请先保存企业名称或简称，再保存展示图片。",
+  "watermark_not_ready": "水印尚未完成，请重新保存后重试。"
 }

@@ -282,6 +282,13 @@ func TestCompleteBackupRestoreAndCutover(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(a.Config.MediaDir, "snapshot.txt"), []byte("snapshot media"), 0600); err != nil {
 		t.Fatal(err)
 	}
+	watermarkOwner := tc.login("13900007779")
+	watermarkSource := watermarkUpload(t, a, watermarkOwner, "/merchant/media")
+	watermarkSaved := watermarkVendorFixture(t, a, watermarkOwner, []uint64{watermarkSource})
+	watermarkMarked := uint64(watermarkSaved["data"].(map[string]any)["media_ids"].([]any)[0].(float64))
+	var originalWatermark MediaWatermark
+	a.DB.First(&originalWatermark, "media_id=?", watermarkMarked)
+	procurementProject, procurementAttachment, procurementQuote := procurementBackupFixture(t, a)
 	backup, _, err := a.newJob("backup", backupParams{}, 1)
 	if err != nil {
 		t.Fatal(err)
@@ -303,9 +310,39 @@ func TestCompleteBackupRestoreAndCutover(t *testing.T) {
 	var result RestoreResult
 	json.Unmarshal(done.Result, &result)
 	names = append(names, result.Database)
+	var restoredProject ProcurementProject
+	var restoredAttachment ProcurementAttachment
+	var restoredQuote ProcurementQuoteRevision
+	if e := a.DB.First(&restoredProject, procurementProject).Error; e != nil || restoredProject.PublishedRevisionID != procurementAttachment.ScopeID {
+		t.Fatal("Schema21 procurement project lost", e)
+	}
+	if e := a.DB.First(&restoredAttachment, procurementAttachment.ID).Error; e != nil || restoredAttachment.ObjectKey != procurementAttachment.ObjectKey {
+		t.Fatal("Schema21 private attachment lost", e)
+	}
+	if e := a.DB.First(&restoredQuote, procurementQuote).Error; e != nil || restoredQuote.DemandRevisionID != restoredProject.PublishedRevisionID {
+		t.Fatal("Schema21 quotation history lost", e)
+	}
+	if content, e := os.ReadFile(filepath.Join(result.MediaDir, restoredAttachment.ObjectKey)); e != nil || string(content) != "%PDF-1.7 private procurement backup fixture" {
+		t.Fatal("Schema21 private attachment bytes lost", e)
+	}
 	var restoredPhone Account
 	if e := a.DB.First(&restoredPhone, phoneOwner.ID).Error; e != nil || !verifiedPhone(restoredPhone) || *restoredPhone.Phone != verifiedNumber {
 		t.Fatal("Schema19 phone backup lost")
+	}
+	var restoredWatermark MediaWatermark
+	if e := a.DB.First(&restoredWatermark, "media_id=?", watermarkMarked).Error; e != nil || restoredWatermark.SourceMediaID != watermarkSource || restoredWatermark.ConfigJSON != originalWatermark.ConfigJSON || restoredWatermark.VendorText != "水印农机" {
+		t.Fatal("Schema20 watermark backup lost", restoredWatermark, e)
+	}
+	for _, mid := range []uint64{watermarkSource, watermarkMarked} {
+		var m Media
+		if e := a.DB.First(&m, mid).Error; e != nil {
+			t.Fatal(e)
+		}
+		for _, key := range []string{m.Path, m.ThumbPath} {
+			if _, e := os.Stat(filepath.Join(result.MediaDir, key)); e != nil {
+				t.Fatal("watermark file missing after restore", e)
+			}
+		}
 	}
 	data, err := os.ReadFile(filepath.Join(result.MediaDir, "snapshot.txt"))
 	if err != nil || string(data) != "snapshot media" {

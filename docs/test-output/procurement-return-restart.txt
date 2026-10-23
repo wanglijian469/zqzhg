@@ -1,0 +1,2 @@
+2026/10/23 11:59:53 Procurement demo initialized
+Procurement demo: http://localhost:8081/buyer; select an account and request the dynamic code. No real SMS is sent.

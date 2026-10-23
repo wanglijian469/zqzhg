@@ -1,0 +1,12 @@
+[GIN] 2026/10/23 - 11:45:08 | 200 |   5.44ms |       192.0.2.1 | GET      "/api/v1/procurement/notifications?scope=buyer"
+[GIN] 2026/10/23 - 11:45:08 | 200 |   3.38ms |       192.0.2.1 | GET      "/api/v1/procurement/notifications?scope=supplier"
+[GIN] 2026/10/23 - 11:45:08 | 200 |   2.11ms |       192.0.2.1 | GET      "/api/v1/procurement/notifications"
+[GIN] 2026/10/23 - 11:45:08 | 200 |   4.09ms |       192.0.2.1 | GET      "/api/v1/procurement/notifications?scope=supplier&page_size=1"
+
+2026/10/23 11:45:08 D:/workspace-main/codex-zqzt/server/import_test.go:28 SLOW SQL >= 200ms
+[473.437ms] [rows:57] DROP DATABASE `zqzt_exhibition_test_1792727105024270700`
+--- FAIL: TestProcurementNotificationIdentityScopes (3.76s)
+    procurement_notification_scope_test.go:54: map[items:[map[available_at:2026-10-23T03:45:08.129Z created_at:2026-10-23T03:45:08.129Z id:4 kind:digest project_id:0 read_at:<nil> target_scope:supplier title:] map[available_at:2026-10-23T03:45:08.129Z created_at:2026-10-23T03:45:08.129Z id:3 kind:invitation project_id:2 read_at:<nil> target_scope:supplier title:]] page:1 page_size:20 total:2 unread:2]
+FAIL
+FAIL	zqzt/exhibition	5.366s
+FAIL

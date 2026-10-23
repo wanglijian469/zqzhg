@@ -185,17 +185,13 @@ func (a *App) saveShowroomAddress(c *gin.Context, admin bool) {
 func (a *App) merchantSaveLink(c *gin.Context) { a.saveShowroomAddress(c, false) }
 func (a *App) redirectOldShowroom(c *gin.Context, item View) bool {
 	path := c.Request.URL.Path
-	// Default numeric links remain compatible; only registered historical aliases redirect.
-	if strings.HasPrefix(path, "/v/") {
-		slug := strings.TrimPrefix(path, "/v/")
-		if slug != item.ShowroomSlug && !strings.HasPrefix(slug, "v-") {
-			target := "/v/" + url.PathEscape(item.ShowroomSlug)
-			if c.Request.URL.RawQuery != "" {
-				target += "?" + c.Request.URL.RawQuery
-			}
-			c.Redirect(301, target)
-			return true
+	target := "/v/" + url.PathEscape(item.ShowroomSlug)
+	if (strings.HasPrefix(path, "/v/") || strings.HasPrefix(path, "/vendors/")) && path != target {
+		if c.Request.URL.RawQuery != "" {
+			target += "?" + c.Request.URL.RawQuery
 		}
+		c.Redirect(301, target)
+		return true
 	}
 	return false
 }

@@ -36,15 +36,17 @@ type DiskConfig struct {
 	MinFreeBytes    uint64 `json:"min_free_bytes"`
 }
 type SystemConfig struct {
-	Version    uint64       `json:"version"`
-	Site       SiteConfig   `json:"site"`
-	Uploads    UploadConfig `json:"uploads"`
-	Disk       DiskConfig   `json:"disk"`
-	ProbeToken string       `json:"probe_token,omitempty"`
+	Watermark        WatermarkConfig `json:"watermark"`
+	watermarkPresent bool
+	Version          uint64       `json:"version"`
+	Site             SiteConfig   `json:"site"`
+	Uploads          UploadConfig `json:"uploads"`
+	Disk             DiskConfig   `json:"disk"`
+	ProbeToken       string       `json:"probe_token,omitempty"`
 }
 
 func defaultSystemConfig() SystemConfig {
-	return SystemConfig{Version: 1, Site: SiteConfig{Name: "中企展馆", NameEN: "ZQZG", WebURL: "", APIURL: "", MediaURL: ""}, Uploads: UploadConfig{ImageMiB: settingInt("MAX_IMAGE_MIB", 10), VideoMiB: settingInt("MAX_VIDEO_MIB", 200), PDFMiB: settingInt("MAX_PDF_MIB", 50), DefaultQuotaBytes: 2 << 30}, Disk: DiskConfig{WarnPercent: 80, CriticalPercent: 90, MinFreeBytes: 1 << 30}}
+	return SystemConfig{Watermark: defaultWatermarkConfig(), Version: 1, Site: SiteConfig{Name: "中企展馆", NameEN: "ZQZG", WebURL: "", APIURL: "", MediaURL: ""}, Uploads: UploadConfig{ImageMiB: settingInt("MAX_IMAGE_MIB", 10), VideoMiB: settingInt("MAX_VIDEO_MIB", 200), PDFMiB: settingInt("MAX_PDF_MIB", 50), DefaultQuotaBytes: 2 << 30}, Disk: DiskConfig{WarnPercent: 80, CriticalPercent: 90, MinFreeBytes: 1 << 30}}
 }
 func (a *App) systemConfig() (SystemConfig, error) { return systemConfigDB(a.DB) }
 func systemConfigDB(db *gorm.DB) (SystemConfig, error) {
@@ -106,7 +108,7 @@ func (a *App) siteIdentity() string {
 func (a *App) publicRuntimeConfig(c *gin.Context) {
 	cfg := a.effectiveConfig(c)
 	c.Header("Cache-Control", "no-store")
-	c.JSON(200, gin.H{"version": cfg.Version, "site": cfg.Site, "uploads": cfg.Uploads, "site_id": a.siteIdentity(), "capabilities": gin.H{"phone_password_auth": true, "administrative_regions": true, "industry_map": true, "product_name_only": true}})
+	c.JSON(200, gin.H{"version": cfg.Version, "site": cfg.Site, "uploads": cfg.Uploads, "watermark": cfg.Watermark, "site_id": a.siteIdentity(), "capabilities": a.publicCapabilities(), "demo_accounts": a.procurementDemoAccounts()})
 }
 func (a *App) publicMediaStatus(c *gin.Context) { c.JSON(200, gin.H{"site_id": a.siteIdentity()}) }
 func normalizeConfig(cfg *SystemConfig) {
@@ -116,8 +118,14 @@ func normalizeConfig(cfg *SystemConfig) {
 	cfg.Site.APIURL = strings.TrimRight(strings.TrimSpace(cfg.Site.APIURL), "/")
 	cfg.Site.MediaURL = strings.TrimRight(strings.TrimSpace(cfg.Site.MediaURL), "/")
 	cfg.ProbeToken = strings.TrimSpace(cfg.ProbeToken)
+	normalizeWatermark(&cfg.Watermark)
 }
 func validateSystemConfig(cfg SystemConfig) error {
+	if cfg.watermarkPresent || cfg.Watermark != (WatermarkConfig{}) {
+		if e := validateWatermark(cfg.Watermark); e != nil {
+			return e
+		}
+	}
 	if cfg.Site.Name == "" || len([]rune(cfg.Site.Name)) > 100 || len([]rune(cfg.Site.NameEN)) > 100 {
 		return errors.New("invalid_system_settings")
 	}
@@ -214,6 +222,7 @@ func (a *App) safeProbe(ctx context.Context, raw, currentOrigin string) (map[str
 	return info, nil
 }
 func (a *App) settingsRoutes(admin, pub *gin.RouterGroup) {
+	a.watermarkRoutes(admin)
 	pub.GET("/config", a.publicRuntimeConfig)
 	admin.GET("/settings", func(c *gin.Context) {
 		cfg := a.effectiveConfig(c)
@@ -224,6 +233,14 @@ func (a *App) settingsRoutes(admin, pub *gin.RouterGroup) {
 		if c.ShouldBindJSON(&cfg) != nil {
 			fail(c, 400, "invalid_request")
 			return
+		}
+		if !cfg.watermarkPresent {
+			previous, err := a.systemConfig()
+			if err != nil {
+				dbFail(c, err)
+				return
+			}
+			cfg.Watermark = previous.Watermark
 		}
 		normalizeConfig(&cfg)
 		if e := validateSystemConfig(cfg); e != nil {
@@ -264,6 +281,14 @@ func (a *App) settingsRoutes(admin, pub *gin.RouterGroup) {
 		if c.ShouldBindJSON(&cfg) != nil {
 			fail(c, 400, "invalid_request")
 			return
+		}
+		if !cfg.watermarkPresent {
+			previous, err := a.systemConfig()
+			if err != nil {
+				dbFail(c, err)
+				return
+			}
+			cfg.Watermark = previous.Watermark
 		}
 		normalizeConfig(&cfg)
 		if e := validateSystemConfig(cfg); e != nil {
@@ -347,7 +372,7 @@ func (a *App) mediaAddress(c *gin.Context, id uint64, query string) string {
 func (a *App) brandName() string { cfg, _ := a.systemConfig(); return cfg.Site.Name }
 func (a *App) runtimeHTML(c *gin.Context, page string) string {
 	cfg := a.effectiveConfig(c)
-	raw, _ := json.Marshal(gin.H{"version": cfg.Version, "site": cfg.Site, "uploads": cfg.Uploads})
+	raw, _ := json.Marshal(gin.H{"version": cfg.Version, "site": cfg.Site, "uploads": cfg.Uploads, "watermark": cfg.Watermark, "capabilities": a.publicCapabilities(), "demo_accounts": a.procurementDemoAccounts()})
 	return strings.Replace(page, "<head>", "<head><script id=\"zqzg-runtime-config\" type=\"application/json\">"+string(raw)+"</script>", 1)
 }
 func (a *App) allowedSiteOrigin(origin string) bool {

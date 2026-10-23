@@ -60,7 +60,7 @@ func (a *App) importVendor(manifestPath string) (result importResult, err error)
 			}
 		}
 	}()
-	err = a.DB.Transaction(func(tx *gorm.DB) error {
+	err = a.watermarkTransaction(func(tx *gorm.DB) error {
 		var admin Account
 		if e := tx.Where("role = 'admin'").Order("id").First(&admin).Error; e != nil {
 			return e
@@ -185,6 +185,9 @@ func (a *App) importVendor(manifestPath string) (result importResult, err error)
 				if e = tx.Create(&media).Error; e != nil {
 					return e
 				}
+				if e = stampWatermarkSnapshot(tx, media, "unknown"); e != nil {
+					return e
+				}
 				item.Data.MediaIDs = append(item.Data.MediaIDs, media.ID)
 				result.Images++
 			}
@@ -194,7 +197,7 @@ func (a *App) importVendor(manifestPath string) (result importResult, err error)
 			if e = tx.Create(&content).Error; e != nil {
 				return e
 			}
-			if e = makeDraft(tx, &content, item.Data); e != nil {
+			if e = a.makeDraft(tx, &content, item.Data); e != nil {
 				return e
 			}
 			now := time.Now().UTC()

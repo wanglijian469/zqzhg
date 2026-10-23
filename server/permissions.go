@@ -21,6 +21,7 @@ type Permission struct {
 }
 
 var permissionCatalog = []Permission{
+	{"procurement.read", "查看采购询价", "View procurement"}, {"procurement.review", "审核采购需求", "Review procurement"}, {"procurement.quote", "查看采购报价", "View procurement quotes"}, {"procurement.match", "管理厂商匹配", "Manage procurement matching"}, {"procurement.manage", "处理采购异常", "Moderate procurement"}, {"procurement.stats", "采购统计", "Procurement statistics"},
 	{"vendor.read", "查看厂商", "View manufacturers"}, {"vendor.write", "编辑厂商", "Edit manufacturers"}, {"vendor.review", "审核厂商", "Review manufacturers"}, {"vendor.offline", "下架厂商", "Unpublish manufacturers"},
 	{"product.read", "查看产品", "View products"}, {"product.write", "编辑产品", "Edit products"}, {"product.review", "审核产品", "Review products"}, {"product.offline", "下架产品", "Unpublish products"},
 	{"resource.read", "查看视频和图册", "View media resources"}, {"resource.write", "编辑视频和图册", "Edit media resources"}, {"resource.review", "审核视频和图册", "Review media resources"}, {"resource.offline", "下架视频和图册", "Unpublish media resources"},
@@ -52,6 +53,9 @@ func normalizePermissions(values []string) ([]string, error) {
 			return nil, errors.New("invalid_permission")
 		}
 		set[key] = true
+		if strings.HasPrefix(key, "procurement.") {
+			set["procurement.read"] = true
+		}
 		parts := strings.Split(key, ".")
 		if len(parts) == 2 && (parts[1] == "write" || parts[1] == "review" || parts[1] == "offline") {
 			set[parts[0]+".read"] = true
@@ -120,7 +124,9 @@ func (a *App) hasPermission(account Account, key string) bool {
 	return false
 }
 func (a *App) accountJSON(account Account) gin.H {
-	return gin.H{"id": account.ID, "username": account.Username, "login_name": account.LoginName, "phone": account.Phone, "phone_verified": verifiedPhone(account), "requires_phone_binding": phoneAccount(account) && !verifiedPhone(account), "role": account.Role, "enabled": true, "created_at": account.CreatedAt, "permissions": a.permissions(account)}
+	var buyer BuyerProfile
+	buyerRegistered := a.DB.First(&buyer, "account_id=?", account.ID).Error == nil
+	return gin.H{"buyer_registered": buyerRegistered, "capabilities": gin.H{"buyer": buyerRegistered && !buyer.Suspended, "supplier": account.Role == "merchant", "procurement": procurementEnabled()}, "id": account.ID, "username": account.Username, "login_name": account.LoginName, "phone": account.Phone, "phone_verified": verifiedPhone(account), "requires_phone_binding": phoneAccount(account) && !verifiedPhone(account), "role": account.Role, "enabled": true, "created_at": account.CreatedAt, "permissions": a.permissions(account)}
 }
 func (a *App) platformPolicy() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -144,6 +150,22 @@ func (a *App) platformPolicy() gin.HandlerFunc {
 func (a *App) permissionForRequest(c *gin.Context) string {
 	path := strings.TrimPrefix(c.Request.URL.Path, "/api/v1/admin/")
 	method := c.Request.Method
+	if strings.HasPrefix(path, "procurement/") {
+		switch {
+		case strings.HasSuffix(path, "/quotes"):
+			return "procurement.quote"
+		case strings.HasSuffix(path, "/matches"), strings.HasSuffix(path, "/invite"):
+			return "procurement.match"
+		case strings.HasPrefix(path, "procurement/reviews/"):
+			return "procurement.review"
+		case strings.HasSuffix(path, "/stats"):
+			return "procurement.stats"
+		case method != "GET" && method != "HEAD":
+			return "procurement.manage"
+		default:
+			return "procurement.read"
+		}
+	}
 	switch {
 	case path == "dashboard":
 		return "platform.dashboard"

@@ -1,12 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"html"
 	"net/url"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -22,25 +19,27 @@ type CompanyContact struct {
 	Wechat string `json:"wechat"`
 }
 type CompanyProfile struct {
-	Credentials        []CompanyCredential `json:"credentials"`
-	GalleryAnnotations []GalleryAnnotation `json:"gallery_annotations"`
-	ShortName          string              `json:"short_name"`
-	ShortNameEN        string              `json:"short_name_en"`
-	Summary            string              `json:"summary"`
-	SummaryEN          string              `json:"summary_en"`
-	LogoMediaID        uint64              `json:"logo_media_id"`
-	CoverMediaID       uint64              `json:"cover_media_id"`
-	Established        string              `json:"established"`
-	Staff              string              `json:"staff"`
-	FactoryArea        string              `json:"factory_area"`
-	Equipment          string              `json:"equipment"`
-	EquipmentEN        string              `json:"equipment_en"`
-	Capacity           string              `json:"capacity"`
-	CapacityEN         string              `json:"capacity_en"`
-	Website            string              `json:"website"`
-	ContactName        string              `json:"contact_name"`
-	ContactNameEN      string              `json:"contact_name_en"`
-	Contacts           []CompanyContact    `json:"contacts"`
+	SupplyProductCategoryIDs []uint64            `json:"supply_product_category_ids"`
+	SupplyRegionCodes        []string            `json:"supply_region_codes"`
+	Credentials              []CompanyCredential `json:"credentials"`
+	GalleryAnnotations       []GalleryAnnotation `json:"gallery_annotations"`
+	ShortName                string              `json:"short_name"`
+	ShortNameEN              string              `json:"short_name_en"`
+	Summary                  string              `json:"summary"`
+	SummaryEN                string              `json:"summary_en"`
+	LogoMediaID              uint64              `json:"logo_media_id"`
+	CoverMediaID             uint64              `json:"cover_media_id"`
+	Established              string              `json:"established"`
+	Staff                    string              `json:"staff"`
+	FactoryArea              string              `json:"factory_area"`
+	Equipment                string              `json:"equipment"`
+	EquipmentEN              string              `json:"equipment_en"`
+	Capacity                 string              `json:"capacity"`
+	CapacityEN               string              `json:"capacity_en"`
+	Website                  string              `json:"website"`
+	ContactName              string              `json:"contact_name"`
+	ContactNameEN            string              `json:"contact_name_en"`
+	Contacts                 []CompanyContact    `json:"contacts"`
 }
 
 type GalleryAnnotation struct {
@@ -64,6 +63,12 @@ func mergePortalProfile(next *Payload, previous Payload) {
 		return
 	}
 	if previous.CompanyProfile != nil {
+		if next.CompanyProfile.SupplyProductCategoryIDs == nil {
+			next.CompanyProfile.SupplyProductCategoryIDs = previous.CompanyProfile.SupplyProductCategoryIDs
+		}
+		if next.CompanyProfile.SupplyRegionCodes == nil {
+			next.CompanyProfile.SupplyRegionCodes = previous.CompanyProfile.SupplyRegionCodes
+		}
 		if next.CompanyProfile.Credentials == nil {
 			next.CompanyProfile.Credentials = previous.CompanyProfile.Credentials
 		}
@@ -114,6 +119,14 @@ func payloadMedia(p Payload) []uint64 {
 func validateCompanyProfile(p *CompanyProfile) error {
 	if p == nil {
 		return nil
+	}
+	if len(p.SupplyProductCategoryIDs) > 35 || len(p.SupplyRegionCodes) > 50 {
+		return fmt.Errorf("invalid_request")
+	}
+	for _, code := range p.SupplyRegionCodes {
+		if !procValidRegion(code) {
+			return fmt.Errorf("invalid_request")
+		}
 	}
 	for _, s := range []string{p.ShortName, p.ShortNameEN, p.Established, p.Staff, p.FactoryArea, p.ContactName, p.ContactNameEN} {
 		if utf8.RuneCountInString(s) > 200 {
@@ -278,7 +291,7 @@ func (a *App) publicShowroom(c *gin.Context) {
 }
 func (a *App) setShowroomSlug(c *gin.Context) { a.saveShowroomAddress(c, true) }
 
-// The SPA remains interactive; metadata is rendered by Go for link crawlers.
+// The SPA remains interactive; Go renders public content for every visitor.
 func (a *App) showroomHTML(c *gin.Context, index string) bool {
 	path := c.Request.URL.Path
 	slug := ""
@@ -289,66 +302,54 @@ func (a *App) showroomHTML(c *gin.Context, index string) bool {
 	} else {
 		return false
 	}
-	source, e := os.ReadFile(index)
-	if e != nil {
-		return false
+	canonical := canonicalPublic(a.publicBase(c), path, nil)
+	unavailable := func(status int) bool {
+		return a.sendPublicHTML(c, index, status, "展厅暂不可用 | "+a.brandName(), "展厅不存在、暂未公开或已下架。", canonical, "noindex,follow")
 	}
-	items, e := a.resolveShowroom(slug)
-	if e != nil {
-		c.Header("Cache-Control", "no-store")
-		c.Data(503, "text/html; charset=utf-8", []byte(strings.Replace(string(source), "<head>", `<head><meta name="robots" content="noindex">`, 1)))
-		return true
+	items, err := a.resolveShowroom(slug)
+	if err != nil {
+		return unavailable(503)
 	}
-	c.Header("Cache-Control", "no-store")
 	if len(items) == 0 {
-		c.Header("X-Robots-Tag", "noindex")
-		c.Data(404, "text/html; charset=utf-8", []byte(strings.Replace(string(source), "<head>", `<head><meta name="robots" content="noindex">`, 1)))
-		return true
+		return unavailable(404)
 	}
 	item := items[0]
 	if a.redirectOldShowroom(c, item) {
 		return true
 	}
+	canonical = canonicalPublic(a.publicBase(c), "/v/"+item.ShowroomSlug, nil)
+	representatives, err := a.representativeProducts(item.ID)
+	if err != nil {
+		return unavailable(503)
+	}
+	products, err := a.showroomHomeProducts(item.ID, representatives)
+	if err != nil {
+		return unavailable(503)
+	}
+	detail, err := a.vendorSEO(c, item, products, canonical)
+	if err != nil {
+		return unavailable(500)
+	}
 	data := item.Data
 	desc := data.MainProducts
-	cover := uint64(0)
-	if data.CompanyProfile != nil {
-		if data.CompanyProfile.Summary != "" {
-			desc = data.CompanyProfile.Summary
-		}
-		cover = data.CompanyProfile.CoverMediaID
+	if data.Description != "" {
+		desc = data.Description
 	}
-	if cover == 0 && len(data.MediaIDs) > 0 {
-		cover = data.MediaIDs[0]
+	if data.CompanyProfile != nil && data.CompanyProfile.Summary != "" {
+		desc = data.CompanyProfile.Summary
 	}
-	base := a.publicBase(c)
-	if base == "" {
-		scheme := "http"
-		if c.Request.TLS != nil {
-			scheme = "https"
-		}
-		base = scheme + "://" + c.Request.Host
+	runes := []rune(strings.TrimSpace(desc))
+	if len(runes) > 160 {
+		desc = string(runes[:160])
 	}
-	canonical := canonicalPublic(base, "/v/"+item.ShowroomSlug, c.Request.URL.Query())
-	title := data.Name + " · " + data.MainProducts + " | " + a.brandName()
-	meta := `<title>` + html.EscapeString(title) + `</title><meta name="description" content="` + html.EscapeString(desc) + `"><link rel="canonical" href="` + html.EscapeString(canonical) + `">`
-	for k, v := range map[string]string{"og:type": "website", "og:title": title, "og:description": desc, "og:url": canonical} {
-		meta += `<meta property="` + k + `" content="` + html.EscapeString(v) + `">`
+	title := data.Name
+	if strings.TrimSpace(data.MainProducts) != "" {
+		title += " · " + data.MainProducts
 	}
-	if cover > 0 {
-		meta += `<meta property="og:image" content="` + html.EscapeString(a.mediaAddress(c, cover, "")) + `">`
-	}
-	org, _ := json.Marshal(map[string]string{"@context": "https://schema.org", "@type": "Organization", "name": data.Name, "url": canonical, "telephone": data.Phone, "address": data.Address})
-	meta += `<script type="application/ld+json">` + string(org) + `</script>`
-	page := cleanHTMLMetadata(string(source))
+	title += " | " + a.brandName()
 	robots := "index,follow"
-	for _, k := range []string{"q", "category_id", "region_id", "vendor_id", "sort"} {
-		if c.Query(k) != "" {
-			robots = "noindex,follow"
-		}
+	if showroomSearchVariant(c.Request.URL.Query()) {
+		robots = "noindex,follow"
 	}
-	meta += `<meta name="zqzg-public-base" content="` + html.EscapeString(base) + `"><meta name="robots" content="` + robots + `">`
-	page = strings.Replace(page, "<head>", "<head>"+meta, 1)
-	c.Data(200, "text/html; charset=utf-8", []byte(a.runtimeHTML(c, page)))
-	return true
+	return a.sendPublicHTML(c, index, 200, title, desc, canonical, robots, detail)
 }

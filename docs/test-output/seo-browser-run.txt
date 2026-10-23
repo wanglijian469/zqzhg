@@ -1,0 +1,531 @@
+=== RUN   TestIndependentSEOBrowser
+
+2026/10/22 17:14:07 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.671ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:07 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.533ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:07 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[2.253ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:07 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.588ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:07 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.519ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:07 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.522ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:07 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.552ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:07 | 200 | 242.39ms |       127.0.0.1 | GET      "/v/seo-browser"
+
+2026/10/22 17:14:07 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.701ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:07 | 200 | 349.88ms |       127.0.0.1 | GET      "/assets/index-D1Kpv1Ju.css"
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.781ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.311ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.534ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.154ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.562ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.618ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:08 | 200 |  15.53ms |       127.0.0.1 | GET      "/products/2"
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.529ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.729ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.770ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.512ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.000ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.519ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.605ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:08 | 200 |  15.24ms |       127.0.0.1 | GET      "/v/seo-browser"
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.251ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.513ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.531ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.644ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.635ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.626ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.754ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:08 | 200 |   16.7ms |       127.0.0.1 | GET      "/v/seo-browser"
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.617ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:08 | 200 |   1.15ms |       127.0.0.1 | GET      "/assets/index-D1Kpv1Ju.css"
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.259ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.577ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.531ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.054ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.554ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:08 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.095ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:08 | 200 |  13.61ms |       127.0.0.1 | GET      "/products/2"
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.564ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.542ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.526ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.588ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.584ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.535ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.527ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:09 | 200 |  16.31ms |       127.0.0.1 | GET      "/v/seo-browser"
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.608ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.592ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.709ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.609ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.587ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.524ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.095ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:09 | 200 |  17.13ms |       127.0.0.1 | GET      "/v/seo-browser"
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.526ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:09 | 200 |   2.66ms |       127.0.0.1 | GET      "/assets/index-n-xh2H1R.js"
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.594ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:09 | 200 |   1.69ms |       127.0.0.1 | GET      "/assets/index-D1Kpv1Ju.css"
+[GIN] 2026/10/22 - 17:14:09 | 200 |   5.96ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.528ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:09 | 200 |   20.6ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[1.101ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:09 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.548ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/22 - 17:14:09 | 200 |  31.24ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/seo-browser"
+[GIN] 2026/10/22 - 17:14:09 | 200 |   5.65ms |       127.0.0.1 | GET      "/api/v1/public/products?vendor_id=1&page_size=24&page=1"
+[GIN] 2026/10/22 - 17:14:09 | 200 |   7.35ms |       127.0.0.1 | GET      "/api/v1/public/products/2?page=1"
+[GIN] 2026/10/22 - 17:14:10 | 200 |   7.55ms |       127.0.0.1 | GET      "/api/v1/public/resources?page=1&page_size=12&product_id=2"
+[GIN] 2026/10/22 - 17:14:10 | 200 |   9.73ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+[GIN] 2026/10/22 - 17:14:10 | 200 |  10.86ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.043ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[1.060ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[1.635ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/22 - 17:14:10 | 200 |   33.3ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/seo-browser"
+[GIN] 2026/10/22 - 17:14:10 | 200 |  10.71ms |       127.0.0.1 | GET      "/api/v1/public/products?vendor_id=1&page_size=24&page=1"
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.064ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.146ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.568ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.516ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.072ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.064ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.717ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:10 | 200 |  25.19ms |       127.0.0.1 | GET      "/v/seo-browser?tab=products&page=2"
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.994ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:10 | 202 |  14.28ms |       127.0.0.1 | POST     "/api/v1/public/analytics/events"
+[GIN] 2026/10/22 - 17:14:10 | 200 |   2.13ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/22 - 17:14:10 | 200 |  10.62ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[2.137ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[2.662ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.850ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/22 - 17:14:10 | 200 |  87.72ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/seo-browser"
+[GIN] 2026/10/22 - 17:14:10 | 200 |   3.61ms |       127.0.0.1 | GET      "/api/v1/public/products?vendor_id=1&page_size=24&page=2"
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.554ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.595ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.538ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.592ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.578ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.553ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.536ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:10 | 200 |  20.94ms |       127.0.0.1 | GET      "/v/seo-browser"
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.928ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:10 | 200 |   5.23ms |       127.0.0.1 | GET      "/assets/index-n-xh2H1R.js"
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[2.359ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:10 | 200 |   3.57ms |       127.0.0.1 | GET      "/assets/index-D1Kpv1Ju.css"
+[GIN] 2026/10/22 - 17:14:10 | 200 |   9.28ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.138ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:10 | 200 |  21.41ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[1.127ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:10 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[1.247ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/22 - 17:14:10 | 200 |  33.17ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/seo-browser"
+[GIN] 2026/10/22 - 17:14:11 | 200 |  11.16ms |       127.0.0.1 | GET      "/api/v1/public/products?vendor_id=1&page_size=24&page=1"
+[GIN] 2026/10/22 - 17:14:11 | 200 |  22.26ms |       127.0.0.1 | GET      "/api/v1/public/products/2?page=1"
+[GIN] 2026/10/22 - 17:14:11 | 200 |    2.7ms |       127.0.0.1 | GET      "/api/v1/public/resources?page=1&page_size=12&product_id=2"
+[GIN] 2026/10/22 - 17:14:11 | 200 |  23.73ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+[GIN] 2026/10/22 - 17:14:11 | 200 |  14.86ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.514ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[1.000ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.827ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/22 - 17:14:11 | 200 |  55.55ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/seo-browser"
+[GIN] 2026/10/22 - 17:14:11 | 200 |  12.71ms |       127.0.0.1 | GET      "/api/v1/public/products?vendor_id=1&page_size=24&page=1"
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.317ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.919ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[1.056ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[1.026ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.374ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.371ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.903ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:11 | 200 |  34.62ms |       127.0.0.1 | GET      "/v/seo-browser?tab=products&page=2"
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.902ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:11 | 202 |     57ms |       127.0.0.1 | POST     "/api/v1/public/analytics/events"
+[GIN] 2026/10/22 - 17:14:11 | 200 |   1.91ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/22 - 17:14:11 | 200 |  23.33ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.839ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.571ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:11 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[1.014ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/22 - 17:14:11 | 200 |  50.46ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/seo-browser"
+[GIN] 2026/10/22 - 17:14:11 | 200 |  12.28ms |       127.0.0.1 | GET      "/api/v1/public/products?vendor_id=1&page_size=24&page=2"
+
+2026/10/22 17:14:12 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.478ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:12 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.627ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:12 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[1.322ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:12 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.816ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:12 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.631ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:12 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.580ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:12 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.153ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:12 | 200 |  23.66ms |       127.0.0.1 | GET      "/v/seo-browser"
+
+2026/10/22 17:14:12 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.529ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:12 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.577ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:12 | 200 |   2.18ms |       127.0.0.1 | GET      "/assets/index-D1Kpv1Ju.css"
+[GIN] 2026/10/22 - 17:14:12 | 200 |   3.25ms |       127.0.0.1 | GET      "/assets/index-n-xh2H1R.js"
+[GIN] 2026/10/22 - 17:14:12 | 200 |     13ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/22 17:14:12 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.532ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:12 | 200 |  17.16ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+
+2026/10/22 17:14:12 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.546ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:12 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.636ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/22 - 17:14:12 | 200 |   26.8ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/seo-browser"
+[GIN] 2026/10/22 - 17:14:12 | 200 |   5.94ms |       127.0.0.1 | GET      "/api/v1/public/products?vendor_id=1&page_size=24&page=1"
+[GIN] 2026/10/22 - 17:14:12 | 200 |   8.38ms |       127.0.0.1 | GET      "/api/v1/public/products/2?page=1"
+[GIN] 2026/10/22 - 17:14:12 | 200 |   1.63ms |       127.0.0.1 | GET      "/api/v1/public/resources?page=1&page_size=12&product_id=2"
+[GIN] 2026/10/22 - 17:14:12 | 200 |    5.5ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+[GIN] 2026/10/22 - 17:14:13 | 200 |   6.13ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.668ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.000ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.000ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/22 - 17:14:13 | 200 |  17.54ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/seo-browser"
+[GIN] 2026/10/22 - 17:14:13 | 200 |   5.62ms |       127.0.0.1 | GET      "/api/v1/public/products?vendor_id=1&page_size=24&page=1"
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.536ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.535ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.580ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.525ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.525ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.660ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.525ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:13 | 200 |  15.49ms |       127.0.0.1 | GET      "/v/seo-browser?tab=products&page=2"
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.536ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:13 | 202 |   4.84ms |       127.0.0.1 | POST     "/api/v1/public/analytics/events"
+[GIN] 2026/10/22 - 17:14:13 | 200 |  625.3µs |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/22 - 17:14:13 | 200 |    7.6ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.536ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.000ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.564ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/22 - 17:14:13 | 200 |  16.72ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/seo-browser"
+[GIN] 2026/10/22 - 17:14:13 | 200 |   2.42ms |       127.0.0.1 | GET      "/api/v1/public/products?vendor_id=1&page_size=24&page=2"
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.044ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.528ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.523ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.595ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.694ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.515ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.000ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:13 | 200 |  14.54ms |       127.0.0.1 | GET      "/v/seo-browser"
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.626ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[1.053ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:13 | 200 |   2.74ms |       127.0.0.1 | GET      "/assets/index-n-xh2H1R.js"
+[GIN] 2026/10/22 - 17:14:13 | 200 |   2.11ms |       127.0.0.1 | GET      "/assets/index-D1Kpv1Ju.css"
+[GIN] 2026/10/22 - 17:14:13 | 200 |   1.22ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/22 - 17:14:13 | 200 |   7.63ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.545ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.653ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:13 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.587ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/22 - 17:14:13 | 200 |  19.55ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/seo-browser"
+[GIN] 2026/10/22 - 17:14:14 | 200 |   7.47ms |       127.0.0.1 | GET      "/api/v1/public/products?vendor_id=1&page_size=24&page=1"
+[GIN] 2026/10/22 - 17:14:14 | 200 |   7.55ms |       127.0.0.1 | GET      "/api/v1/public/products/2?page=1"
+[GIN] 2026/10/22 - 17:14:14 | 200 |   3.08ms |       127.0.0.1 | GET      "/api/v1/public/resources?page=1&page_size=12&product_id=2"
+[GIN] 2026/10/22 - 17:14:14 | 200 |   8.53ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+[GIN] 2026/10/22 - 17:14:14 | 200 |   7.68ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.550ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.527ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.668ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/22 - 17:14:14 | 200 |  21.69ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/seo-browser"
+[GIN] 2026/10/22 - 17:14:14 | 200 |   8.44ms |       127.0.0.1 | GET      "/api/v1/public/products?vendor_id=1&page_size=24&page=1"
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.526ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.639ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[1.046ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.613ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.573ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.599ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.640ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:14 | 200 |  19.22ms |       127.0.0.1 | GET      "/v/seo-browser?tab=products&page=2"
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.539ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+[GIN] 2026/10/22 - 17:14:14 | 202 |   6.34ms |       127.0.0.1 | POST     "/api/v1/public/analytics/events"
+[GIN] 2026/10/22 - 17:14:14 | 200 |   1.07ms |       127.0.0.1 | GET      "/api/v1/public/halls"
+[GIN] 2026/10/22 - 17:14:14 | 200 |   8.89ms |       127.0.0.1 | GET      "/api/v1/public/taxonomy?category_kind=all"
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/system_settings.go:55 record not found
+[0.530ms] [rows:0] SELECT * FROM `system_settings` WHERE setting_key='system_config_v3' ORDER BY `system_settings`.`setting_key` LIMIT 1
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.000ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+
+2026/10/22 17:14:14 D:/workspace-main/codex-zqzt/server/showroom_display.go:26 record not found
+[0.024ms] [rows:0] SELECT * FROM `showroom_display_settings` WHERE vendor_id=1 AND `showroom_display_settings`.`vendor_id` = 1 ORDER BY `showroom_display_settings`.`vendor_id` LIMIT 1
+[GIN] 2026/10/22 - 17:14:14 | 200 |  20.17ms |       127.0.0.1 | GET      "/api/v1/public/showrooms/seo-browser"
+[GIN] 2026/10/22 - 17:14:14 | 200 |   3.52ms |       127.0.0.1 | GET      "/api/v1/public/products?vendor_id=1&page_size=24&page=2"
+    independent_seo_browser_test.go:36: {"checks":[{"width":390,"javaScript":false,"companyAndProductBody":true,"crossLinks":true,"overflow":false},{"width":1440,"javaScript":false,"companyAndProductBody":true,"crossLinks":true,"overflow":false},{"width":390,"lang":"zh","javaScript":true,"rootReplaced":true,"navigation":true,"canonical":true,"paginatedNoindex":true,"overflow":false},{"width":390,"lang":"en","javaScript":true,"rootReplaced":true,"navigation":true,"canonical":true,"paginatedNoindex":true,"overflow":false},{"width":1440,"lang":"zh","javaScript":true,"rootReplaced":true,"navigation":true,"canonical":true,"paginatedNoindex":true,"overflow":false},{"width":1440,"lang":"en","javaScript":true,"rootReplaced":true,"navigation":true,"canonical":true,"paginatedNoindex":true,"overflow":false}],"errors":[],"isolatedDatabase":true,"physicalDeviceVerified":false}
+
+
+2026/10/22 17:14:16 D:/workspace-main/codex-zqzt/server/import_test.go:28 SLOW SQL >= 200ms
+[846.178ms] [rows:43] DROP DATABASE `zqzt_exhibition_test_1792660441545850600`
+--- PASS: TestIndependentSEOBrowser (14.48s)
+PASS
+ok  	zqzt/exhibition	16.490s

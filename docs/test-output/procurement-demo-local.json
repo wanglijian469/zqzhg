@@ -1,0 +1,13 @@
+{
+  "primary_health": "ok",
+  "demo_health": "ok",
+  "demo_development_sms": true,
+  "primary_vendor_count": 11,
+  "admin_login_file": true,
+  "demo_account_count": 3,
+  "demo_listen": "127.0.0.1",
+  "demo_public_project_count": 1,
+  "primary_product_count": 46,
+  "primary_public_data_unchanged": true,
+  "primary_demo_enabled": false
+}

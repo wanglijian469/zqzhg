@@ -32,7 +32,7 @@ it('shows three compact counts, four primary tasks and independent draft/display
   expect(screen.getByText('建议补充（非必填）')).toBeTruthy();expect(document.querySelector('.workspace-topbar-actions')!.textContent).not.toContain('退出登录');
 });
 it('keeps vendor and full-account stats across language and management routes',async()=>{
-  mount();await screen.findByText('30');const user=userEvent.setup();await user.click(screen.getByRole('button',{name:'English'}));await user.click(screen.getByRole('link',{name:'Manage showroom'}));await screen.findByText('Company information');
+  mount();await screen.findByText('30');const user=userEvent.setup();await user.click(screen.getByRole('button',{name:'Switch to English'}));await user.click(screen.getByRole('link',{name:'Manage showroom'}));await screen.findByText('Company information');
   expect(calls.filter(c=>c.url.includes('kind=vendor'))).toHaveLength(1);expect(calls.filter(c=>c.url.includes('/merchant/dashboard'))).toHaveLength(1);
 });
 it('debounces model search and keeps the same query after explicit submit',async()=>{

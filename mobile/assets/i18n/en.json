@@ -472,5 +472,8 @@
   "phone_already_bound": "This account already has a linked mobile number. Contact the administrator.",
   "phone_binding_required": "Verify and link a mobile number first.",
   "password_setup_unavailable": "This is not an original SMS account without a password. Sign in with your password or contact the administrator.",
-  "confirmation_required": "Confirm before upgrading to a manufacturer account."
+  "confirmation_required": "Confirm before upgrading to a manufacturer account.",
+  "invalid_watermark": "Invalid image watermark settings. Contact the administrator.",
+  "watermark_vendor_required": "Save the company name or short name before saving display images.",
+  "watermark_not_ready": "The watermark is not ready. Save the content and retry."
 }

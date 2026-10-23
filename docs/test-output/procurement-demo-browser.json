@@ -1,0 +1,136 @@
+{
+  "checks": [
+    "Three real dynamic-code UI logins; direct quote/revision; buyer comparison; intent contact release; private supplier quotes/conversations; legacy route query/hash preservation",
+    "24 bilingual layouts across 360/390/768/1440, supplier subscriptions remain in procurement, normal logout for account switching"
+  ],
+  "layouts": [
+    {
+      "name": "buyer-comparison",
+      "width": 360,
+      "lang": "zh"
+    },
+    {
+      "name": "supplier-quote",
+      "width": 360,
+      "lang": "zh"
+    },
+    {
+      "name": "supplier-settings",
+      "width": 360,
+      "lang": "zh"
+    },
+    {
+      "name": "buyer-comparison",
+      "width": 360,
+      "lang": "en"
+    },
+    {
+      "name": "supplier-quote",
+      "width": 360,
+      "lang": "en"
+    },
+    {
+      "name": "supplier-settings",
+      "width": 360,
+      "lang": "en"
+    },
+    {
+      "name": "buyer-comparison",
+      "width": 390,
+      "lang": "zh"
+    },
+    {
+      "name": "supplier-quote",
+      "width": 390,
+      "lang": "zh"
+    },
+    {
+      "name": "supplier-settings",
+      "width": 390,
+      "lang": "zh"
+    },
+    {
+      "name": "buyer-comparison",
+      "width": 390,
+      "lang": "en"
+    },
+    {
+      "name": "supplier-quote",
+      "width": 390,
+      "lang": "en"
+    },
+    {
+      "name": "supplier-settings",
+      "width": 390,
+      "lang": "en"
+    },
+    {
+      "name": "buyer-comparison",
+      "width": 768,
+      "lang": "zh"
+    },
+    {
+      "name": "supplier-quote",
+      "width": 768,
+      "lang": "zh"
+    },
+    {
+      "name": "supplier-settings",
+      "width": 768,
+      "lang": "zh"
+    },
+    {
+      "name": "buyer-comparison",
+      "width": 768,
+      "lang": "en"
+    },
+    {
+      "name": "supplier-quote",
+      "width": 768,
+      "lang": "en"
+    },
+    {
+      "name": "supplier-settings",
+      "width": 768,
+      "lang": "en"
+    },
+    {
+      "name": "buyer-comparison",
+      "width": 1440,
+      "lang": "zh"
+    },
+    {
+      "name": "supplier-quote",
+      "width": 1440,
+      "lang": "zh"
+    },
+    {
+      "name": "supplier-settings",
+      "width": 1440,
+      "lang": "zh"
+    },
+    {
+      "name": "buyer-comparison",
+      "width": 1440,
+      "lang": "en"
+    },
+    {
+      "name": "supplier-quote",
+      "width": 1440,
+      "lang": "en"
+    },
+    {
+      "name": "supplier-settings",
+      "width": 1440,
+      "lang": "en"
+    },
+    {
+      "name": "demo-login",
+      "width": 390,
+      "lang": "en"
+    }
+  ],
+  "errors": [],
+  "realSMS": false,
+  "physicalDeviceVerified": false
+}

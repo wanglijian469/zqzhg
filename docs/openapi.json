@@ -3,7 +3,7 @@
   "info": {
     "title": "中企展馆 · ZQZG",
     "version": "2.0.0",
-    "description": "Published snapshots only. Draft and pending content and media require ownership or administrator access. Error messages are localized by clients using error.code. Resource snapshots have independent review and processing states; anonymous media access also requires a public parent showroom and linked product. Platform operators use effective feature permissions. Administrator-only storage, persistent jobs and encrypted isolated recovery are provided. Anonymous analytics do not identify people.\nPublic data reads use shared per-IP page/API limits, bounded pagination and distinct content budgets; 429 includes Retry-After. Schema14 preserves historical showroom addresses. Schema18 compacts the official product taxonomy to 10 roots and 35 children; existing IDs resolve through aliases. Search UI removes industrial belt and business nature while APIs preserve legacy filter compatibility. Schema19 adds globally unique verified account phones and purpose-scoped verification; legacy username and SMS endpoints remain compatible. Native App removes map functionality; website maps remain available."
+    "description": "Published snapshots only. Draft and pending content and media require ownership or administrator access. Error messages are localized by clients using error.code. Resource snapshots have independent review and processing states; anonymous media access also requires a public parent showroom and linked product. Platform operators use effective feature permissions. Administrator-only storage, persistent jobs and encrypted isolated recovery are provided. Anonymous analytics do not identify people.\nPublic data reads use shared per-IP page/API limits, bounded pagination and distinct content budgets; 429 includes Retry-After. Schema14 preserves historical showroom addresses. Schema18 compacts the official product taxonomy to 10 roots and 35 children; existing IDs resolve through aliases. Search UI removes industrial belt and business nature while APIs preserve legacy filter compatibility. Schema19 adds globally unique verified account phones and purpose-scoped verification; legacy username and SMS endpoints remain compatible. Native App removes map functionality; website maps remain available.\nSchema20 stores immutable upload-time watermark config, server-resolved manufacturer label and separate source/display media references. Only new company gallery, showroom cover and product images are rendered. Legacy media, logos, credentials, banners, category images and resource media are unchanged. Public media IDs always serve the authorized display variant; original=1 cannot expose protected clean sources. Legacy upload IDs may resolve to their public watermarked variant. New clients must use normalized media IDs returned after draft saving.\nSchema21 introduces procurement with additive buyer identity, reviewed publication/expansion, immutable demand and quotation versions, private attachments and conversations, deterministic supplier matching, scoped notifications and restored-object validation. Prices and quantities are decimal strings. Native App APIs remain compatible. Procurement may be disabled with PROCUREMENT_ENABLED=false.\nSupplier opportunities use /merchant/opportunities; legacy /buyer/opportunities pages redirect with query and fragment preserved. Procurement notifications support optional buyer/supplier scope for lists, unread counts and marking read. Phone SMS login uses purpose=login and the existing verification lifecycle. Runtime capabilities include phone_sms_auth, development_sms and procurement_demo; demo_accounts is only populated in explicit isolated demo mode. Production never exposes development codes."
   },
   "servers": [
     {
@@ -3732,6 +3732,10 @@
                   "file": {
                     "type": "string",
                     "format": "binary"
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "description": "Optional image-purpose hint; actual saved slot is authoritative."
                   }
                 },
                 "required": [
@@ -3826,7 +3830,8 @@
               }
             }
           }
-        }
+        },
+        "description": " Image multipart uploads accept optional purpose: unknown, company_gallery, company_cover, product_image, company_logo, credential, home_display, category_image or resource_cover. Actual saved content slots determine watermark eligibility; client hints do not bypass processing. For administrator uploads the server uses the target content owner. The returned source ID is private until a valid saved display or excluded slot is public."
       }
     },
     "/admin/dashboard": {
@@ -4726,6 +4731,10 @@
                   "file": {
                     "type": "string",
                     "format": "binary"
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "description": "Optional image-purpose hint; actual saved slot is authoritative."
                   }
                 },
                 "required": [
@@ -4835,7 +4844,8 @@
             },
             "required": true
           }
-        ]
+        ],
+        "description": " Image multipart uploads accept optional purpose: unknown, company_gallery, company_cover, product_image, company_logo, credential, home_display, category_image or resource_cover. Actual saved content slots determine watermark eligibility; client hints do not bypass processing. For administrator uploads the server uses the target content owner. The returned source ID is private until a valid saved display or excluded slot is public."
       }
     },
     "/public/showrooms/{slug}": {
@@ -7611,7 +7621,7 @@
     "/admin/home-display/media": {
       "post": {
         "summary": "Upload a private standalone platform hero image",
-        "description": "JPEG, PNG or WebP, up to 10 MiB, 36 megapixels under existing image rules. Returns existing image-upload shape id/url/thumb_url. No vendor gallery quota. Uploading does not publish; public access requires current saved configuration.",
+        "description": "JPEG, PNG or WebP, up to 10 MiB, 36 megapixels under existing image rules. Returns existing image-upload shape id/url/thumb_url. No vendor gallery quota. Uploading does not publish; public access requires current saved configuration. Image multipart uploads accept optional purpose: unknown, company_gallery, company_cover, product_image, company_logo, credential, home_display, category_image or resource_cover. Actual saved content slots determine watermark eligibility; client hints do not bypass processing. For administrator uploads the server uses the target content owner. The returned source ID is private until a valid saved display or excluded slot is public.",
         "security": [
           {
             "bearerAuth": []
@@ -7630,6 +7640,10 @@
                   "file": {
                     "type": "string",
                     "format": "binary"
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "description": "Optional image-purpose hint; actual saved slot is authoritative."
                   }
                 }
               }
@@ -9886,7 +9900,7 @@
     "/admin/resources/{id}/media": {
       "post": {
         "summary": "resource.write: upload on behalf of the owning merchant",
-        "description": "Multipart file. resource-media accepts kind=video or pdf. Private draft previews remain scoped to uploader and authorized references.",
+        "description": "Multipart file. resource-media accepts kind=video or pdf. Private draft previews remain scoped to uploader and authorized references. Image multipart uploads accept optional purpose: unknown, company_gallery, company_cover, product_image, company_logo, credential, home_display, category_image or resource_cover. Actual saved content slots determine watermark eligibility; client hints do not bypass processing. For administrator uploads the server uses the target content owner. The returned source ID is private until a valid saved display or excluded slot is public.",
         "tags": [
           "Platform operations"
         ],
@@ -9935,6 +9949,10 @@
                   "file": {
                     "type": "string",
                     "format": "binary"
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "description": "Optional image-purpose hint; actual saved slot is authoritative."
                   }
                 }
               }
@@ -10536,7 +10554,8 @@
           "409": {
             "description": "Version, quota, disk-space or reference conflict"
           }
-        }
+        },
+        "description": " Optional watermark field uses ImageWatermark. Omitting it retains the current configuration, explicit invalid/null values are rejected; the existing version check and system_settings_saved audit apply."
       }
     },
     "/admin/settings/test-addresses": {
@@ -11433,7 +11452,8 @@
                     "type": "string",
                     "enum": [
                       "register",
-                      "setup_password"
+                      "setup_password",
+                      "login"
                     ]
                   }
                 },
@@ -11885,6 +11905,2509 @@
                 },
                 "required": [
                   "confirmed"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid phone, password, verification code, missing explicit confirmation, or setup not available"
+          },
+          "401": {
+            "description": "Invalid password or expired session"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "409": {
+            "description": "Phone already used or account already bound; resolve with administrator, never auto-merge"
+          },
+          "429": {
+            "description": "Rate limit or 60-second SMS cooldown"
+          },
+          "503": {
+            "description": "SMS disabled/unavailable"
+          }
+        }
+      }
+    },
+    "/admin/settings/watermark/vendors": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "summary": "Search manufacturers for watermark preview",
+        "description": "Administrator only. Uses the published revision when present, otherwise the current draft. Returns at most 20 id/name/short_name options. Does not update settings.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{items:[{id,name,short_name}]}"
+          },
+          "403": {
+            "description": "Administrator required"
+          }
+        }
+      }
+    },
+    "/admin/settings/watermark/preview": {
+      "post": {
+        "tags": [
+          "Settings"
+        ],
+        "summary": "Render unsaved image watermark preview",
+        "description": "Administrator only; rate limited. Returns 960×600 PNG using the same pixel renderer as display images. vendor_id=0 uses a sample manufacturer. No settings/media writes. Cache-Control: no-store.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "watermark"
+                ],
+                "properties": {
+                  "watermark": {
+                    "$ref": "#/components/schemas/ImageWatermark"
+                  },
+                  "vendor_id": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "dark": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PNG preview",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "invalid_watermark"
+          },
+          "403": {
+            "description": "Administrator required"
+          }
+        }
+      }
+    },
+    "/public/procurements": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Active approved public summaries; no contact, notes, specification or attachment fields",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "20 records per page"
+          },
+          {
+            "name": "hall_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional filter"
+          },
+          {
+            "name": "category_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional filter"
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional filter"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional filter"
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "open or closing_soon (next 72 hours)"
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/public/procurement-vendors": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Approved supplier selector",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "20 records per page"
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/procurement/profile": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Current account buyer profile and capabilities",
+        "parameters": [],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Register/update buyer profile without changing the account role",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementBuyerProfile"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/projects": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Buyer projects; scope=supplier returns only the caller’s invitations",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "20 records per page"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Create one project; source_product_id starts a product inquiry",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementDemandInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Authorized project; draft=1 for owner, revision_id for authorized version history",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcurementPrivateProject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}/draft": {
+      "put": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Save a new immutable demand draft and supersede pending review",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementDemandInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}/submit": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Submit publication; first product inquiry reaches its source immediately, wider scope is reviewed on the same project",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementAction"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}/expand": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Review expansion of the SAME published project without invalidating quotes",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementAction"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}/state": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Complete, close or cancel while retaining history",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementAction"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}/invite": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Invite <=20 suppliers per call; <=100 pushed invitations per project",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementAction"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}/matches": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Owner-only deterministic category/keyword/coverage match preview",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "revision_id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            },
+            "description": "Owner/platform-only preview for a specific demand version"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}/join": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Eligible public supplier joins, or follows an existing invitation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementAction"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}/quotes": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Buyer comparison or only the supplier’s own quote/history; never competitor data",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Save draft or submit versioned partial quote for current demand revision",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementQuoteInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}/quote-withdraw": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Withdraw own quotation before deadline",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementAction"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}/participants/{vendor}/state": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Buyer intent disclosure or supplier participation state",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "vendor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementParticipantInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}/messages/{vendor}": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Private buyer–supplier conversation with pagination",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "vendor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Send private conversation message",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "vendor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementMessageInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/projects/{id}/attachments": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Upload private file before binding it to a demand, quote or message",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "JPG/PNG/WebP/PDF/DOCX/XLSX, <=20 MiB; no macros, CAD or archives"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/attachments/{id}": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Authenticated download/preview; never a public object-store URL",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Authenticated attachment headers",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/procurement/notifications": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Current account notifications, unread count and target_scope",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "20 records per page"
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "buyer",
+                "supplier"
+              ]
+            },
+            "description": "Optional identity scope; omitted returns all available account messages"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/procurement/notifications/read": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Mark own available notifications read; empty ids means all",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementReadInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procurement/preferences": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Current account opportunity preferences",
+        "parameters": [],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Update frequency without changing platform restriction",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementPreferenceInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/procurement/projects": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "procurement.read: project administration",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "20 records per page"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/admin/procurement/projects/{id}": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "procurement.read: project and demand versions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/admin/procurement/reviews": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "procurement.read: review queue",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "20 records per page"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/admin/procurement/reviews/{id}": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "procurement.review: approve/reject exact pending revision",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementReviewInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/procurement/projects/{id}/quotes": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "procurement.quote: quotation comparison and history",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/admin/procurement/projects/{id}/matches": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "procurement.match: match reasons",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "revision_id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            },
+            "description": "Owner/platform-only preview for a specific demand version"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/admin/procurement/projects/{id}/invite": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "procurement.match: supplement invitations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementAction"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/procurement/projects/{id}/moderate": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "procurement.manage: suspend project, exclude supplier or hide quote; reason required",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementModerationInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/procurement/accounts/{id}/restrict": {
+      "post": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "procurement.manage: buyer/supplier restriction; reason required",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 80
+            },
+            "description": "Reuse after uncertain network failure; reuse with different input returns 409."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementRestrictionInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/procurement/attachments/{id}": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "Scoped attachment access; quote/message files additionally require procurement.quote",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/admin/procurement/stats": {
+      "get": {
+        "tags": [
+          "procurement"
+        ],
+        "summary": "procurement.stats: lifecycle/quote/invitation/review counts",
+        "parameters": [],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Private projections depend on ownership and participant scope."
+          },
+          "400": {
+            "description": "Invalid input or missing Idempotency-Key"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Capability, verified phone, supplier eligibility or administrative permission required"
+          },
+          "404": {
+            "description": "Unavailable or outside the caller’s scope"
+          },
+          "409": {
+            "description": "Stale version, closed project, passed deadline or review required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/auth/phone/login": {
+      "post": {
+        "summary": "SMS code login for an existing verified buyer/supplier account; never creates a vendor or accepts an administrator",
+        "tags": [
+          "authentication"
+        ],
+        "description": "Returns actual role. A merchant may use visitor favorites; upgrading a visitor requires a separate confirmation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "pattern": "^1[3-9][0-9]{9}$",
+                    "description": "Verified mainland China mobile number; never inferred from company contacts."
+                  },
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[0-9]{6}$"
+                  }
+                },
+                "required": [
+                  "phone",
+                  "code"
                 ]
               }
             }
@@ -12990,6 +15513,22 @@
             },
             "description": "Captions keyed by media_id in media_ids. media_ids determines order. Omitted/null preserves captions for remaining images; [] clears captions.",
             "nullable": true
+          },
+          "supply_product_category_ids": {
+            "type": "array",
+            "maxItems": 35,
+            "items": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          "supply_region_codes": {
+            "type": "array",
+            "maxItems": 50,
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -14060,6 +16599,641 @@
           "updated_at": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "ImageWatermark": {
+        "type": "object",
+        "required": [
+          "enabled",
+          "text",
+          "opacity",
+          "width_percent",
+          "position"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": true
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "default": "中企展馆"
+          },
+          "opacity": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 40,
+            "default": 15
+          },
+          "width_percent": {
+            "type": "integer",
+            "minimum": 10,
+            "maximum": 30,
+            "default": 22
+          },
+          "position": {
+            "type": "string",
+            "enum": [
+              "top_left",
+              "top_right",
+              "bottom_left",
+              "bottom_right"
+            ],
+            "default": "bottom_right"
+          }
+        }
+      },
+      "ProcurementDemandInput": {
+        "type": "object",
+        "properties": {
+          "audience": {
+            "type": "string"
+          },
+          "vendor_ids": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "hall_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "source_product_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "delivery_region": {
+            "type": "string",
+            "description": "Existing administrative code, province/city/district"
+          },
+          "expected_delivery": {
+            "type": "string"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "contact_name": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "$ref": "#/components/schemas/ProcurementDemandItem"
+            }
+          },
+          "attachment_ids": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "ProcurementDemandItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "category_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "name": {
+            "type": "string"
+          },
+          "specification": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]{1,4})?$",
+            "description": "Decimal string, never a floating-point JSON number"
+          },
+          "unit": {
+            "type": "string"
+          }
+        }
+      },
+      "ProcurementAction": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "audience": {
+            "type": "string",
+            "enum": [
+              "direct",
+              "matched",
+              "public",
+              "designated"
+            ]
+          },
+          "vendor_ids": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "closed",
+              "cancelled"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "ProcurementQuoteInput": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "demand_revision_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "submit": {
+            "type": "boolean"
+          },
+          "tax_mode": {
+            "type": "string",
+            "enum": [
+              "included",
+              "excluded",
+              "negotiable"
+            ]
+          },
+          "freight_mode": {
+            "type": "string",
+            "enum": [
+              "included",
+              "fixed",
+              "collect",
+              "negotiable"
+            ]
+          },
+          "freight": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]{1,4})?$",
+            "description": "Decimal string, never a floating-point JSON number"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "$ref": "#/components/schemas/ProcurementQuoteItem"
+            }
+          },
+          "attachment_ids": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "ProcurementQuoteItem": {
+        "type": "object",
+        "properties": {
+          "item_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "quoted",
+              "unquoted",
+              "unavailable"
+            ]
+          },
+          "unit_price": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]{1,4})?$",
+            "description": "Decimal string, never a floating-point JSON number"
+          },
+          "minimum_quantity": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]{1,4})?$",
+            "description": "Decimal string, never a floating-point JSON number"
+          },
+          "delivery_days": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3650
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "ProcurementPublicSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "hall_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "title": {
+            "type": "string"
+          },
+          "delivery_region": {
+            "type": "string"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "category_id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1
+                },
+                "quantity": {
+                  "type": "string",
+                  "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]{1,4})?$",
+                  "description": "Decimal string, never a floating-point JSON number"
+                },
+                "unit": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ProcurementPrivateProject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "hall_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "state": {
+            "type": "string"
+          },
+          "audience": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "published_revision_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "draft_revision_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "revision": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64",
+                "minimum": 1
+              },
+              "status": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "delivery_region": {
+                "type": "string"
+              },
+              "expected_delivery": {
+                "type": "string"
+              },
+              "deadline": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "notes": {
+                "type": "string"
+              }
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProcurementDemandItem"
+            }
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProcurementAttachment"
+            }
+          },
+          "contact": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              }
+            },
+            "nullable": true,
+            "description": "Owner/platform only, or supplier after shortlist. Never present in public summaries."
+          },
+          "owner": {
+            "type": "boolean"
+          },
+          "participant": {
+            "type": "object"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Owner/platform only"
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Owner/platform only"
+          },
+          "versions": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Owner/platform only"
+          }
+        }
+      },
+      "ProcurementAttachment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "name": {
+            "type": "string"
+          },
+          "content_type": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "scope_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "project_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          }
+        }
+      },
+      "ProcurementBuyerProfile": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "contact_name": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "region_code": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "ProcurementReviewInput": {
+        "type": "object",
+        "properties": {
+          "approved": {
+            "type": "boolean"
+          },
+          "revision_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        }
+      },
+      "ProcurementMessageInput": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "type": "string",
+            "maxLength": 5000
+          },
+          "attachment_ids": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "ProcurementModerationInput": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "suspended": {
+            "type": "boolean"
+          },
+          "quote_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "vendor_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "excluded": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          }
+        }
+      },
+      "ProcurementPreferenceInput": {
+        "type": "object",
+        "properties": {
+          "opportunity_mode": {
+            "type": "string",
+            "enum": [
+              "instant",
+              "daily",
+              "off"
+            ]
+          }
+        }
+      },
+      "ProcurementParticipantInput": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "intent": {
+            "type": "boolean"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "participating",
+              "declined"
+            ]
+          }
+        }
+      },
+      "ProcurementReadInput": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "buyer",
+              "supplier"
+            ],
+            "description": "Optional identity scope; omitted preserves all-message reads"
+          }
+        }
+      },
+      "ProcurementRestrictionInput": {
+        "type": "object",
+        "properties": {
+          "supplier": {
+            "type": "boolean"
+          },
+          "suspended": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string"
           }
         }
       }

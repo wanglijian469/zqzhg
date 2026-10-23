@@ -1,0 +1,39 @@
+{
+  "checks": [
+    {
+      "route": "/buyer",
+      "width": 1440,
+      "homepage": true,
+      "sessionPreserved": true,
+      "languagePreserved": true
+    },
+    {
+      "route": "/buyer",
+      "width": 390,
+      "homepage": true,
+      "sessionPreserved": true,
+      "languagePreserved": true
+    },
+    {
+      "route": "/merchant/opportunities",
+      "width": 1440,
+      "homepage": true,
+      "sessionPreserved": true,
+      "languagePreserved": true
+    },
+    {
+      "route": "/merchant/opportunities",
+      "width": 390,
+      "homepage": true,
+      "sessionPreserved": true,
+      "languagePreserved": true
+    },
+    {
+      "route": "/procurement",
+      "guest": true,
+      "homepage": true
+    }
+  ],
+  "logoutRequests": 0,
+  "errors": []
+}
