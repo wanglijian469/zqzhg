@@ -21,7 +21,8 @@
   },
   "physical_android_verified": false,
   "ios_verified": false,
-  "production_deployed": false,
+  "production_deployed": true,
   "real_sms_sent": 0,
-  "bundled_map_https_verified": true
+  "bundled_map_https_verified": true,
+  "official_download": "https://zqzhg.com/downloads/dalunongji.apk"
 }

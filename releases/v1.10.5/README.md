@@ -18,6 +18,8 @@
 
 正式下载更新前备份数据库、程序、配置、旧APK及清单。具体备份位置及运维回执由运营方私有留存，公开发布仅提供源码和安装包身份校验信息。
 
-按清单核验上传文件后，使用`deploy/linux/promote-android-download.py`原子更新正式APK与清单；正式网站无需重启。更新后使用`python scripts/verify-official-android.py --tag v1.10.5`读取整个公网APK，确认与源包SHA256一致，并检查下载按钮／二维码接口。实际更新和GitHub附件校验记录随后保存为本目录发布回执及`docs/test-output/github-v1.10.5-*.json`。
+ECS正式下载现已更新为1.10.5+43，公网完整下载与本机原签名包及GitHub附件SHA256一致；下载按钮及二维码均已核对，网站服务保持正常。已知“关于”卡片保留1.10.4（42）旧版本文字，实际安装包及系统应用信息是1.10.5（43），详见上述验证说明。
+
+按清单核验上传文件后，使用`deploy/linux/promote-android-download.py`原子更新正式APK与清单；正式网站无需重启。更新后使用`python scripts/verify-official-android.py --tag v1.10.5`读取整个公网APK，确认与源包SHA256一致，并检查下载按钮／二维码接口。实际更新和GitHub附件校验记录保存为本目录发布回执及`docs/test-output/github-v1.10.5-*.json`。
 
 回退保留原包与配置，不修改数据库或清理企业资料。已安装43版本的Android手机不能直接用较低versionCode覆盖回退，应优先提供高于43的修复包；避免卸载造成未上传草稿丢失。服务端继续保留内容审核与协议确认，不恢复四项敏感核验材料收集。

@@ -1,5 +1,7 @@
 # 中企展馆 ZQZG V2.0
 
+2026-10-29 App正式下载更新为 **大陆农机1.10.5+43**：修复首页招牌裁切，点击图片可查看完整原图并缩放。原签名、包名及固定HTTPS地址保持；ECS旧包已备份，网站服务保持正常。[正式下载](https://zqzhg.com/downloads/dalunongji.apk) · [源码与受控安装包](https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.5) · [本版说明](releases/v1.10.5/README.md)。以下各轮保留为历史发布记录。
+
 2026-10-29 当前正式版本：网站已升级至企业内容审核流程（schema27）；Android **大陆农机1.10.4+42** 固定连接 `https://zqzhg.com`，原包名及签名保持。取消独立敏感材料核验，统一注册／密码登录、200 MB免费存储与采购关闭规则。正式App下载已更新。[正式下载](https://zqzhg.com/downloads/dalunongji.apk) · [GitHub源码与安装包](https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.4) · [发布、测试及回退说明](releases/v1.10.4/README.md)。**以下按时间保留历史记录，旧版“当前”描述不代表现状。**
 
 2026-10-28 免费展示服务升级：网站与“大陆农机”Android **1.10.0+38** 增加入驻说明与版本协议、企业人工核验、200 MB默认免费存储、最多12家每日免费轮换、投诉／企业权益工单和隐私统计选择，当前版本固定关闭采购业务。已交付本机验收APK，不部署生产、不替换正式下载。[修改、测试、安装、回退与备案待确认事项](docs/FREE_DISPLAY_SERVICE_1.10.0.md)。以下各轮保留为历史记录，当前服务状态以本条为准。
