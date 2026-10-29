@@ -2,7 +2,7 @@ import {apiURL} from './runtime-config';
 import {useCallback,useContext,useEffect,useRef,useState,type ReactNode} from 'react';
 import {Activity,Archive,ArrowRight,CheckCircle2,Cloud,Database,Download,HardDrive,Plus,RefreshCw,Upload,Users} from 'lucide-react';
 import {api,body,token,APIError} from './api';
-import {Confirmation,ErrorState,Loading,Modal,useLanguage} from './main';
+import {Confirmation,ErrorState,Loading,Modal,useLanguage} from './ui';
 import {usePlatformAccess} from './platform-access';
 import './operations.css';
 function useWords(){const {lang}=useLanguage();return (zh:string,en:string)=>lang==='zh'?zh:en}

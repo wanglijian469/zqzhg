@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
+	"net/url"
 	"regexp"
 	"strconv"
 
@@ -56,6 +57,7 @@ func sendSitemap(c *gin.Context, value any) {
 func (a *App) sitemapIndex(c *gin.Context) {
 	index := sitemapIndex{XMLNS: sitemapNamespace}
 	base := a.publicBase(c)
+	index.Entries = append(index.Entries, sitemapLocation{base + "/sitemaps/pages.xml"})
 	for _, kind := range []string{"vendor", "product"} {
 		var total int64
 		if err := a.publicQuery(kind).Count(&total).Error; err != nil {
@@ -70,6 +72,25 @@ func (a *App) sitemapIndex(c *gin.Context) {
 }
 
 func (a *App) sitemapPage(c *gin.Context) {
+	if c.Param("file") == "pages.xml" {
+		var halls []Hall
+		if err := a.DB.Where("status=?", "open").Order("id ASC").Find(&halls).Error; err != nil {
+			sitemapError(c, 503)
+			return
+		}
+		urls := sitemapURLs{XMLNS: sitemapNamespace}
+		base := a.publicBase(c)
+		for _, path := range []string{"/services", "/services/showroom-agreement", "/services/terms", "/services/privacy"} {
+			urls.Entries = append(urls.Entries, sitemapLocation{base + path})
+		}
+		for _, hall := range halls {
+			for _, path := range []string{"/", "/browse", "/browse/products", "/regions"} {
+				urls.Entries = append(urls.Entries, sitemapLocation{canonicalPublic(base, path, url.Values{"hall": {hall.Slug}})})
+			}
+		}
+		sendSitemap(c, urls)
+		return
+	}
 	match := sitemapFile.FindStringSubmatch(c.Param("file"))
 	if match == nil {
 		sitemapError(c, 404)

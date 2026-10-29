@@ -25,7 +25,7 @@ func procErr(code string, status int) error { return procurementError{code, stat
 func procInvalid() error                    { return procErr("proc_invalid", 400) }
 func procMissing() error                    { return procErr("not_found", 404) }
 func procConflict() error                   { return procErr("proc_conflict", 409) }
-func procurementEnabled() bool              { return env("PROCUREMENT_ENABLED", "true") != "false" }
+func procurementEnabled() bool              { return false } // This release only provides free information display.
 func procResponse(c *gin.Context, value any, err error) {
 	if err == nil {
 		c.JSON(200, value)
@@ -194,6 +194,7 @@ func (a *App) procurementRoutes(api, pub, admin *gin.RouterGroup) {
 	p.GET("/preferences", a.procPreferences)
 	p.PUT("/preferences", a.procSavePreferences)
 	pub.GET("/procurements", a.procPublicProjects)
+	pub.GET("/procurements/:id", a.procPublicProject)
 	pub.GET("/procurement-vendors", a.procVendorOptions)
 	admin.GET("/procurement/projects", a.procAdminProjects)
 	admin.GET("/procurement/projects/:id", a.procProjectDetail)
@@ -430,6 +431,16 @@ func (a *App) procList(c *gin.Context, q *gorm.DB, who Account) {
 		procResponse(c, nil, e)
 		return
 	}
+	// Opt in to the Web list contract; legacy App callers retain the detail-shaped response.
+	if c.Query("view") == "summary" {
+		items, err := a.procProjectSummaries(who, projects)
+		if err != nil {
+			procResponse(c, nil, err)
+			return
+		}
+		c.JSON(200, gin.H{"items": items, "total": total, "page": page, "page_size": size})
+		return
+	}
 	items := []gin.H{}
 	for _, p := range projects {
 		v, e := a.procProjectView(a.DB, who, p, false)
@@ -442,12 +453,25 @@ func (a *App) procList(c *gin.Context, q *gorm.DB, who Account) {
 	c.JSON(200, gin.H{"items": items, "total": total, "page": page, "page_size": size})
 }
 func (a *App) procPublicProjects(c *gin.Context) {
+	a.procPublicProjectsView(c, false)
+}
+
+func (a *App) procPublicProject(c *gin.Context) {
+	a.procPublicProjectsView(c, true)
+}
+
+// Both views use exactly the same public visibility rules and field allowlist.
+func (a *App) procPublicProjectsView(c *gin.Context, detail bool) {
 	if !procurementEnabled() {
 		fail(c, 503, "proc_disabled")
 		return
 	}
 	page, size := procPaging(c)
 	q := a.DB.Table("procurement_projects p").Joins("JOIN procurement_revisions r ON r.id=p.published_revision_id AND r.status='approved'").Joins("JOIN halls h ON h.id=p.hall_id AND h.status='open'").Joins("JOIN buyer_profiles b ON b.account_id=p.buyer_id AND b.suspended=0").Where("p.state='open' AND p.audience='public' AND p.suspended=0 AND r.deadline>?", time.Now().UTC())
+	if detail {
+		q = q.Where("p.id=?", c.Param("id"))
+		page, size = 1, 1
+	}
 	if c.Query("state") == "closing_soon" {
 		q = q.Where("r.deadline<=?", time.Now().Add(72*time.Hour))
 	} else if c.Query("state") != "" && c.Query("state") != "open" {
@@ -467,7 +491,7 @@ func (a *App) procPublicProjects(c *gin.Context) {
 			fail(c, 400, "proc_invalid")
 			return
 		}
-		q = q.Where("r.title LIKE ?", "%"+kw+"%")
+		q = q.Where("(r.title LIKE ? OR EXISTS (SELECT 1 FROM procurement_items search_item WHERE search_item.revision_id=r.id AND search_item.name LIKE ?))", "%"+kw+"%", "%"+kw+"%")
 	}
 	var total int64
 	if e := q.Count(&total).Error; e != nil {
@@ -492,10 +516,38 @@ func (a *App) procPublicProjects(c *gin.Context) {
 			return
 		}
 		lines := []gin.H{}
+		categoryIDs := []uint64{}
 		for _, i := range items {
-			lines = append(lines, gin.H{"name": i.Name, "category_id": i.CategoryID, "quantity": i.Quantity, "unit": i.Unit})
+			categoryIDs = append(categoryIDs, i.CategoryID)
 		}
-		result = append(result, gin.H{"id": p.ID, "hall_id": p.HallID, "title": r.Title, "delivery_region": r.DeliveryRegion, "deadline": r.Deadline, "state": "open", "items": lines})
+		var categories []Category
+		if len(categoryIDs) > 0 {
+			if e := a.DB.Select("id,name,name_en").Where("id IN ?", categoryIDs).Find(&categories).Error; e != nil {
+				procResponse(c, nil, e)
+				return
+			}
+		}
+		names := map[uint64]Category{}
+		for _, category := range categories {
+			names[category.ID] = category
+		}
+		for _, i := range items {
+			lines = append(lines, gin.H{"name": i.Name, "category_id": i.CategoryID, "category_name": names[i.CategoryID].Name, "category_name_en": names[i.CategoryID].NameEN, "quantity": i.Quantity, "unit": i.Unit})
+		}
+		var review ProcurementReview
+		if e := a.DB.Where("project_id=? AND revision_id=? AND audience='public' AND status='approved' AND reviewed_at IS NOT NULL", p.ID, r.ID).Order("reviewed_at ASC").Limit(1).Find(&review).Error; e != nil {
+			procResponse(c, nil, e)
+			return
+		}
+		result = append(result, gin.H{"id": p.ID, "hall_id": p.HallID, "title": r.Title, "delivery_region": r.DeliveryRegion, "deadline": r.Deadline, "published_at": review.ReviewedAt, "state": "open", "items": lines})
+	}
+	if detail {
+		if len(result) == 0 {
+			fail(c, 404, "not_found")
+			return
+		}
+		c.JSON(200, result[0])
+		return
 	}
 	c.JSON(200, gin.H{"items": result, "total": total, "page": page, "page_size": size})
 }

@@ -31,7 +31,7 @@ func TestTaxonomyPayloadPresence(t *testing.T) {
 }
 
 func TestAgricultureTaxonomyLifecycle(t *testing.T) {
-	a := importTestApp(t)
+	a := importTestAppAtSchema(t, 21)
 	tc := testClient{t, a.router()}
 	admin := resourceTestSession(t, a, "admin")
 	owner := resourceTestSession(t, a, "merchant")
@@ -156,7 +156,7 @@ func TestAgricultureTaxonomyLifecycle(t *testing.T) {
 }
 
 func TestTaxonomyHistoricalBackfillAndMerge(t *testing.T) {
-	a := importTestApp(t)
+	a := importTestAppAtSchema(t, 21)
 	tc := testClient{t, a.router()}
 	admin := resourceTestSession(t, a, "admin")
 	var cylinder, gear Category
@@ -213,7 +213,7 @@ func TestTaxonomyHistoricalBackfillAndMerge(t *testing.T) {
 	if e := a.DB.Exec("DELETE FROM schema_migrations WHERE version=17").Error; e != nil {
 		t.Fatal(e)
 	}
-	if e := migrate(a.DB); e != nil {
+	if e := migrateThrough(a.DB, 21); e != nil {
 		t.Fatal("interrupted migration retry", e)
 	}
 	for id, blob := range snapshots {

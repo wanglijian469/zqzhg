@@ -2,7 +2,8 @@ part of 'main.dart';
 
 /// The four public destinations retain their own list and scroll state.
 class AppShell extends StatefulWidget {
-  const AppShell({super.key});
+  final bool initiallyInHall;
+  const AppShell({super.key, this.initiallyInHall = true});
   @override
   State<AppShell> createState() => _AppShellState();
 }
@@ -27,15 +28,129 @@ class _AppShellState extends State<AppShell>
   }
 
   @override
-  void didPopNext() => recordPage();
+  void didPopNext() {
+    recordPage();
+    if (mounted) setState(() {});
+  }
+
+  bool welcomeShowing = false;
   int selected = 0;
+  Future<void> welcome(AppModel m) async {
+    if (welcomeShowing ||
+        m.account['welcome_pending'] != true ||
+        m.token.isEmpty) {
+      return;
+    }
+    welcomeShowing = true;
+    final endpoint = m.baseUrl;
+    final session = m.token;
+    try {
+      final fresh = asMap(await m.api('/auth/me'));
+      if (!mounted || m.baseUrl != endpoint || m.token != session) {
+        welcomeShowing = false;
+        return;
+      }
+      m.account = fresh;
+      await m.prefs.setString('account', jsonEncode(fresh));
+      if (fresh['welcome_pending'] != true) {
+        welcomeShowing = false;
+        return;
+      }
+    } catch (_) {
+      welcomeShowing = false;
+      return;
+    }
+    if (!mounted) {
+      welcomeShowing = false;
+      return;
+    }
+    String problem = '';
+    bool saving = false;
+    final choice = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialog) => StatefulBuilder(
+        builder: (c, change) {
+          Future<void> choose(String v) async {
+            if (saving) return;
+            change(() => saving = true);
+            try {
+              await m.api(
+                '/auth/me/welcome',
+                method: 'POST',
+                data: {'choice': v},
+              );
+              if (m.baseUrl != endpoint) return;
+              m.account['welcome_pending'] = false;
+              await m.prefs.setString('account', jsonEncode(m.account));
+              if (c.mounted) Navigator.pop(c, v);
+            } catch (_) {
+              if (c.mounted) {
+                change(
+                  () => problem = syncText(
+                    c,
+                    '保存未完成，请重试',
+                    'Could not save. Retry.',
+                  ),
+                );
+              }
+            } finally {
+              if (c.mounted) change(() => saving = false);
+            }
+          }
+
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+              title: Text(syncText(c, '欢迎来到中企展馆', 'Welcome to the exhibition')),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final pair in [
+                    [
+                      'manufacturer',
+                      '我是厂家，免费入驻',
+                      'I manufacture products — join free',
+                    ],
+                    ['products', '我是采购商，寻找产品', 'Find products'],
+                    ['browse', '暂时逛逛展馆', 'Explore the exhibition'],
+                    ['skip', '跳过', 'Skip'],
+                  ])
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: OutlinedButton(
+                        onPressed: saving ? null : () => choose(pair[0]),
+                        child: Text(syncText(c, pair[1], pair[2])),
+                      ),
+                    ),
+                  if (problem.isNotEmpty) Text(problem),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+    welcomeShowing = false;
+    if (!mounted || m.baseUrl != endpoint) return;
+    if (choice == 'products') browse('product');
+    if (choice == 'manufacturer') await authenticateManufacturerEntry(context);
+  }
+
+  late bool insideHall = widget.initiallyInHall;
   final initialQueries = <int, String>{};
   final initialCategories = <int, int?>{};
   final visited = <int>{0};
   final vendors = GlobalKey<_BrowseScreenState>();
   final products = GlobalKey<_BrowseScreenState>();
   AppModel? model;
-  void homeCallback() => select(0);
+  void homeCallback() {
+    setState(() {
+      selected = 0;
+      insideHall = true;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -117,6 +232,14 @@ class _AppShellState extends State<AppShell>
   @override
   Widget build(BuildContext context) {
     final m = ModelScope.of(context);
+    if (selected == 0 &&
+        m.account['welcome_pending'] == true &&
+        !welcomeShowing &&
+        (ModalRoute.of(context)?.isCurrent ?? true)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(welcome(m));
+      });
+    }
     final labels = ['navHome', 'navManufacturers', 'navProducts', 'navMine'];
     final icons = [
       Icons.home_outlined,
@@ -125,18 +248,38 @@ class _AppShellState extends State<AppShell>
       Icons.person_outline,
     ];
     return PopScope(
-      canPop: selected == 0,
+      canPop: selected == 0 && (insideHall || !m.showHallSelector),
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) select(0);
+        if (!didPop) {
+          if (selected == 0 && insideHall && m.showHallSelector) {
+            setState(() => insideHall = false);
+          } else {
+            select(0);
+          }
+        }
       },
       child: Scaffold(
         body: AppNavigation(
           browse: browse,
+          openExhibition: () => setState(() {
+            selected = 0;
+            insideHall = false;
+          }),
           openMine: () => select(3),
           child: IndexedStack(
             index: selected,
             children: [
-              const IndustrialHomeScreen(),
+              insideHall || !m.showHallSelector
+                  ? const IndustrialHomeScreen()
+                  : ExhibitionPortalScreen(
+                      onSelect: (hall) {
+                        m.selectHall(hall);
+                        setState(() {
+                          insideHall = true;
+                          selected = 0;
+                        });
+                      },
+                    ),
               if (visited.contains(1))
                 BrowseScreen(
                   key: vendors,
@@ -239,10 +382,12 @@ class _AppShellState extends State<AppShell>
 class AppNavigation extends InheritedWidget {
   final void Function(String kind, {String? query, int? category}) browse;
   final VoidCallback openMine;
+  final VoidCallback? openExhibition;
   const AppNavigation({
     super.key,
     required this.browse,
     required this.openMine,
+    this.openExhibition,
     required super.child,
   });
   static AppNavigation? of(BuildContext context) =>
@@ -272,14 +417,8 @@ class PersonalScreen extends StatelessWidget {
     Widget entry(bool owned) => Card(
       child: ListTile(
         key: const ValueKey('my-booth'),
-        leading: const Icon(
-          Icons.storefront_outlined,
-          color: Color(0xff1769c2),
-        ),
-        title: Text(
-          m.t(owned ? 'myBooth' : 'freeEntry'),
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
+        leading: const Icon(Icons.storefront_outlined, color: industrialBlue),
+        title: Text(m.t(owned ? 'myBooth' : 'freeEntry')),
         trailing: const Icon(Icons.chevron_right),
         onTap: () => push(context, const MerchantScreen()),
       ),
@@ -290,12 +429,6 @@ class PersonalScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(m.t('navMine')),
           automaticallyImplyLeading: false,
-          actions: [
-            TextButton(
-              onPressed: m.toggleLanguage,
-              child: Text(m.language == 'zh' ? 'English' : '中文'),
-            ),
-          ],
         ),
         body: SafeArea(
           top: false,
@@ -303,53 +436,44 @@ class PersonalScreen extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              if (isMerchant(m))
-                MerchantVendorPane(
-                  builder: (item) => Column(
-                    children: [
-                      if (item != null) MerchantCompanyCard(item: item),
-                      entry(item != null),
-                    ],
+              Card(
+                child: ListTile(
+                  key: const ValueKey('account-summary'),
+                  leading: const Icon(
+                    Icons.account_circle_outlined,
+                    size: 40,
+                    color: industrialBlue,
                   ),
-                )
-              else ...[
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(
-                          Icons.account_circle_outlined,
-                          size: 40,
-                          color: Color(0xff1769c2),
-                        ),
-                        space(8),
-                        Text(
-                          m.token.isEmpty
-                              ? m.t('guestFavorites')
-                              : (m.account['phone'] ??
-                                        m.account['login_name'] ??
-                                        m.account['username'] ??
-                                        m.t('accountMenu'))
-                                    .toString(),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        if (m.account['role'] == 'visitor')
-                          Text(m.t('visitorMerchantHelp')),
-                        if (m.token.isEmpty)
-                          TextButton(
-                            onPressed: () =>
-                                push(context, const LoginScreen(visitor: true)),
-                            child: Text(m.t('loginToSync')),
+                  title: Text(
+                    m.token.isEmpty
+                        ? syncText(context, '登录／注册', 'Sign in / Register')
+                        : (m.account['phone'] ??
+                                  m.account['login_name'] ??
+                                  m.account['username'] ??
+                                  m.t('accountMenu'))
+                              .toString(),
+                  ),
+                  subtitle: m.token.isEmpty
+                      ? Text(
+                          syncText(
+                            context,
+                            '登录后同步收藏和企业资料',
+                            'Sync favorites and company materials',
                           ),
-                      ],
-                    ),
-                  ),
+                        )
+                      : null,
+                  trailing: m.token.isEmpty
+                      ? const Icon(Icons.chevron_right)
+                      : null,
+                  onTap: m.token.isEmpty
+                      ? () => push(context, const LoginScreen(visitor: true))
+                      : null,
                 ),
+              ),
+              if (isMerchant(m))
+                MerchantVendorPane(builder: (item) => entry(item != null))
+              else
                 entry(false),
-              ],
               Card(
                 child: Column(
                   children: [
@@ -370,11 +494,6 @@ class PersonalScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              if (!isMerchant(m))
-                TextButton(
-                  onPressed: () => loginManufacturer(context),
-                  child: Text(m.t('manufacturerAccount')),
-                ),
             ],
           ),
         ),
@@ -399,11 +518,10 @@ class AccountSettingsScreen extends StatelessWidget {
             children: [
               Card(
                 child: ListTile(
-                  leading: const Icon(Icons.dns_outlined),
-                  title: Text(m.t('apiEndpoint')),
-                  subtitle: Text(m.baseUrl),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => showEndpointSettings(context),
+                  leading: const Icon(Icons.language),
+                  title: Text(syncText(context, '语言', 'Language')),
+                  trailing: Text(m.language == 'zh' ? '简体中文' : 'English'),
+                  onTap: m.toggleLanguage,
                 ),
               ),
               if (m.token.isNotEmpty &&
@@ -425,6 +543,8 @@ class AccountSettingsScreen extends StatelessWidget {
                         : () => push(context, const LoginScreen(binding: true)),
                   ),
                 ),
+              const AppAboutCard(),
+              const NativeServiceLinks(),
               if (m.token.isNotEmpty)
                 OutlinedButton(
                   onPressed: () async {
@@ -454,43 +574,6 @@ Future<void> loginManufacturer(BuildContext context) async {
       m.token.isNotEmpty &&
       m.account['role'] != 'visitor') {
     returnToMerchant(context);
-  }
-}
-
-Future<void> showEndpointSettings(BuildContext context) async {
-  final m = ModelScope.of(context);
-  final controller = TextEditingController(text: m.baseUrl);
-  final url = await showDialog<String>(
-    context: context,
-    builder: (ctx) => AlertDialog(
-      title: Text(m.t('apiEndpoint')),
-      content: TextField(
-        controller: controller,
-        keyboardType: TextInputType.url,
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(ctx),
-          child: Text(m.t('cancel')),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(ctx, controller.text.trim()),
-          child: Text(m.t('save')),
-        ),
-      ],
-    ),
-  );
-  // Keep the controller alive until the dialog's exit transition completes.
-  await Future<void>.delayed(const Duration(milliseconds: 300));
-  controller.dispose();
-  if (url == null || !context.mounted) return;
-  try {
-    await m.changeEndpoint(url);
-    if (context.mounted) {
-      Navigator.of(context).popUntil((route) => route.isFirst);
-    }
-  } catch (e) {
-    if (context.mounted) showError(context, e);
   }
 }
 

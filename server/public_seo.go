@@ -65,7 +65,7 @@ func showroomSearchVariant(query url.Values) bool {
 	return page > 1
 }
 func cleanHTMLMetadata(source string) string {
-	for _, pattern := range []string{`(?is)<title[^>]*>.*?</title\s*>`, `(?is)<meta\b[^>]*(?:name\s*=\s*["'](?:description|robots|zqzg-public-base)["']|property\s*=\s*["']og:[^"']+["'])[^>]*>`, `(?is)<link\b[^>]*rel\s*=\s*["']canonical["'][^>]*>`, `(?is)<script\b[^>]*type\s*=\s*["']application/ld\+json["'][^>]*>.*?</script\s*>`} {
+	for _, pattern := range []string{`(?is)<title[^>]*>.*?</title\s*>`, `(?is)<meta\b[^>]*(?:name\s*=\s*["'](?:description|keywords|robots|zqzg-public-base)["']|property\s*=\s*["']og:[^"']+["'])[^>]*>`, `(?is)<link\b[^>]*rel\s*=\s*["']canonical["'][^>]*>`, `(?is)<script\b[^>]*type\s*=\s*["']application/ld\+json["'][^>]*>.*?</script\s*>`} {
 		source = regexp.MustCompile(pattern).ReplaceAllString(source, "")
 	}
 	return source
@@ -81,8 +81,13 @@ func (a *App) sendPublicHTML(c *gin.Context, index string, status int, title, de
 		meta += "<meta property='" + k + "' content='" + escape(v) + "'>"
 	}
 	page := cleanHTMLMetadata(string(source))
+	settings, _ := a.systemConfig()
+	page = strings.Replace(page, "</body>", "<noscript><footer><a href="+`"https://beian.miit.gov.cn/"`+">"+escape(settings.Site.ICPNumber)+"</a></footer></noscript></body>", 1)
 	if len(content) > 0 {
 		detail := content[0]
+		if detail.Keywords != "" {
+			meta += "<meta name='keywords' content='" + escape(detail.Keywords) + "'>"
+		}
 		if detail.Image != "" {
 			meta += "<meta property='og:image' content='" + escape(detail.Image) + "'>"
 		}
@@ -108,6 +113,9 @@ func (a *App) sendPublicHTML(c *gin.Context, index string, status int, title, de
 }
 func (a *App) publicHTML(c *gin.Context, index string) bool {
 	path := c.Request.URL.Path
+	if path == "/services" || strings.HasPrefix(path, "/services/") || path == "/service-requests" {
+		return a.servicePageHTML(c, index)
+	}
 	if path != "/regions" && path != "/" && path != "/browse" && path != "/browse/products" && !strings.HasPrefix(path, "/products/") {
 		return false
 	}
@@ -154,6 +162,7 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 			return a.sendPublicHTML(c, index, 500, "服务暂不可用 | "+a.brandName(), "请稍后重试。", canonical, "noindex,follow")
 		}
 		content = append(content, detail)
+
 	} else {
 		var hall Hall
 		if e := a.DB.Where("slug=?", c.DefaultQuery("hall", "agriculture")).First(&hall).Error; e != nil {
@@ -164,7 +173,7 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 			}
 			return a.sendPublicHTML(c, index, status, "展馆暂不可用 | "+a.brandName(), "展馆不存在或暂不可用。", canonical, "noindex,follow")
 		}
-		title = a.brandName() + " · " + hall.Name
+		title = a.brandName() + "-" + hall.Name
 		if strings.TrimSpace(hall.Description) != "" {
 			desc = hall.Description
 		}
@@ -178,11 +187,29 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 			title = "厂商地图 | " + title
 			desc = "按行政区划浏览" + hall.Name + "的公开厂商。行政目录覆盖大陆31个省级行政区，版本2023-06-30。"
 		} else if path == "/browse" {
-			title = "找厂家 | " + title
-			desc = "按产品、主营业务和所在地区，快速发现" + hall.Name + "的制造企业。"
+			title = publicSEOCopy.ZH.DirectoryTitle + " | " + title
+			desc = hall.Name + "：" + publicSEOCopy.ZH.DirectoryDescription
 		} else if path == "/browse/products" {
-			title = "找产品 | " + title
-			desc = "按名称、型号、分类和地区，发现" + hall.Name + "的真实产品。"
+			title = publicSEOCopy.ZH.ProductsTitle + " | " + title
+			desc = hall.Name + "：" + publicSEOCopy.ZH.ProductsDescription
+		} else if path == "/" {
+			title = a.brandName() + "-" + hall.Name
+			desc = hall.Name + "：" + publicSEOCopy.ZH.HomeIntro
+		}
+		if hall.Status == "open" && (path == "/" || path == "/browse" || path == "/browse/products") {
+			landing, err := landingSEO(title, desc, hall.Slug, path == "/")
+			if err != nil {
+				return a.sendPublicHTML(c, index, 500, "服务暂不可用 | "+a.brandName(), "请稍后重试。", canonical, "noindex,follow")
+			}
+			values := []string{a.brandName(), hall.Name}
+			if path == "/" || path == "/browse" {
+				values = append(values, publicSEOCopy.ZH.DirectoryTerms...)
+				values = append(values, publicSEOCopy.TargetTerms...)
+			} else {
+				values = append(values, publicSEOCopy.ZH.ProductTerms...)
+			}
+			landing.Keywords = seoKeywords(values...)
+			content = append(content, landing)
 		}
 		for _, k := range []string{"q", "category_id", "region_id", "region_code", "unassigned", "vendor_id", "sort"} {
 			if c.Query(k) != "" {

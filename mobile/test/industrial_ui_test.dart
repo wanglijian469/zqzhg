@@ -22,8 +22,13 @@ void main() {
             jsonDecode(File('assets/i18n/$lang.json').readAsStringSync()),
           ),
       },
-      client: legacyHallClient(client ??
-          MockClient((_) async => http.Response('{"items":[],"total":0}', 200))),
+      testBaseUrl: 'http://fixture',
+      client: legacyHallClient(
+        client ??
+            MockClient(
+              (_) async => http.Response('{"items":[],"total":0}', 200),
+            ),
+      ),
     );
   }
 

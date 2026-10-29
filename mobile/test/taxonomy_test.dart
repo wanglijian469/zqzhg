@@ -1,3 +1,4 @@
+import 'native_field_finder.dart';
 import 'dart:convert';
 import 'package:dalunongji/main.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +106,7 @@ void main() {
         tester,
         find.widgetWithText(OutlinedButton, '搜索分类'),
       );
-      await tester.enterText(find.widgetWithText(TextField, '分类名称或别名'), '油缸');
+      await tester.enterText(nativeField( '分类名称或别名'), '油缸');
       await tester.pumpAndSettle();
       await tester.tap(find.text('液压系统及零部件 / 液压油缸').last);
       await tester.pumpAndSettle();
@@ -145,9 +146,9 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await tester.enterText(find.widgetWithText(TextField, '产品品牌'), '品牌A');
+      await tester.enterText(nativeField( '产品品牌'), '品牌A');
       await tester.enterText(
-        find.widgetWithText(TextField, '适用机型'),
+        nativeField( '适用机型'),
         'A100，B200',
       );
       await tester.pump();
@@ -221,9 +222,7 @@ void main() {
                   reason: '$width/$lang/$kind/$scale/keyboard=$keyboard',
                 );
                 if (keyboard && kind == 'product') {
-                  final field = find.widgetWithText(
-                    TextField,
-                    lang == 'zh' ? '适用机型' : 'Compatible models',
+                  final field = nativeField(lang == 'zh' ? '适用机型' : 'Compatible models',
                   );
                   await tester.ensureVisible(field);
                   await tester.pumpAndSettle();

@@ -1,8 +1,8 @@
 import {useEffect,useRef,useState} from 'react';
 import type {OutlineBoundary,RegionStatistics} from './industry-map-types';
 import {loadBoundary} from './industry-map-resources';
-import {loadMapPreview,mapPreviewAvailable} from './industry-map-preview';
-import {useLanguage} from './main';
+import {loadMapPreview,mapPreviewAvailable,mapDemoActive} from './industry-map-preview';
+import {useLanguage} from './ui';
 import {MapPin,Minus,Plus,RotateCcw} from 'lucide-react';
 
 type MapControls={dispose:()=>void;resize:()=>void;zoom:(factor:number)=>void;reset:()=>void;update?:(statistics:RegionStatistics)=>void};
@@ -18,7 +18,7 @@ export default function IndustryMapChart({statistics,onSelect,onMissing}:{statis
   setState('loading');setResource(undefined);setVerified(null);
   (async()=>{
    const approved=schematic?null:await loadBoundary(code,controller.signal);
-   const enabled=approved?false:schematic?false:await mapPreviewAvailable(controller.signal).catch(error=>{if(controller.signal.aborted)throw error;return false});
+   const enabled=approved?false:schematic?false:await mapPreviewAvailable(controller.signal).catch(error=>{if(controller.signal.aborted||mapDemoActive())throw error;return false});
    if(controller.signal.aborted)return;
    if(!schematic)setAvailable(enabled||!!approved);
    setMode(enabled||approved?'outline':'schematic');
@@ -53,10 +53,10 @@ export default function IndustryMapChart({statistics,onSelect,onMissing}:{statis
  return <div className="industry-chart-wrapper industry-schematic-wrapper" data-map-mode={mode}>
   <div className="industry-diagram-heading"><strong>{statistics.region?.name||t('imNational')}</strong><span>{statistics.items.length?t('imDrillHint'):t('imLeaf')}</span></div>
   <div className="industry-chart" ref={container} role="img" aria-label={t(mode==='outline'?'imOutlineGraphic':'imGraphic')}/>
-  {state==='loading'?<div className="loading" role="status">{t('loading')}</div>:failed?<div className="industry-map-state" role="status"><MapPin size={32}/><p>{t('imMapFailed')}</p><button className="button secondary" onClick={()=>state==='module-failed'?window.location.reload():setAttempt(n=>n+1)}>{t('retry')}</button>{available&&!schematic&&<button className="text-link" onClick={()=>setSchematic(true)}>{t('imUseSchematic')}</button>}</div>:null}
+  {state==='loading'?<div className="loading" role="status">{t('loading')}</div>:failed?<div className="industry-map-state" role="status"><MapPin size={32}/><p>{t('imMapFailed')}</p><button className="button secondary" onClick={()=>state==='module-failed'?window.location.reload():setAttempt(n=>n+1)}>{t('retry')}</button>{available&&!schematic&&!mapDemoActive()&&<button className="text-link" onClick={()=>setSchematic(true)}>{t('imUseSchematic')}</button>}</div>:null}
   {state==='ready'&&<div className="industry-map-controls"><button aria-label={t('imZoomIn')} onClick={()=>controls.current?.zoom(1.3)}><Plus size={17}/></button><button aria-label={t('imZoomOut')} onClick={()=>controls.current?.zoom(1/1.3)}><Minus size={17}/></button><button aria-label={t('imResetMap')} onClick={()=>controls.current?.reset()}><RotateCcw size={16}/></button></div>}
   {!!resource?.missing_codes.length&&<button className="industry-missing-outlines" onClick={onMissing}>{t('imMissingOutlines')} {resource.missing_codes.length} · {t('imChooseRegion')}</button>}
-  {available&&schematic&&<button className="industry-missing-outlines" onClick={()=>setSchematic(false)}>{t('imReturnOutline')}</button>}
-  <div className="industry-schematic-footer"><span className="industry-schematic-legend"><i/>{t('imLess')} — {t('imMore')}</span>{mode==='outline'&&verified?<small>{verified.source} · {verified.review_number}</small>:mode==='outline'?<a href="https://help.aliyun.com/zh/datav/datav-7-0/user-guide/datav-geoatlas-widgets/" target="_blank" rel="noreferrer">{t('imPreviewNote')}</a>:<small>{t('imSchematicNote')}</small>}</div>
+  {available&&schematic&&!mapDemoActive()&&<button className="industry-missing-outlines" onClick={()=>setSchematic(false)}>{t('imReturnOutline')}</button>}
+  <div className="industry-schematic-footer"><span className="industry-schematic-legend"><i/>{t('imLess')} — {t('imMore')}</span>{mode==='outline'&&verified?<small>{verified.source} · {verified.review_number}</small>:mode==='outline'?<a href="https://help.aliyun.com/zh/datav/datav-7-0/user-guide/datav-geoatlas-widgets/" target="_blank" rel="noreferrer">{mapDemoActive()?(lang==='zh'?'开发演示边界 · DataV/高德（仅供学习交流）':'Demo boundaries · DataV/Amap (learning and exchange)'):t('imPreviewNote')}</a>:<small>{t('imSchematicNote')}</small>}</div>
  </div>;
 }

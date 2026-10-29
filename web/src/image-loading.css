@@ -1,0 +1,5 @@
+/* Keep the footer below the first viewport while page/API content is pending. */
+.public-web:not(.factory-map-shell):not(.merchant-entry-shell)>main{min-height:calc(100svh - 72px)}
+.image-loading{min-width:1px;min-height:1px}
+.home-platform-image>.image-loading{aspect-ratio:16/9}
+.public-web .vendor-brand-photo>.image-loading{display:grid!important}

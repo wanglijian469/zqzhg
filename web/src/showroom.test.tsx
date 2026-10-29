@@ -28,7 +28,7 @@ afterEach(()=>{cleanup();vi.unstubAllGlobals();fetcher.mockClear()});
 
 it('keeps showroom search, category, page and language across product details and refresh',async()=>{
  render(<BrowserRouter><App/></BrowserRouter>);const user=userEvent.setup();await screen.findByRole('heading',{name:vendor.data.name});
- expect(screen.queryByRole('link',{name:'首页'})).toBeNull();expect(screen.getAllByRole('tab')).toHaveLength(6);await user.click(screen.getByRole('tab',{name:'联系企业'}));expect(screen.getByRole('link',{name:'13800000002'}).getAttribute('href')).toBe('tel:13800000002');await user.click(screen.getByRole('tab',{name:'产品中心'}));
+ expect(screen.queryByRole('link',{name:'首页'})).toBeNull();expect(screen.getAllByRole('tab')).toHaveLength(4);await user.click(screen.getByRole('tab',{name:'联系企业'}));expect(screen.getByRole('link',{name:'13800000002'}).getAttribute('href')).toBe('tel:13800000002');await user.click(screen.getByRole('tab',{name:'产品中心'}));
  await user.type(screen.getByRole('textbox',{name:'产品名称 / 型号'}),'TEST');await user.selectOptions(screen.getByRole('combobox',{name:'产品分类'}),'1');await user.click(screen.getByRole('button',{name:'找产品'}));
  await user.click(await screen.findByRole('button',{name:'下一页'}));expect(location.search).toContain('page=2');
  await user.click(screen.getByRole('button',{name:'English'}));expect(location.pathname).toBe('/v/sample');
@@ -39,7 +39,7 @@ it('keeps showroom search, category, page and language across product details an
 });
 it('shares the canonical company URL without filters and provides manual copy fallback',async()=>{
  history.replaceState(null,'','/v/sample?q=TEST&page=2');render(<BrowserRouter><App/></BrowserRouter>);const user=userEvent.setup();await screen.findByRole('heading',{name:vendor.data.name});
- await user.click(screen.getAllByRole('button',{name:'分享企业展厅'})[0]);const modal=screen.getByRole('dialog');expect((within(modal).getByRole('textbox',{name:'展厅地址'}) as HTMLInputElement).value).toBe('https://showroom.example/v/sample');
+ await user.click(screen.getAllByRole('button',{name:'分享官网'})[0]);const modal=screen.getByRole('dialog');expect((within(modal).getByRole('textbox',{name:'展厅地址'}) as HTMLInputElement).value).toBe('https://showroom.example/v/sample');
  vi.spyOn(navigator.clipboard,'writeText').mockRejectedValueOnce(new Error('clipboard denied'));await user.click(within(modal).getByRole('button',{name:'复制地址'}));expect(await within(modal).findByText('自动复制失败，请选中地址手动复制。')).toBeTruthy();
  expect(within(modal).getByRole('button',{name:'展厅二维码'})).toBeTruthy();expect(within(modal).getByRole('button',{name:'生成海报预览'})).toBeTruthy();
 });

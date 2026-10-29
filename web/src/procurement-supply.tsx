@@ -1,4 +1,4 @@
-import {useLanguage,useLoad} from './main';
+import {useLanguage,useLoad} from './ui';
 import type {Data,Taxonomy} from './types';
 export function ProcurementSupplyFields({data,hallID,disabled,onChange}:{data:Data;hallID:number;disabled?:boolean;onChange:(patch:Partial<Data>)=>void}){
  const {lang}=useLanguage(),en=lang==='en';const categories=useLoad<Taxonomy>('/public/taxonomy?category_kind=product&hall_id='+hallID);const regions=useLoad<{items:{code:string;name:string}[]}>('/public/administrative-regions');const profile=data.company_profile||{},selected=profile.supply_product_category_ids||[],supply=profile.supply_region_codes||[];

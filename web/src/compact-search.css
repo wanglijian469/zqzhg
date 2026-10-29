@@ -1,5 +1,13 @@
 .public-web .browse-page .public-search-form{display:grid;grid-template-columns:minmax(190px,1.6fr) minmax(160px,1.2fr) minmax(140px,1fr) minmax(145px,1fr) auto;align-items:center;gap:12px;padding:16px}
 .browse-compact-options{display:contents}
+.public-web .browse-page.section{padding-block:16px 32px}
+.public-web .browse-page.section .page-heading{margin-bottom:16px}
+.public-web .browse-page.section .page-heading h1{font-size:30px;line-height:1.35;margin:0}
+.public-web .browse-page.section .page-heading p{margin:8px 0 0;line-height:1.6;font-size:14px}
+/* Breadcrumbs are content navigation, so reset the global header-nav rules. */
+.public-web nav.exhibition-breadcrumb{position:static;inset:auto;display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 0 0;margin-inline:auto;background:transparent;border:0;line-height:1.5}
+.public-web nav.exhibition-breadcrumb>a{padding:2px 0;min-height:0;line-height:1.5}
+@media(max-width:600px){.public-web nav.exhibition-breadcrumb{display:none}.public-web .browse-page.section{padding-block:16px 24px}.public-web .browse-page.section .page-heading{margin-bottom:12px}.public-web .browse-page.section .page-heading h1{font-size:24px}.public-web .browse-page.section .page-heading p{font-size:13px}}
 .public-web .browse-page .public-search-form label{display:flex;align-items:center;gap:8px;min-width:0;grid-column:auto;grid-row:auto}
 .public-web .browse-page .public-search-form label>span{flex:0 0 auto;max-width:88px;margin:0;font-size:12px;line-height:1.4;overflow-wrap:break-word}
 .public-web .browse-page .public-search-form .filter-search>div{flex:1;min-width:0}

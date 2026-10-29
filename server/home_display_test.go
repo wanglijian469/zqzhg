@@ -206,7 +206,11 @@ func homeMediaRead(t *testing.T, a *App, token, path string, want int) {
 		if w.Code != want {
 			t.Fatal(method, path, w.Code)
 		}
-		if w.Header().Get("Cache-Control") != "no-store" {
+		expectedCache := "no-store"
+		if token == "" && want == 200 {
+			expectedCache = "private, no-cache"
+		}
+		if w.Header().Get("Cache-Control") != expectedCache {
 			t.Fatal("media cache policy")
 		}
 	}

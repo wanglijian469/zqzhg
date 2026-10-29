@@ -8,6 +8,7 @@ import 'package:video_player/video_player.dart';
 import 'package:pdfrx/pdfrx.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart' as http;
@@ -17,10 +18,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'analytics.dart';
+part 'service_center.dart';
 part 'form_rules.dart';
 part 'onboarding.dart';
 part 'taxonomy.dart';
 part 'industrial_ui.dart';
+part 'mobile_fields.dart';
 part 'merchant_experience.dart';
 part 'merchant_workspace.dart';
 part 'merchant_products.dart';
@@ -29,16 +32,22 @@ part 'app_sync.dart';
 part 'app_navigation.dart';
 part 'favorites.dart';
 part 'exhibition_home.dart';
+part 'exhibition_portal.dart';
 part 'browse_screen.dart';
 part 'exhibit_card.dart';
 part 'exhibition_halls.dart';
 part 'app_upgrade.dart';
 part 'native_auth_entry.dart';
+part 'unified_auth.dart';
+part 'password_policy.dart';
 part 'mobile_upgrade.dart';
+part 'procurement_workspace.dart';
+part 'product_quality.dart';
 
 typedef Json = Map<String, dynamic>;
 const green = industrialBlue;
 const pale = industrialSurface;
+const productionApiBaseUrl = 'https://zqzhg.com';
 Json asMap(dynamic value) => Map<String, dynamic>.from(value as Map);
 List<Json> rows(dynamic value) => (value as List? ?? []).map(asMap).toList();
 List<int> imageIDs(Json data) => (data['media_ids'] as List? ?? [])
@@ -59,6 +68,8 @@ class AppModel extends ChangeNotifier {
   late final MerchantDataStore merchant = MerchantDataStore(this);
   late final FavoritesStore favorites = FavoritesStore(this);
   late final AppAnalytics analytics = AppAnalytics(this);
+  bool get usageAnalyticsAllowed =>
+      analyticsEnabled && prefs.getBool('service.analytics_consent') == true;
   VoidCallback? openMerchant;
   VoidCallback? openHome;
   void favoritesChanged() => notifyListeners();
@@ -67,12 +78,14 @@ class AppModel extends ChangeNotifier {
   final bool analyticsEnabled;
   final Map<String, Json> resources;
   late String language;
-  late String baseUrl;
+  late final String baseUrl;
   late String token;
   late Json account;
   late final HallRegistry hallRegistry = HallRegistry(this);
   ExhibitionHall get activeHall => hallRegistry.active;
   List<ExhibitionHall> get availableHalls => hallRegistry.items;
+  bool get showHallSelector =>
+      availableHalls.where((h) => h.isOpen).length >= 2;
   bool get isHallPreview => !activeHall.isOpen;
   bool get hallsReady => hallRegistry.ready;
   bool get modernPublicApi => hallsReady && !hallRegistry.legacy;
@@ -152,38 +165,32 @@ class AppModel extends ChangeNotifier {
     this.resources, {
     http.Client? client,
     bool? analyticsEnabled,
+    String? testBaseUrl,
   }) : analyticsEnabled = analyticsEnabled ?? Platform.isAndroid,
        client = client ?? http.Client() {
     unawaited(clearRetiredBoundaryCache());
     language = prefs.getString('language') ?? 'zh';
     const compiledBase = String.fromEnvironment(
       'API_BASE_URL',
-      defaultValue: 'http://39.97.250.244:8089',
+      defaultValue: 'https://zqzhg.com',
     );
+    assert(!kReleaseMode || testBaseUrl == null);
+    baseUrl = kReleaseMode ? productionApiBaseUrl : testBaseUrl ?? compiledBase;
     final savedBase = prefs.getString('base_url');
-    const migrationKey = 'endpoint_migration.aliyun_39_97_250_244_8089';
-    final firstCloudLaunch =
-        compiledBase == 'http://39.97.250.244:8089' &&
-        prefs.getBool(migrationKey) != true;
     final migrate =
-        firstCloudLaunch &&
-        (savedBase == null ||
-            [
-              'http://172.27.35.2:8080',
-              'http://10.0.2.2:8080',
-            ].contains(savedBase.replaceAll(RegExp(r'/$'), '')));
-    baseUrl = migrate ? compiledBase : savedBase ?? compiledBase;
+        savedBase != null && savedBase.replaceAll(RegExp(r'/$'), '') != baseUrl;
+    if (!usageAnalyticsAllowed) {
+      unawaited(analytics.withdraw());
+    }
     token = migrate ? '' : prefs.getString('token') ?? '';
     account = migrate
         ? <String, dynamic>{}
         : asMap(jsonDecode(prefs.getString('account') ?? '{}'));
-    if (firstCloudLaunch) {
-      unawaited(prefs.setBool(migrationKey, true));
-      if (migrate) {
-        unawaited(prefs.setString('base_url', compiledBase));
-        unawaited(prefs.remove('token'));
-        unawaited(prefs.remove('account'));
-      }
+    // Keep source-scoped drafts and favorites. Foreign sessions never cross hosts.
+    unawaited(prefs.setString('base_url', baseUrl));
+    if (migrate) {
+      unawaited(prefs.remove('token'));
+      unawaited(prefs.remove('account'));
     }
   }
   Future<void> clearRetiredBoundaryCache() async {
@@ -244,8 +251,13 @@ class AppModel extends ChangeNotifier {
           '/auth/visitor/register',
           '/auth/phone',
           '/auth/phone/password',
+          '/auth/password',
+          '/auth/phone/verify',
+          '/auth/phone/password/reset',
+          '/auth/phone/login',
           '/auth/phone/register',
           '/auth/phone/code',
+          '/auth/phone/challenge',
           '/auth/phone/password/setup',
           '/auth/sms',
           '/auth/admin',
@@ -328,26 +340,6 @@ class AppModel extends ChangeNotifier {
     merchant.clear();
     await prefs.remove('token');
     await prefs.remove('account');
-    notifyListeners();
-  }
-
-  Future<void> changeEndpoint(String url) async {
-    final uri = Uri.tryParse(url);
-    if (uri == null ||
-        !['http', 'https'].contains(uri.scheme) ||
-        uri.host.isEmpty ||
-        uri.query.isNotEmpty ||
-        uri.userInfo.isNotEmpty ||
-        (uri.path.isNotEmpty && uri.path != '/')) {
-      throw ApiFailure('invalid_request');
-    }
-    await signOut();
-    baseUrl = url.replaceAll(RegExp(r'/$'), '');
-    hallRegistry.reset();
-    _taxonomies.clear();
-    clientCapabilityCache.clear();
-    browseMemory.clear();
-    await prefs.setString('base_url', baseUrl);
     notifyListeners();
   }
 }
@@ -833,9 +825,32 @@ class _DetailScreenState extends State<DetailScreen> {
                     ),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: FavoriteButton(item: {...item, 'kind': widget.kind}),
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        IconButton(
+                          tooltip: m.t('share'),
+                          icon: const Icon(Icons.share_outlined),
+                          onPressed: () async {
+                            final url = '${m.baseUrl}/products/${widget.id}';
+                            try {
+                              await sharingBridge.invokeMethod('shareText', {
+                                'text': url,
+                                'title': m.content(data, 'name'),
+                              });
+                            } catch (_) {
+                              if (context.mounted) {
+                                await copyNativeText(context, url);
+                              }
+                            }
+                          },
+                        ),
+                        FavoriteButton(item: {...item, 'kind': widget.kind}),
+                      ],
+                    ),
                   ),
                   dataDetails(context, data, widget.kind),
+                  if (widget.kind == 'product') ...[space(12)],
                   if (widget.kind == 'product')
                     ExpansionTile(
                       title: Text(
@@ -847,7 +862,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   Contact(
                     data: widget.kind == 'vendor'
                         ? data
-                        : asMap(result['vendor']['data']),
+                        : asMap(asMap(result['vendor'] ?? {})['data'] ?? {}),
                   ),
                   if (result['vendor'] != null) ...[
                     space(),
@@ -1254,6 +1269,17 @@ class _EditorScreenState extends State<EditorScreen> {
       });
     }
     if (widget.initialSection != null) {
+      productStep =
+          [
+            'brand',
+            'profile',
+            'credentials',
+            'gallery',
+          ].contains(widget.initialSection)
+          ? 1
+          : widget.initialSection == 'review'
+          ? 2
+          : 0;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         final target = sectionKeys[widget.initialSection]?.currentContext;
@@ -1856,7 +1882,9 @@ class _EditorScreenState extends State<EditorScreen> {
       ].contains(key)) {
         expandedSections.add('more');
       }
-      if (widget.kind == 'product') productStep = key == 'media_ids' ? 1 : 0;
+      productStep = key == 'media_ids' || key.startsWith('company_profile')
+          ? 1
+          : 0;
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -1893,31 +1921,33 @@ class _EditorScreenState extends State<EditorScreen> {
     return Padding(
       key: fieldKeys.putIfAbsent(key, () => GlobalKey()),
       padding: const EdgeInsets.only(bottom: 16),
-      child: TextField(
-        controller: fields[key],
-        focusNode: node,
-        maxLines: multiline ? 4 : 1,
-        enabled: !busy && current?['status'] != 'pending',
-        decoration: InputDecoration(
-          labelText: m.t(label),
-          hintText: rule[m.language == 'zh' ? 'sample_zh' : 'sample_en'],
-          hintStyle: const TextStyle(
-            color: Color(0xff9aa8b8),
-            fontStyle: FontStyle.italic,
+      child: NativeFieldLabel(
+        label: m.t(label),
+        child: TextField(
+          controller: fields[key],
+          focusNode: node,
+          maxLines: multiline ? 4 : 1,
+          enabled: !busy && current?['status'] != 'pending',
+          decoration: InputDecoration(
+            hintText: rule[m.language == 'zh' ? 'sample_zh' : 'sample_en'],
+            hintStyle: const TextStyle(
+              color: Color(0xff9aa8b8),
+              fontStyle: FontStyle.italic,
+            ),
+            helperText: node.hasFocus || limit != null && count > limit * .85
+                ? '$count / ${limit ?? '—'} ${rule['unit'] == 'bytes' ? (m.language == 'zh' ? '字节' : 'bytes') : (m.language == 'zh' ? '字' : 'characters')}'
+                : null,
+            errorText: issues[key] == null
+                ? null
+                : fieldIssueText(m, issues[key]!),
+            errorMaxLines: 3,
           ),
-          helperText: node.hasFocus || limit != null && count > limit * .85
-              ? '$count / ${limit ?? '—'} ${rule['unit'] == 'bytes' ? (m.language == 'zh' ? '字节' : 'bytes') : (m.language == 'zh' ? '字' : 'characters')}'
-              : null,
-          errorText: issues[key] == null
-              ? null
-              : fieldIssueText(m, issues[key]!),
-          errorMaxLines: 3,
+          keyboardType: key == 'phone'
+              ? TextInputType.phone
+              : multiline
+              ? TextInputType.multiline
+              : TextInputType.text,
         ),
-        keyboardType: key == 'phone'
-            ? TextInputType.phone
-            : multiline
-            ? TextInputType.multiline
-            : TextInputType.text,
       ),
     );
   }
@@ -2255,6 +2285,7 @@ class _EditorScreenState extends State<EditorScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         field(context, 'name', 'productName'),
+        NativeProductQuality(data: data),
         Text(
           syncText(
             context,
@@ -2507,8 +2538,6 @@ class _EditorScreenState extends State<EditorScreen> {
             ),
           ),
         ]),
-        companyExtras(),
-        gallery(),
       ],
     );
   }
@@ -2618,25 +2647,24 @@ class _EditorScreenState extends State<EditorScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       if (!product) const NativeJoinGuide(),
-                      if (product)
-                        Wrap(
-                          spacing: 8,
-                          children: [
-                            for (var i = 0; i < 3; i++)
-                              ChoiceChip(
-                                label: Text(
-                                  '${i + 1}. ${m.language == 'zh' ? ['基础信息', '图片与展示资料', '预览并提交'][i] : ['Basics', 'Images', 'Preview & submit'][i]}',
-                                ),
-                                selected: productStep == i,
-                                onSelected: busy
-                                    ? null
-                                    : (_) {
-                                        setState(() => productStep = i);
-                                        scheduleSave();
-                                      },
+                      Wrap(
+                        spacing: 8,
+                        children: [
+                          for (var i = 0; i < 3; i++)
+                            ChoiceChip(
+                              label: Text(
+                                '${i + 1}. ${m.language == 'zh' ? (product ? ['基础信息', '图片与展示资料', '预览并提交'] : ['基本资料', '展示资料', '协议与提交'])[i] : (product ? ['Basics', 'Images', 'Preview & submit'] : ['Basics', 'Presentation', 'Agreements & submit'])[i]}',
                               ),
-                          ],
-                        ),
+                              selected: productStep == i,
+                              onSelected: busy
+                                  ? null
+                                  : (_) {
+                                      setState(() => productStep = i);
+                                      scheduleSave();
+                                    },
+                            ),
+                        ],
+                      ),
                       space(),
                       if (current != null)
                         Text(
@@ -2696,7 +2724,24 @@ class _EditorScreenState extends State<EditorScreen> {
                           ),
                         ),
                       if (!product)
-                        companyBasics()
+                        (productStep == 0
+                            ? companyBasics()
+                            : productStep == 1
+                            ? Column(children: [companyExtras(), gallery()])
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  previewBody(),
+                                  const NativePublicationAgreements(),
+                                  Text(
+                                    syncText(
+                                      context,
+                                      '确认协议并提交资料，审核通过后公开；保存草稿不会公开。',
+                                      'Accept the agreements and submit for review. Drafts stay private.',
+                                    ),
+                                  ),
+                                ],
+                              ))
                       else if (productStep == 0)
                         productBasics()
                       else if (productStep == 1)
@@ -2713,32 +2758,31 @@ class _EditorScreenState extends State<EditorScreen> {
                         style: const TextStyle(fontSize: 12),
                       ),
                       space(),
-                      if (product)
-                        Wrap(
-                          spacing: 12,
-                          children: [
-                            if (productStep > 0)
-                              OutlinedButton(
-                                onPressed: busy
-                                    ? null
-                                    : () {
-                                        setState(() => productStep--);
-                                        scheduleSave();
-                                      },
-                                child: Text(m.t('previous')),
-                              ),
-                            if (productStep < 2)
-                              FilledButton(
-                                onPressed: busy
-                                    ? null
-                                    : () {
-                                        setState(() => productStep++);
-                                        scheduleSave();
-                                      },
-                                child: Text(m.t('next')),
-                              ),
-                          ],
-                        ),
+                      Wrap(
+                        spacing: 12,
+                        children: [
+                          if (productStep > 0)
+                            OutlinedButton(
+                              onPressed: busy
+                                  ? null
+                                  : () {
+                                      setState(() => productStep--);
+                                      scheduleSave();
+                                    },
+                              child: Text(m.t('previous')),
+                            ),
+                          if (productStep < 2)
+                            FilledButton(
+                              onPressed: busy
+                                  ? null
+                                  : () {
+                                      setState(() => productStep++);
+                                      scheduleSave();
+                                    },
+                              child: Text(m.t('next')),
+                            ),
+                        ],
+                      ),
                       if (!product)
                         OutlinedButton(
                           onPressed: () {
@@ -2762,7 +2806,7 @@ class _EditorScreenState extends State<EditorScreen> {
                         child: Text(m.t(busy ? 'loading' : 'saveCloud')),
                       ),
                       space(),
-                      if (!product || productStep == 2)
+                      if (productStep == 2)
                         FilledButton(
                           onPressed: busy || pending || creationUncertain
                               ? null

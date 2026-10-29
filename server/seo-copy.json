@@ -1,0 +1,27 @@
+{
+  "targetTerms": ["河北内卷网", "内卷网", "不卷网"],
+  "zh": {
+    "homeTitle": "企业展厅与产品展示",
+    "homeHeading": "企业名单、产品展示与厂家直连",
+    "homeIntro": "通过“内卷网”相关信息寻找供货渠道？在这里可以按行业和地区浏览企业名单、进入企业展厅、查看产品并联系厂家。",
+    "directoryTitle": "企业名单与厂家展厅",
+    "directoryDescription": "按主营产品、分类和所在地区查找企业名单，进入厂家展厅，查看企业介绍、产品、视频、电子画册及公开联系方式。",
+    "productsTitle": "产品展示与厂家产品",
+    "productsDescription": "按名称、型号、分类和地区查找产品，查看产品介绍及所属厂家的企业展厅，联系厂家了解供货信息。",
+    "showroom": "企业展厅",
+    "directoryTerms": ["企业名单", "企业展厅", "厂家展厅", "厂家直连"],
+    "productTerms": ["产品展示", "厂家产品"]
+  },
+  "en": {
+    "homeTitle": "Company showrooms and products",
+    "homeHeading": "Company directory, products and direct manufacturer contact",
+    "homeIntro": "Looking for suppliers after searching for “内卷网”? Browse companies by industry and region, visit their showrooms, explore products and contact manufacturers directly.",
+    "directoryTitle": "Company directory and manufacturer showrooms",
+    "directoryDescription": "Find companies by their main products, category and region. Visit manufacturer showrooms for company profiles, products, videos, catalogs and public contact details.",
+    "productsTitle": "Products and manufacturers",
+    "productsDescription": "Find products by name, model, category and region. View product details and the manufacturer's showroom, and contact the manufacturer about supply.",
+    "showroom": "Company showroom",
+    "directoryTerms": ["company directory", "company showroom", "manufacturer showroom", "manufacturer contact"],
+    "productTerms": ["products", "manufacturer products"]
+  }
+}

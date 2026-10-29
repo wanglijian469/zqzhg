@@ -930,6 +930,21 @@ func sameStorageLocation(first, second StorageProfile) bool {
 // Confirm the SQL snapshot can resolve every media object, including queued
 // sources. Outputs not yet produced by transcoding are deliberately excluded.
 func validateMediaInventory(db *gorm.DB, objects []StoredObject) error {
+	if db.Migrator().HasTable(&ServiceEvidence{}) {
+		known := map[string]bool{}
+		for _, object := range objects {
+			known[object.Key] = true
+		}
+		var evidence []ServiceEvidence
+		if e := db.Find(&evidence).Error; e != nil {
+			return e
+		}
+		for _, file := range evidence {
+			if !strings.HasPrefix(file.ObjectKey, "private/service/") || !known[file.ObjectKey] {
+				return errors.New("object_missing_service_evidence")
+			}
+		}
+	}
 	if db.Migrator().HasTable(&ProcurementAttachment{}) {
 		known := map[string]bool{}
 		for _, object := range objects {

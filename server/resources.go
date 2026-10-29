@@ -374,6 +374,9 @@ func (a *App) submitResource(c *gin.Context) {
 		if json.Unmarshal([]byte(rev.Payload), &p) != nil {
 			return fmt.Errorf("invalid_request")
 		}
+		if e = publicationCompliance(tx, r.OwnerID, r.VendorID, nil); e != nil {
+			return e
+		}
 		if e = a.validateResource(tx, r, &p, true); e != nil {
 			return e
 		}

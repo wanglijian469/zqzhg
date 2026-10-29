@@ -1,3 +1,4 @@
+import 'native_field_finder.dart';
 import 'legacy_hall_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -30,6 +31,7 @@ void main() {
             jsonDecode(File('assets/i18n/$lang.json').readAsStringSync()),
           ),
       },
+      testBaseUrl: 'http://fixture',
       client: legacyHallClient(
         MockClient(
           handler ??
@@ -106,7 +108,7 @@ void main() {
         app(m, const CompanyShowroomScreen(slug: 'fixture')),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(ChoiceChip), findsNWidgets(6));
+      expect(find.byType(ChoiceChip), findsNWidgets(3));
       expect(
         tester
             .widget<ChoiceChip>(find.widgetWithText(ChoiceChip, '展厅首页'))
@@ -251,18 +253,14 @@ void main() {
       await click(tester, find.widgetWithText(OutlinedButton, '保存云端草稿'));
       expect(find.byType(LoginScreen), findsOneWidget);
       await tester.enterText(
-        find.byKey(const ValueKey('auth-phone')),
-        '13900009991',
+        find.byKey(const ValueKey('auth-login_name')),
+        'company-fixture-9991',
       );
-      await tester.enterText(find.byKey(const ValueKey('auth-code')), '123456');
-      await tester.enterText(
-        find.widgetWithText(TextField, '设置密码'),
-        'fixture-pass-123',
-      );
-      await tester.enterText(
-        find.widgetWithText(TextField, '确认密码'),
-        'fixture-pass-123',
-      );
+      await tester.enterText(nativeField('设置密码'), 'fixture-pass-123');
+      await tester.enterText(nativeField('确认密码'), 'fixture-pass-123');
+      await tester.ensureVisible(find.byType(CheckboxListTile));
+      await tester.tap(find.byType(CheckboxListTile));
+      await tester.pumpAndSettle();
       await click(tester, find.widgetWithText(FilledButton, '注册并继续'));
       await tester.runAsync(() async {
         await Future<void>.delayed(const Duration(milliseconds: 300));
@@ -322,7 +320,7 @@ void main() {
       await tester.pumpAndSettle();
       await click(tester, find.text('＋ 新增经营分类'));
       expect(find.text('顶级（一级）分类'), findsOneWidget);
-      await tester.enterText(find.widgetWithText(TextField, '中文分类名称'), '新一级分类');
+      await tester.enterText(nativeField('中文分类名称'), '新一级分类');
       await click(tester, find.widgetWithText(FilledButton, '保存'));
       expect(created?['parent_id'], 0);
       expect(selected, 90);
@@ -428,6 +426,7 @@ void main() {
       await m.prefs.setString(
         key,
         jsonEncode({
+          'step': 2,
           'revision_id': 0,
           'data': company(),
           'photos': [
@@ -485,10 +484,7 @@ void main() {
       final m = await model(signed: true);
       await tester.pumpWidget(app(m, const EditorScreen(kind: 'vendor')));
       await tester.pumpAndSettle();
-      await tester.enterText(
-        find.widgetWithText(TextField, '企业 / 工厂名称'),
-        '账号七私有草稿',
-      );
+      await tester.enterText(nativeField('企业 / 工厂名称'), '账号七私有草稿');
       await tester.pump(const Duration(milliseconds: 350));
       final oldScope = m.scope;
       await m.expireSession();
@@ -514,10 +510,7 @@ void main() {
         app(m, const NativeResourceEditor(kind: 'catalog')),
       );
       await tester.pumpAndSettle();
-      await tester.enterText(
-        find.widgetWithText(TextField, '标题 / 图册名称'),
-        '账号七的私有图册',
-      );
+      await tester.enterText(nativeField('标题 / 图册名称'), '账号七的私有图册');
       await tester.pump(const Duration(milliseconds: 350));
       final key = 'resource.draft.${m.scope}.catalog.0';
       expect(m.prefs.getString(key), contains('账号七的私有图册'));

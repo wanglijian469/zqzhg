@@ -1,0 +1,744 @@
+{
+  "checks": [
+    "Existing account buyer registration, product inquiry, private attachment upload/download/preview, direct delivery, online quote, shortlist contact release, isolated two-way messages, reviewed expansion of the same project, independent second supplier quote and safe public summary",
+    "Five buyer menus, canonical manufacturer opportunities, legacy query/fragment redirects, independent collapse, mobile keyboard/overlay navigation and bilingual layouts",
+    "Closing disables new supplier quotes and messages while preserving quotation history"
+  ],
+  "layouts": [
+    {
+      "label": "guest-center",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "mobile-filter-sheet",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-home",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-booth",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-products",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-promotion",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-settings",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-notifications",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-settings",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 360,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "mobile-filter-sheet",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-home",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-booth",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-products",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-promotion",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-settings",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-notifications",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-settings",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 360,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "mobile-filter-sheet",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-home",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-booth",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-products",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-promotion",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-settings",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-notifications",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-settings",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 390,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "mobile-filter-sheet",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-home",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-booth",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-products",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-promotion",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-settings",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-notifications",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-settings",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 390,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "mobile-filter-sheet",
+      "width": 430,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 430,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 430,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 430,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-home",
+      "width": 430,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-booth",
+      "width": 430,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-products",
+      "width": 430,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-promotion",
+      "width": 430,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-settings",
+      "width": 430,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-notifications",
+      "width": 430,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-settings",
+      "width": 430,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 430,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "mobile-filter-sheet",
+      "width": 430,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 430,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 430,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 430,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-home",
+      "width": 430,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-booth",
+      "width": 430,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-products",
+      "width": 430,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-promotion",
+      "width": 430,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-settings",
+      "width": 430,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-notifications",
+      "width": 430,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-settings",
+      "width": 430,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 430,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "desktop-collapsed",
+      "width": 1366,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 1366,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 1366,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 1366,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-home",
+      "width": 1366,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-booth",
+      "width": 1366,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-products",
+      "width": 1366,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-promotion",
+      "width": 1366,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-settings",
+      "width": 1366,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-notifications",
+      "width": 1366,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-settings",
+      "width": 1366,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 1366,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "desktop-collapsed",
+      "width": 1366,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 1366,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 1366,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 1366,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-home",
+      "width": 1366,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-booth",
+      "width": 1366,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-products",
+      "width": 1366,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-promotion",
+      "width": 1366,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-settings",
+      "width": 1366,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-notifications",
+      "width": 1366,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-settings",
+      "width": 1366,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 1366,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "desktop-collapsed",
+      "width": 1920,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 1920,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 1920,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 1920,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-home",
+      "width": 1920,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-booth",
+      "width": 1920,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-products",
+      "width": 1920,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-promotion",
+      "width": 1920,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "merchant-settings",
+      "width": 1920,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-notifications",
+      "width": 1920,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "supplier-settings",
+      "width": 1920,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 1920,
+      "lang": "zh",
+      "overflow": false
+    },
+    {
+      "label": "desktop-collapsed",
+      "width": 1920,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-comparison",
+      "width": 1920,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "buyer-editor",
+      "width": 1920,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-quote",
+      "width": 1920,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-home",
+      "width": 1920,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-booth",
+      "width": 1920,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-products",
+      "width": 1920,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-promotion",
+      "width": 1920,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "merchant-settings",
+      "width": 1920,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-notifications",
+      "width": 1920,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "supplier-settings",
+      "width": 1920,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "public-hall",
+      "width": 1920,
+      "lang": "en",
+      "overflow": false
+    },
+    {
+      "label": "admin-statistics",
+      "width": 1440,
+      "lang": "zh",
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "isolatedDatabase": true,
+  "physicalDeviceVerified": false
+}

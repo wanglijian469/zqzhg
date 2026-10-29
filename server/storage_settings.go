@@ -414,7 +414,17 @@ func (a *App) usageJSON(owner uint64) (gin.H, error) {
 		return nil, e
 	}
 	used, reserved, limit, e := a.ownerUsage(a.DB, owner)
-	return gin.H{"account_id": owner, "used_bytes": used, "reserved_bytes": reserved, "quota_bytes": limit}, e
+	remaining := limit - used - reserved
+	if remaining < 0 {
+		remaining = 0
+	}
+	state := "normal"
+	if used+reserved >= limit {
+		state = "exceeded"
+	} else if (used+reserved)*10 >= limit*9 {
+		state = "warning"
+	}
+	return gin.H{"account_id": owner, "used_bytes": used, "reserved_bytes": reserved, "quota_bytes": limit, "remaining_bytes": remaining, "state": state}, e
 }
 func (a *App) storageStatus(c *gin.Context) {
 	var objects int64

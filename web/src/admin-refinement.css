@@ -1,0 +1,43 @@
+/* Keep console styling inside its root; public service pages do not theme navigation. */
+body .admin-app{background:#f4f7fb;color:#172b45;--primary:#1769c2;--line:#dce5f1;--navy:#071b36}
+.admin-app .admin-sidebar{background:#071b36;border-color:#183553;color:#c6d6eb}
+.admin-app .admin-brand{background:#071b36;color:#fff}
+.admin-app .admin-brand b{color:#fff}
+.admin-app .admin-brand>span{background:#163b65;color:#fff}
+.admin-app .admin-brand small,.admin-app .admin-nav-group>p{color:#97b2d3}
+.admin-app .admin-navigation a,.admin-app .admin-extension-menu summary{color:#c6d6eb;min-height:44px}
+.admin-app .admin-navigation a svg{color:inherit;opacity:1}
+.admin-app .admin-navigation a:hover{background:#17385a;color:#fff}
+.admin-app .admin-navigation a.active{background:#1769c2;color:#fff;border-color:#287ddd}
+.admin-app .admin-navigation a small,.admin-app .admin-extension-menu summary small{color:#a7bedb}
+.admin-app .admin-collapse{background:#071b36;color:#c6d6eb;border-color:#183553}
+.admin-app .admin-collapse:hover{background:#17385a;color:#fff}
+.admin-app .admin-navigation{scrollbar-width:thin;scrollbar-color:#547298 #071b36}
+.admin-app .admin-topbar{background:#fff;border-color:#dce5f1;color:#172b45}
+.admin-app .admin-topbar .text-link,.admin-app .admin-breadcrumb b{color:#245a92}
+.admin-app .admin-breadcrumb>span,.admin-app .eyebrow,.admin-app .muted{color:#657b95}
+.admin-app .admin-panel,.admin-app .stat-card,.admin-app .admin-stats>a,.admin-app .service-admin-list article{background:#fff;border-color:#dce5f1;box-shadow:0 4px 16px #173b6410}
+.admin-app .admin-main h1,.admin-app .admin-main h2,.admin-app .admin-main h3,.admin-app .admin-stats strong{color:#172b45}
+.admin-app .admin-stats span,.admin-app .admin-stats small{color:#5f7591}
+.admin-app .admin-stats svg,.admin-app .admin-quick-links svg,.admin-app .admin-account svg{color:#6e8fb5}
+.admin-app .admin-stats .pending{background:#f0f6ff;border-color:#d6e5f9}
+.admin-app .admin-table th{background:#f4f7fb;color:#5d7390}
+.admin-app .admin-table td{color:#243c59;border-color:#e6edf5}
+.admin-app .admin-notice{background:#edf4ff;color:#375d89;border:1px solid #d8e6f8}
+.admin-app .admin-quick-links a{background:#f0f6ff;color:#245a92;border-color:#dce5f1}
+.admin-app .admin-main input,.admin-app .admin-main select,.admin-app .admin-main textarea{color:#172b45;background:#fff;border-color:#d5e1ef}
+.admin-app .admin-main .button:not(.secondary):not(.danger){background:#1769c2;border-color:#1769c2;color:#fff}
+.admin-app .admin-main .button.secondary:not(.danger){background:#fff;border-color:#d5e1ef;color:#245a92}
+.admin-app .admin-main .service-page{max-width:none}
+.admin-app .service-page>label{display:block;max-width:360px;margin-bottom:20px}
+.admin-app .service-admin-list article h2{margin-top:0;font-size:18px}
+.admin-app .service-admin-list article label{display:block;line-height:1.6;margin:14px 0}
+.admin-app .service-admin-list article textarea{width:100%;box-sizing:border-box}
+.admin-app .service-actions{margin:16px 0 0}
+.admin-app .service-document-editor{max-width:100%;min-width:0}
+.publication-agreements{margin:20px 0;padding:20px;border:1px solid #dce5f1;border-radius:12px;background:#fff;min-width:0}
+.publication-agreements details{margin:10px 0;border:1px solid #dce5f1;border-radius:8px;padding:12px}
+.publication-agreements summary{cursor:pointer;font-weight:600}
+.publication-agreements .service-document{margin:16px 0}
+.publication-agreements .service-document h1{font-size:22px}
+@media(max-width:650px){.admin-app .admin-panel,.admin-app .service-admin-list article{padding:16px}.admin-app .service-actions .button{min-height:44px}.publication-agreements{padding:16px}}

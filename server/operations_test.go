@@ -261,7 +261,7 @@ func TestCompleteBackupRestoreAndCutover(t *testing.T) {
 	hero := resourceUpload(t, a, admin, "/admin/home-display/media", "restored-hall.png", hallPhoto.Bytes(), 201)
 	tc.call("PUT", "/admin/halls/2", admin, gin.H{"name": "恢复验证电缆厅", "name_en": "Restored Cable Hall", "description": "隔离恢复验证", "description_en": "Isolated restore verification", "status": "preparing", "slug": "cable", "hero_media_id": hero["id"], "version": 1}, 200)
 	var taxonomyCategory Category
-	if e := a.DB.Where("code=?", "agri.vendor.09").First(&taxonomyCategory).Error; e != nil {
+	if e := a.DB.Where("code=?", "ciame.2026.vendor.27").First(&taxonomyCategory).Error; e != nil {
 		t.Fatal(e)
 	}
 	if e := a.DB.Transaction(func(tx *gorm.DB) error {

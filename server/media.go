@@ -297,5 +297,8 @@ func (a *App) mediaRead(c *gin.Context) {
 	if c.Query("download") == "1" {
 		c.Header("Content-Disposition", "attachment; filename=\"catalog"+filepath.Ext(path)+"\"")
 	}
+	if a.serveImageDisplay(c, media, path, count > 0) {
+		return
+	}
 	a.serveObject(c, path)
 }

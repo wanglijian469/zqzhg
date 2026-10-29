@@ -1,7 +1,7 @@
 import {useNavigate} from 'react-router-dom';
 import {useEffect,useState} from 'react';
 import {api,token} from './api';
-import {useLanguage} from './main';
+import {useLanguage} from './ui';
 import {useRuntimeConfig} from './runtime-config';
 
 export function ProcurementDemoBanner({supplier=false}:{supplier?:boolean}){

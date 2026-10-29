@@ -1,3 +1,4 @@
+import 'native_field_finder.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dalunongji/main.dart';
@@ -66,7 +67,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(NativeJoinGuide), findsOneWidget);
       await tester.enterText(
-        find.widgetWithText(TextField, '企业 / 工厂名称'),
+        nativeField( '企业 / 工厂名称'),
         '保留企业',
       );
       await tester.scrollUntilVisible(
@@ -84,13 +85,13 @@ void main() {
       expect(find.text('请修改以下项目，填写内容已保留'), findsOneWidget);
       expect(find.byType(LoginScreen), findsNothing);
       await tester.scrollUntilVisible(
-        find.widgetWithText(TextField, '企业 / 工厂名称'),
+        nativeField( '企业 / 工厂名称'),
         -250,
         scrollable: find.byType(Scrollable).first,
       );
       expect(
         tester
-            .widget<TextField>(find.widgetWithText(TextField, '企业 / 工厂名称'))
+            .widget<TextField>(nativeField( '企业 / 工厂名称'))
             .controller!
             .text,
         '保留企业',

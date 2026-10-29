@@ -173,11 +173,9 @@ class _NativeRegionFieldState extends State<NativeRegionField> {
       context: context,
       builder: (c) => AlertDialog(
         title: Text(syncText(c, '历史／未覆盖地区', 'Historical or unlisted region')),
-        content: TextField(
-          controller: manual,
-          decoration: InputDecoration(
-            labelText: ModelScope.of(c).t('regionName'),
-          ),
+        content: NativeFieldLabel(
+          label: ModelScope.of(c).t('regionName'),
+          child: TextField(controller: manual, decoration: InputDecoration()),
         ),
         actions: [
           TextButton(

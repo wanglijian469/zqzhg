@@ -94,7 +94,9 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
                       onKind: (v) => setState(() => kind = v),
                       onSearch: () => browse(kind, term: query.text.trim()),
                     ),
-                    space(12),
+
+                    const HomeQuickActions(),
+                    space(8),
                     FutureBuilder<dynamic>(
                       key: ValueKey('hero:$endpoint'),
                       future: home,
@@ -128,7 +130,7 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
                   }
                   final data = asMap(snap.data);
                   final allVendors = rows(data['vendors']);
-                  final vendors = allVendors.take(4).toList();
+                  final vendors = allVendors.take(12).toList();
                   final products = uniqueContent(rows(data['products']))
                       .take(8)
                       .map((p) {
@@ -156,18 +158,9 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
                           SliverToBoxAdapter(
                             child: message(context, m.t('emptyDesc')),
                           ),
-                        SliverList.builder(
-                          itemCount: vendors.length,
-                          itemBuilder: (context, index) {
-                            final vendor = vendors[index];
-                            return NativeVendorCard(
-                              key: ValueKey('home-vendor-${vendor['id']}'),
-                              item: vendor,
-                              productImages: rows(data['products'])
-                                  .where((p) => p['vendor_id'] == vendor['id'])
-                                  .toList(),
-                            );
-                          },
+                        VendorSliver(
+                          items: vendors,
+                          productImages: rows(data['products']),
                         ),
                         SliverToBoxAdapter(
                           child: IndustrialSectionTitle(
@@ -190,8 +183,6 @@ class _IndustrialHomeScreenState extends State<IndustrialHomeScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 22, 16, 24),
                   child: Column(
                     children: [
-                      const HomeJoinCard(),
-                      space(20),
                       Text(
                         m.t('footerNote'),
                         textAlign: TextAlign.center,
@@ -220,102 +211,29 @@ class HomeBrandBar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: 64,
       automaticallyImplyLeading: false,
       titleSpacing: 16,
-      title: Row(
-        children: [
-          Flexible(
-            flex: 4,
-            child: Tooltip(
-              message: m.t('brand'),
-              child: Text(
-                m.t('brand'),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Flexible(
-            flex: 5,
-            child: PopupMenuButton<ExhibitionHall>(
-              key: const ValueKey('home-hall-selector'),
-              tooltip: m.t('chooseHall'),
-              initialValue: m.activeHall,
-              onSelected: m.selectHall,
-              itemBuilder: (_) => [
-                for (final hall in m.availableHalls)
-                  PopupMenuItem(
-                    key: ValueKey('hall-option-${hall.name}'),
-                    value: hall,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(exhibitionHallName(m, hall)),
-                          if (!hall.isOpen)
-                            Text(
-                              m.t('hallPreparing'),
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Color(0xff66768a),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 48),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        exhibitionHallName(m, m.activeHall),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: industrialInk,
-                        ),
-                      ),
-                    ),
-                    const Icon(Icons.arrow_drop_down, size: 18),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
+      title: Text(
+        '${m.t('brand')}-${exhibitionHallName(m, m.activeHall)}',
+        maxLines: 2,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
       ),
       actions: [
-        TextButton(
-          style: TextButton.styleFrom(
-            minimumSize: const Size(44, 44),
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+        if (m.showHallSelector)
+          PopupMenuButton<ExhibitionHall>(
+            key: const ValueKey('home-hall-selector'),
+            tooltip: m.t('chooseHall'),
+            onSelected: m.selectHall,
+            itemBuilder: (_) => [
+              for (final hall in m.availableHalls.where((h) => h.isOpen))
+                PopupMenuItem(
+                  value: hall,
+                  key: ValueKey('hall-option-${hall.name}'),
+                  child: Text(
+                    '${exhibitionHallName(m, hall)}${hall.isOpen ? '' : ' · ${m.t('hallPreparing')}'}',
+                  ),
+                ),
+            ],
+            icon: const Icon(Icons.domain_outlined),
           ),
-          onPressed: m.toggleLanguage,
-          child: Text(m.language == 'zh' ? 'English' : '中文'),
-        ),
-        IconButton(
-          key: const ValueKey('home-profile'),
-          tooltip: m.t('navMine'),
-          onPressed: () {
-            final navigation = AppNavigation.of(context);
-            if (navigation != null) {
-              navigation.openMine();
-            } else {
-              push(context, const PersonalScreen());
-            }
-          },
-          icon: const Icon(Icons.person_outline),
-        ),
       ],
     );
   }
@@ -389,131 +307,72 @@ class HomeBrandBanner extends StatelessWidget {
   final int? mediaID;
   const HomeBrandBanner({super.key, this.mediaID});
   @override
-  Widget build(BuildContext context) {
-    final m = ModelScope.of(context);
-    final family = Theme.of(context).textTheme.bodyMedium?.fontFamily;
-    final titleStyle = TextStyle(
-      fontFamily: family,
-      fontSize: 20,
-      height: 1.25,
-      color: Colors.white,
-      fontWeight: FontWeight.w700,
-    );
-    final subtitleStyle = TextStyle(
-      fontFamily: family,
-      fontSize: 12,
-      height: 1.4,
-      color: const Color(0xffe0ebf8),
-    );
-    const fallback = DecoratedBox(
-      key: ValueKey('landmark-fallback'),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [industrialNavy, Color(0xff124d89)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-    );
-    return LayoutBuilder(
-      builder: (context, c) {
-        final imageHeight = (c.maxWidth * .58).clamp(200.0, 220.0);
-        double textHeight(String text, TextStyle style) {
-          final painter = TextPainter(
-            text: TextSpan(text: text, style: style),
-            textDirection: Directionality.of(context),
-            textScaler: MediaQuery.textScalerOf(context),
-            locale: Localizations.localeOf(context),
-          )..layout(maxWidth: max(1, c.maxWidth - 32));
-          final height = painter.height;
-          painter.dispose();
-          return height;
-        }
-
-        final copyHeight =
-            textHeight(
-              '${m.t('brand')} · ${exhibitionHallName(m, m.activeHall)}',
-              titleStyle,
-            ) +
-            6 +
-            textHeight(m.t('homeHeroSub'), subtitleStyle);
-        final height = max(imageHeight, 128 + copyHeight + 44);
-        final clearStop = (height - copyHeight - 44) / height;
-        final textStop = (height - copyHeight - 16) / height;
-        return Container(
+  Widget build(BuildContext context) => mediaID == null || mediaID! <= 0
+      ? const SizedBox.shrink(key: ValueKey('home-banner'))
+      : Container(
           key: const ValueKey('home-banner'),
-          height: height,
-          decoration: BoxDecoration(
-            color: industrialNavy,
-            borderRadius: BorderRadius.circular(16),
-          ),
+          height: 88,
           clipBehavior: Clip.antiAlias,
-          child: Stack(
-            children: [
-              const Positioned.fill(child: fallback),
-              if (mediaID != null && mediaID! > 0)
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: imageHeight,
-                  child: Semantics(
-                    image: true,
-                    label: m.t('landmarkScene'),
-                    child: ExcludeSemantics(
-                      child: Photo(
-                        key: const ValueKey('home-landmark-photo'),
-                        id: mediaID!,
-                        thumb: false,
-                        height: imageHeight,
-                        fit: BoxFit.cover,
-                        alignment: Alignment.topCenter,
-                        radius: 0,
-                        loadingPlaceholder: fallback,
-                        errorPlaceholder: fallback,
-                      ),
-                    ),
-                  ),
-                ),
-              Positioned.fill(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: const [
-                        Colors.transparent,
-                        Colors.transparent,
-                        Color(0xed071b36),
-                        industrialNavy,
-                      ],
-                      stops: [0, clearStop, textStop, 1],
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 16,
-                right: 16,
-                bottom: 16,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${m.t('brand')} · ${exhibitionHallName(m, m.activeHall)}',
-                      style: titleStyle,
-                    ),
-                    const SizedBox(height: 6),
-                    Text(m.t('homeHeroSub'), style: subtitleStyle),
-                  ],
-                ),
-              ),
-            ],
+          decoration: BoxDecoration(
+            color: industrialSurface,
+            borderRadius: BorderRadius.circular(12),
           ),
+          child: mediaID != null && mediaID! > 0
+              ? Photo(
+                  key: const ValueKey('home-landmark-photo'),
+                  id: mediaID!,
+                  thumb: false,
+                  height: 88,
+                  fit: BoxFit.cover,
+                )
+              : const Center(
+                  child: Icon(
+                    Icons.agriculture_outlined,
+                    color: industrialBlue,
+                    size: 36,
+                  ),
+                ),
+        );
+}
+
+class HomeQuickActions extends StatelessWidget {
+  const HomeQuickActions({super.key});
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: 8),
+    child: LayoutBuilder(
+      builder: (context, c) {
+        final buttons = [
+          OutlinedButton.icon(
+            key: const ValueKey('home-map'),
+            onPressed: () => openManufacturerMap(context),
+            icon: const Icon(Icons.map_outlined),
+            label: Text(syncText(context, '厂商地图', 'Manufacturer map')),
+          ),
+          FilledButton.icon(
+            key: const ValueKey('home-admission'),
+            onPressed: () => openManufacturerEntry(context),
+            icon: const Icon(Icons.add_business_outlined),
+            label: Text(syncText(context, '免费入驻', 'Join free')),
+          ),
+        ];
+        if (MediaQuery.textScalerOf(context).scale(1) >= 1.5 ||
+            c.maxWidth < 300) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [buttons[0], space(8), buttons[1]],
+          );
+        }
+        return Row(
+          children: [
+            Expanded(child: buttons[0]),
+            const SizedBox(width: 8),
+            Expanded(child: buttons[1]),
+          ],
         );
       },
-    );
-  }
+    ),
+  );
 }
 
 class HomeLoadState extends StatelessWidget {

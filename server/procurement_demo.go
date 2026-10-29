@@ -29,7 +29,7 @@ func validateProcurementDemo(cfg Config, database string) error {
 	return nil
 }
 func (a *App) publicCapabilities() gin.H {
-	return gin.H{"procurement": procurementEnabled(), "phone_sms_auth": a.Config.SMSProvider != "disabled", "development_sms": a.Config.Env == "development" && a.Config.SMSProvider == "development", "procurement_demo": a.Config.ProcurementDemo, "image_watermark": true, "phone_password_auth": true, "administrative_regions": true, "industry_map": true, "product_name_only": true}
+	return gin.H{"free_display": true, "service_documents": true, "company_verification": false, "service_requests": true, "home_rotation": true, "procurement": procurementEnabled(), "procurement_public_summary": procurementEnabled(), "phone_sms_auth": false, "phone_password_reset": a.smsPurposeReady("reset_password"), "unified_auth": true, "phone_sms_register": a.smsPurposeReady("register"), "phone_sms_bind": a.smsPurposeReady("bind"), "sms_challenge": a.captchaRequired(), "development_sms": a.Config.Env == "development" && a.Config.SMSProvider == "development", "procurement_demo": a.Config.ProcurementDemo, "image_watermark": true, "phone_password_auth": true, "administrative_regions": true, "industry_map": true, "map_demo": a.Config.MapDemoEnabled, "product_name_only": true}
 }
 func (a *App) procurementDemoAccounts() []procurementDemoAccount {
 	if !a.Config.ProcurementDemo {

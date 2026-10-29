@@ -19,6 +19,9 @@ func TestIndependentSEOBrowser(t *testing.T) {
 		t.Fatal(err)
 	}
 	a.Config.WebDir = filepath.Join(root, "web", "dist")
+	if dir := os.Getenv("TEST_WEB_DIR"); dir != "" {
+		a.Config.WebDir = dir
+	}
 	if _, err = os.Stat(filepath.Join(a.Config.WebDir, "index.html")); err != nil {
 		t.Fatal("build web first", err)
 	}

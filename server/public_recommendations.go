@@ -5,6 +5,7 @@ import (
 	"gorm.io/gorm"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // Each UNION branch uses an indexed manufacturer scope and its own LIMIT. This
@@ -83,6 +84,9 @@ func (a *App) batchRepresentatives(vendors []View, base *gorm.DB, order string) 
 	return nil
 }
 func (a *App) homeVendors(hallID uint64) ([]View, error) {
+	return a.dailyHomeVendors(hallID, time.Now())
+}
+func (a *App) legacyHomeVendors(hallID uint64) ([]View, error) {
 	base := func() *gorm.DB { return a.publicQuery("vendor").Where("contents.hall_id=?", hallID) }
 	// Reserve bounded candidates independently for categories and regions, so
 	// many regions in a recent dominant category cannot crowd out a rare category.

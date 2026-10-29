@@ -280,6 +280,16 @@ class MerchantWorkspace extends StatelessWidget {
       title: 'merchantCenter',
       actions: [
         IconButton(
+          tooltip: syncText(context, '协议与提交', 'Agreements and submission'),
+          onPressed: () => push(context, const NativeVerificationScreen()),
+          icon: const Icon(Icons.verified_user_outlined),
+        ),
+        IconButton(
+          tooltip: syncText(context, '入驻与服务说明', 'Admission and services'),
+          onPressed: () => push(context, const NativeServicesScreen()),
+          icon: const Icon(Icons.info_outline),
+        ),
+        IconButton(
           tooltip: m.t('appSettings'),
           onPressed: () => push(context, const AccountSettingsScreen()),
           icon: const Icon(Icons.settings_outlined),
@@ -305,7 +315,12 @@ class MerchantWorkspace extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         MerchantCompanyCard(item: item),
-                        _MerchantCompleteness(item: item),
+                        ExpansionTile(
+                          title: Text(
+                            syncText(context, '资料完整度', 'Profile completeness'),
+                          ),
+                          children: [_MerchantCompleteness(item: item)],
+                        ),
                         space(12),
                         LayoutBuilder(
                           builder: (context, constraints) {
@@ -316,14 +331,9 @@ class MerchantWorkspace extends StatelessWidget {
                             final columns = scale >= 1.7 ? 1 : 2;
                             final actions = <(String, IconData, VoidCallback)>[
                               (
-                                'editShowroom',
+                                'companyMaterials',
                                 Icons.edit_outlined,
                                 () => editMerchant(context, item, 'vendor'),
-                              ),
-                              (
-                                'addProduct',
-                                Icons.add_box_outlined,
-                                () => editMerchant(context, null, 'product'),
                               ),
                               (
                                 'productManage',
@@ -331,6 +341,18 @@ class MerchantWorkspace extends StatelessWidget {
                                 () => push(
                                   context,
                                   const MerchantProductsScreen(),
+                                ),
+                              ),
+                              (
+                                'previewShowroom',
+                                Icons.visibility_outlined,
+                                () => push(
+                                  context,
+                                  PreviewScreen(
+                                    data: asMap(item['data']),
+                                    kind: 'vendor',
+                                    photos: const [],
+                                  ),
                                 ),
                               ),
                               (
@@ -360,10 +382,13 @@ class MerchantWorkspace extends StatelessWidget {
                             );
                           },
                         ),
+
                         ListTile(
                           contentPadding: EdgeInsets.zero,
                           leading: const Icon(Icons.storefront_outlined),
-                          title: Text(m.t('boothManage')),
+                          title: Text(
+                            syncText(context, '更多管理', 'More management'),
+                          ),
                           trailing: const Icon(Icons.chevron_right),
                           onTap: () =>
                               push(context, const MerchantManagementScreen()),
@@ -372,6 +397,7 @@ class MerchantWorkspace extends StatelessWidget {
                     ),
             ),
             space(12),
+            const NativeFreeStorage(),
             AsyncPane(
               key: ValueKey('stats:${m.merchant.key}'),
               identity: m.merchant.key,

@@ -2,7 +2,7 @@ import {useRef,useState} from 'react';
 import {useSearchParams,Link} from 'react-router-dom';
 import {ArrowUp,ArrowDown,Package,Plus,X} from 'lucide-react';
 import {api,APIError,body} from './api';
-import {display,ErrorState,Loading,MediaImage,Pager,useLanguage,useLoad} from './main';
+import {display,ErrorState,Loading,MediaImage,Pager,useLanguage,useLoad} from './ui';
 import type {Item,Page,ShowroomDisplay} from './types';
 
 export function RepresentativeProducts(){const r=useLoad<ShowroomDisplay>('/merchant/showroom-display','merchant');return r.error?<ErrorState code={r.error} retry={r.reload}/>:!r.data?<Loading/>:<RepresentativeEditor initial={r.data}/>}

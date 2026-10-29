@@ -1,0 +1,87 @@
+{
+  "site": "https://zqzhg.com",
+  "checkedAt": "2026-10-24T14:15:38.385Z",
+  "timeZone": "Asia/Shanghai",
+  "production": [
+    {
+      "path": "/",
+      "status": "unverified",
+      "error": "apiRequestContext.get: Client network socket disconnected before secure TLS connection was established (ECONNRESET)"
+    },
+    {
+      "path": "/robots.txt",
+      "status": "unverified",
+      "error": "apiRequestContext.get: Client network socket disconnected before secure TLS connection was established (ECONNRESET)"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": "unverified",
+      "error": "apiRequestContext.get: Client network socket disconnected before secure TLS connection was established (ECONNRESET)"
+    }
+  ],
+  "searches": [
+    {
+      "engine": "baidu",
+      "query": "内卷网",
+      "url": "https://www.baidu.com/s?wd=%E5%86%85%E5%8D%B7%E7%BD%91",
+      "status": "unverified",
+      "results": [],
+      "screenshot": "baidu-keyword.png",
+      "httpStatus": 200,
+      "pageTitle": "百度安全验证"
+    },
+    {
+      "engine": "baidu",
+      "query": "河北冀农农机具有限公司",
+      "url": "https://www.baidu.com/s?wd=%E6%B2%B3%E5%8C%97%E5%86%80%E5%86%9C%E5%86%9C%E6%9C%BA%E5%85%B7%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8",
+      "status": "unverified",
+      "results": [],
+      "screenshot": "baidu-company.png",
+      "httpStatus": 200,
+      "pageTitle": "百度安全验证"
+    },
+    {
+      "engine": "bing",
+      "query": "内卷网",
+      "url": "https://www.bing.com/search?q=%E5%86%85%E5%8D%B7%E7%BD%91",
+      "status": "unverified",
+      "results": [],
+      "screenshot": "bing-keyword.png",
+      "httpStatus": 200,
+      "pageTitle": "内卷网 - 搜索"
+    },
+    {
+      "engine": "bing",
+      "query": "河北冀农农机具有限公司",
+      "url": "https://www.bing.com/search?q=%E6%B2%B3%E5%8C%97%E5%86%80%E5%86%9C%E5%86%9C%E6%9C%BA%E5%85%B7%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8",
+      "status": "unverified",
+      "results": [],
+      "screenshot": "bing-company.png",
+      "httpStatus": 200,
+      "pageTitle": "河北冀农农机具有限公司 - 搜索"
+    },
+    {
+      "engine": "google",
+      "query": "内卷网",
+      "url": "https://www.google.com/search?q=%E5%86%85%E5%8D%B7%E7%BD%91",
+      "status": "unverified",
+      "results": [],
+      "screenshot": "google-keyword.png",
+      "httpStatus": 200,
+      "pageTitle": "https://www.google.com.hk/search?q=%E5%86%85%E5%8D%B7%E7%BD%91&sei=tr3cauD-NpbNkPIP27iDuQ0"
+    },
+    {
+      "engine": "google",
+      "query": "河北冀农农机具有限公司",
+      "url": "https://www.google.com/search?q=%E6%B2%B3%E5%8C%97%E5%86%80%E5%86%9C%E5%86%9C%E6%9C%BA%E5%85%B7%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8",
+      "status": "unverified",
+      "results": [],
+      "screenshot": "google-company.png",
+      "httpStatus": 200,
+      "pageTitle": "https://www.google.com.hk/search?q=%E6%B2%B3%E5%8C%97%E5%86%80%E5%86%9C%E5%86%9C%E6%9C%BA%E5%85%B7%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8&sei=xr3cauy2AojxkPIP8r-vsAo"
+    }
+  ],
+  "searchAcceptance": "not_passed",
+  "deployment": "not_performed",
+  "searchConsoleSubmission": "not_performed_no_verified_session"
+}

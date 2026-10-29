@@ -1,4 +1,4 @@
-import {useLanguage} from './main';
+import {useLanguage} from './ui';
 import {categoryPath,businessNatures} from './taxonomy-utils';
 import type {Item,Taxonomy,IndustrialBelt} from './types';
 export function TaxonomySummary({item,categories,belts}:{item:Item;categories:Taxonomy['categories'];belts:IndustrialBelt[]}) {

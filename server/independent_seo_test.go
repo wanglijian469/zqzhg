@@ -19,7 +19,7 @@ import (
 
 func seoTestIndex(t *testing.T, a *App) {
 	t.Helper()
-	source := `<!doctype html><html><head><title>stale-title</title><meta name="description" content="stale"><meta name="robots" content="stale"><link rel="canonical" href="stale"><script type="application/ld+json">{"name":"stale-schema"}</script></head><body><div id="root"> </div></body></html>`
+	source := `<!doctype html><html><head><title>stale-title</title><meta name="description" content="stale"><meta name="keywords" content="stale-keywords"><meta name="robots" content="stale"><link rel="canonical" href="stale"><script type="application/ld+json">{"name":"stale-schema"}</script></head><body><div id="root"> </div></body></html>`
 	if err := os.WriteFile(filepath.Join(a.Config.WebDir, "index.html"), []byte(source), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -67,7 +67,7 @@ func TestIndependentSEOHTMLAndPublication(t *testing.T) {
 		if w.Code != 200 || !strings.Contains(raw, `<div id="root"><main`) || strings.Contains(raw, "待审秘密") || strings.Contains(raw, "stale-") || strings.Contains(raw, "<script>alert(") {
 			t.Fatalf("unsafe or missing initial HTML: %d %s", w.Code, raw)
 		}
-		for _, pattern := range []string{`<title>`, `<meta name='description'`, `<meta name='robots'`, `<link rel='canonical'`, `application/ld\+json`} {
+		for _, pattern := range []string{`<title>`, `<meta name='description'`, `<meta name='keywords'`, `<meta name='robots'`, `<link rel='canonical'`, `application/ld\+json`} {
 			if len(regexp.MustCompile(pattern).FindAllString(raw, -1)) != 1 {
 				t.Fatalf("duplicate/missing metadata %s", pattern)
 			}
@@ -156,7 +156,7 @@ func TestIndependentSEOSitemapVisibilityAndBoundaries(t *testing.T) {
 	router := a.router()
 	w := seoGet(router, "/sitemap.xml")
 	var index sitemapIndex
-	if w.Code != 200 || xml.Unmarshal(w.Body.Bytes(), &index) != nil || len(index.Entries) != 3 || index.XMLNS != sitemapNamespace {
+	if w.Code != 200 || xml.Unmarshal(w.Body.Bytes(), &index) != nil || len(index.Entries) != 4 || index.XMLNS != sitemapNamespace {
 		t.Fatal("invalid index", w.Code, w.Body.String())
 	}
 	for page, expected := range map[int]int{1: 1000, 2: 1} {

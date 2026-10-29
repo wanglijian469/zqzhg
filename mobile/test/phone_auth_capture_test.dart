@@ -80,7 +80,7 @@ void main() {
               f.upgradeApp(
                 m,
                 RoutedAuthCapture(
-                  page: LoginScreen(
+                  page: LoginScreen(companyAccount: false,
                     visitor: mode.startsWith('visitor'),
                     register: mode.endsWith('register'),
                     binding: mode == 'binding',

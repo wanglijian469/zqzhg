@@ -1,6 +1,6 @@
 import {useContext,useEffect,useState} from 'react';
 import {api,body,APIError} from './api';
-import {Confirmation,ErrorState,useLanguage} from './main';
+import {Confirmation,ErrorState,useLanguage} from './ui';
 import type {Item} from './types';
 type LinkInfo={showroom_slug:string;locked:boolean;available?:boolean;valid?:boolean;slug?:string;suggestions:string[];base_url:string};
 export function ShowroomLinkEditor({vendor,admin=false,onSaved}:{vendor:Item;admin?:boolean;onSaved?:()=>void}){

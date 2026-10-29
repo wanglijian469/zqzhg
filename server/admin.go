@@ -427,12 +427,9 @@ func (a *App) adminSystem(c *gin.Context) {
 			}
 		}
 	}
-	configured := true
-	for _, key := range []string{"ALIYUN_ACCESS_KEY_ID", "ALIYUN_ACCESS_KEY_SECRET", "ALIYUN_SMS_SIGN_NAME", "ALIYUN_SMS_TEMPLATE_CODE"} {
-		if strings.TrimSpace(os.Getenv(key)) == "" {
-			configured = false
-		}
-	}
+	// Readiness reflects the running role-backed provider, never the presence
+	// of obsolete long-lived AccessKey environment variables.
+	configured := a.Config.SMSProvider == "aliyun" && a.smsPurposeReady("register") && a.smsPurposeReady("reset_password")
 	c.Header("Cache-Control", "no-store")
 	c.JSON(200, gin.H{"service": "ok", "environment": a.Config.Env, "database_ok": dbOK, "media_ok": mediaOK, "media_files": files, "media_bytes": bytes, "sms_provider": a.Config.SMSProvider, "aliyun_configured": configured, "checked_at": time.Now().UTC(), "product_limit": maxVendorProducts, "public_protection": a.protectionStats()})
 }

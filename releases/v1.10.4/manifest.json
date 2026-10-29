@@ -1,0 +1,21 @@
+{
+  "version": "1.10.4+42",
+  "versionName": "1.10.4",
+  "versionCode": 42,
+  "applicationId": "com.zqzt.dalunongji",
+  "appName": "大陆农机",
+  "asset": "dalunongji-1.10.4+42.apk",
+  "bytes": 85346497,
+  "sha256": "98170cdd59b658337cc45fd7705ed58729af6034bdb6997dc12ab53dcdaff16d",
+  "certificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+  "apiBaseUrl": "https://zqzhg.com",
+  "endpointEditable": false,
+  "sourceTag": "v1.10.4",
+  "releaseURL": "https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.4",
+  "officialDownloadURL": "https://zqzhg.com/downloads/dalunongji.apk",
+  "acceptanceDownloadURL": "https://zqzhg.com/acceptance/dalunongji-1.10.4-42.apk",
+  "companyVerificationMode": "content_review",
+  "schemaVersion": 27,
+  "deviceValidation": false,
+  "iosValidation": false
+}

@@ -27,7 +27,7 @@ const mount=(path='/merchant')=>{history.replaceState(null,'',path);render(<Brow
 it('shows three compact counts, four primary tasks and independent draft/display states',async()=>{
   mount();await screen.findByText('30');expect(screen.getByText('6')).toBeTruthy();expect(screen.getByText('3')).toBeTruthy();expect(screen.queryByText('40')).toBeNull();
   const actions=document.querySelector('.workspace-quick-actions')!;
-  for(const label of ['编辑展厅','添加产品','管理产品','分享企业展厅'])expect(within(actions as HTMLElement).getByRole('link',{name:label})).toBeTruthy();
+  for(const label of ['编辑展厅','添加产品','管理产品','分享官网'])expect(within(actions as HTMLElement).getByRole('link',{name:label})).toBeTruthy();
   const company=document.querySelector('.compact-company')!;expect(within(company as HTMLElement).getByText('待审核')).toBeTruthy();expect(within(company as HTMLElement).getByText('已展示')).toBeTruthy();
   expect(screen.getByText('建议补充（非必填）')).toBeTruthy();expect(document.querySelector('.workspace-topbar-actions')!.textContent).not.toContain('退出登录');
 });
@@ -43,11 +43,11 @@ it('debounces model search and keeps the same query after explicit submit',async
 });
 it('opens promotion directly with public data, a normalized address and a share fallback',async()=>{
   mount('/merchant/promotion');await screen.findByText('公开版本企业（测试）');expect(screen.queryByRole('dialog')).toBeNull();expect(document.querySelector('.share-company-preview')!.textContent).not.toContain('测试资料修改');
-  expect(screen.getByRole('textbox',{name:'展厅地址'})).toHaveProperty('value','https://business.example/v/company');const user=userEvent.setup();await user.click(screen.getByRole('button',{name:'分享企业展厅'}));await screen.findByText('当前无法调用系统分享，可复制链接或保存素材发送。');
+  expect(screen.getByRole('textbox',{name:'展厅地址'})).toHaveProperty('value','https://business.example/v/company');const user=userEvent.setup();await user.click(screen.getByRole('button',{name:'分享官网'}));await screen.findByText('当前无法调用系统分享，可复制链接或保存素材发送。');
   for(const name of ['复制地址','展厅二维码','生成海报预览'])expect(screen.getByRole('button',{name})).toBeTruthy();
 });
 it('does not build promotional materials for an unpublished company',async()=>{
-  hidden=true;mount('/merchant/promotion');await screen.findByText('未展示');expect(screen.queryByRole('button',{name:'分享企业展厅'})).toBeNull();expect(calls.some(c=>c.url.includes('/public/showrooms/'))).toBe(false);
+  hidden=true;mount('/merchant/promotion');await screen.findByText('未展示');expect(screen.queryByRole('button',{name:'分享官网'})).toBeNull();expect(calls.some(c=>c.url.includes('/public/showrooms/'))).toBe(false);
 });
 it('shares the current public product name and never its unreviewed revision',async()=>{
   const share=vi.fn().mockResolvedValue(undefined);Object.defineProperty(navigator,'share',{configurable:true,value:share});

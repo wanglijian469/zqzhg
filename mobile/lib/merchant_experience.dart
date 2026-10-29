@@ -48,32 +48,35 @@ class PromotionalProfileEditor extends StatelessWidget {
           () => GlobalKey(),
         ),
         padding: const EdgeInsets.only(bottom: 16),
-        child: TextFormField(
-          key: ValueKey('${index ?? 'profile'}:$key'),
-          initialValue:
+        child: NativeFieldLabel(
+          label: m.t(label),
+          child: TextFormField(
+            key: ValueKey('${index ?? 'profile'}:$key'),
+            initialValue:
+                (contact == null ? p[key] : contact[key])?.toString() ?? '',
+            enabled: enabled,
+            decoration: guidedDecoration(
+              m,
+              contact == null
+                  ? 'company_profile.$key'
+                  : 'company_profile.contacts.$index.$key',
               (contact == null ? p[key] : contact[key])?.toString() ?? '',
-          enabled: enabled,
-          decoration: guidedDecoration(
-            m,
-            contact == null
-                ? 'company_profile.$key'
-                : 'company_profile.contacts.$index.$key',
-            (contact == null ? p[key] : contact[key])?.toString() ?? '',
-            m.t(label),
-            issue:
-                issues[contact == null
-                    ? 'company_profile.$key'
-                    : 'company_profile.contacts.$index.$key'],
+              m.t(label),
+              issue:
+                  issues[contact == null
+                      ? 'company_profile.$key'
+                      : 'company_profile.contacts.$index.$key'],
+            ),
+            onChanged: (v) {
+              if (contact == null) {
+                update(key, v);
+              } else {
+                final cs = rows(p['contacts']);
+                cs[index!] = {...contact, key: v};
+                update('contacts', cs);
+              }
+            },
           ),
-          onChanged: (v) {
-            if (contact == null) {
-              update(key, v);
-            } else {
-              final cs = rows(p['contacts']);
-              cs[index!] = {...contact, key: v};
-              update('contacts', cs);
-            }
-          },
         ),
       );
     }

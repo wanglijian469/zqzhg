@@ -1,0 +1,103 @@
+{
+  "version": "1.10.3+41",
+  "flutter_tests_passed": 77,
+  "legacy_screenshot_tasks_skipped": 2,
+  "new_screenshots_captured": 8,
+  "static_analysis": "No issues found",
+  "native_bridge_tests_passed": 4,
+  "release_origin_guard": "non-production URL rejected",
+  "apk": {
+    "apk_sha256": "2b549ea955211249a67b972cb837a5711bceb74df60f032f43bfc640449a8a90",
+    "apk_bytes": 85461293,
+    "embedded_manifest_files_verified": 226,
+    "public_files_extracted": 229,
+    "bundle_manifest_sha256": "747daafb0d6828434b54f49a6754745ec6d7a37dc0af0430aed2e2f3ef8f795f",
+    "passed": true
+  },
+  "map": {
+    "origin": "https://zqzhg.com",
+    "bundledAPK": true,
+    "map": [
+      {
+        "code": "",
+        "name": "全国",
+        "total": 11,
+        "sha256": "352c09e7064756c7c6a505c30dd3e7560b13a4edf87883a65fc3d008a3152802",
+        "features": 35,
+        "missing_codes": []
+      },
+      {
+        "code": "13",
+        "name": "河北省",
+        "total": 10,
+        "sha256": "bd1daff0ea4d7253b6ce77784bf7f9669ad6e5a19d0815eb89d696e8db9b34ea",
+        "features": 11,
+        "missing_codes": []
+      },
+      {
+        "code": "1305",
+        "name": "邢台市",
+        "total": 8,
+        "sha256": "cd6acc3f9b1319610f28c83b88b8f79952b9b5242bfc34a47a10871e2247d8ba",
+        "features": 18,
+        "missing_codes": [
+          "130571"
+        ]
+      },
+      {
+        "code": "130528",
+        "name": "宁晋县",
+        "total": 8,
+        "sha256": "f09314a4d4a0bc4ee436e982f282ef6ea59572c742fc01b7d1833d0634f51251",
+        "features": 1,
+        "missing_codes": []
+      }
+    ],
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 900
+      },
+      {
+        "width": 768,
+        "height": 1024
+      },
+      {
+        "width": 390,
+        "height": 844
+      },
+      {
+        "width": 360,
+        "height": 640
+      },
+      {
+        "width": 844,
+        "height": 390
+      }
+    ],
+    "errors": [],
+    "showroomReturn": true,
+    "zoomAndFilter": true,
+    "mapResourceRetry": true,
+    "english": true,
+    "passed": true
+  },
+  "download": {
+    "sha256": "2b549ea955211249a67b972cb837a5711bceb74df60f032f43bfc640449a8a90",
+    "bytes": 85461293,
+    "official_downloads_unchanged": true,
+    "official_download_files": 2,
+    "website_release_unchanged": "/opt/zqzt/releases/auth-1.10.2-20261029-r2",
+    "https_status": 200,
+    "url": "https://zqzhg.com/acceptance/dalunongji-1.10.3-41.apk",
+    "version": "1.10.3+41",
+    "certificate_sha256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+    "application_id": "com.zqzt.dalunongji",
+    "app_name": "大陆农机",
+    "device_validation": false,
+    "agent_real_sms_sends": 0
+  },
+  "device_validation": false,
+  "ios_validation": false,
+  "agent_real_sms_sends": 0
+}

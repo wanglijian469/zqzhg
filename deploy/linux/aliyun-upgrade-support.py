@@ -19,6 +19,12 @@ def contains(parent, child):
 
 def context(env_file, install):
     cfg = read_env(env_file)
+    if cfg.get('APP_ENV') != 'production':
+        raise ValueError('APP_ENV must be production on the ECS host')
+    if cfg.get('SMS_PROVIDER') not in ['disabled', 'aliyun']:
+        raise ValueError('Set SMS_PROVIDER=disabled or aliyun; development SMS is forbidden on ECS')
+    if cfg.get('PROCUREMENT_DEMO', 'false').lower() != 'false':
+        raise ValueError('PROCUREMENT_DEMO must be false on ECS; do not deploy demo data')
     def absolute(value, label):
         if not value or not Path(value).is_absolute(): raise ValueError(label+' must be an absolute server path; preserve its current actual location')
         return Path(value).resolve()
@@ -33,7 +39,10 @@ def context(env_file, install):
         if current.get('database'): database = current['database']
         if current.get('media_dir'): media = absolute(current['media_dir'],'active media_dir')
     if not re.fullmatch(r'[A-Za-z0-9_]+',database): raise ValueError('Unexpected effective database name')
-    web = absolute(cfg.get('WEB_DIR',str(Path(install)/'current/web/dist')),'WEB_DIR')
+    web_value = cfg.get('WEB_DIR',str(Path(install)/'current/web/dist'))
+    if Path(web_value).absolute() != (Path(install)/'current/web/dist').absolute():
+        raise ValueError('WEB_DIR must follow INSTALL_DIR/current/web/dist; otherwise the old website would remain active')
+    web = absolute(web_value,'WEB_DIR')
     release = (Path(install)/'current').resolve()
     for location in [media,operations]:
         if location == Path(location.anchor) or contains(release,location) or contains(web,location): raise ValueError('Persistent storage must be outside the program and web directories')
@@ -96,6 +105,9 @@ def backup(env_file, install, directory, max_schema=15):
             with target.open('xb') as stream:
                 os.chmod(target,0o600)
                 with tarfile.open(fileobj=stream,mode='w:gz') as archive: archive.add(str(source),arcname=label)
+    info['previous_schema']=int(schema.stdout.strip());info['backup']=str(directory)
+    (directory/'context.json').write_text(json.dumps(info,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    os.chmod(directory/'context.json',0o600)
     checks=[]
     for file in sorted(directory.iterdir()):
         h=hashlib.sha256()
@@ -103,9 +115,6 @@ def backup(env_file, install, directory, max_schema=15):
             for chunk in iter(lambda:stream.read(1024*1024),b''):h.update(chunk)
         checks.append(h.hexdigest()+'  '+file.name)
     (directory/'SHA256SUMS').write_text('\n'.join(checks)+'\n',encoding='utf-8')
-    info['previous_schema']=int(schema.stdout.strip());info['backup']=str(directory)
-    (directory/'context.json').write_text(json.dumps(info,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    os.chmod(directory/'context.json',0o600)
     return info
 
 def main():

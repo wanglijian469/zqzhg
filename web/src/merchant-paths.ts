@@ -1,0 +1,1 @@
+export const merchantLegacyPath=(search:string)=>{const p=new URLSearchParams(search);const tab=p.get('tab');p.delete('tab');const path=tab==='boothManage'?'/merchant/booth':tab==='productManage'?'/merchant/products':tab==='promotion'?'/merchant/promotion':'/merchant';return path+(p.size?'?'+p:'')};

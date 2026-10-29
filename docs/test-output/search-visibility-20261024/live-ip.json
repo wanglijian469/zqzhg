@@ -1,0 +1,34 @@
+{
+  "checks": [
+    {
+      "path": "/",
+      "keywords": "",
+      "status": 200,
+      "hasStaticSitemap": false,
+      "hasSearchCopy": false,
+      "title": "中企展馆 · 农业机械厅"
+    },
+    {
+      "path": "/browse",
+      "keywords": "",
+      "status": 200,
+      "hasStaticSitemap": false,
+      "hasSearchCopy": false,
+      "title": "找厂家 | 中企展馆 · 农业机械厅"
+    },
+    {
+      "path": "/sitemap.xml",
+      "keywords": "",
+      "status": 200,
+      "hasStaticSitemap": false,
+      "hasSearchCopy": false,
+      "title": ""
+    },
+    {
+      "error": "Response status code does not indicate success: 404 (Not Found).",
+      "path": "/sitemaps/pages.xml"
+    }
+  ],
+  "checkedAt": "2026-10-24T15:47:35.2116669+00:00",
+  "origin": "http://39.97.250.244:8089"
+}

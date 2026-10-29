@@ -1,6 +1,6 @@
 import {useEffect,useId,useRef,useState,type ReactNode} from 'react';
 import {ChevronDown,Phone,X} from 'lucide-react';
-import {useLanguage,Modal} from './main';
+import {useLanguage,Modal} from './ui';
 import type {Lang,Taxonomy} from './types';
 
 export function usePhoneViewport(){

@@ -1,6 +1,6 @@
 import {useEffect,useState,useRef,type RefObject} from 'react';
 import {formRules} from './form-rules';
-import {useLanguage} from './main';
+import {useLanguage} from './ui';
 import type {Data} from './types';
 export interface FieldIssue{field:string;code:string;limit?:number;unit?:string}
 export function fieldValue(data:unknown,path:string):unknown{return path.split('.').reduce((v:any,key)=>v?.[key],data)}

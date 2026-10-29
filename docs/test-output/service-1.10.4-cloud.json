@@ -1,0 +1,14 @@
+{
+  "origin": "https://zqzhg.com",
+  "company_verification_mode": "content_review",
+  "document_versions": {
+    "service-info": 2,
+    "showroom-agreement": 2,
+    "terms": 2,
+    "privacy": 3
+  },
+  "procurement_disabled": true,
+  "sms_login_disabled": true,
+  "agent_real_sms_sends": 0,
+  "passed": true
+}

@@ -21,6 +21,7 @@ type Permission struct {
 }
 
 var permissionCatalog = []Permission{
+	{"compliance.review", "审核企业身份", "Review company verification"}, {"service.manage", "处理服务工单", "Manage service requests"}, {"legal.manage", "管理服务协议", "Manage service documents"},
 	{"procurement.read", "查看采购询价", "View procurement"}, {"procurement.review", "审核采购需求", "Review procurement"}, {"procurement.quote", "查看采购报价", "View procurement quotes"}, {"procurement.match", "管理厂商匹配", "Manage procurement matching"}, {"procurement.manage", "处理采购异常", "Moderate procurement"}, {"procurement.stats", "采购统计", "Procurement statistics"},
 	{"vendor.read", "查看厂商", "View manufacturers"}, {"vendor.write", "编辑厂商", "Edit manufacturers"}, {"vendor.review", "审核厂商", "Review manufacturers"}, {"vendor.offline", "下架厂商", "Unpublish manufacturers"},
 	{"product.read", "查看产品", "View products"}, {"product.write", "编辑产品", "Edit products"}, {"product.review", "审核产品", "Review products"}, {"product.offline", "下架产品", "Unpublish products"},
@@ -126,7 +127,7 @@ func (a *App) hasPermission(account Account, key string) bool {
 func (a *App) accountJSON(account Account) gin.H {
 	var buyer BuyerProfile
 	buyerRegistered := a.DB.First(&buyer, "account_id=?", account.ID).Error == nil
-	return gin.H{"buyer_registered": buyerRegistered, "capabilities": gin.H{"buyer": buyerRegistered && !buyer.Suspended, "supplier": account.Role == "merchant", "procurement": procurementEnabled()}, "id": account.ID, "username": account.Username, "login_name": account.LoginName, "phone": account.Phone, "phone_verified": verifiedPhone(account), "requires_phone_binding": phoneAccount(account) && !verifiedPhone(account), "role": account.Role, "enabled": true, "created_at": account.CreatedAt, "permissions": a.permissions(account)}
+	return gin.H{"welcome_pending": a.welcomePending(account.ID), "buyer_registered": buyerRegistered, "capabilities": gin.H{"buyer": buyerRegistered && !buyer.Suspended, "supplier": account.Role == "merchant", "procurement": procurementEnabled()}, "id": account.ID, "username": account.Username, "login_name": account.LoginName, "phone": account.Phone, "phone_verified": verifiedPhone(account), "requires_phone_binding": phoneAccount(account) && !verifiedPhone(account), "role": account.Role, "enabled": true, "created_at": account.CreatedAt, "permissions": a.permissions(account)}
 }
 func (a *App) platformPolicy() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -167,6 +168,14 @@ func (a *App) permissionForRequest(c *gin.Context) string {
 		}
 	}
 	switch {
+	case strings.HasPrefix(path, "verifications"):
+		return "compliance.review"
+	case strings.HasPrefix(path, "service-requests"):
+		return "service.manage"
+	case strings.HasPrefix(path, "service-documents"):
+		return "legal.manage"
+	case strings.HasPrefix(path, "home-rotation"):
+		return "home.manage"
 	case path == "dashboard":
 		return "platform.dashboard"
 	case strings.HasPrefix(path, "analytics"):
@@ -395,9 +404,9 @@ func (a *App) resetOperatorPassword(c *gin.Context) {
 	}
 	password := req.Password
 	if password == "" {
-		password = randomToken()[:24]
+		password = randomToken()[:16]
 	}
-	if len(password) < 12 || len(password) > 72 {
+	if !validNewPassword(password) {
 		fail(c, 400, "invalid_password")
 		return
 	}

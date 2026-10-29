@@ -269,7 +269,13 @@ class PortalResourceSummary extends StatelessWidget {
       load: () => m.api(
         '/public/resources?vendor_id=$vendorID&kind=$kind&page_size=3&page=1',
       ),
-      builder: (r) => Column(children:rows(r['items']).where((item)=>item['vendor_id']==vendorID).take(3).map((item)=>NativePublicResourceCard(item:item)).toList()),
+      builder: (r) => Column(
+        children: rows(r['items'])
+            .where((item) => item['vendor_id'] == vendorID)
+            .take(3)
+            .map((item) => NativePublicResourceCard(item: item))
+            .toList(),
+      ),
     );
   }
 }
@@ -522,14 +528,17 @@ class _RepresentativeSettingsScreenState
                     ],
                   ),
                 ),
-              TextField(
-                controller: search,
-                decoration: InputDecoration(labelText: m.t('productSearch')),
-                onSubmitted: (s) => setState(() {
-                  query = s;
-                  page = 1;
-                  reload++;
-                }),
+              NativeFieldLabel(
+                label: m.t('productSearch'),
+                child: TextField(
+                  controller: search,
+                  decoration: InputDecoration(),
+                  onSubmitted: (s) => setState(() {
+                    query = s;
+                    page = 1;
+                    reload++;
+                  }),
+                ),
               ),
               TextButton(
                 onPressed: busy
@@ -665,22 +674,25 @@ class PortalMediaEditor extends StatelessWidget {
     }) => Column(
       children: [
         for (final k in ['title', 'description', 'title_en', 'description_en'])
-          TextFormField(
-            key: ValueKey('$identity:$k'),
-            initialValue: (r[k] ?? '').toString(),
-            enabled: enabled,
-            maxLines: k.startsWith('description') ? 3 : 1,
-            decoration: InputDecoration(
-              errorText: issues['$issuePrefix.$k'] == null
-                  ? null
-                  : fieldIssueText(m, issues['$issuePrefix.$k']!),
-              labelText:
-                  '${k.startsWith('title') ? syncText(context, '标题', 'Title') : syncText(context, '说明', 'Description')}${k.endsWith('_en') ? ' (English)' : ''}${requiredTitle && k == 'title' ? ' *' : ''}',
-              helperText: k.startsWith('title')
-                  ? syncText(context, '最多100字', 'Up to 100 characters')
-                  : syncText(context, '最多500字', 'Up to 500 characters'),
+          NativeFieldLabel(
+            label:
+                '${k.startsWith('title') ? syncText(context, '标题', 'Title') : syncText(context, '说明', 'Description')}${k.endsWith('_en') ? ' (English)' : ''}${requiredTitle && k == 'title' ? ' *' : ''}',
+            child: TextFormField(
+              key: ValueKey('$identity:$k'),
+              initialValue: (r[k] ?? '').toString(),
+              enabled: enabled,
+              maxLines: k.startsWith('description') ? 3 : 1,
+              decoration: InputDecoration(
+                errorText: issues['$issuePrefix.$k'] == null
+                    ? null
+                    : fieldIssueText(m, issues['$issuePrefix.$k']!),
+
+                helperText: k.startsWith('title')
+                    ? syncText(context, '最多100字', 'Up to 100 characters')
+                    : syncText(context, '最多500字', 'Up to 500 characters'),
+              ),
+              onChanged: (v) => change({k: v}),
             ),
-            onChanged: (v) => change({k: v}),
           ),
       ],
     );
@@ -773,33 +785,34 @@ class PortalMediaEditor extends StatelessWidget {
                           ),
                         ),
                       ),
-                      DropdownButtonFormField<int>(
-                        key: ValueKey('$slot:${row['media_id']}'),
-                        initialValue: row['media_id'] ?? 0,
-                        isExpanded: true,
-                        decoration: InputDecoration(
-                          labelText: syncText(
-                            context,
-                            '选择已有图片',
-                            'Choose an existing image',
-                          ),
+                      NativeFieldLabel(
+                        label: syncText(
+                          context,
+                          '选择已有图片',
+                          'Choose an existing image',
                         ),
-                        items: [
-                          const DropdownMenuItem(value: 0, child: Text('—')),
-                          for (final id in <int>{
-                            ...imageIDs(data),
-                            ...credentials.map(
-                              (r) => (r['media_id'] ?? 0) as int,
-                            ),
-                          }.where((id) => id > 0))
-                            DropdownMenuItem(value: id, child: Text('#$id')),
-                        ],
-                        onChanged: enabled
-                            ? (id) {
-                                onDiscard(slot);
-                                change(i, {'media_id': id});
-                              }
-                            : null,
+                        child: DropdownButtonFormField<int>(
+                          key: ValueKey('$slot:${row['media_id']}'),
+                          initialValue: row['media_id'] ?? 0,
+                          isExpanded: true,
+                          decoration: InputDecoration(),
+                          items: [
+                            const DropdownMenuItem(value: 0, child: Text('—')),
+                            for (final id in <int>{
+                              ...imageIDs(data),
+                              ...credentials.map(
+                                (r) => (r['media_id'] ?? 0) as int,
+                              ),
+                            }.where((id) => id > 0))
+                              DropdownMenuItem(value: id, child: Text('#$id')),
+                          ],
+                          onChanged: enabled
+                              ? (id) {
+                                  onDiscard(slot);
+                                  change(i, {'media_id': id});
+                                }
+                              : null,
+                        ),
                       ),
                       if (local != null)
                         Wrap(

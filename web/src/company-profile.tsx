@@ -4,7 +4,7 @@ import {VendorBrandCard} from './vendor-list';
 import {BrandImageField,type RegisterBrandUpload} from './brand-image-field';
 import {useEffect,useRef,useState} from 'react';
 import {api,body,APIError} from './api';
-import {useLanguage,MediaImage,Modal,ErrorState,useLoad} from './main';
+import {useLanguage,MediaImage,Modal,ErrorState,useLoad} from './ui';
 import type {Data,CompanyProfile,Item,ShowroomResponse} from './types';
 import {domesticChannels,overseasChannels,shareChannelURL,shareText,addressScope} from './share-channels';
 import {vendorPath,shareURL,qrDataURL,posterDataURL,download} from './showroom-share';

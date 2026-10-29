@@ -1,12 +1,12 @@
 import {runtimeConfig} from './runtime-config';
 import {mediaURL} from './runtime-config';
-import {canonicalPublicURL,filteredSearch,showroomSearchVariant} from './seo';
+import {indexablePublicPath,canonicalPublicURL,filteredSearch,showroomSearchVariant} from './seo';
 import {HomeVisual} from './home-display';
 import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from 'react';
 import {Link,useLocation,useNavigate} from 'react-router-dom';
 import {Cable,Check,ChevronDown,Factory,Tractor} from 'lucide-react';
 import {api} from './api';
-import {useLanguage,ErrorState,Loading} from './main';
+import {useLanguage,ErrorState,Loading} from './ui';
 import type {Hall,Item} from './types';
 
 export function hallHref(path:string,slug='agriculture'){
@@ -34,15 +34,16 @@ export function HallSwitcher(){
 }
 export function HallGate({children}:{children:ReactNode}){const {loading,error,reload,hall}=useHall();if(loading)return <div className="container section"><Loading/></div>;if(error)return <div className="container section"><ErrorState code={error} retry={reload}/></div>;if(!hall)return <div className="container section"><ErrorState code="not_found"/></div>;return children}
 export function PreparingHall(){const {hall}=useHall();const {lang,t}=useLanguage();return <section className="container preparing-hall"><span className="preparing-symbol"><Cable size={48}/></span><span className="eyebrow">ZQZG / INDUSTRIAL EXHIBITION</span><h1>{t('brand')} · {lang==='en'?hall?.name_en:hall?.name}</h1><span className="status-pill">{t('hallPreparing')}</span><p>{(lang==='en'?hall?.description_en:hall?.description)||t('preparingDescription')}</p>{!!hall?.hero_media_id&&<div className="preparing-visual"><HomeVisual id={hall.hero_media_id}/></div>}<Link className="button" to="/">{t('backOpenHall')}</Link></section>}
-export function usePageMetadata(title:string,description:string,canonical?:string,unavailable=false,imageID=0){
+export function usePageMetadata(title:string,description:string,canonical?:string,unavailable=false,imageID=0,keywords=''){
  const location=useLocation();const {hall}=useHall();
- useEffect(()=>{if(!title)return;const base=runtimeConfig().site.web_url||document.querySelector<HTMLMetaElement>('meta[name="zqzg-public-base"]')?.content||window.location.origin;
+ useEffect(()=>{if(!title){if(/^\/(?:admin|merchant|join|buyer|procurement)(?:\/|$)/.test(location.pathname))document.querySelectorAll('meta[name="keywords"]').forEach(n=>n.remove());return}const base=runtimeConfig().site.web_url||document.querySelector<HTMLMetaElement>('meta[name="zqzg-public-base"]')?.content||window.location.origin;
  const url=canonicalPublicURL(location.pathname,location.search,base,canonical);
- const robots=unavailable||!hall||hall.status==='preparing'||filteredSearch(location.search)||showroomSearchVariant(location.pathname,location.search)||/^\/(admin|merchant|join|buyer|procurement)(\/|$)/.test(location.pathname)?'noindex,follow':'index,follow';
+ const robots=!indexablePublicPath(location.pathname)||unavailable||(!location.pathname.startsWith('/services')&&(!hall||hall.status==='preparing'))||location.pathname==='/service-requests'||new URLSearchParams(location.search).has('version')||filteredSearch(location.search)||showroomSearchVariant(location.pathname,location.search)||/^\/(admin|merchant|join|buyer|procurement)(\/|$)/.test(location.pathname)?'noindex,follow':'index,follow';
  document.title=title;const meta=(key:string,value:string,property=false)=>{const selector=property?'property':'name';let node=document.querySelector<HTMLMetaElement>('meta['+selector+'="'+key+'"]');if(!node){node=document.createElement('meta');node.setAttribute(selector,key);document.head.append(node)}node.content=value;document.querySelectorAll('meta['+selector+'="'+key+'"]').forEach(other=>{if(other!==node)other.remove()})};
  meta('description',description);meta('robots',robots);meta('og:title',title,true);meta('og:description',description,true);meta('og:url',url,true);
+ if(keywords&&!unavailable)meta('keywords',keywords);else document.querySelectorAll('meta[name="keywords"]').forEach(n=>n.remove());
  if(imageID)meta('og:image',new URL(mediaURL(imageID),base).href,true);else document.querySelectorAll('meta[property="og:image"]').forEach(n=>n.remove());
  let link=document.querySelector<HTMLLinkElement>('link[rel="canonical"]');if(!link){link=document.createElement('link');link.rel='canonical';document.head.append(link)}link.href=url;document.querySelectorAll('link[rel="canonical"]').forEach(n=>{if(n!==link)n.remove()});
  document.querySelectorAll('script[type="application/ld+json"]').forEach(node=>{try{if(JSON.parse(node.textContent||'{}').url!==url)node.remove()}catch{node.remove()}});
- },[title,description,canonical,unavailable,imageID,location.pathname,location.search,hall?.status,runtimeConfig().site.web_url]);
+ },[title,description,canonical,unavailable,imageID,keywords,location.pathname,location.search,hall?.status,runtimeConfig().site.web_url]);
 }

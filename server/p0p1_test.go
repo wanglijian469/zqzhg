@@ -299,10 +299,10 @@ func TestV2InitialHTMLSEOAndPrivacy(t *testing.T) {
 		path, title, canonical, robots string
 		status                         int
 	}{
-		{"/", "中企展馆 · 农业机械厅", "https://zqzhg.com/", "index,follow", 200},
-		{"/browse?hall=agriculture&page=1", "找厂家", "https://zqzhg.com/browse", "index,follow", 200},
-		{"/browse/products?page=2", "找产品", "https://zqzhg.com/browse/products?page=2", "index,follow", 200},
-		{"/browse?q=MODEL&category_id=1&page=2", "找厂家", "https://zqzhg.com/browse?category_id=1&amp;page=2&amp;q=MODEL", "noindex,follow", 200},
+		{"/", "中企展馆", "https://zqzhg.com/", "index,follow", 200},
+		{"/browse?hall=agriculture&page=1", publicSEOCopy.ZH.DirectoryTitle, "https://zqzhg.com/browse", "index,follow", 200},
+		{"/browse/products?page=2", publicSEOCopy.ZH.ProductsTitle, "https://zqzhg.com/browse/products?page=2", "index,follow", 200},
+		{"/browse?q=MODEL&category_id=1&page=2", publicSEOCopy.ZH.DirectoryTitle, "https://zqzhg.com/browse?category_id=1&amp;page=2&amp;q=MODEL", "noindex,follow", 200},
 		{"/?hall=cable", "电线电缆厅", "https://zqzhg.com/?hall=cable", "noindex,follow", 200},
 		{fmt.Sprintf("/products/%d?hall=cable", p.ID), "独立设备 &lt;一号&gt;", fmt.Sprintf("https://zqzhg.com/products/%d", p.ID), "index,follow", 200},
 		{"/products/999999", "产品暂未公开", "https://zqzhg.com/products/999999", "noindex,follow", 404},

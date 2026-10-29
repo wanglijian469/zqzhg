@@ -1,0 +1,8 @@
+{
+  "https_configuration": true,
+  "procurement_disabled": true,
+  "unregistered_login_does_not_create_user": true,
+  "missing_challenge_rejected_before_send": true,
+  "legacy_http_probe": "separate_on_host_public_ip_probe_426; Windows direct legacy port intermittently reset",
+  "development_route_unavailable_in_production": true
+}

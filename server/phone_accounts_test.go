@@ -18,7 +18,7 @@ func phoneFixture(t *testing.T, a *App, phone, purpose string, id uint64) string
 	code := "246810"
 	salt := randomToken()
 	a.DB.Delete(&PhoneVerification{}, "phone=? AND purpose=? AND account_id=?", phone, purpose, id)
-	if e := a.DB.Create(&PhoneVerification{Phone: phone, Purpose: purpose, AccountID: id, Salt: salt, Digest: digest(salt + phone + purpose + code), SentAt: time.Now().Add(-61 * time.Second), ExpiresAt: time.Now().Add(5 * time.Minute)}).Error; e != nil {
+	if e := a.DB.Create(&PhoneVerification{Phone: phone, Purpose: purpose, AccountID: id, Salt: salt, Digest: smsCodeDigest(salt, phone, purpose, code), SentAt: time.Now().Add(-61 * time.Second), ExpiresAt: time.Now().Add(5 * time.Minute)}).Error; e != nil {
 		t.Fatal(e)
 	}
 	return code
@@ -26,6 +26,10 @@ func phoneFixture(t *testing.T, a *App, phone, purpose string, id uint64) string
 func phoneCall(t *testing.T, r *gin.Engine, method, path, token string, data gin.H, status int) map[string]any {
 	t.Helper()
 	clearRegistrationLimit()
+	if (path == "/auth/phone/register" || path == "/auth/merchant/register" || path == "/auth/visitor/register") && data != nil && data["agreements"] == nil {
+		data["agreements"] = (testClient{t, r}).registrationAgreements()
+		data["source"] = "web"
+	}
 	return (testClient{t, r}).call(method, path, token, data, status)
 }
 func TestPhoneRegistrationLoginUpgradeAndMigration(t *testing.T) {
@@ -110,8 +114,8 @@ func TestPhoneCodePurposesAttemptsExpiryAndCooldown(t *testing.T) {
 	if len(out["development_code"].(string)) != 6 || out["expires_in"] != float64(300) {
 		t.Fatal(out)
 	}
-	phoneCall(t, r, "POST", "/auth/phone/code", "", gin.H{"phone": phone, "purpose": "setup_password"}, 429)
-	phoneCall(t, r, "POST", "/auth/sms", "", gin.H{"phone": phone}, 429)
+	phoneCall(t, r, "POST", "/auth/phone/code", "", gin.H{"phone": phone, "purpose": "setup_password"}, 409)
+	phoneCall(t, r, "POST", "/auth/sms", "", gin.H{"phone": phone}, 409)
 	code := phoneFixture(t, a, phone, "register", 0)
 	phoneCall(t, r, "POST", "/auth/phone/password/setup", "", gin.H{"phone": phone, "code": code, "password": pw}, 400)
 	for i := 0; i < 5; i++ {
@@ -128,10 +132,10 @@ func TestPhoneCodePurposesAttemptsExpiryAndCooldown(t *testing.T) {
 	phoneCall(t, r, "POST", "/auth/phone/register", "", gin.H{"phone": phone, "code": code, "password": pw, "role": "visitor"}, 400)
 	phoneCall(t, r, "POST", "/auth/phone/code", "", gin.H{"phone": "12345", "purpose": "register"}, 400)
 	phoneCall(t, r, "POST", "/auth/phone/code", "", gin.H{"phone": phone, "purpose": "bind"}, 400)
-	// Development codes never appear with a production environment.
+	// The development adapter cannot send in a production environment.
 	a.Config.Env = "production"
 	other := "13900002223"
-	out = phoneCall(t, r, "POST", "/auth/phone/code", "", gin.H{"phone": other, "purpose": "register"}, 200)
+	out = phoneCall(t, r, "POST", "/auth/phone/code", "", gin.H{"phone": other, "purpose": "register"}, 426)
 	if _, ok := out["development_code"]; ok {
 		t.Fatal("code exposed")
 	}
@@ -191,12 +195,13 @@ func TestPhoneConcurrentRegistration(t *testing.T) {
 	code := phoneFixture(t, a, phone, "register", 0)
 	clearRegistrationLimit()
 	var wg sync.WaitGroup
+	refs := serviceTestRefs(t, a, "terms", "privacy")
 	statuses := make(chan int, 2)
 	for i := 0; i < 2; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			w := resetRequest(r, "/auth/phone/register", "", gin.H{"phone": phone, "code": code, "password": "Phone-Password-2026!", "role": "visitor"})
+			w := resetRequest(r, "/auth/phone/register", "", gin.H{"phone": phone, "code": code, "password": "Phone-Password-2026!", "role": "visitor", "agreements": refs, "source": "web"})
 			statuses <- w.Code
 		}()
 	}

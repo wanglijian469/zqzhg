@@ -35,7 +35,7 @@ afterEach(()=>{cleanup();vi.unstubAllGlobals()});
 
 describe('Browser workflows',()=>{
   it('searches for manufacturers by default and switches home search to products',async()=>{
-    history.replaceState(null,'','/');
+    history.replaceState(null,'','/?hall=agriculture');
     render(<BrowserRouter><App/></BrowserRouter>);
     const user=userEvent.setup();
     await user.type(await screen.findByRole('textbox',{name:'关键词'}),'440');
@@ -90,7 +90,7 @@ describe('Browser workflows',()=>{
     expect((screen.getByRole('textbox',{name:'Keyword'}) as HTMLInputElement).value).toBe('TEST');
   });
   it('routes popular products to the catalog and gives direct product details a catalog return link',async()=>{
-    history.replaceState(null,'','/');
+    history.replaceState(null,'','/?hall=agriculture');
     const product={id:2,kind:'product',data:{...emptyData,name:'首页测试产品（不入库）'}};
     const vendor={id:1,kind:'vendor',data:{...emptyData,name:'首页测试厂家（不入库）'}};
     fetchMock.mockImplementation(async(url:string,options?:RequestInit)=>{

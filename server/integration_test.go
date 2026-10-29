@@ -48,10 +48,35 @@ func (tc testClient) call(method, path, token string, body any, want int) map[st
 	json.Unmarshal(w.Body.Bytes(), &out)
 	return out
 }
+func (tc testClient) registrationAgreements() []AgreementRef {
+	tc.t.Helper()
+	rows := tc.call("GET", "/public/service-documents", "", nil, 200)["items"].([]any)
+	refs := []AgreementRef{}
+	for _, value := range rows {
+		d := value.(map[string]any)
+		if d["key"] == "terms" || d["key"] == "privacy" {
+			refs = append(refs, AgreementRef{d["key"].(string), uint64(d["version"].(float64)), d["digest"].(string)})
+		}
+	}
+	return refs
+}
 func (tc testClient) login(phone string) string {
 	tc.t.Helper()
-	code := tc.call("POST", "/auth/sms", "", gin.H{"phone": phone}, 200)["development_code"]
-	return tc.call("POST", "/auth/phone", "", gin.H{"phone": phone, "code": code}, 200)["token"].(string)
+	const pw = "Fixture-Pass-2026!"
+	raw, _ := json.Marshal(gin.H{"phone": phone, "password": pw})
+	r := httptest.NewRequest("POST", "/api/v1/auth/phone/password", bytes.NewReader(raw))
+	r.Header.Set("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	tc.router.ServeHTTP(w, r)
+	if w.Code == 200 {
+		var out map[string]any
+		json.Unmarshal(w.Body.Bytes(), &out)
+		return out["token"].(string)
+	}
+	clearRegistrationLimit()
+	code := tc.call("POST", "/auth/phone/code", "", gin.H{"phone": phone, "purpose": "register"}, 200)["development_code"]
+	out := tc.call("POST", "/auth/phone/register", "", gin.H{"phone": phone, "code": code, "password": pw, "role": "visitor", "source": "web", "agreements": tc.registrationAgreements()}, 201)
+	return tc.call("POST", "/auth/me/merchant-upgrade", out["token"].(string), gin.H{"confirmed": true}, 200)["token"].(string)
 }
 func number(v any) string { return strconv.FormatUint(uint64(v.(float64)), 10) }
 func TestBusinessAndMediaIsolation(t *testing.T) {
@@ -80,6 +105,9 @@ func TestBusinessAndMediaIsolation(t *testing.T) {
 	admin := tc.call("POST", "/auth/admin", "", gin.H{"username": "admin", "password": "Integration-Admin-2026!"}, 200)["token"].(string)
 	merchant := tc.login("13900000001")
 	other := tc.login("13900000002")
+	_ = tc.login("13900000003")
+	a.DB.Model(&SMSSendAttempt{}).Where("phone_key=?", smsPhoneKey("13900000003")).Update("created_at", time.Now().Add(-61*time.Second))
+	a.DB.Model(&PhoneVerification{}).Where("phone=?", "13900000003").Update("sent_at", time.Now().Add(-61*time.Second))
 	code := tc.call("POST", "/auth/sms", "", gin.H{"phone": "13900000003"}, 200)["development_code"]
 	tc.call("POST", "/auth/sms", "", gin.H{"phone": "13900000003"}, 429)
 	for i := 0; i < 5; i++ {

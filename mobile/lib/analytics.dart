@@ -49,6 +49,7 @@ class AppAnalytics {
   }
 
   Future<void> _persist() async {
+    if (!model.usageAnalyticsAllowed) return;
     try {
       final key = _key;
       await model.prefs.setString('$key.visitor', _visitor);
@@ -67,7 +68,7 @@ class AppAnalytics {
     int? id,
     String? keyword,
   }) {
-    if (!model.analyticsEnabled || model.isHallPreview) {
+    if (!model.usageAnalyticsAllowed || model.isHallPreview) {
       return;
     }
     if (!RegExp(
@@ -124,6 +125,10 @@ class AppAnalytics {
   }
 
   Future<void> flush() async {
+    if (!model.usageAnalyticsAllowed) {
+      await withdraw();
+      return;
+    }
     if (_sending || _queue.isEmpty) return;
     _sending = true;
     final base = _base;
@@ -151,6 +156,21 @@ class AppAnalytics {
       _sending = false;
       await _persist();
       if (_queue.isNotEmpty) _schedule(const Duration(seconds: 10));
+    }
+  }
+
+  Future<void> withdraw() async {
+    _timer?.cancel();
+    _queue.clear();
+    _visitor = '';
+    _session = '';
+    _base = '';
+    for (final key
+        in model.prefs
+            .getKeys()
+            .where((k) => k.startsWith('zqzt.analytics.'))
+            .toList()) {
+      await model.prefs.remove(key);
     }
   }
 

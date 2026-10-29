@@ -1,6 +1,6 @@
 import {imageLimitBytes} from './runtime-config';
 import {useEffect,useRef,useState} from 'react';
-import {MediaImage,useLanguage,ErrorState} from './main';
+import {MediaImage,useLanguage,ErrorState} from './ui';
 import {uploadResourceFile} from './resources';
 import {APIError} from './api';
 import type {Data} from './types';

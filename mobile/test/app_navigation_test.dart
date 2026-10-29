@@ -1,3 +1,5 @@
+import 'native_field_finder.dart';
+import 'service_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -47,6 +49,7 @@ Future<AppModel> fixture({
 }) async {
   SharedPreferences.setMockInitialValues({
     'base_url': 'http://fixture',
+    if (analyticsEnabled) 'service.analytics_consent': true,
     if (signed) 'token': 'test-token',
     if (signed) 'account': jsonEncode({'id': 7}),
   });
@@ -58,12 +61,20 @@ Future<AppModel> fixture({
           jsonDecode(File('assets/i18n/$lang.json').readAsStringSync()),
         ),
     },
+    testBaseUrl: 'http://fixture',
     analyticsEnabled: analyticsEnabled,
     client: MockClient((r) async {
       calls?.add(r.url);
       final override = await intercept?.call(r);
       if (override != null) return override;
       final path = r.url.path;
+      if (path.endsWith('/public/service-documents')) {
+        return http.Response(
+          jsonEncode({'items': serviceFixtureDocuments()}),
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        );
+      }
       if (path.endsWith('/halls')) {
         return http.Response(
           jsonEncode({
@@ -147,7 +158,7 @@ Future<AppModel> fixture({
 
 Widget harness(
   AppModel m, {
-  Widget home = const HomeScreen(),
+  Widget home = const AppShell(initiallyInHall: true),
   double scale = 1,
   Key? boundary,
 }) => ModelScope(
@@ -197,12 +208,7 @@ Future<void> tap(WidgetTester tester, Finder finder) async {
     await tester.scrollUntilVisible(
       finder,
       350,
-      scrollable: find
-          .descendant(
-            of: find.byType(CustomScrollView).last,
-            matching: find.byType(Scrollable),
-          )
-          .first,
+      scrollable: find.byType(Scrollable).first,
       maxScrolls: 30,
     );
   }
@@ -237,7 +243,7 @@ void main() {
       await tester.enterText(find.byType(TextField).first, '旋耕机');
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
-      await tap(tester, find.byType(DropdownButtonFormField<int>).at(1));
+      await tap(tester, find.widgetWithText(TextButton, '地区'));
       await tap(tester, find.text('河北').last);
       await tap(tester, find.text('下一页'));
       expect(
@@ -291,7 +297,7 @@ void main() {
       await tester.pumpWidget(harness(m));
       await tester.pumpAndSettle();
       await tap(tester, find.byKey(const ValueKey('home-search-kind')));
-      await tap(tester, find.text('产品').last);
+      await tap(tester, find.text(m.t('navProducts')).last);
       await tester.enterText(find.byType(TextField).first, '440');
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
@@ -350,7 +356,10 @@ void main() {
       await tester.pumpAndSettle();
       await tap(tester, find.byKey(const ValueKey('app-tab-3')));
       await tap(tester, find.byKey(const ValueKey('my-booth')));
-      await tap(tester, find.text(m.t('boothManage')));
+      await tap(
+        tester,
+        find.text(m.language == 'zh' ? '更多管理' : 'More management'),
+      );
       await tap(tester, find.text('Logo与封面'));
       expect(
         tester.widget<EditorScreen>(find.byType(EditorScreen)).initialSection,
@@ -360,10 +369,7 @@ void main() {
       await tester.tap(find.byType(BackButton).first);
       await tester.pumpAndSettle();
       await tap(tester, find.text('基本信息'));
-      await tester.enterText(
-        find.widgetWithText(TextField, '企业 / 工厂名称'),
-        '修改后企业',
-      );
+      await tester.enterText(nativeField('企业 / 工厂名称'), '修改后企业');
       await tester.pump(const Duration(milliseconds: 500));
       await tester.tap(find.byType(BackButton).first);
       await tester.pumpAndSettle();
@@ -402,17 +408,18 @@ void main() {
       );
       expect(
         tester
-            .widget<FilledButton>(find.widgetWithText(FilledButton, '提交审核'))
-            .onPressed,
-        isNull,
-      );
-      expect(
-        tester
             .widget<PromotionalProfileEditor>(
               find.byType(PromotionalProfileEditor),
             )
             .enabled,
         isFalse,
+      );
+      await tap(tester, find.widgetWithText(ChoiceChip, '3. 协议与提交'));
+      expect(
+        tester
+            .widget<FilledButton>(find.widgetWithText(FilledButton, '提交审核'))
+            .onPressed,
+        isNull,
       );
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
@@ -489,8 +496,14 @@ void main() {
             expect(tester.takeException(), isNull);
           }
           await tap(tester, find.byKey(const ValueKey('my-booth')));
-          await tap(tester, find.text(m.t('boothManage')));
-          await tester.drag(find.byType(ListView).last, const Offset(0, -500));
+          await tap(
+            tester,
+            find.text(m.language == 'zh' ? '更多管理' : 'More management'),
+          );
+          await tester.drag(
+            find.byType(Scrollable).last,
+            const Offset(0, -500),
+          );
           await tester.pumpAndSettle();
           expect(tester.takeException(), isNull);
           await tester.pumpWidget(const SizedBox());
@@ -551,7 +564,10 @@ void main() {
       await capture('products');
       await tap(tester, find.byKey(const ValueKey('app-tab-3')));
       await tap(tester, find.byKey(const ValueKey('my-booth')));
-      await tap(tester, find.text(m.t('boothManage')));
+      await tap(
+        tester,
+        find.text(m.language == 'zh' ? '更多管理' : 'More management'),
+      );
       await capture('booth');
       await tap(tester, find.text('Logo与封面'));
       await capture('brand-editor');

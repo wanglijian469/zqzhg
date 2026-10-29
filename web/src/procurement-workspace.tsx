@@ -1,7 +1,9 @@
 import {useEffect,useRef,useState,type ReactNode} from 'react';
-import {Link,useLocation} from 'react-router-dom';
+import {Link,useLocation,useNavigate} from 'react-router-dom';
+import {nativeWorkspace,useMobileWorkspace} from './mobile-workspace';
+import './procurement-mobile.css';
 import {Bell,ChevronLeft,ChevronRight,ClipboardList,ContactRound,Globe2,Home,Menu,SquarePen,Store,Tractor,X} from 'lucide-react';
-import {useLanguage} from './main';
+import {useLanguage} from './ui';
 import {ProcurementDemoBanner} from './procurement-demo-banner';
 import './merchant-workspace.css';
 import './workspace-upgrade.css';
@@ -16,10 +18,13 @@ const entries=[
 
 export function ProcurementWorkspace({children,notifications}:{children:ReactNode;notifications:ReactNode}){
  const {lang,t,toggle}=useLanguage(),en=lang==='en';const location=useLocation();
+ const mobile=useMobileWorkspace(),navigate=useNavigate();
  const [collapsed,setCollapsed]=useState(()=>sessionStorage.getItem('zqzt.procurement.collapsed')==='1'),[drawer,setDrawer]=useState(false);
  const aside=useRef<HTMLElement>(null),toggleRef=useRef<HTMLButtonElement>(null);
  const active=entries.find(entry=>entry.path==='/buyer'?location.pathname==='/buyer'||location.pathname.startsWith('/buyer/projects/'):location.pathname===entry.path)||entries[0];
  const center=en?'Procurement center':'采购中心',openLabel=en?'Open procurement navigation':'打开采购中心导航';
+ const pageTitle=/^\/procurement\/[1-9][0-9]*$/.test(location.pathname)?(en?'Request details':'采购需求详情'):location.pathname==='/procurement'?center:en?active.en:active.zh;
+ useEffect(()=>{document.title=pageTitle;let robots=document.querySelector<HTMLMetaElement>('meta[name=robots]');if(!robots){robots=document.createElement('meta');robots.name='robots';document.head.appendChild(robots)}robots.content='noindex,follow'},[pageTitle]);
 
  useEffect(()=>setDrawer(false),[location.pathname,location.search]);
  useEffect(()=>{const resize=()=>{if(window.innerWidth>900)setDrawer(false)};window.addEventListener('resize',resize);return()=>window.removeEventListener('resize',resize)},[]);
@@ -38,6 +43,10 @@ export function ProcurementWorkspace({children,notifications}:{children:ReactNod
   return()=>{document.body.style.overflow=overflow;document.removeEventListener('keydown',key);if(prior?.isConnected)prior.focus();else toggleRef.current?.focus()};
  },[drawer]);
 
+ if(mobile)return <div className="proc-app proc-mobile">
+  {!nativeWorkspace()&&<header className="proc-mobile-header"><button aria-label={en?'Back':'返回'} onClick={()=>{if((window.history.state?.idx||0)>0)navigate(-1);else navigate(location.pathname==='/procurement'?'/':'/procurement')}}><ChevronLeft/></button><strong>{location.pathname==='/procurement'?center:en?active.en:active.zh}</strong><button onClick={toggle} aria-label={en?'切换为中文':'Switch to English'}>{en?'中文':'English'}</button></header>}
+  <main className="proc-mobile-content"><ProcurementDemoBanner/>{children}</main>
+ </div>;
  return <div className={'proc-app merchant-workspace procurement-workspace'+(collapsed?' is-collapsed':'')+(drawer?' drawer-open':'')}>
   {drawer&&<button className="workspace-shade" aria-label={en?'Close procurement navigation overlay':'关闭采购导航遮罩'} onClick={()=>setDrawer(false)}/>}
   <aside id="procurement-navigation-panel" ref={aside} className="workspace-sidebar" aria-label={center} {...(drawer?{role:'dialog','aria-modal':true}:{})}>

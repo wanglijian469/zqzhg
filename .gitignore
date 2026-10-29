@@ -9,6 +9,7 @@ mobile/.dart_tool/
 mobile/build/
 mobile/android/local.properties
 mobile/android/key.properties
+mobile/android/app/src/main/assets/workspace/
 *.jks
 *.keystore
 *.log
@@ -52,3 +53,6 @@ __pycache__/
 # Generated local download metadata and learning-only geographic screenshots.
 /web/public/downloads/
 /docs/screenshots/factory-map-outline*.png
+
+# Operator-only SSH connection credentials; never package or commit.
+/需求文档/39.97.250.244.txt

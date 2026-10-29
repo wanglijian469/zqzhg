@@ -1,0 +1,131 @@
+{
+  "checks": [
+    {
+      "width": 360,
+      "lang": "zh",
+      "landingMetadata": true,
+      "initialHTML": true,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "landingMetadata": true,
+      "initialHTML": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "landingMetadata": true,
+      "initialHTML": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "landingMetadata": true,
+      "initialHTML": true,
+      "overflow": false
+    },
+    {
+      "width": 430,
+      "lang": "zh",
+      "landingMetadata": true,
+      "initialHTML": true,
+      "overflow": false
+    },
+    {
+      "width": 430,
+      "lang": "en",
+      "landingMetadata": true,
+      "initialHTML": true,
+      "overflow": false
+    },
+    {
+      "width": 1366,
+      "lang": "zh",
+      "landingMetadata": true,
+      "initialHTML": true,
+      "overflow": false
+    },
+    {
+      "width": 1366,
+      "lang": "en",
+      "landingMetadata": true,
+      "initialHTML": true,
+      "overflow": false
+    },
+    {
+      "width": 1920,
+      "lang": "zh",
+      "landingMetadata": true,
+      "initialHTML": true,
+      "overflow": false
+    },
+    {
+      "width": 1920,
+      "lang": "en",
+      "landingMetadata": true,
+      "initialHTML": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "javaScript": false,
+      "companyAndProductBody": true,
+      "crossLinks": true,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "javaScript": false,
+      "companyAndProductBody": true,
+      "crossLinks": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "javaScript": true,
+      "rootReplaced": true,
+      "navigation": true,
+      "canonical": true,
+      "paginatedNoindex": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "javaScript": true,
+      "rootReplaced": true,
+      "navigation": true,
+      "canonical": true,
+      "paginatedNoindex": true,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "javaScript": true,
+      "rootReplaced": true,
+      "navigation": true,
+      "canonical": true,
+      "paginatedNoindex": true,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "javaScript": true,
+      "rootReplaced": true,
+      "navigation": true,
+      "canonical": true,
+      "paginatedNoindex": true,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "isolatedDatabase": true,
+  "physicalDeviceVerified": false
+}

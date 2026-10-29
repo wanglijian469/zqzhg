@@ -1,5 +1,5 @@
 import {useEffect,useRef,useState} from 'react';
-import {useLanguage,useLoad,ErrorState} from './main';
+import {useLanguage,useLoad,ErrorState} from './ui';
 import type {Data} from './types';
 export interface AdministrativeRegion{code:string;parent_code:string;name:string;level:number;has_children:boolean;full_name:string;path:string[]}
 interface Result{items:AdministrativeRegion[];selected:AdministrativeRegion|null;trail:AdministrativeRegion[];version:string}

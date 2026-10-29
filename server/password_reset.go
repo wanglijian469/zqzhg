@@ -25,9 +25,9 @@ func (a *App) adminPasswordReset(c *gin.Context) {
 			dbFail(c, fieldFailure("invalid_request", "password", "generated_password_only"))
 			return
 		}
-		password = "Ad-" + randomToken()[:24] + "!"
+		password = "Ad-" + randomToken()[:12] + "!"
 	case "manual":
-		if len(password) < 12 || len(password) > 72 || strings.TrimSpace(password) == "" {
+		if !validNewPassword(password) {
 			dbFail(c, fieldFailure("invalid_request", "password", "password_length"))
 			return
 		}

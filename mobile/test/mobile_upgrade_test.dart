@@ -1,3 +1,5 @@
+import 'native_field_finder.dart';
+import 'service_fixture.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -31,10 +33,17 @@ Future<AppModel> upgradeModel({
           jsonDecode(File('assets/i18n/$lang.json').readAsStringSync()),
         ),
     },
+    testBaseUrl: 'http://127.0.0.1:8080',
     analyticsEnabled: false,
     client: MockClient((r) async {
       final custom = await handler?.call(r);
       if (custom != null) return custom;
+      if (r.url.path.endsWith('/public/service-documents')) {
+        return jsonResponse({'items': serviceFixtureDocuments()});
+      }
+      if (r.url.path.endsWith('/public/home')) {
+        return jsonResponse({'vendors': [], 'products': [], 'hero': {}});
+      }
       if (r.url.path.endsWith('/public/config')) {
         return jsonResponse({
           'capabilities': {
@@ -42,6 +51,10 @@ Future<AppModel> upgradeModel({
             'industry_map': true,
             'product_name_only': true,
             'phone_password_auth': true,
+            'phone_sms_register': true,
+            'phone_sms_bind': true,
+            'phone_sms_auth': true,
+            'sms_challenge': false,
           },
         });
       }
@@ -199,7 +212,7 @@ void main() {
     await t.pumpWidget(upgradeApp(m, const EditorScreen(kind: 'product')));
     await t.pumpAndSettle();
     await tapReachable(t, find.text('关键词、说明和参数（选填）'));
-    final input = find.widgetWithText(TextField, '关键词（含英文，选填）');
+    final input = nativeField('关键词（含英文，选填）');
     await t.ensureVisible(input);
     await t.enterText(input, '实际关键词');
     await t.pumpAndSettle();
@@ -423,13 +436,18 @@ void main() {
       await expectLater(m.clientCapabilities(), throwsA(isA<ApiFailure>()));
       expect(await m.clientCapabilities(), isEmpty);
       expect(count, 2);
-      m.baseUrl = 'http://other.test';
-      await m.clientCapabilities();
+      final other = AppModel(
+        m.prefs,
+        m.resources,
+        client: m.client,
+        testBaseUrl: 'http://other.test',
+      );
+      await other.clientCapabilities();
       expect(count, 3);
     },
   );
   test(
-    'A delayed capability result from a previous server is rejected',
+    'A delayed capability result remains scoped to its immutable model',
     () async {
       final pending = Completer<http.Response>();
       final m = await upgradeModel(
@@ -437,14 +455,18 @@ void main() {
             r.url.path.endsWith('/config') ? pending.future : null,
       );
       final request = m.clientCapabilities();
-      final assertion = expectLater(request, throwsA(isA<ApiFailure>()));
-      m.baseUrl = 'http://other.test';
+      final other = AppModel(
+        m.prefs,
+        m.resources,
+        testBaseUrl: 'http://other.test',
+      );
       pending.complete(
         jsonResponse({
           'capabilities': {'industry_map': true},
         }),
       );
-      await assertion;
+      expect((await request)['industry_map'], true);
+      expect(other.clientCapabilityCache, isEmpty);
     },
   );
   test(
@@ -482,7 +504,7 @@ void main() {
     },
   );
   testWidgets(
-    'Registration validates focus, independent visibility, reset and single uncertain request',
+    'Unified registration keeps independent visibility and prevents duplicate uncertain requests',
     (t) async {
       int writes = 0;
       final pending = Completer<http.Response>();
@@ -497,52 +519,58 @@ void main() {
       );
       await t.pumpWidget(upgradeApp(m, const LoginScreen(register: true)));
       await t.pumpAndSettle();
-      await tapReachable(t, find.widgetWithText(FilledButton, '注册并继续'));
-      final name = find.widgetWithText(TextField, '手机号');
-      expect(t.widget<TextField>(name).focusNode!.hasFocus, isTrue);
-      await t.enterText(name, '13900009991');
-      await t.enterText(find.widgetWithText(TextField, '短信验证码'), '123456');
+      await tapReachable(t, find.text('账号密码注册'));
       await t.enterText(
-        find.widgetWithText(TextField, '设置密码'),
-        'Entry-password-2026!',
+        find.byKey(const ValueKey('auth-username')),
+        'isolated-account',
       );
       await t.enterText(
-        find.widgetWithText(TextField, '确认密码'),
-        'Entry-password-2026!',
+        find.byKey(const ValueKey('auth-accountPassword')),
+        'Entry-pass-2026!',
+      );
+      await t.enterText(
+        find.byKey(const ValueKey('auth-accountConfirm')),
+        'Entry-pass-2026!',
       );
       await tapReachable(t, find.byTooltip('显示设置密码'));
       expect(
-        t.widget<TextField>(find.widgetWithText(TextField, '设置密码')).obscureText,
+        t
+            .widget<TextField>(
+              find.byKey(const ValueKey('auth-accountPassword')),
+            )
+            .obscureText,
         isFalse,
       );
       expect(
-        t.widget<TextField>(find.widgetWithText(TextField, '确认密码')).obscureText,
+        t
+            .widget<TextField>(
+              find.byKey(const ValueKey('auth-accountConfirm')),
+            )
+            .obscureText,
         isTrue,
       );
-      final formSubmit = find.widgetWithText(FilledButton, '注册并继续');
-      await t.ensureVisible(formSubmit);
-      await t.tap(formSubmit);
-      await t.tap(formSubmit);
+      await tapReachable(t, find.byType(CheckboxListTile));
+      final submit = find.widgetWithText(FilledButton, '注册并进入展馆');
+      await t.ensureVisible(submit);
+      await t.tap(submit);
+      await t.tap(submit);
       await t.pump();
       expect(writes, 1);
       pending.completeError(SocketException('test disconnected'));
       await t.pumpAndSettle();
-      expect(find.textContaining('无法确认账号'), findsOneWidget);
-      await tapReachable(t, find.text('已有账号？登录继续'));
+      expect(m.token, isEmpty);
+      expect(find.byKey(const ValueKey('auth-error')), findsOneWidget);
+      await tapReachable(t, find.text('已有账号，登录'));
       expect(
         t
-            .widget<TextField>(find.widgetWithText(TextField, '密码'))
+            .widget<TextField>(find.byKey(const ValueKey('auth-loginPassword')))
             .controller!
             .text,
         isEmpty,
       );
       expect(
-        t.widget<TextField>(find.widgetWithText(TextField, '密码')).obscureText,
-        isTrue,
-      );
-      expect(
         m.prefs.getKeys().any(
-          (key) => '${m.prefs.get(key)}'.contains('Entry-password'),
+          (k) => '${m.prefs.get(k)}'.contains('Entry-pass'),
         ),
         isFalse,
       );
@@ -582,7 +610,7 @@ void main() {
       );
       await t.pumpWidget(upgradeApp(m, const EditorScreen(kind: 'product')));
       await t.pumpAndSettle();
-      await t.enterText(find.widgetWithText(TextField, '产品名称'), '入口验收产品（仅测试）');
+      await t.enterText(nativeField('产品名称'), '入口验收产品（仅测试）');
       await tapReachable(t, find.widgetWithText(OutlinedButton, '保存云端草稿'));
       expect(creates, 1);
       expect(find.byType(EditorScreen), findsOneWidget);
@@ -611,7 +639,7 @@ void main() {
       );
       await t.pumpWidget(upgradeApp(m, const EditorScreen(kind: 'product')));
       await t.pumpAndSettle();
-      await t.enterText(find.widgetWithText(TextField, '产品名称'), '旧服务兼容（仅测试）');
+      await t.enterText(nativeField('产品名称'), '旧服务兼容（仅测试）');
       await tapReachable(t, find.widgetWithText(OutlinedButton, '保存云端草稿'));
       expect(writes, 0);
       expect(find.textContaining('当前服务器尚未支持'), findsOneWidget);

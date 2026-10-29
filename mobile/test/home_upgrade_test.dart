@@ -213,18 +213,18 @@ void main() {
         nav.harness(m, home: const BrowseScreen(kind: 'product')),
       );
       await tester.pumpAndSettle();
-      final cards = find.byType(ItemTile);
+      final cards = find.byType(NativeProductCard);
       expect(
-        tester.getTopLeft(cards.at(0)).dy,
-        tester.getTopLeft(cards.at(1)).dy,
+        tester.getTopLeft(cards.at(0)).dx,
+        tester.getTopLeft(cards.at(1)).dx,
       );
       expect(
-        tester.getSize(cards.at(0)).height,
-        tester.getSize(cards.at(1)).height,
+        tester.getBottomLeft(cards.at(0)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(cards.at(1)).dy),
       );
       expect(find.text('型号：1LF-440'), findsOneWidget);
       for (final photo in tester.widgetList<Photo>(find.byType(Photo))) {
-        expect(photo.aspectRatio, 4 / 3);
+        expect(photo.aspectRatio, 1);
         expect(photo.fit, BoxFit.contain);
       }
       expect(tester.takeException(), isNull);
@@ -233,7 +233,7 @@ void main() {
   );
 
   testWidgets(
-    'Home caps recommendations at six each and does not request per-card details',
+    'Home shows up to 12 free rotating companies without per-card detail requests',
     (tester) async {
       viewport(tester, 390);
       final calls = <Uri>[];
@@ -255,7 +255,7 @@ void main() {
       await tester.pumpWidget(nav.harness(m));
       await tester.pumpAndSettle();
       final vendors = <int>{}, products = <int>{};
-      for (var i = 0; i < 15; i++) {
+      for (var i = 0; i < 30; i++) {
         vendors.addAll(
           tester
               .widgetList<NativeVendorCard>(find.byType(NativeVendorCard))
@@ -272,7 +272,7 @@ void main() {
         );
         await tester.pumpAndSettle();
       }
-      expect(vendors, {1, 2, 3, 4});
+      expect(vendors, {for (var i = 1; i <= 12; i++) i});
       expect(products, {200, 201, 202, 203, 204, 205, 206, 207});
       expect(calls, hasLength(3));
       await tester.pumpWidget(const SizedBox());

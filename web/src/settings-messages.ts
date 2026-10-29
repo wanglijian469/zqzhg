@@ -1,6 +1,6 @@
 export const settingsMessages:Record<string,Record<string,string>>={
   "zh": {
-    "systemSettings": "系统设置", "settingsLocalStore":"本地存储", "myStorageUsage":"文件存储用量", "storageQuotaNote":"统计已上传原图、缩略图、视频与画册。迁移副本不重复计费；移除表单图片不会物理删除文件。",
+    "systemSettings": "系统设置", "settingsLocalStore":"本地存储", "myStorageUsage":"文件存储用量", "storageQuotaNote":"统计已上传原图、缩略图、视频与画册。迁移副本不重复计量；移除表单图片不会物理删除文件。",
     "settingsIntro": "网站地址、上传限制与厂商容量统一管理。关键设置仅超级管理员可修改，文件目录由服务器配置。",
     "settingsSite": "网站与地址",
     "settingsUploads": "上传与容量",
@@ -20,7 +20,7 @@ export const settingsMessages:Record<string,Record<string,string>>={
     "setting_pdf_mib": "PDF大小上限",
     "setting_default_quota_bytes": "厂商容量额度",
     "settingsHardLimit": "服务器硬上限",
-    "settingsQuotaHelp": "用量包括原图、缩略图、视频源文件及处理结果、PDF。迁移副本不重复计费。历史超额不删除资料，只限制新增上传；移除引用不等于物理删除。",
+    "settingsQuotaHelp": "用量包括原图、缩略图、视频源文件及处理结果、PDF。迁移副本不重复计量。历史超额不删除资料，只限制新增上传；移除引用不等于物理删除。",
     "settingsDiskAlerts": "磁盘预警",
     "setting_warn_percent": "预警使用率",
     "setting_critical_percent": "严重预警使用率",

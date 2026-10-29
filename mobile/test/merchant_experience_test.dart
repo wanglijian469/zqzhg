@@ -1,3 +1,4 @@
+import 'native_field_finder.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dalunongji/main.dart';
@@ -100,11 +101,9 @@ void main() {
       );
       await tester.tap(find.text('已有公司账号登录'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('原账号登录'));
-      await tester.pumpAndSettle();
-      await tester.enterText(find.widgetWithText(TextField, '原登录账号'), '公司账号');
+      await tester.enterText(nativeField( '公司账号'), '公司账号');
       await tester.enterText(
-        find.widgetWithText(TextField, '密码'),
+        nativeField( '密码'),
         'Example-Pass-2026!',
       );
       await tester.tap(find.widgetWithText(FilledButton, '登录'));
@@ -116,7 +115,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(calls, contains('/api/v1/merchant/dashboard'));
       expect(find.text('30'), findsOneWidget);
-      for (final label in ['编辑展厅', '添加产品', '产品管理', '分享企业展厅', '展厅管理']) {
+      for (final label in ['编辑展厅', '添加产品', '产品管理', '分享官网', '企业资料']) {
         expect(find.text(label), findsWidgets);
       }
       expect(calls, contains('/api/v1/merchant/dashboard'));
@@ -160,8 +159,8 @@ void main() {
     );
     await tester.tap(find.text('宣传资料'));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.widgetWithText(TextFormField, '宣传简介'));
-    await tester.enterText(find.widgetWithText(TextFormField, '宣传简介'), '新简介');
+    await tester.ensureVisible(nativeFormField( '宣传简介'));
+    await tester.enterText(nativeFormField( '宣传简介'), '新简介');
     expect(asMap(d['company_profile'])['capacity'], '供货能力原值');
     expect(
       rows(asMap(d['company_profile'])['contacts']).single['phone'],

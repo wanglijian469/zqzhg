@@ -74,6 +74,42 @@ class _BrowseScreenState extends State<BrowseScreen> {
       }
       requestKey = null;
       taxonomy = m.publicTaxonomy(kind: widget.kind);
+      final categoryScope = scope;
+      unawaited(
+        taxonomy!.then<void>((value) {
+          if (!mounted || endpoint != categoryScope || category == null) return;
+          final data = asMap(value), aliases = rows(asMap(value)['aliases']);
+          final alias = aliases
+              .where((a) => a['source_id'] == category)
+              .firstOrNull;
+          final canonical = alias?['target_id'] ?? category;
+          final valid = rows(
+            data['categories'],
+          ).any((c) => c['id'] == canonical);
+          if (!valid || canonical != category) {
+            setState(() {
+              category = valid ? (canonical as num).toInt() : null;
+              page = 1;
+              requestKey = null;
+              load();
+              save();
+            });
+            if (!valid) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    syncText(
+                      context,
+                      '原分类已更新，请重新选择类别。',
+                      'Categories have changed. Please select a category again.',
+                    ),
+                  ),
+                ),
+              );
+            }
+          }
+        }, onError: (Object e, StackTrace s) {}),
+      );
       final offset = obsolete
           ? 0.0
           : ((old?['offset'] as num?)?.toDouble() ?? 0);
@@ -130,6 +166,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
     term = value.trim();
     category = categoryID;
     region = null;
+    order = '';
     page = 1;
   });
   void submit(String value) {
@@ -149,89 +186,134 @@ class _BrowseScreenState extends State<BrowseScreen> {
 
   Widget filters(AppModel m, Json tax) {
     final cats = rows(tax['categories']), regions = rows(tax['regions']);
-    return NativeFilterPanel(
-      count:
-          (category == null ? 0 : 1) +
-          (region == null ? 0 : 1) +
-          (order.isEmpty ? 0 : 1),
-      panelKey: PageStorageKey('filters:$endpoint'),
+    Widget button(String label, bool selected, VoidCallback open, {Key? key}) =>
+        Expanded(
+          child: TextButton(
+            key: key,
+            onPressed: open,
+            style: TextButton.styleFrom(
+              minimumSize: const Size(48, 48),
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              foregroundColor: selected ? industrialBlue : industrialInk,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    label,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const Icon(Icons.expand_more, size: 16),
+              ],
+            ),
+          ),
+        );
+    Future<void> chooseInt(bool isCategory) async {
+      FocusScope.of(context).unfocus();
+      final value = await nativeFilterSheet<int>(
+        context,
+        title: isCategory
+            ? widget.kind == 'vendor'
+                  ? syncText(context, '厂家分类', 'Manufacturer category')
+                  : m.t('category')
+            : syncText(context, '所在地区', 'Region'),
+        selected: (isCategory ? category : region) ?? 0,
+        options: [
+          (value: 0, label: m.t(isCategory ? 'allCategories' : 'allRegions')),
+          for (final row in isCategory ? cats : regions)
+            (
+              value: (row['id'] as num).toInt(),
+              label: isCategory
+                  ? nativeCategoryPath(cats, row['id'], m)
+                  : m.content(row, 'name'),
+            ),
+        ],
+      );
+      if (value == null || !mounted) return;
+      update(() {
+        if (isCategory) {
+          category = value == 0 ? null : value;
+        } else {
+          region = value == 0 ? null : value;
+        }
+        page = 1;
+      });
+    }
+
+    final selectedCategory = cats.where((c) => c['id'] == category).firstOrNull;
+    final selectedRegion = regions.where((r) => r['id'] == region).firstOrNull;
+    return Column(
       children: [
-        DropdownButtonFormField<int>(
-          key: ValueKey('category:$category'),
-          initialValue: cats.any((c) => c['id'] == category) ? category : null,
-          isExpanded: true,
-          decoration: InputDecoration(
-            labelText: widget.kind == 'vendor'
-                ? syncText(context, '厂家分类', 'Manufacturer category')
-                : m.t('category'),
-          ),
-          items: [
-            DropdownMenuItem(value: null, child: Text(m.t('allCategories'))),
-            for (final c in cats)
-              DropdownMenuItem(
-                value: c['id'],
-                child: Text(
-                  nativeCategoryPath(cats, c['id'], m),
-                  overflow: TextOverflow.ellipsis,
+        Row(
+          children: [
+            button(
+              selectedCategory == null
+                  ? syncText(
+                      context,
+                      widget.kind == 'vendor' ? '厂家分类' : '产品分类',
+                      'Category',
+                    )
+                  : m.content(selectedCategory, 'name'),
+              category != null,
+              () => chooseInt(true),
+              key: const ValueKey('browse-category-filter'),
+            ),
+            button(
+              selectedRegion == null
+                  ? syncText(context, '地区', 'Region')
+                  : m.content(selectedRegion, 'name'),
+              region != null,
+              () => chooseInt(false),
+            ),
+            if (m.modernPublicApi)
+              button(
+                m.t(
+                  order == 'latest'
+                      ? 'latestSort'
+                      : order == 'name'
+                      ? 'companyNameSort'
+                      : 'sort',
                 ),
+                order.isNotEmpty,
+                () async {
+                  FocusScope.of(context).unfocus();
+                  final value = await nativeFilterSheet<String>(
+                    context,
+                    title: m.t('sort'),
+                    selected: order,
+                    options: [
+                      (value: '', label: m.t('defaultSort')),
+                      (value: 'latest', label: m.t('latestSort')),
+                      if (widget.kind == 'vendor')
+                        (value: 'name', label: m.t('companyNameSort')),
+                    ],
+                  );
+                  if (value != null && mounted) {
+                    update(() {
+                      order = value;
+                      page = 1;
+                    });
+                  }
+                },
               ),
           ],
-          onChanged: (v) => update(() {
-            category = v;
-            page = 1;
-          }),
         ),
-        DropdownButtonFormField<int>(
-          key: ValueKey('region:$region'),
-          initialValue: regions.any((r) => r['id'] == region) ? region : null,
-          isExpanded: true,
-          decoration: InputDecoration(
-            labelText: syncText(context, '所在地区', 'Region'),
-          ),
-          items: [
-            DropdownMenuItem(value: null, child: Text(m.t('allRegions'))),
-            for (final r in regions)
-              DropdownMenuItem(
-                value: r['id'],
-                child: Text(
-                  m.content(r, 'name'),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-          ],
-          onChanged: (v) => update(() {
-            region = v;
-            page = 1;
-          }),
-        ),
-        if (m.modernPublicApi)
-          DropdownButtonFormField<String>(
-            initialValue: order,
-            isExpanded: true,
-            decoration: InputDecoration(labelText: m.t('sort')),
-            items: [
-              DropdownMenuItem(value: '', child: Text(m.t('defaultSort'))),
-              DropdownMenuItem(value: 'latest', child: Text(m.t('latestSort'))),
-              if (widget.kind == 'vendor')
-                DropdownMenuItem(
-                  value: 'name',
-                  child: Text(m.t('companyNameSort')),
-                ),
-            ],
-            onChanged: (v) => update(() {
-              order = v ?? '';
-              page = 1;
-            }),
-          ),
         if (category != null || region != null || order.isNotEmpty)
-          TextButton(
-            onPressed: () => update(() {
-              category = null;
-              region = null;
-              order = '';
-              page = 1;
-            }),
-            child: Text(m.t('clear')),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () => update(() {
+                category = null;
+                region = null;
+                order = '';
+                page = 1;
+              }),
+              child: Text(m.t('clear')),
+            ),
           ),
       ],
     );
@@ -269,22 +351,28 @@ class _BrowseScreenState extends State<BrowseScreen> {
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
                 sliver: SliverList.list(
                   children: [
                     TextField(
+                      key: const ValueKey('browse-search'),
                       controller: query,
                       textInputAction: TextInputAction.search,
                       decoration: InputDecoration(
-                        labelText: m.t(
+                        hintText: syncText(
+                          context,
                           widget.kind == 'product'
-                              ? 'showroomKeyword'
-                              : 'keyword',
+                              ? '搜索产品名称、型号'
+                              : '搜索厂家名称、主营产品',
+                          widget.kind == 'product'
+                              ? 'Product name or model'
+                              : 'Manufacturer or products',
                         ),
+                        prefixIcon: const Icon(Icons.search),
                         suffixIcon: IconButton(
                           tooltip: m.t('homeSearchAction'),
                           onPressed: () => submit(query.text),
-                          icon: const Icon(Icons.search),
+                          icon: const Icon(Icons.arrow_forward),
                         ),
                       ),
                       onSubmitted: submit,
@@ -328,7 +416,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
                   pageSize = (snap.data['page_size'] as num? ?? pageSize)
                       .toInt();
                   return SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     sliver: SliverMainAxisGroup(
                       slivers: [
                         SliverToBoxAdapter(
@@ -365,11 +453,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
                         if (widget.kind == 'product')
                           ExhibitSliver(items: items)
                         else
-                          SliverList.builder(
-                            itemCount: items.length,
-                            itemBuilder: (c, i) =>
-                                NativeVendorCard(item: items[i]),
-                          ),
+                          VendorSliver(items: items),
                         SliverToBoxAdapter(
                           child: NativePagination(
                             page: page,

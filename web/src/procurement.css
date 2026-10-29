@@ -23,3 +23,7 @@ nav.proc-nav{position:static;inset:auto;flex-direction:row;align-items:center;ba
 .procurement-workspace .workspace-topbar .workspace-topbar-actions>a{min-height:44px}
 @media(max-width:900px){.procurement-workspace .workspace-topbar .workspace-topbar-actions>a{display:flex}.procurement-workspace .workspace-menu{min-width:44px;min-height:44px}.procurement-workspace .workspace-drawer-close{width:44px;height:44px}.procurement-workspace .workspace-topbar-title{min-width:0}.procurement-workspace .workspace-topbar-title small{line-height:1.5}}
 @media(max-width:600px){.procurement-workspace .proc-card{padding:20px 16px;margin-bottom:20px}.procurement-workspace .proc-card h1,.procurement-workspace .proc-title h1,.procurement-workspace .proc-workspace-content>section>h1{font-size:23px}.procurement-workspace .workspace-content{padding:20px 12px 48px}.procurement-workspace .workspace-topbar{padding:10px 12px}.procurement-workspace .workspace-topbar-actions{gap:8px}.procurement-workspace .workspace-topbar-title small{font-size:12px}.procurement-workspace .workspace-topbar-actions>a span{display:none}.procurement-workspace .workspace-topbar .workspace-topbar-actions>a{min-width:36px;justify-content:center}}
+
+.proc-module .proc-review-filters{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.proc-module .proc-review-filters label{flex:1 1 220px;margin:0}
+.proc-module .proc-review-filters .button{min-height:44px;align-self:flex-end;flex:0 0 auto}

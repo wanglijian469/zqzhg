@@ -1,0 +1,51 @@
+{
+  "version": "1.10.0+38",
+  "backendSchema": 23,
+  "defaultFreeStorageBytes": 200000000,
+  "backend": {
+    "relatedMySQLTestsPassed": 13,
+    "isolatedDatabase": true,
+    "browserTestRunSeparately": true,
+    "legacyProcurementWorkflowSuiteRun": false
+  },
+  "web": {
+    "testFiles": 9,
+    "testsPassed": 55,
+    "typeCheckPassed": true,
+    "buildPassed": true
+  },
+  "flutter": {
+    "testsPassed": 183,
+    "explicitCaptureTestsSkipped": 7,
+    "analyzePassed": true
+  },
+  "browser": {
+    "isolatedChecks": 5,
+    "responsiveLanguageCases": 48,
+    "localLayoutCases": 12,
+    "pageErrors": []
+  },
+  "localData": {
+    "publicVendorsBefore": 11,
+    "publicVendorsAfter": 11,
+    "publicProductsBefore": 46,
+    "publicProductsAfter": 46,
+    "historicalAddressVerified": true
+  },
+  "android": {
+    "package": "com.zqzt.dalunongji",
+    "name": "大陆农机",
+    "apkSHA256": "7b9542a8d1319a00e890e0d27fb2278cf6de337040e25145ebe81c719bd1e81f",
+    "certificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+    "originalSigningRetained": true,
+    "stableDownloadsUnchanged": true,
+    "embeddedWebFilesVerified": 224,
+    "embeddedWebMatchesWebsite": true,
+    "apiBaseUrl": "http://192.168.179.35:8080"
+  },
+  "productionDeployed": false,
+  "linuxBundleGenerated": false,
+  "physicalDeviceVerified": false,
+  "iosBuilt": false,
+  "appAndPoliceFilingNumbersProvided": false
+}

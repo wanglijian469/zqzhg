@@ -183,16 +183,25 @@ void main() {
       final restarted = AppModel(
         m.prefs,
         m.resources,
+        testBaseUrl: 'http://fixture',
         client: MockClient((r) async => await cloud.handle(r) ?? response({})),
       );
       expect(restarted.favorites.entries, hasLength(2));
       expect(restarted.favorites.contains('vendor', 1), isTrue);
       await restarted.toggleLanguage();
       expect(restarted.favorites.entries, hasLength(2));
-      await restarted.changeEndpoint('http://other-fixture');
-      expect(restarted.favorites.entries, isEmpty);
-      await restarted.changeEndpoint('http://fixture');
-      expect(restarted.favorites.entries, hasLength(2));
+      final other = AppModel(
+        m.prefs,
+        m.resources,
+        testBaseUrl: 'http://other-fixture',
+      );
+      expect(other.favorites.entries, isEmpty);
+      final restored = AppModel(
+        m.prefs,
+        m.resources,
+        testBaseUrl: 'http://fixture',
+      );
+      expect(restored.favorites.entries, hasLength(2));
       expect(cloud.syncTokens, isEmpty);
     },
   );
@@ -252,6 +261,7 @@ void main() {
       final restarted = AppModel(
         m.prefs,
         m.resources,
+        testBaseUrl: 'http://fixture',
         client: MockClient((r) async => await cloud.handle(r) ?? response({})),
       );
       expect(restarted.favorites.pendingCount, 3);
@@ -430,7 +440,7 @@ void main() {
   );
 
   testWidgets(
-    'Visitor registration merges favorites and visitors see a manufacturer login instead of management',
+    'Unified registration merges favorites and ordinary users keep optional company entry',
     (tester) async {
       size(tester, 390);
       final cloud = Cloud();
@@ -439,43 +449,30 @@ void main() {
       await tester.pumpWidget(nav.harness(m));
       await tester.pumpAndSettle();
       await nav.tap(tester, find.byKey(const ValueKey('app-tab-3')));
-      await nav.tap(tester, find.byKey(const ValueKey('my-favorites')));
-      await nav.tap(tester, find.text('登录／注册并同步'));
-      await nav.tap(tester, find.text('注册访客账号'));
+      await nav.tap(tester, find.byKey(const ValueKey('account-summary')));
+      await nav.tap(tester, find.text('免费注册'));
+      await nav.tap(tester, find.text('账号密码注册'));
       await tester.enterText(
-        find.widgetWithText(TextField, '手机号'),
-        '13900001111',
-      );
-      await tester.enterText(find.widgetWithText(TextField, '短信验证码'), '123456');
-      await tester.enterText(
-        find.widgetWithText(TextField, '设置密码'),
-        'Visitor-Password-2026!',
+        find.byKey(const ValueKey('auth-username')),
+        'ordinary-user',
       );
       await tester.enterText(
-        find.widgetWithText(TextField, '确认密码'),
-        'Visitor-Password-2026!',
+        find.byKey(const ValueKey('auth-accountPassword')),
+        'Visitor-pass-2026!',
       );
-      await nav.tap(tester, find.widgetWithText(FilledButton, '注册并继续'));
+      await tester.enterText(
+        find.byKey(const ValueKey('auth-accountConfirm')),
+        'Visitor-pass-2026!',
+      );
+      await nav.tap(tester, find.byType(CheckboxListTile));
+      await nav.tap(tester, find.widgetWithText(FilledButton, '注册并进入展馆'));
       expect(m.account['role'], 'visitor');
+      await m.favorites.refresh();
       expect(cloud.account('a:first'), hasLength(1));
-      await tester.tap(find.byType(BackButton).first);
-      await tester.pumpAndSettle();
       await nav.tap(tester, find.byKey(const ValueKey('app-tab-3')));
-      expect(find.text(m.t('visitorMerchantHelp')), findsOneWidget);
+      expect(find.byKey(const ValueKey('my-booth')), findsOneWidget);
+      expect(find.text('厂商账号登录'), findsNothing);
       expect(find.byType(MerchantWorkspace), findsNothing);
-      await nav.tap(tester, find.widgetWithText(TextButton, '厂商账号登录'));
-      await tester.enterText(
-        find.widgetWithText(TextField, '手机号'),
-        '13900002222',
-      );
-      await tester.enterText(
-        find.widgetWithText(TextField, '密码'),
-        'Manufacturer-Pass-2026!',
-      );
-      await nav.tap(tester, find.widgetWithText(FilledButton, '登录'));
-      expect(m.account['role'], 'merchant');
-      expect(find.byType(MerchantWorkspace), findsOneWidget);
-      expect(cloud.account('manufacturer:first'), isEmpty);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     },
@@ -517,14 +514,8 @@ void main() {
         nav.harness(m, home: const LoginScreen(visitor: true), scale: 1.4),
       );
       await tester.pumpAndSettle();
-      await nav.tap(
-        tester,
-        find.text(lang == 'zh' ? '注册访客账号' : 'Register visitor account'),
-      );
-      expect(
-        find.widgetWithText(TextField, lang == 'zh' ? '手机号' : 'Mobile number'),
-        findsOneWidget,
-      );
+      await nav.tap(tester, find.text(lang == 'zh' ? '免费注册' : 'Register free'));
+      expect(find.byKey(const ValueKey('auth-phone')), findsOneWidget);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     });

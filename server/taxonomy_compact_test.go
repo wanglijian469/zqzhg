@@ -10,7 +10,7 @@ import (
 )
 
 func TestCompactTaxonomyMigrationAndCompatibility(t *testing.T) {
-	a := importTestApp(t)
+	a := importTestAppAtSchema(t, 21)
 	tc := testClient{t, a.router()}
 	active := tc.call("GET", "/public/taxonomy?category_kind=product", "", nil, 200)["categories"].([]any)
 	roots := 0
@@ -88,7 +88,7 @@ func TestCompactTaxonomyMigrationAndCompatibility(t *testing.T) {
 	overflowChild := Category{HallID: 1, CategoryKind: "product", Name: "超层级原分类", ParentID: overflow.ID, Enabled: true}
 	a.DB.Create(&overflowChild)
 	add(overflowChild.ID)
-	if e := migrate(a.DB); e != nil {
+	if e := migrateThrough(a.DB, 21); e != nil {
 		t.Fatal(e)
 	}
 	for _, c := range old {
@@ -149,7 +149,7 @@ func TestCompactTaxonomyMigrationAndCompatibility(t *testing.T) {
 	if e := a.DB.Exec("DELETE FROM schema_migrations WHERE version=18").Error; e != nil {
 		t.Fatal(e)
 	}
-	if e := migrate(a.DB); e != nil {
+	if e := migrateThrough(a.DB, 21); e != nil {
 		t.Fatal("interrupted marker retry", e)
 	}
 	var countAfter int64

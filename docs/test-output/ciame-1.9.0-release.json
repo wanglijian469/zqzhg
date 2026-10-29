@@ -1,0 +1,21 @@
+{
+  "version": "1.9.0+37",
+  "applicationId": "com.zqzt.dalunongji",
+  "appName": "大陆农机",
+  "platformName": "中企展馆",
+  "industryTitle": "中企展馆-农业机械厅",
+  "apkBytes": 84756830,
+  "apkSHA256": "6f98e11246704316cccbe9ceb774e762d12c1ceed01dc64b1b2882bcb778da56",
+  "certificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+  "signingMatchesPrevious": true,
+  "stableDownloadsUnchanged": true,
+  "stableSHA256": "5f0a35407fcb6dc2e9001fa4f1578ca7f63463a7ea6feece2ab18866dfe1441d",
+  "embeddedWebFilesVerified": 224,
+  "embeddedWebMatchesWebsite": true,
+  "ciamePrimary": 29,
+  "ciameSecondary": 159,
+  "sourceWorkbookSHA256": "58036ac74e95acec2beddcbd62dbf2ae3215d1549fba6ac33267367c02c1b5e4",
+  "productionDeployed": false,
+  "deviceValidation": false,
+  "iosBuilt": false
+}

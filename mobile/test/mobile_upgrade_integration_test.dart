@@ -20,7 +20,7 @@ void main() {
           lang: asMap(
             jsonDecode(File('assets/i18n/$lang.json').readAsStringSync()),
           ),
-      }, analyticsEnabled: false);
+      }, analyticsEnabled: false, testBaseUrl: base);
       addTearDown(m.client.close);
       final caps = await m.clientCapabilities();
       expect(caps['product_name_only'], true);

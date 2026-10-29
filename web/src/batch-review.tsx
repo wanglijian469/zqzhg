@@ -1,6 +1,6 @@
 import {useEffect,useRef,useState} from 'react';
 import {api,APIError,body} from './api';
-import {ContentInfo,display,MediaImage,Modal,useLanguage} from './main';
+import {ContentInfo,display,MediaImage,Modal,useLanguage} from './ui';
 import type {Item} from './types';
 
 type Decision='approve'|'reject';

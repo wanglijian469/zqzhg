@@ -19,6 +19,10 @@ class CompanyShowroomScreen extends StatefulWidget {
 
 class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
   late int tab = widget.initialTab;
+  late final visited = <int>{widget.initialTab};
+  Widget? stableHero;
+  Object? heroData;
+  String? heroScope;
   final productState = <String, dynamic>{};
   final tabKeys = {
     for (final i in [5, 0, 1, 2, 3, 4]) i: GlobalKey(),
@@ -26,7 +30,11 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
   bool positioned = false;
   void choose(int value) {
     FocusScope.of(context).unfocus();
-    setState(() => tab = value);
+    if (value == tab) return;
+    setState(() {
+      tab = value;
+      visited.add(value);
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final c = tabKeys[value]?.currentContext;
       if (c != null) {
@@ -58,6 +66,19 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
           final item = asMap(result['item']),
               data = asMap(item['data']),
               profile = asMap(data['company_profile'] ?? {});
+          final resourceCounts = asMap(result['resource_counts'] ?? {});
+          final visibleTabs = [
+            5,
+            0,
+            if ((result['product_count'] as num? ?? 0) > 0) 1,
+            if ((resourceCounts['video'] as num? ?? 0) > 0) 2,
+            if ((resourceCounts['catalog'] as num? ?? 0) > 0) 3,
+            4,
+          ];
+          if (!visibleTabs.contains(tab)) {
+            tab = 5;
+            visited.add(5);
+          }
           final ownHall = m.availableHalls
               .where((h) => h.id == (item['hall_id'] ?? 1))
               .firstOrNull;
@@ -84,6 +105,18 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
             }
           }
 
+          final nextHeroScope = '${m.baseUrl}:${widget.slug}:${m.language}';
+          if (heroScope != nextHeroScope || !identical(heroData, result)) {
+            heroScope = nextHeroScope;
+            heroData = result;
+            stableHero = NativeCompanyHero(
+              item: item,
+              slug: widget.slug,
+              onProducts: () => choose(1),
+              showProducts: visibleTabs.contains(1),
+              onContact: () => choose(4),
+            );
+          }
           final phone = (data['phone'] ?? '').toString(),
               wechat = (data['wechat'] ?? '').toString();
           return AnalyticsScreen(
@@ -98,13 +131,14 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
                   top: false,
                   child: Row(
                     children: [
-                      Expanded(
-                        child: TextButton.icon(
-                          onPressed: () => choose(1),
-                          icon: const Icon(Icons.inventory_2_outlined),
-                          label: Text(m.t('navProducts')),
+                      if (visibleTabs.contains(1))
+                        Expanded(
+                          child: TextButton.icon(
+                            onPressed: () => choose(1),
+                            icon: const Icon(Icons.inventory_2_outlined),
+                            label: Text(m.t('navProducts')),
+                          ),
                         ),
-                      ),
                       if (phone.isNotEmpty || wechat.isNotEmpty)
                         Expanded(
                           child: TextButton.icon(
@@ -132,7 +166,7 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
                 ),
               ),
               body: CustomScrollView(
-                key: PageStorageKey('showroom:${widget.slug}:$tab'),
+                key: PageStorageKey('showroom:${m.baseUrl}:${widget.slug}'),
                 slivers: [
                   SliverToBoxAdapter(
                     child: Align(
@@ -149,16 +183,7 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
                       ),
                     ),
                   ),
-                  SliverToBoxAdapter(
-                    child: tab == 5
-                        ? NativeCompanyHero(
-                            item: item,
-                            slug: widget.slug,
-                            onProducts: () => choose(1),
-                            onContact: () => choose(4),
-                          )
-                        : NativeCompanyHeader(data: data),
-                  ),
+                  SliverToBoxAdapter(child: stableHero!),
                   SliverPersistentHeader(
                     pinned: true,
                     delegate: ShowroomTabsHeader(
@@ -172,7 +197,7 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            for (final i in [5, 0, 1, 2, 3, 4])
+                            for (final i in visibleTabs)
                               Padding(
                                 key: tabKeys[i],
                                 padding: const EdgeInsets.symmetric(
@@ -206,11 +231,15 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          if (tab == 5)
-                            ShowroomHomeBody(
-                              data: data,
-                              result: asMap(result),
-                              onTab: choose,
+                          if (visited.contains(5))
+                            Offstage(
+                              key: const ValueKey('showroom-home'),
+                              offstage: tab != 5,
+                              child: ShowroomHomeBody(
+                                data: data,
+                                result: asMap(result),
+                                onTab: choose,
+                              ),
                             ),
                           if (tab == 0) ...[
                             CompanyPortalBody(
@@ -226,19 +255,29 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
                               NativeCompanyGallery(items: companyGallery(data)),
                             ],
                           ],
-                          if (tab == 1)
-                            NativeCompanyProducts(
-                              vendorID: item['id'],
-                              hall: ownHall,
-                              categories: rows(result['categories']),
-                              memory: productState,
+                          if (visited.contains(1))
+                            Offstage(
+                              key: const ValueKey('showroom-products'),
+                              offstage: tab != 1,
+                              child: NativeCompanyProducts(
+                                vendorID: item['id'],
+                                hall: ownHall,
+                                categories: rows(result['categories']),
+                                memory: productState,
+                              ),
                             ),
-                          if (tab == 2 || tab == 3)
-                            NativeResourceList(
-                              key: ValueKey('${widget.slug}:$tab'),
-                              vendorID: item['id'],
-                              kind: tab == 2 ? 'video' : 'catalog',
-                            ),
+                          for (final resourceTab in [2, 3])
+                            if (visited.contains(resourceTab))
+                              Offstage(
+                                key: ValueKey('showroom-resource-$resourceTab'),
+                                offstage: tab != resourceTab,
+                                child: NativeResourceList(
+                                  key: ValueKey('${widget.slug}:$resourceTab'),
+                                  vendorID: item['id'],
+                                  kind: resourceTab == 2 ? 'video' : 'catalog',
+                                ),
+                              ),
+
                           if (tab == 4) ...[
                             Text(
                               m.t('showroomContact'),
@@ -300,6 +339,7 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
                                 ),
                           ],
                           space(16),
+                          const ICPRegistrationTile(),
                         ],
                       ),
                     ),
@@ -389,60 +429,71 @@ class _NativeCompanyProductsState extends State<NativeCompanyProducts> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TextField(
-          controller: search,
-          textInputAction: TextInputAction.search,
-          decoration: InputDecoration(
-            labelText: m.t('showroomKeyword'),
-            suffixIcon: IconButton(
-              tooltip: m.t('search'),
-              onPressed: submit,
-              icon: const Icon(Icons.search),
+        NativeFieldLabel(
+          label: m.t('showroomKeyword'),
+          child: TextField(
+            controller: search,
+            textInputAction: TextInputAction.search,
+            decoration: InputDecoration(
+              suffixIcon: IconButton(
+                tooltip: m.t('search'),
+                onPressed: submit,
+                icon: const Icon(Icons.search),
+              ),
             ),
+            onSubmitted: (_) => submit(),
           ),
-          onSubmitted: (_) => submit(),
         ),
         NativeFilterPanel(
           count: (category > 0 ? 1 : 0) + (order.isEmpty ? 0 : 1),
           panelKey: const PageStorageKey('company-product-filters'),
           children: [
-            DropdownButtonFormField<int>(
-              key: ValueKey(category),
-              initialValue: category,
-              isExpanded: true,
-              decoration: InputDecoration(labelText: m.t('category')),
-              items: [
-                DropdownMenuItem(value: 0, child: Text(m.t('allCategories'))),
-                for (final c in widget.categories)
-                  DropdownMenuItem(
-                    value: c['id'],
-                    child: Text(
-                      m.content(c, 'name'),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-              ],
-              onChanged: (v) => change(() {
-                category = v ?? 0;
-                page = 1;
-              }),
-            ),
-            if (m.modernPublicApi)
-              DropdownButtonFormField<String>(
-                initialValue: order,
+            NativeFieldLabel(
+              label: m.t('category'),
+              child: DropdownButtonFormField<int>(
+                key: ValueKey(category),
+                initialValue: category,
                 isExpanded: true,
-                decoration: InputDecoration(labelText: m.t('sort')),
+                decoration: InputDecoration(),
                 items: [
-                  DropdownMenuItem(value: '', child: Text(m.t('defaultSort'))),
-                  DropdownMenuItem(
-                    value: 'latest',
-                    child: Text(m.t('latestSort')),
-                  ),
+                  DropdownMenuItem(value: 0, child: Text(m.t('allCategories'))),
+                  for (final c in widget.categories)
+                    DropdownMenuItem(
+                      value: c['id'],
+                      child: Text(
+                        m.content(c, 'name'),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                 ],
                 onChanged: (v) => change(() {
-                  order = v ?? '';
+                  category = v ?? 0;
                   page = 1;
                 }),
+              ),
+            ),
+            if (m.modernPublicApi)
+              NativeFieldLabel(
+                label: m.t('sort'),
+                child: DropdownButtonFormField<String>(
+                  initialValue: order,
+                  isExpanded: true,
+                  decoration: InputDecoration(),
+                  items: [
+                    DropdownMenuItem(
+                      value: '',
+                      child: Text(m.t('defaultSort')),
+                    ),
+                    DropdownMenuItem(
+                      value: 'latest',
+                      child: Text(m.t('latestSort')),
+                    ),
+                  ],
+                  onChanged: (v) => change(() {
+                    order = v ?? '';
+                    page = 1;
+                  }),
+                ),
               ),
             if (category > 0 || term.isNotEmpty || order.isNotEmpty)
               TextButton(
@@ -579,47 +630,56 @@ class _NativeResourceListState extends State<NativeResourceList> {
             label: Text(m.t('newResource')),
           ),
           space(),
-          TextField(
-            decoration: InputDecoration(labelText: m.t('keyword')),
-            onChanged: (v) => setState(() {
-              query = v;
-              page = 1;
-            }),
+          NativeFieldLabel(
+            label: m.t('keyword'),
+            child: TextField(
+              decoration: InputDecoration(),
+              onChanged: (v) => setState(() {
+                query = v;
+                page = 1;
+              }),
+            ),
           ),
           space(),
-          DropdownButtonFormField<String>(
-            initialValue: status,
-            isExpanded: true,
-            decoration: InputDecoration(labelText: m.t('reviewStatus')),
-            items: [
-              DropdownMenuItem(value: '', child: Text(m.t('allStatus'))),
-              for (final s in ['draft', 'pending', 'approved', 'rejected'])
-                DropdownMenuItem(value: s, child: Text(m.t(s))),
-            ],
-            onChanged: (v) => setState(() {
-              status = v ?? '';
-              page = 1;
-            }),
+          NativeFieldLabel(
+            label: m.t('reviewStatus'),
+            child: DropdownButtonFormField<String>(
+              initialValue: status,
+              isExpanded: true,
+              decoration: InputDecoration(),
+              items: [
+                DropdownMenuItem(value: '', child: Text(m.t('allStatus'))),
+                for (final s in ['draft', 'pending', 'approved', 'rejected'])
+                  DropdownMenuItem(value: s, child: Text(m.t(s))),
+              ],
+              onChanged: (v) => setState(() {
+                status = v ?? '';
+                page = 1;
+              }),
+            ),
           ),
         ],
         if (!widget.management && widget.kind == 'video')
-          DropdownButtonFormField<String>(
-            initialValue: purpose,
-            isExpanded: true,
-            decoration: InputDecoration(labelText: m.t('purpose')),
-            items: [
-              DropdownMenuItem(value: '', child: Text(m.t('allVideoTypes'))),
-              for (final p in [
-                ['company', 'companyVideo'],
-                ['production', 'productionVideo'],
-                ['product', 'productVideo'],
-              ])
-                DropdownMenuItem(value: p[0], child: Text(m.t(p[1]))),
-            ],
-            onChanged: (v) => setState(() {
-              purpose = v ?? '';
-              page = 1;
-            }),
+          NativeFieldLabel(
+            label: m.t('purpose'),
+            child: DropdownButtonFormField<String>(
+              initialValue: purpose,
+              isExpanded: true,
+              decoration: InputDecoration(),
+              items: [
+                DropdownMenuItem(value: '', child: Text(m.t('allVideoTypes'))),
+                for (final p in [
+                  ['company', 'companyVideo'],
+                  ['production', 'productionVideo'],
+                  ['product', 'productVideo'],
+                ])
+                  DropdownMenuItem(value: p[0], child: Text(m.t(p[1]))),
+              ],
+              onChanged: (v) => setState(() {
+                purpose = v ?? '';
+                page = 1;
+              }),
+            ),
           ),
         space(),
         AsyncPane(
@@ -1562,79 +1622,93 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
             for (final k in ['title', 'description'])
               Padding(
                 padding: const EdgeInsets.only(bottom: 18),
-                child: TextField(
-                  controller: fields[k],
-                  enabled: !disabled,
-                  maxLength: k == 'title' ? 200 : 10000,
-                  maxLines: k == 'title' ? 1 : 3,
-                  decoration: InputDecoration(
-                    labelText: m.t(
-                      k == 'title' ? 'resourceTitle' : 'resourceDescription',
-                    ),
+                child: NativeFieldLabel(
+                  label: m.t(
+                    k == 'title' ? 'resourceTitle' : 'resourceDescription',
+                  ),
+                  child: TextField(
+                    controller: fields[k],
+                    enabled: !disabled,
+                    maxLength: k == 'title' ? 200 : 10000,
+                    maxLines: k == 'title' ? 1 : 3,
+                    decoration: InputDecoration(),
                   ),
                 ),
               ),
             ExpansionTile(
               title: Text(m.t('englishInfo')),
               children: [
-                TextField(
-                  controller: fields['title_en'],
-                  enabled: !disabled,
-                  maxLength: 200,
-                  decoration: InputDecoration(labelText: m.t('nameEN')),
+                NativeFieldLabel(
+                  label: m.t('nameEN'),
+                  child: TextField(
+                    controller: fields['title_en'],
+                    enabled: !disabled,
+                    maxLength: 200,
+                    decoration: InputDecoration(),
+                  ),
                 ),
-                TextField(
-                  controller: fields['description_en'],
-                  enabled: !disabled,
-                  maxLength: 10000,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    labelText: m.t('englishDescription'),
+                NativeFieldLabel(
+                  label: m.t('englishDescription'),
+                  child: TextField(
+                    controller: fields['description_en'],
+                    enabled: !disabled,
+                    maxLength: 10000,
+                    maxLines: 3,
+                    decoration: InputDecoration(),
                   ),
                 ),
               ],
             ),
             if (widget.kind == 'video')
-              DropdownButtonFormField<String>(
-                initialValue: data['purpose'],
-                isExpanded: true,
-                decoration: InputDecoration(labelText: m.t('purpose')),
-                items: [
-                  for (final p in [
-                    ['company', 'companyVideo'],
-                    ['production', 'productionVideo'],
-                    ['product', 'productVideo'],
-                  ])
-                    DropdownMenuItem(value: p[0], child: Text(m.t(p[1]))),
-                ],
-                onChanged: disabled
-                    ? null
-                    : (v) {
-                        setState(() => data['purpose'] = v);
-                        persist();
-                      },
+              NativeFieldLabel(
+                label: m.t('purpose'),
+                child: DropdownButtonFormField<String>(
+                  initialValue: data['purpose'],
+                  isExpanded: true,
+                  decoration: InputDecoration(),
+                  items: [
+                    for (final p in [
+                      ['company', 'companyVideo'],
+                      ['production', 'productionVideo'],
+                      ['product', 'productVideo'],
+                    ])
+                      DropdownMenuItem(value: p[0], child: Text(m.t(p[1]))),
+                  ],
+                  onChanged: disabled
+                      ? null
+                      : (v) {
+                          setState(() => data['purpose'] = v);
+                          persist();
+                        },
+                ),
               )
             else
-              DropdownButtonFormField<String>(
-                initialValue: data['format'],
-                isExpanded: true,
-                decoration: InputDecoration(labelText: m.t('catalogFormat')),
-                items: [
-                  DropdownMenuItem(value: 'pdf', child: Text(m.t('pdf'))),
-                  DropdownMenuItem(value: 'images', child: Text(m.t('images'))),
-                ],
-                onChanged: disabled
-                    ? null
-                    : (v) {
-                        setState(() {
-                          data['format'] = v;
-                          data['file_media_id'] = 0;
-                          data['page_media_ids'] = <int>[];
-                          metadata = {};
-                          uploads = [];
-                        });
-                        persist();
-                      },
+              NativeFieldLabel(
+                label: m.t('catalogFormat'),
+                child: DropdownButtonFormField<String>(
+                  initialValue: data['format'],
+                  isExpanded: true,
+                  decoration: InputDecoration(),
+                  items: [
+                    DropdownMenuItem(value: 'pdf', child: Text(m.t('pdf'))),
+                    DropdownMenuItem(
+                      value: 'images',
+                      child: Text(m.t('images')),
+                    ),
+                  ],
+                  onChanged: disabled
+                      ? null
+                      : (v) {
+                          setState(() {
+                            data['format'] = v;
+                            data['file_media_id'] = 0;
+                            data['page_media_ids'] = <int>[];
+                            metadata = {};
+                            uploads = [];
+                          });
+                          persist();
+                        },
+                ),
               ),
             space(),
             Text(
@@ -1867,12 +1941,15 @@ class _NativeProductPickerState extends State<NativeProductPicker> {
           onPressed: widget.enabled ? () => widget.onSelected(0) : null,
           child: Text(m.t('noAssociation')),
         ),
-        TextField(
-          decoration: InputDecoration(labelText: m.t('keyword')),
-          onChanged: (v) => setState(() {
-            q = v;
-            page = 1;
-          }),
+        NativeFieldLabel(
+          label: m.t('keyword'),
+          child: TextField(
+            decoration: InputDecoration(),
+            onChanged: (v) => setState(() {
+              q = v;
+              page = 1;
+            }),
+          ),
         ),
         AsyncPane(
           identity: '${m.scope}:pick:$q:$page',

@@ -1,0 +1,68 @@
+{
+  "origin": "https://zqzhg.com",
+  "bundledAPK": true,
+  "map": [
+    {
+      "code": "",
+      "name": "全国",
+      "total": 11,
+      "sha256": "352c09e7064756c7c6a505c30dd3e7560b13a4edf87883a65fc3d008a3152802",
+      "features": 35,
+      "missing_codes": []
+    },
+    {
+      "code": "13",
+      "name": "河北省",
+      "total": 10,
+      "sha256": "bd1daff0ea4d7253b6ce77784bf7f9669ad6e5a19d0815eb89d696e8db9b34ea",
+      "features": 11,
+      "missing_codes": []
+    },
+    {
+      "code": "1305",
+      "name": "邢台市",
+      "total": 8,
+      "sha256": "cd6acc3f9b1319610f28c83b88b8f79952b9b5242bfc34a47a10871e2247d8ba",
+      "features": 18,
+      "missing_codes": [
+        "130571"
+      ]
+    },
+    {
+      "code": "130528",
+      "name": "宁晋县",
+      "total": 8,
+      "sha256": "f09314a4d4a0bc4ee436e982f282ef6ea59572c742fc01b7d1833d0634f51251",
+      "features": 1,
+      "missing_codes": []
+    }
+  ],
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "width": 390,
+      "height": 844
+    },
+    {
+      "width": 360,
+      "height": 640
+    },
+    {
+      "width": 844,
+      "height": 390
+    }
+  ],
+  "errors": [],
+  "showroomReturn": true,
+  "zoomAndFilter": true,
+  "mapResourceRetry": true,
+  "english": true,
+  "passed": true
+}

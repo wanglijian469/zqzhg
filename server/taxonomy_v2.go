@@ -124,7 +124,7 @@ func selectableCategory(tx *gorm.DB, id uint64, kind string, hall uint64, owner 
 	return true
 }
 func validateTaxonomy(tx *gorm.DB, content Content, p *Payload) error {
-	if p.CompanyProfile != nil {
+	if p.CompanyProfile != nil && procurementEnabled() {
 		for _, category := range p.CompanyProfile.SupplyProductCategoryIDs {
 			if !selectableCategory(tx, canonicalCategory(tx, category), "product", content.HallID, 0, false) {
 				return fieldFailure("invalid_category", "company_profile.supply_product_category_ids", "category_unavailable")
@@ -573,9 +573,6 @@ func validateCategoryTree(tx *gorm.DB, req Category) error {
 	}
 	if req.CategoryKind == "legacy" {
 		return nil
-	}
-	if req.CategoryKind == "vendor" && req.ParentID != 0 {
-		return fmt.Errorf("invalid_category")
 	}
 	// Simulate the move, including all descendants, before writing any row.
 	var all []Category

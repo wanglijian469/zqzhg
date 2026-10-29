@@ -18,8 +18,8 @@ import (
 func (a *App) setMerchantLogin(sourceKey, name, password string) (Account, error) {
 	var account Account
 	name = strings.TrimSpace(name)
-	if !regexp.MustCompile(`^V[0-9]{4,12}$`).MatchString(sourceKey) || name == "" || utf8.RuneCountInString(name) > 100 || len(password) < 12 || len(password) > 72 {
-		return account, fmt.Errorf("login name and 12–72 byte password required")
+	if !regexp.MustCompile(`^V[0-9]{4,12}$`).MatchString(sourceKey) || name == "" || utf8.RuneCountInString(name) > 100 || !validNewPassword(password) {
+		return account, fmt.Errorf("valid login name and 8–20 character password required")
 	}
 	hash, e := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if e != nil {

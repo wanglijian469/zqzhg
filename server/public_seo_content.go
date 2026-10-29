@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"net/url"
 	"regexp"
 	"strings"
 
@@ -17,6 +18,7 @@ var seoModel = regexp.MustCompile(`(?im)^\s*(?:型号|model)\s*[:：]\s*([^\r\n]
 type seoContent struct {
 	Body       string
 	Image      string
+	Keywords   string
 	Structured map[string]any
 }
 
@@ -31,9 +33,18 @@ type seoPage struct {
 	Vendor   seoLink
 }
 
-var seoBody = template.Must(template.New("public-content").Parse(`<main class="container section seo-content" data-seo-content>
+var seoBody = template.Must(template.New("public-content").Funcs(template.FuncMap{"previewImage": func(raw string) string {
+	u, err := url.Parse(raw)
+	if err != nil {
+		return raw
+	}
+	query := u.Query()
+	query.Set("w", "480")
+	u.RawQuery = query.Encode()
+	return u.String()
+}}).Parse(`<main class="container section seo-content" data-seo-content>
 <article><h1>{{.Data.Name}}</h1>
-{{range .Images}}<img src="{{.URL}}" alt="{{.Alt}}" style="max-width:100%;height:auto" width="320">{{end}}
+{{range .Images}}<img src="{{previewImage .URL}}" alt="{{.Alt}}" style="max-width:100%;object-fit:contain" width="320" height="240" loading="lazy" decoding="async">{{end}}
 {{if .Company}}
 {{with .Data.MainProducts}}<section><h2>主营产品</h2><p>{{.}}</p></section>{{end}}
 {{with .Data.CompanyProfile}}{{with .Summary}}<section><h2>企业简介</h2><p style="white-space:pre-wrap;overflow-wrap:anywhere">{{.}}</p></section>{{end}}{{end}}
@@ -110,7 +121,9 @@ func (a *App) vendorSEO(c *gin.Context, item View, products []View, canonical st
 	for _, product := range products {
 		page.Products = append(page.Products, seoLink{fmt.Sprintf("/products/%d", product.ID), product.Data.Name})
 	}
-	return renderSEO(page, org)
+	result, err := renderSEO(page, org)
+	result.Keywords = vendorSEOKeywords(d)
+	return result, err
 }
 
 func (a *App) productSEO(c *gin.Context, item, vendor View, canonical string) (seoContent, error) {
@@ -139,5 +152,23 @@ func (a *App) productSEO(c *gin.Context, item, vendor View, canonical string) (s
 	if len(images) > 0 {
 		product["image"] = images
 	}
-	return renderSEO(page, product)
+	result, err := renderSEO(page, product)
+	result.Keywords = productSEOKeywords(d, vendor.Data)
+	return result, err
+}
+
+var seoLandingBody = template.Must(template.New("public-landing").Parse(`<main class="container section seo-content" data-seo-content><h1>{{.Title}}</h1>{{if not .Home}}<p>{{.Description}}</p>{{end}}<p><a href="{{.Vendors}}">企业名单与厂家展厅</a> · <a href="{{.Products}}">产品展示</a></p></main>`))
+
+func landingSEO(title, description, hall string, home bool) (seoContent, error) {
+	vendors, products := "/browse", "/browse/products"
+	if hall != "agriculture" {
+		vendors += "?hall=" + url.QueryEscape(hall)
+		products += "?hall=" + url.QueryEscape(hall)
+	}
+	var body bytes.Buffer
+	err := seoLandingBody.Execute(&body, struct {
+		Title, Description, Vendors, Products string
+		Home                                  bool
+	}{title, description, vendors, products, home})
+	return seoContent{Body: body.String()}, err
 }

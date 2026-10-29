@@ -27,6 +27,7 @@ Future<int?> searchNativeCategories(
 ) async {
   final m = ModelScope.of(context);
   var query = '';
+  var rootCategory = 0;
   return Navigator.push<int>(
     context,
     MaterialPageRoute(
@@ -40,15 +41,50 @@ Future<int?> searchNativeCategories(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16),
-                  child: TextField(
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      labelText: m.language == 'zh'
-                          ? '分类名称或别名'
-                          : 'Category name or alias',
-                      prefixIcon: const Icon(Icons.search),
+                  child: NativeFieldLabel(
+                    label: m.language == 'zh'
+                        ? '分类名称或别名'
+                        : 'Category name or alias',
+                    child: TextField(
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.search),
+                      ),
+                      onChanged: (v) => change(() => query = v.toLowerCase()),
                     ),
-                    onChanged: (v) => change(() => query = v.toLowerCase()),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 4,
+                  ),
+                  child: NativeFieldLabel(
+                    label: m.language == 'zh' ? '一级类别' : 'Primary category',
+                    child: DropdownButtonFormField<int>(
+                      initialValue: rootCategory,
+                      isExpanded: true,
+                      items: [
+                        DropdownMenuItem(
+                          value: 0,
+                          child: Text(m.t('allCategories')),
+                        ),
+                        for (final root in cats.where(
+                          (c) =>
+                              (c['parent_id'] ?? 0) == 0 &&
+                              c['enabled'] == true,
+                        ))
+                          DropdownMenuItem(
+                            value: root['id'] as int,
+                            child: Text(
+                              m.content(root, 'name'),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                      ],
+                      onChanged: (value) =>
+                          change(() => rootCategory = value ?? 0),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -56,15 +92,18 @@ Future<int?> searchNativeCategories(
                     children: [
                       for (final cat in cats.where(
                         (c) =>
-                            nativeCategoryPath(
-                              cats,
-                              c['id'],
-                              m,
-                            ).toLowerCase().contains(query) ||
-                            (c['search_aliases'] ?? '')
-                                .toString()
-                                .toLowerCase()
-                                .contains(query),
+                            (rootCategory == 0 ||
+                                c['id'] == rootCategory ||
+                                c['parent_id'] == rootCategory) &&
+                            (nativeCategoryPath(
+                                  cats,
+                                  c['id'],
+                                  m,
+                                ).toLowerCase().contains(query) ||
+                                (c['search_aliases'] ?? '')
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(query)),
                       ))
                         ListTile(
                           minVerticalPadding: 12,
@@ -280,44 +319,53 @@ class _NativeTaxonomyFieldsState extends State<NativeTaxonomyFields> {
             (v) => set('primary_category_id', v),
             secondary,
           ),
-          for (var i = 0; i < 2; i++)
-            picker(
-              'secondary_category_ids',
-              secondary.length > i ? secondary[i] : 0,
-              zh
-                  ? '兼营分类${i + 1}（选填）'
-                  : 'Secondary category ${i + 1} (optional)',
-              (v) => secondaryChange(i, v),
-              [
-                d['primary_category_id'] ?? 0,
-                ...secondary
-                    .asMap()
-                    .entries
-                    .where((e) => e.key != i)
-                    .map((e) => e.value),
-              ],
+          ExpansionTile(
+            tilePadding: EdgeInsets.zero,
+            title: Text(
+              zh ? '兼营及经营信息（选填）' : 'Additional business information (optional)',
             ),
-          DropdownButtonFormField<String>(
-            key: ValueKey('nature:${d['business_nature']}'),
-            initialValue:
-                nativeBusinessNatures.containsKey(d['business_nature'])
-                ? d['business_nature']
-                : '',
-            isExpanded: true,
-            decoration: InputDecoration(
-              labelText: zh ? '经营性质' : 'Business nature',
-            ),
-            items: [
-              DropdownMenuItem(value: '', child: Text(m.t('optional'))),
-              for (final e in nativeBusinessNatures.entries)
-                DropdownMenuItem(
-                  value: e.key,
-                  child: Text(e.value[zh ? 0 : 1]),
+            children: [
+              for (var i = 0; i < 2; i++)
+                picker(
+                  'secondary_category_ids',
+                  secondary.length > i ? secondary[i] : 0,
+                  zh
+                      ? '兼营分类${i + 1}（选填）'
+                      : 'Secondary category ${i + 1} (optional)',
+                  (v) => secondaryChange(i, v),
+                  [
+                    d['primary_category_id'] ?? 0,
+                    ...secondary
+                        .asMap()
+                        .entries
+                        .where((e) => e.key != i)
+                        .map((e) => e.value),
+                  ],
                 ),
+              NativeFieldLabel(
+                label: zh ? '经营性质' : 'Business nature',
+                child: DropdownButtonFormField<String>(
+                  key: ValueKey('nature:${d['business_nature']}'),
+                  initialValue:
+                      nativeBusinessNatures.containsKey(d['business_nature'])
+                      ? d['business_nature']
+                      : '',
+                  isExpanded: true,
+                  decoration: InputDecoration(),
+                  items: [
+                    DropdownMenuItem(value: '', child: Text(m.t('optional'))),
+                    for (final e in nativeBusinessNatures.entries)
+                      DropdownMenuItem(
+                        value: e.key,
+                        child: Text(e.value[zh ? 0 : 1]),
+                      ),
+                  ],
+                  onChanged: widget.enabled
+                      ? (v) => set('business_nature', v ?? '')
+                      : null,
+                ),
+              ),
             ],
-            onChanged: widget.enabled
-                ? (v) => set('business_nature', v ?? '')
-                : null,
           ),
         ] else ...[
           picker(
@@ -344,25 +392,27 @@ class _NativeTaxonomyFieldsState extends State<NativeTaxonomyFields> {
           }.entries)
             Padding(
               padding: const EdgeInsets.only(top: 12, bottom: 4),
-              child: TextField(
-                controller: controllers[entry.key],
-                enabled: widget.enabled,
-                maxLength: entry.key.startsWith('applicable_') ? 6030 : 200,
-                decoration: InputDecoration(
-                  labelText: entry.value,
-                  counterText: '',
-                  helperText: entry.key.startsWith('applicable_')
-                      ? (zh
-                            ? '多项用逗号分隔，最多30项'
-                            : 'Separate up to 30 entries with commas')
-                      : null,
-                  errorText: widget.issues[entry.key] == null
-                      ? null
-                      : fieldIssueText(m, asMap(widget.issues[entry.key])),
-                ),
-                onChanged: (v) => set(
-                  entry.key,
-                  entry.key.startsWith('applicable_') ? tokens(v) : v,
+              child: NativeFieldLabel(
+                label: entry.value,
+                child: TextField(
+                  controller: controllers[entry.key],
+                  enabled: widget.enabled,
+                  maxLength: entry.key.startsWith('applicable_') ? 6030 : 200,
+                  decoration: InputDecoration(
+                    counterText: '',
+                    helperText: entry.key.startsWith('applicable_')
+                        ? (zh
+                              ? '多项用逗号分隔，最多30项'
+                              : 'Separate up to 30 entries with commas')
+                        : null,
+                    errorText: widget.issues[entry.key] == null
+                        ? null
+                        : fieldIssueText(m, asMap(widget.issues[entry.key])),
+                  ),
+                  onChanged: (v) => set(
+                    entry.key,
+                    entry.key.startsWith('applicable_') ? tokens(v) : v,
+                  ),
                 ),
               ),
             ),

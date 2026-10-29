@@ -347,54 +347,60 @@ class _MerchantProductsScreenState extends State<MerchantProductsScreen> {
                 style: const TextStyle(fontSize: 14),
               ),
               children: [
-                DropdownButtonFormField<String>(
-                  initialValue: status,
-                  key: ValueKey('review:$status'),
-                  isExpanded: true,
-                  decoration: InputDecoration(labelText: m.t('reviewStatus')),
-                  items: [
-                    for (final s in [
-                      '',
-                      'draft',
-                      'pending',
-                      'approved',
-                      'rejected',
-                    ])
-                      DropdownMenuItem(
-                        value: s,
-                        child: Text(m.t(s.isEmpty ? 'allStatus' : s)),
-                      ),
-                  ],
-                  onChanged: (s) => setState(() {
-                    status = s ?? '';
-                    page = 1;
-                  }),
+                NativeFieldLabel(
+                  label: m.t('reviewStatus'),
+                  child: DropdownButtonFormField<String>(
+                    initialValue: status,
+                    key: ValueKey('review:$status'),
+                    isExpanded: true,
+                    decoration: InputDecoration(),
+                    items: [
+                      for (final s in [
+                        '',
+                        'draft',
+                        'pending',
+                        'approved',
+                        'rejected',
+                      ])
+                        DropdownMenuItem(
+                          value: s,
+                          child: Text(m.t(s.isEmpty ? 'allStatus' : s)),
+                        ),
+                    ],
+                    onChanged: (s) => setState(() {
+                      status = s ?? '';
+                      page = 1;
+                    }),
+                  ),
                 ),
                 space(8),
-                DropdownButtonFormField<String>(
-                  initialValue: publication,
-                  key: ValueKey('publication:$publication'),
-                  isExpanded: true,
-                  decoration: InputDecoration(labelText: m.t('displayStatus')),
-                  items: [
-                    for (final s in ['', 'public', 'unpublished'])
-                      DropdownMenuItem(
-                        value: s,
-                        child: Text(
-                          m.t(
-                            s.isEmpty
-                                ? 'allPublic'
-                                : s == 'public'
-                                ? 'published'
-                                : 'unpublished',
+                NativeFieldLabel(
+                  label: m.t('displayStatus'),
+                  child: DropdownButtonFormField<String>(
+                    initialValue: publication,
+                    key: ValueKey('publication:$publication'),
+                    isExpanded: true,
+                    decoration: InputDecoration(),
+                    items: [
+                      for (final s in ['', 'public', 'unpublished'])
+                        DropdownMenuItem(
+                          value: s,
+                          child: Text(
+                            m.t(
+                              s.isEmpty
+                                  ? 'allPublic'
+                                  : s == 'public'
+                                  ? 'published'
+                                  : 'unpublished',
+                            ),
                           ),
                         ),
-                      ),
-                  ],
-                  onChanged: (s) => setState(() {
-                    publication = s ?? '';
-                    page = 1;
-                  }),
+                    ],
+                    onChanged: (s) => setState(() {
+                      publication = s ?? '';
+                      page = 1;
+                    }),
+                  ),
                 ),
               ],
             ),

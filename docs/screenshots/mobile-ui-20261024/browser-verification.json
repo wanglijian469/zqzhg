@@ -1,0 +1,1146 @@
+{
+  "checks": [
+    {
+      "label": "after-procurement",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-filters",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-summary",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-publish",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-procurement",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-filters",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-summary",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-publish",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-procurement",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-filters",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-summary",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-publish",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 360,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-procurement",
+      "width": 360,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-filters",
+      "width": 360,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-summary",
+      "width": 360,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-publish",
+      "width": 360,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 360,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 360,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 360,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 360,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 360,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 360,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-procurement",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-filters",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-summary",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-publish",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-procurement",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-filters",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-summary",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-publish",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 360,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-procurement",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-filters",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-empty",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-network-error",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-summary",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-publish",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-procurement",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-filters",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-summary",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-publish",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-procurement",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-filters",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-summary",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-publish",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 390,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-procurement",
+      "width": 390,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-filters",
+      "width": 390,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-summary",
+      "width": 390,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-publish",
+      "width": 390,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 390,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 390,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 390,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 390,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 390,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 390,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-procurement",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-filters",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-summary",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-publish",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-procurement",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-filters",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-summary",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-publish",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 390,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-procurement",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-filters",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-summary",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-publish",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-procurement",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-filters",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-summary",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-publish",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.3
+    },
+    {
+      "label": "after-procurement",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-filters",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-summary",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-publish",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 430,
+      "lang": "zh",
+      "scale": 1.5
+    },
+    {
+      "label": "after-procurement",
+      "width": 430,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-filters",
+      "width": 430,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-summary",
+      "width": 430,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-publish",
+      "width": 430,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 430,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 430,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 430,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 430,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 430,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 430,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-procurement",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-filters",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-summary",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-publish",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.3
+    },
+    {
+      "label": "after-procurement",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-filters",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-summary",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-publish",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-about",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-products",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-videos",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-catalogs",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-contact",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-showroom-home",
+      "width": 430,
+      "lang": "en",
+      "scale": 1.5
+    },
+    {
+      "label": "after-desktop-procurement",
+      "width": 1366,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-desktop-showroom",
+      "width": 1366,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-desktop-procurement",
+      "width": 1366,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-desktop-showroom",
+      "width": 1366,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-desktop-procurement",
+      "width": 1920,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-desktop-showroom",
+      "width": 1920,
+      "lang": "zh",
+      "scale": 1
+    },
+    {
+      "label": "after-desktop-procurement",
+      "width": 1920,
+      "lang": "en",
+      "scale": 1
+    },
+    {
+      "label": "after-desktop-showroom",
+      "width": 1920,
+      "lang": "en",
+      "scale": 1
+    }
+  ],
+  "errors": [],
+  "fixtures": "synthetic layout data; no business writes"
+}

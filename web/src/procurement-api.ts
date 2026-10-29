@@ -29,3 +29,5 @@ export async function openProcFile(file:ProcFile,admin=false,preview=false){
  const role:ProcRole=admin?'admin':'merchant';const response=await fetch(apiURL(procRoot(admin)+'/attachments/'+file.id+(preview?'?preview=1':'')),{headers:{Authorization:'Bearer '+token(role)}});
  if(!response.ok)throw new Error('not_found');const blob=await response.blob();const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;if(preview){a.target='_blank';a.rel='noopener'}else a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);
 }
+
+export type ProcProjectSummary=Pick<ProcProject,"id"|"hall_id"|"state"|"audience"> & {revision:Pick<ProcRevision,"id"|"status"|"title"|"delivery_region"|"deadline">;items:Omit<ProcItem,"specification">[];participant?:Pick<ProcParticipant,"state"|"intent">};

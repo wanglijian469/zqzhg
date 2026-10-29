@@ -1,0 +1,303 @@
+{
+  "checks": [
+    "Homepage shows 12 reviewed companies from a 26-company free pool",
+    "Registration records explicit agreement versions; draft and preview work before identity verification; publication is blocked",
+    "Manual private-evidence verification → active showroom agreement → submit → review → stable public showroom",
+    "Private credential lookup and administrative reply; 200 MB storage usage; no payment action",
+    "Analytics off by default, identifiers only after opt-in, withdrawal clears identifiers and pending events"
+  ],
+  "layouts": [
+    {
+      "width": 360,
+      "lang": "zh",
+      "route": "/services",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "route": "/services/privacy",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "route": "/service-requests",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "route": "/merchant/verification",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "route": "/merchant/settings",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "route": "/",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "route": "/services",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "route": "/services/privacy",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "route": "/service-requests",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "route": "/merchant/verification",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "route": "/merchant/settings",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "route": "/",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "route": "/services",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "route": "/services/privacy",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "route": "/service-requests",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "route": "/merchant/verification",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "route": "/merchant/settings",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "route": "/",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "route": "/services",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "route": "/services/privacy",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "route": "/service-requests",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "route": "/merchant/verification",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "route": "/merchant/settings",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "route": "/",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "route": "/services",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "route": "/services/privacy",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "route": "/service-requests",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "route": "/merchant/verification",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "route": "/merchant/settings",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "route": "/",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "route": "/services",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "route": "/services/privacy",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "route": "/service-requests",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "route": "/merchant/verification",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "route": "/merchant/settings",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "route": "/",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "route": "/services",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "route": "/services/privacy",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "route": "/service-requests",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "route": "/merchant/verification",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "route": "/merchant/settings",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "route": "/",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "route": "/services",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "route": "/services/privacy",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "route": "/service-requests",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "route": "/merchant/verification",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "route": "/merchant/settings",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "route": "/",
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "isolatedDatabase": true,
+  "productionWrites": false,
+  "realDeviceVerified": false
+}

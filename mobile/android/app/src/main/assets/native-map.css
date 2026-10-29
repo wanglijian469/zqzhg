@@ -1,0 +1,19 @@
+/* The native toolbar replaces the hidden website header. Keep the map in the
+   remaining WebView viewport instead of the website's three-row shell. */
+.native-workspace .factory-map-shell {
+  height: 100dvh;
+  min-height: 0;
+  grid-template-rows: minmax(0, 1fr) 22px !important;
+}
+.native-workspace .factory-map-shell > main {
+  min-height: 0;
+  height: 100%;
+}
+.native-workspace .factory-map-shell > .factory-map-footer {
+  grid-row: 2;
+}
+@media (max-height: 500px) {
+  .native-workspace .factory-map-shell {
+    grid-template-rows: minmax(0, 1fr) 18px !important;
+  }
+}

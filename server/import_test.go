@@ -16,6 +16,9 @@ import (
 )
 
 func importTestApp(t *testing.T) *App {
+	return importTestAppAtSchema(t, 0)
+}
+func importTestAppAtSchema(t *testing.T, maximum int) *App {
 	t.Helper()
 	if os.Getenv("RUN_MYSQL_TESTS") != "1" {
 		t.Skip("requires isolated MySQL database")
@@ -25,8 +28,12 @@ func importTestApp(t *testing.T) *App {
 	if e != nil {
 		t.Fatal(e)
 	}
+	var actual string
+	if e = db.Raw("SELECT DATABASE()").Scan(&actual).Error; e != nil || actual != name || !strings.HasPrefix(actual, "zqzt_exhibition_test_") {
+		t.Fatal("refusing fixtures outside the generated isolated database", e)
+	}
 	t.Cleanup(func() { db.Exec("DROP DATABASE `" + name + "`"); pool, _ := db.DB(); pool.Close() })
-	if e = migrate(db); e != nil {
+	if e = migrateThrough(db, maximum); e != nil {
 		t.Fatal(e)
 	}
 	t.Setenv("ADMIN_PASSWORD", "Import-Test-Admin-2026!")

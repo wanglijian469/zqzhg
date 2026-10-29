@@ -18,6 +18,9 @@ Future<void> fill(WidgetTester t, {bool registration = false}) async {
       find.byKey(const ValueKey('auth-confirmation')),
       'Phone-Password-2026!',
     );
+    await t.ensureVisible(find.byType(CheckboxListTile));
+    await t.tap(find.byType(CheckboxListTile));
+    await t.pumpAndSettle();
   }
 }
 
@@ -60,7 +63,14 @@ void main() {
           },
         );
         await t.pumpWidget(
-          f.upgradeApp(m, LoginScreen(visitor: visitor, register: true)),
+          f.upgradeApp(
+            m,
+            LoginScreen(
+              companyAccount: false,
+              visitor: visitor,
+              register: true,
+            ),
+          ),
         );
         await t.pumpAndSettle();
         expect(find.byType(ChoiceChip), findsNothing);
@@ -72,7 +82,7 @@ void main() {
         );
         expect(button.onPressed, isNull);
         await f.tapReachable(t, find.widgetWithText(FilledButton, '注册并继续'));
-        expect(payload!['role'], visitor ? 'visitor' : 'merchant');
+        expect(payload!['role'], 'visitor');
         expect(payload!['phone'], '13900001111');
         expect(payload!['code'], '246810');
         expect(payload!.containsKey('confirmation'), isFalse);
@@ -103,7 +113,9 @@ void main() {
           return null;
         },
       );
-      await t.pumpWidget(f.upgradeApp(m, const LoginScreen()));
+      await t.pumpWidget(
+        f.upgradeApp(m, const LoginScreen(companyAccount: false)),
+      );
       await t.pumpAndSettle();
       await fill(t);
       await f.tapReachable(t, find.widgetWithText(FilledButton, '登录'));
@@ -134,7 +146,12 @@ void main() {
           return null;
         },
       );
-      await t.pumpWidget(f.upgradeApp(m, const LoginScreen(visitor: true)));
+      await t.pumpWidget(
+        f.upgradeApp(
+          m,
+          const LoginScreen(companyAccount: false, visitor: true),
+        ),
+      );
       await t.pumpAndSettle();
       await fill(t);
       await f.tapReachable(t, find.widgetWithText(FilledButton, '登录'));
@@ -159,7 +176,9 @@ void main() {
         return null;
       },
     );
-    await t.pumpWidget(f.upgradeApp(m, const LoginScreen(binding: true)));
+    await t.pumpWidget(
+      f.upgradeApp(m, const LoginScreen(companyAccount: false, binding: true)),
+    );
     await t.pumpAndSettle();
     expect(find.byKey(const ValueKey('auth-password')), findsNothing);
     await t.enterText(find.byKey(const ValueKey('auth-phone')), '13900001111');
@@ -182,7 +201,9 @@ void main() {
           return null;
         },
       );
-      await t.pumpWidget(f.upgradeApp(m, const LoginScreen()));
+      await t.pumpWidget(
+        f.upgradeApp(m, const LoginScreen(companyAccount: false)),
+      );
       await t.pumpAndSettle();
       await fill(t);
       await f.tapReachable(t, find.widgetWithText(FilledButton, '登录'));
@@ -238,6 +259,25 @@ void main() {
       ),
       isEmpty,
     );
+    await t.pumpWidget(const SizedBox());
+  });
+  testWidgets('Production image challenge must be confirmed before the SMS request', (t) async {
+    Json? sent;
+    final m = await f.upgradeModel(handler: (r) async {
+      if (r.url.path.endsWith('/public/config')) return f.jsonResponse({'capabilities': {'phone_password_auth':true,'phone_sms_register':true,'phone_sms_auth':true,'sms_challenge':true}});
+      if (r.url.path.endsWith('/auth/phone/challenge')) return f.jsonResponse({'challenge_id':'image-test','image':''});
+      if (r.url.path.endsWith('/auth/phone/code')) { sent=asMap(jsonDecode(r.body));return f.jsonResponse({'sent':true,'retry_after':60}); }
+      return null;
+    });
+    await t.pumpWidget(f.upgradeApp(m,const LoginScreen(visitor:true,companyAccount:false,register:true)));
+    await t.pumpAndSettle();
+    await t.enterText(find.byKey(const ValueKey('auth-phone')),'13900008888');
+    await f.tapReachable(t,find.text('发送验证码'));
+    expect(find.byType(AlertDialog),findsOneWidget);expect(sent,isNull);
+    await t.enterText(find.byKey(const ValueKey('sms-image-answer-image-test')),'54321');
+    await f.tapReachable(t,find.text('验证并发送'));
+    expect(sent!['purpose'],'register');expect(sent!['challenge_id'],'image-test');expect(sent!['challenge_answer'],'54321');expect((sent!['request_id'] as String).length,64);
+    expect(t.takeException(),isNull);
     await t.pumpWidget(const SizedBox());
   });
 }

@@ -1,7 +1,14 @@
 part of 'main.dart';
 
-int exhibitColumns(double width, double scale) =>
-    width >= 288 && scale < 1.3 ? 2 : 1;
+int exhibitColumns(double width, double scale) => scale >= 1.3
+    ? 1
+    : width >= 1100
+    ? 4
+    : width >= 700
+    ? 3
+    : width >= 288
+    ? 2
+    : 1;
 
 String compactRegion(String value) => value
     .trim()
@@ -26,10 +33,17 @@ String productSpecification(Json data) {
 
 class ExhibitSliver extends StatelessWidget {
   final List<Json> items;
-  const ExhibitSliver({super.key, required this.items});
+  final bool list;
+  const ExhibitSliver({super.key, required this.items, this.list = false});
   @override
   Widget build(BuildContext context) => SliverLayoutBuilder(
     builder: (context, constraints) {
+      if (list) {
+        return SliverList.builder(
+          itemCount: items.length,
+          itemBuilder: (context, i) => NativeProductCard(item: items[i]),
+        );
+      }
       final columns = exhibitColumns(
         constraints.crossAxisExtent,
         MediaQuery.textScalerOf(context).scale(14) / 14,
@@ -57,6 +71,93 @@ class ExhibitSliver extends StatelessWidget {
       );
     },
   );
+}
+
+class NativeProductCard extends StatelessWidget {
+  final Json item;
+  const NativeProductCard({super.key, required this.item});
+  @override
+  Widget build(BuildContext context) {
+    final m = ModelScope.of(context), data = asMap(item['data']);
+    final vendor = asMap(item['vendor'] ?? {});
+    final vd = asMap(vendor['data'] ?? vendor);
+    final images = imageIDs(data);
+    final model = (data['model'] ?? productSpecification(data)).toString();
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      child: InkWell(
+        onTap: () =>
+            push(context, DetailScreen(id: item['id'], kind: 'product')),
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 80,
+                height: 80,
+                child: images.isEmpty
+                    ? const Icon(
+                        Icons.precision_manufacturing_outlined,
+                        color: Color(0xff8ba0ba),
+                      )
+                    : Photo(
+                        id: images.first,
+                        fallbackIDs: images.skip(1).toList(),
+                        aspectRatio: 1,
+                        fit: BoxFit.contain,
+                      ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            m.content(data, 'name'),
+                            style: const TextStyle(
+                              fontSize: 15,
+                              height: 1.4,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        FavoriteButton(
+                          item: {...item, 'kind': 'product'},
+                          iconOnly: true,
+                        ),
+                      ],
+                    ),
+                    if (model.isNotEmpty)
+                      Text(model, style: Theme.of(context).textTheme.bodySmall),
+                    if (m.content(vd, 'name').isNotEmpty)
+                      Text(
+                        m.content(vd, 'name'),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    if ((vd['region_name'] ?? data['region_name'] ?? '')
+                        .toString()
+                        .isNotEmpty)
+                      Text(
+                        compactRegion(
+                          (vd['region_name'] ?? data['region_name']).toString(),
+                        ),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class ItemTile extends StatelessWidget {
@@ -225,11 +326,13 @@ class NativeVendorCard extends StatelessWidget {
             onPressed: open,
             child: Text(m.t('enterShowroom'), maxLines: 1),
           ),
-          OutlinedButton(
-            key: ValueKey('contact-vendor-${item['id']}'),
-            onPressed: () => open(4),
-            child: Text(m.t('contact'), maxLines: 1),
-          ),
+          if ((data['phone'] ?? '').toString().trim().isNotEmpty ||
+              (data['wechat'] ?? '').toString().trim().isNotEmpty)
+            OutlinedButton(
+              key: ValueKey('contact-vendor-${item['id']}'),
+              onPressed: () => open(4),
+              child: Text(m.t('contact'), maxLines: 1),
+            ),
         ];
         final style = ButtonStyle(
           minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
@@ -257,15 +360,15 @@ class NativeVendorCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       buttons[0],
-                      const SizedBox(height: 8),
-                      buttons[1],
+                      if (buttons.length > 1) const SizedBox(height: 8),
+                      if (buttons.length > 1) buttons[1],
                     ],
                   )
                 : Row(
                     children: [
                       Expanded(child: buttons[0]),
-                      const SizedBox(width: 8),
-                      Expanded(child: buttons[1]),
+                      if (buttons.length > 1) const SizedBox(width: 8),
+                      if (buttons.length > 1) Expanded(child: buttons[1]),
                     ],
                   ),
           ),
@@ -283,8 +386,8 @@ class NativeVendorCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 104,
-                  height: 104,
+                  width: 88,
+                  height: 88,
                   child: InkWell(
                     onTap: open,
                     borderRadius: BorderRadius.circular(10),
@@ -320,8 +423,6 @@ class NativeVendorCard extends StatelessWidget {
                               onTap: open,
                               child: Text(
                                 m.content(data, 'name'),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -331,8 +432,8 @@ class NativeVendorCard extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: 40,
-                            height: 44,
+                            width: 48,
+                            height: 48,
                             child: FavoriteButton(
                               item: {...item, 'kind': 'vendor'},
                               iconOnly: true,
@@ -340,23 +441,32 @@ class NativeVendorCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Text(
-                        (data['main_products'] ?? '').toString(),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          height: 1.4,
-                          color: Color(0xff66768a),
+                      if ((data['main_products'] ?? '')
+                          .toString()
+                          .trim()
+                          .isNotEmpty)
+                        Text(
+                          (data['main_products'] ?? '').toString(),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            height: 1.4,
+                            color: Color(0xff66768a),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        compactRegion((data['region_name'] ?? '').toString()),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
+                      if ((data['region_name'] ?? '')
+                          .toString()
+                          .trim()
+                          .isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          compactRegion((data['region_name'] ?? '').toString()),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -369,4 +479,51 @@ class NativeVendorCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class VendorSliver extends StatelessWidget {
+  final List<Json> items;
+  final List<Json> productImages;
+  const VendorSliver({
+    super.key,
+    required this.items,
+    this.productImages = const [],
+  });
+  @override
+  Widget build(BuildContext context) => SliverLayoutBuilder(
+    builder: (context, c) {
+      final columns = MediaQuery.textScalerOf(context).scale(1) >= 1.5
+          ? 1
+          : c.crossAxisExtent >= 1100
+          ? 3
+          : c.crossAxisExtent >= 700
+          ? 2
+          : 1;
+      return SliverList.builder(
+        itemCount: (items.length / columns).ceil(),
+        itemBuilder: (context, row) => Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var col = 0; col < columns; col++) ...[
+              if (col > 0) const SizedBox(width: 12),
+              Expanded(
+                child: row * columns + col < items.length
+                    ? NativeVendorCard(
+                        item: items[row * columns + col],
+                        productImages: productImages
+                            .where(
+                              (p) =>
+                                  p['vendor_id'] ==
+                                  items[row * columns + col]['id'],
+                            )
+                            .toList(),
+                      )
+                    : const SizedBox(),
+              ),
+            ],
+          ],
+        ),
+      );
+    },
+  );
 }

@@ -1,7 +1,7 @@
 import {issueText} from './form-guide';
 import {useState} from 'react';
 import {api,body,APIError} from './api';
-import {useLanguage,useLoad,Modal,ErrorState} from './main';
+import {useLanguage,useLoad,Modal,ErrorState} from './ui';
 import type {Taxonomy} from './types';
 type Cat=Taxonomy['categories'][number]&{suggestion_status?:string;owner_id?:number;reference_count?:number;vendor_name?:string};
 export {CategoryPicker} from './category-picker-field';

@@ -6,22 +6,50 @@ const {chromium} = require('../.tools/browser-qa/node_modules/playwright');
 (async () => {
   const [base, productPath] = process.argv.slice(2);
   assert(base && productPath, 'Usage: node verify-independent-seo.cjs BASE PRODUCT_PATH');
-  const out = path.resolve(__dirname, '../docs/screenshots/independent-seo');
+  const out = process.env.SEO_SCREENSHOTS ? path.resolve(process.env.SEO_SCREENSHOTS) : path.resolve(__dirname, '../docs/screenshots/independent-seo');
   fs.mkdirSync(out, {recursive: true});
   const browser = await chromium.launch({headless: true, executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', args: ['--no-proxy-server']});
   const checks = [], errors = [];
   const companyPath = '/v/seo-browser';
   async function noOverflow(page) {
-    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'Horizontal overflow');
+    const layout=await page.evaluate(()=>({width:innerWidth,total:document.documentElement.scrollWidth,path:location.pathname,lang:document.documentElement.lang,overflow:[...document.querySelectorAll('body *')].filter(el=>{const r=el.getBoundingClientRect();return r.width>0&&(r.right>innerWidth+1||r.left< -1)}).slice(0,8).map(el=>({tag:el.tagName,className:el.className,text:el.textContent.slice(0,100)}))}));
+    if(layout.total>layout.width+1)await page.screenshot({path:path.join(out,`overflow-${layout.width}-${layout.lang}.png`),fullPage:false});
+    assert(layout.total<=layout.width+1,JSON.stringify(layout));
   }
   async function metadata(page, canonical, robots) {
     await page.waitForFunction(({canonical, robots}) => document.querySelector('link[rel=canonical]')?.href === canonical && document.querySelector('meta[name=robots]')?.content === robots, {canonical, robots});
     assert.equal(await page.locator('link[rel=canonical]').count(), 1);
     assert.equal(await page.locator('meta[name=robots]').count(), 1);
     assert.equal(await page.locator('meta[name=description]').count(), 1);
+    assert.equal(await page.locator('meta[name=keywords]').count(), 1);
     assert.equal(await page.locator('title').count(), 1);
   }
   try {
+    for(const width of [360,390,430,1366,1920])for(const lang of ['zh','en']){
+      const context=await browser.newContext({viewport:{width,height:950}});
+      await context.addInitScript(lang=>localStorage.setItem('zqzt.language',lang),lang);
+      const page=await context.newPage();
+      page.on('pageerror',error=>errors.push(error.message));
+      for(const route of ['/','/browse']){
+        const response=await page.goto(base+route);
+        assert.equal(response.status(),200);
+        const initial=await response.text();
+        assert(initial.includes('内卷网')&&initial.includes('data-seo-content'),'Missing initial public search content');
+        await page.locator(route==='/'?'.seo-introduction':'.browse-page').waitFor();
+        await metadata(page,base+route,'index,follow');
+        assert((await page.locator('meta[name=keywords]').getAttribute('content')).includes('内卷网'));
+        if(lang==='zh'){
+          const server=await page.evaluate(raw=>{const doc=new DOMParser().parseFromString(raw,'text/html');return {title:doc.title,description:doc.querySelector('meta[name=description]')?.content,keywords:doc.querySelector('meta[name=keywords]')?.content}},initial);
+          assert.equal(await page.title(),server.title);
+          assert.equal(await page.locator('meta[name=description]').getAttribute('content'),server.description);
+          assert.equal(await page.locator('meta[name=keywords]').getAttribute('content'),server.keywords);
+        }
+        await noOverflow(page);
+        await page.screenshot({path:path.join(out,`${route==='/'?'home':'directory'}-${width}-${lang}.png`),fullPage:true});
+      }
+      checks.push({width,lang,landingMetadata:true,initialHTML:true,overflow:false});
+      await context.close();
+    }
     for (const width of [390, 1440]) {
       const context = await browser.newContext({javaScriptEnabled: false, viewport: {width, height: 950}});
       const page = await context.newPage();
@@ -55,7 +83,7 @@ const {chromium} = require('../.tools/browser-qa/node_modules/playwright');
       await noOverflow(page);
       await page.screenshot({path: path.join(out, `company-js-${width}-${lang}.png`), fullPage: true});
       await page.getByRole('tab').nth(2).click();
-      await page.locator(`.showroom-product-grid a[href*="${productPath}"]`).first().click();
+      await page.locator(`#panel-products .showroom-product-grid a[href*="${productPath}"]`).first().click();
       await page.locator('.public-product-detail h1').waitFor();
       await metadata(page, base + productPath, 'index,follow');
       await noOverflow(page);
@@ -71,7 +99,7 @@ const {chromium} = require('../.tools/browser-qa/node_modules/playwright');
     }
     assert.equal(errors.length, 0, JSON.stringify(errors));
     const report = {checks, errors, isolatedDatabase: true, physicalDeviceVerified: false};
-    fs.writeFileSync(path.resolve(__dirname, '../docs/test-output/seo-browser.json'), JSON.stringify(report, null, 2));
+    fs.writeFileSync(process.env.SEO_REPORT||path.resolve(__dirname, '../docs/test-output/seo-browser.json'), JSON.stringify(report, null, 2));
     console.log(JSON.stringify(report));
   } finally {
     await browser.close();

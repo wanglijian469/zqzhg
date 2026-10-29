@@ -140,7 +140,10 @@ class HallRegistry {
       return;
     }
     if (base != model.baseUrl || stamp != generation) return;
-    final desired = _active?.slug ?? selected;
+    final openHalls = items.where((h) => h.isOpen).toList();
+    final desired = openHalls.length == 1
+        ? openHalls.single.slug
+        : _active?.slug ?? selected;
     final resolved = items.where((h) => h.slug == desired).firstOrNull;
     if (resolved != null) _active = resolved;
     if (resolved == null) {

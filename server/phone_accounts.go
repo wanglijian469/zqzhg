@@ -1,7 +1,6 @@
 package main
 
 import (
-	"crypto/rand"
 	"crypto/subtle"
 	"errors"
 	"fmt"
@@ -10,7 +9,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
-	"math/big"
 	"regexp"
 	"strings"
 	"time"
@@ -26,6 +24,7 @@ type PhoneVerification struct {
 	Purpose   string `gorm:"primaryKey"`
 	AccountID uint64 `gorm:"primaryKey;autoIncrement:false"`
 	Digest    string
+	SendID    string
 	Salt      string
 	ExpiresAt time.Time
 	SentAt    time.Time
@@ -57,7 +56,7 @@ func phonePasswordFields(phone, password string) error {
 	if !mainlandPhone.MatchString(phone) {
 		fields = append(fields, FieldIssue{Field: "phone", Code: "invalid"})
 	}
-	if len(password) < 12 || len(password) > 72 || strings.TrimSpace(password) == "" {
+	if !validNewPassword(password) {
 		fields = append(fields, FieldIssue{Field: "password", Code: "password_length"})
 	}
 	if len(fields) > 0 {
@@ -80,91 +79,16 @@ func (a *App) phoneSession(tx *gorm.DB, account Account, revoke bool) (gin.H, er
 	out, e := newSessionIn(tx, account)
 	if e == nil {
 		out["account"] = a.accountJSON(account)
+		var welcome AccountWelcome
+		if tx.Where("account_id=?", account.ID).First(&welcome).Error == nil {
+			out["account"].(gin.H)["welcome_pending"] = welcome.Pending
+		}
 	}
 	return out, e
 }
-func (a *App) phoneCode(c *gin.Context)        { a.sendPhoneVerification(c, false) }
-func (a *App) bindingPhoneCode(c *gin.Context) { a.sendPhoneVerification(c, true) }
-func (a *App) sendPhoneVerification(c *gin.Context, binding bool) {
-	if a.Config.SMSProvider == "disabled" {
-		fail(c, 503, "sms_disabled")
-		return
-	}
-	var req struct {
-		Phone   string `json:"phone"`
-		Purpose string `json:"purpose"`
-	}
-	if c.ShouldBindJSON(&req) != nil {
-		fail(c, 400, "invalid_request")
-		return
-	}
-	req.Phone = strings.TrimSpace(req.Phone)
-	var accountID uint64
-	if binding {
-		who := actor(c)
-		if !phoneAccount(who) {
-			fail(c, 403, "forbidden")
-			return
-		}
-		accountID = who.ID
-		req.Purpose = "bind"
-	}
-	if !mainlandPhone.MatchString(req.Phone) {
-		dbFail(c, fieldFailure("invalid_phone", "phone", "invalid"))
-		return
-	}
-	if req.Purpose != "register" && req.Purpose != "setup_password" && req.Purpose != "login" && !(binding && req.Purpose == "bind") {
-		fail(c, 400, "invalid_request")
-		return
-	}
-	if !permit("phone-code-ip:"+c.ClientIP(), 20, time.Hour) || !permit("phone-code-number:"+digest(req.Phone), 10, time.Hour) {
-		fail(c, 429, "rate_limited")
-		return
-	}
-	n, e := rand.Int(rand.Reader, big.NewInt(1000000))
-	if e != nil {
-		dbFail(c, e)
-		return
-	}
-	code := fmt.Sprintf("%06d", n.Int64())
-	now := time.Now().UTC()
-	e = a.DB.Session(&gorm.Session{Logger: logger.Default.LogMode(logger.Silent)}).Transaction(func(tx *gorm.DB) error {
-		if e := lockPhoneIdentity(tx, req.Phone); e != nil {
-			return e
-		}
-		var recent PhoneVerification
-		if e := tx.Where("phone=?", req.Phone).Order("sent_at DESC").Limit(1).Find(&recent).Error; e != nil {
-			return e
-		}
-		var legacy SMSCode
-		tx.Where("phone=?", req.Phone).Limit(1).Find(&legacy)
-		if now.Sub(recent.SentAt) < 60*time.Second || now.Sub(legacy.SentAt) < 60*time.Second {
-			return fmt.Errorf("rate_limited")
-		}
-		salt := randomToken()
-		if e := a.SMS.Send(req.Phone, code); e != nil {
-			return fmt.Errorf("sms_unavailable")
-		}
-		row := PhoneVerification{Phone: req.Phone, Purpose: req.Purpose, AccountID: accountID, Digest: digest(salt + req.Phone + req.Purpose + code), Salt: salt, ExpiresAt: now.Add(5 * time.Minute), SentAt: now}
-		return tx.Clauses(clause.OnConflict{Columns: []clause.Column{{Name: "phone"}, {Name: "purpose"}, {Name: "account_id"}}, DoUpdates: clause.AssignmentColumns([]string{"digest", "salt", "expires_at", "sent_at", "attempts", "used"})}).Create(&row).Error
-	})
-	if e != nil {
-		if e.Error() == "rate_limited" {
-			fail(c, 429, "rate_limited")
-		} else if e.Error() == "sms_unavailable" {
-			fail(c, 503, "sms_unavailable")
-		} else {
-			dbFail(c, e)
-		}
-		return
-	}
-	out := gin.H{"sent": true, "expires_in": 300, "retry_after": 60}
-	if a.Config.Env == "development" && a.Config.SMSProvider == "development" {
-		out["development_code"] = code
-	}
-	c.Header("Cache-Control", "no-store")
-	c.JSON(200, out)
-}
+func (a *App) phoneCode(c *gin.Context)                           { a.sendPhoneVerification(c, false) }
+func (a *App) bindingPhoneCode(c *gin.Context)                    { a.sendPhoneVerification(c, true) }
+func (a *App) sendPhoneVerification(c *gin.Context, binding bool) { a.sendSMSCode(c, binding, false) }
 
 // Invalid attempts return normally so counters commit; application errors roll
 // back successful code consumption and account changes together.
@@ -177,6 +101,15 @@ func verifyPhoneCode(tx *gorm.DB, phone, purpose, code string, accountID uint64)
 	if e != nil {
 		return false, e
 	}
+	if row.SendID != "" {
+		var attempt SMSSendAttempt
+		if e := tx.First(&attempt, "id=?", row.SendID).Error; e != nil {
+			return false, e
+		}
+		if attempt.State != "accepted" && attempt.State != "unknown" && !(attempt.State == "sending" && time.Since(attempt.CreatedAt) > 15*time.Second) {
+			return false, nil
+		}
+	}
 	if row.Used || row.Attempts >= 5 || !time.Now().UTC().Before(row.ExpiresAt) {
 		return false, nil
 	}
@@ -184,7 +117,7 @@ func verifyPhoneCode(tx *gorm.DB, phone, purpose, code string, accountID uint64)
 	if e := q.Update("attempts", row.Attempts+1).Error; e != nil {
 		return false, e
 	}
-	if len(code) != 6 || subtle.ConstantTimeCompare([]byte(digest(row.Salt+phone+purpose+code)), []byte(row.Digest)) != 1 {
+	if len(code) != 6 || subtle.ConstantTimeCompare([]byte(smsCodeDigest(row.Salt, phone, purpose, code)), []byte(row.Digest)) != 1 {
 		return false, nil
 	}
 	if e := q.Update("used", true).Error; e != nil {
@@ -194,10 +127,13 @@ func verifyPhoneCode(tx *gorm.DB, phone, purpose, code string, accountID uint64)
 }
 
 type phoneRegistration struct {
-	Phone    string `json:"phone"`
-	Code     string `json:"code"`
-	Password string `json:"password"`
-	Role     string `json:"role"`
+	Agreements  []AgreementRef `json:"agreements"`
+	Source      string         `json:"source"`
+	Phone       string         `json:"phone"`
+	Code        string         `json:"code"`
+	Password    string         `json:"password"`
+	Role        string         `json:"role"`
+	ActionToken string         `json:"action_token"`
 }
 
 func (a *App) phoneRegister(c *gin.Context)      { a.completePhoneRegistration(c, false, false) }
@@ -232,7 +168,7 @@ func (a *App) completePhoneRegistration(c *gin.Context, setup, binding bool) {
 			dbFail(c, e)
 			return
 		}
-		if !setup && req.Role != "merchant" && req.Role != "visitor" {
+		if !setup && req.Role != "" && req.Role != "merchant" && req.Role != "visitor" {
 			dbFail(c, fieldFailure("invalid_request", "role", "invalid"))
 			return
 		}
@@ -261,7 +197,13 @@ func (a *App) completePhoneRegistration(c *gin.Context, setup, binding bool) {
 			purpose = "bind"
 			subject = actor(c).ID
 		}
-		ok, e := verifyPhoneCode(tx, req.Phone, purpose, req.Code, subject)
+		var ok bool
+		var e error
+		if req.ActionToken != "" && !setup && !binding {
+			ok, e = consumePhoneAction(tx, req.ActionToken, req.Phone, "register")
+		} else {
+			ok, e = verifyPhoneCode(tx, req.Phone, purpose, req.Code, subject)
+		}
 		if e != nil || !ok {
 			return e
 		}
@@ -299,8 +241,14 @@ func (a *App) completePhoneRegistration(c *gin.Context, setup, binding bool) {
 			return fieldFailure("phone_exists", "phone", "already_used")
 		}
 		if !setup && !binding {
-			account = Account{Username: "phone:" + randomToken()[:24], Role: req.Role, Phone: &req.Phone, PhoneVerifiedAt: &now, PasswordHash: string(hashed)}
+			account = Account{Username: "phone:" + randomToken()[:24], Role: "visitor", Phone: &req.Phone, PhoneVerifiedAt: &now, PasswordHash: string(hashed)}
 			if e := tx.Create(&account).Error; e != nil {
+				return e
+			}
+			if e := markWelcomePending(tx, account.ID); e != nil {
+				return e
+			}
+			if e := acceptServiceDocuments(tx, account.ID, req.Agreements, req.Source, []string{"terms", "privacy"}); e != nil {
 				return e
 			}
 		} else {
@@ -404,15 +352,13 @@ func (a *App) upgradePhoneMerchant(c *gin.Context) {
 		if !phoneAccount(account) {
 			return fmt.Errorf("forbidden")
 		}
-		if !verifiedPhone(account) {
-			return fieldFailure("phone_binding_required", "phone", "required")
-		}
+
 		if account.Role == "visitor" {
 			if e := tx.Model(&account).Update("role", "merchant").Error; e != nil {
 				return e
 			}
 			account.Role = "merchant"
-			if e := recordOperation(tx, account.ID, "account", account.ID, "visitor_upgraded_to_merchant", phoneMask(*account.Phone)); e != nil {
+			if e := recordOperation(tx, account.ID, "account", account.ID, "visitor_upgraded_to_merchant", accountContactMask(account)); e != nil {
 				return e
 			}
 		}

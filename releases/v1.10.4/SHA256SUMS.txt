@@ -1,0 +1,2 @@
+98170cdd59b658337cc45fd7705ed58729af6034bdb6997dc12ab53dcdaff16d  dalunongji-1.10.4+42.apk
+e1a589eaf28ab98ac2a237c16ac0fa6401bbb655de26e0c594d03cacf7a23040  manifest.json

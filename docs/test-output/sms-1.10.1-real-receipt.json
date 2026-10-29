@@ -1,0 +1,20 @@
+{
+  "recipient": "***8982",
+  "purpose": "register",
+  "http": 200,
+  "result": {
+    "status": "accepted",
+    "sent": true,
+    "request_id": "1c8695ef4542bcf854e6542a4afb70855f1ff8760615c31889108d8447b51588",
+    "retry_after": 60,
+    "expires_in": 300
+  },
+  "delivery_confirmed": true,
+  "registration_user_reported_success": true,
+  "registration_cloud_verified": true,
+  "registration_status": "registered; visitor; phone verified; password set; one active session",
+  "registration_verification_reference": "01A184ED-B9ED-51AC-ACED-D9AC6BB7BD69",
+  "registration_verification_biz_id": "562810393231534687^0",
+  "registration_code_consumed": true,
+  "agent_additional_sends": 0
+}

@@ -49,6 +49,7 @@ ThemeData industrialTheme() => ThemeData(
     surfaceTintColor: Colors.transparent,
     scrolledUnderElevation: 1,
     elevation: 0,
+    toolbarHeight: 56,
   ),
   cardTheme: CardThemeData(
     color: Colors.white,
@@ -71,7 +72,8 @@ ThemeData industrialTheme() => ThemeData(
       borderRadius: BorderRadius.circular(10),
       borderSide: const BorderSide(color: industrialLine),
     ),
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    isDense: true,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
   ),
   filledButtonTheme: FilledButtonThemeData(
     style: FilledButton.styleFrom(
@@ -264,11 +266,13 @@ class NativeBrandHero extends StatelessWidget {
                   spacing: 12,
                   runSpacing: 10,
                   children: [
-                    FilledButton.icon(
-                      onPressed: onContact,
-                      icon: const Icon(Icons.phone_outlined, size: 18),
-                      label: Text(m.t('showroomContact')),
-                    ),
+                    if ((data['phone'] ?? '').toString().trim().isNotEmpty ||
+                        (data['wechat'] ?? '').toString().trim().isNotEmpty)
+                      FilledButton.icon(
+                        onPressed: onContact,
+                        icon: const Icon(Icons.phone_outlined, size: 18),
+                        label: Text(m.t('showroomContact')),
+                      ),
                     OutlinedButton.icon(
                       onPressed: onShare,
                       style: OutlinedButton.styleFrom(

@@ -1,0 +1,10 @@
+{
+  "password_policy": true,
+  "sms_login_disabled": true,
+  "password_recovery_enabled": true,
+  "agent_real_sms_sends": 0,
+  "unknown_login_rejected": true,
+  "invalid_new_passwords_rejected_before_registration": true,
+  "procurement_remains_disabled": true,
+  "dev_map_route_closed": true
+}

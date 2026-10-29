@@ -1,22 +1,23 @@
 part of 'main.dart';
 
-class LoginScreen extends StatefulWidget {
-  final bool visitor, register, binding;
+class LegacyPhoneBindingScreen extends StatefulWidget {
+  final bool visitor, register, binding, companyAccount;
   final String initialName;
   final VoidCallback? onRegistered;
-  const LoginScreen({
+  const LegacyPhoneBindingScreen({
     super.key,
     this.visitor = false,
     this.register = false,
     this.binding = false,
+    this.companyAccount = true,
     this.initialName = '',
     this.onRegistered,
   });
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LegacyPhoneBindingScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LegacyPhoneBindingScreen> {
   final controls = {
     for (final k in ['phone', 'code', 'password', 'confirmation', 'login_name'])
       k: TextEditingController(),
@@ -25,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
     for (final k in ['phone', 'code', 'password', 'confirmation', 'login_name'])
       k: FocusNode(),
   };
+  bool smsMode = false;
   bool registerMode = false,
       legacy = false,
       setup = false,
@@ -32,17 +34,29 @@ class _LoginScreenState extends State<LoginScreen> {
       visible = false,
       confirmationVisible = false,
       unconfirmed = false;
+  List<Json> acceptedAgreements = [];
+  int agreementGeneration = 0;
   Map<String, String> errors = {};
   String error = '', dev = '';
+  String smsRequestKey = '', smsRequestPhone = '', smsRequestPurpose = '';
+  String get smsPurpose => widget.binding
+      ? 'bind'
+      : smsMode
+      ? 'login'
+      : setup
+      ? 'setup_password'
+      : 'register';
   int cooldown = 0;
   Timer? timer;
-  bool get verifying => widget.binding || registerMode || setup;
+  bool get verifying =>
+      !legacy && (widget.binding || registerMode || setup || smsMode);
   String value(String k) => controls[k]!.text;
   String text(String z, String e) => syncText(context, z, e);
   @override
   void initState() {
     super.initState();
     registerMode = widget.register;
+    legacy = widget.companyAccount && !widget.visitor && !widget.binding;
     controls['login_name']!.text = widget.initialName;
   }
 
@@ -65,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }) {
     if (busy) return;
     setState(() {
+      smsMode = false;
       registerMode = registration;
       legacy = old;
       setup = setting;
@@ -101,6 +116,123 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  Future<Json?> smsProof(AppModel m) async {
+    Json image = asMap(
+      await m.api(
+        '/auth/phone/challenge',
+        method: 'POST',
+        data: {'phone': value('phone').trim(), 'purpose': smsPurpose},
+      ),
+    );
+    if (!mounted) return null;
+    String answer = "";
+    bool loading = false;
+    String dialogError = '';
+    return await showDialog<Json>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          final uri = (image['image'] ?? '').toString();
+          return AlertDialog(
+            title: Text(text('图形验证码', 'Image verification')),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (uri.startsWith('data:image/png;base64,'))
+                    Image.memory(
+                      base64Decode(uri.split(',').last),
+                      width: 156,
+                      height: 52,
+                    ),
+                  TextField(
+                    key: ValueKey('sms-image-answer-${image['challenge_id']}'),
+                    onChanged: (value) => answer = value,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(5),
+                    ],
+                    decoration: InputDecoration(
+                      labelText: text('输入图片中的五位数字', 'Enter the five digits'),
+                    ),
+                  ),
+                  if (dialogError.isNotEmpty) Text(dialogError),
+                  TextButton(
+                    onPressed: loading
+                        ? null
+                        : () async {
+                            setDialogState(() => loading = true);
+                            try {
+                              final next = asMap(
+                                await m.api(
+                                  '/auth/phone/challenge',
+                                  method: 'POST',
+                                  data: {
+                                    'phone': value('phone').trim(),
+                                    'purpose': smsPurpose,
+                                  },
+                                ),
+                              );
+                              if (context.mounted) {
+                                setDialogState(() {
+                                  image = next;
+                                  answer = '';
+                                  dialogError = '';
+                                });
+                              }
+                            } catch (_) {
+                              if (context.mounted) {
+                                setDialogState(
+                                  () => dialogError = text(
+                                    '加载失败，请重试',
+                                    'Loading failed. Retry.',
+                                  ),
+                                );
+                              }
+                            } finally {
+                              if (context.mounted) {
+                                setDialogState(() => loading = false);
+                              }
+                            }
+                          },
+                    child: Text(text('换一张', 'Refresh')),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: Text(m.t('cancel')),
+              ),
+              FilledButton(
+                onPressed: loading
+                    ? null
+                    : () {
+                        if (!RegExp(r'^\d{5}$').hasMatch(answer)) {
+                          setDialogState(
+                            () => dialogError = text(
+                              '请填写五位数字',
+                              'Enter five digits',
+                            ),
+                          );
+                          return;
+                        }
+                        Navigator.pop(dialogContext, {
+                          'challenge_id': image['challenge_id'],
+                          'challenge_answer': answer,
+                        });
+                      },
+                child: Text(text('验证并发送', 'Verify and send')),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
   Future<void> submit({bool send = false}) async {
     if (busy || send && cooldown > 0 || !send && unconfirmed) return;
     final m = ModelScope.of(context),
@@ -124,13 +256,11 @@ class _LoginScreenState extends State<LoginScreen> {
       if (verifying && !RegExp(r'^\d{6}$').hasMatch(value('code').trim())) {
         invalid['code'] = text('请填写6位验证码', 'Enter the 6-digit code');
       }
-      if (!widget.binding) {
-        final n = utf8.encode(value('password')).length;
-        if ((registerMode || setup) &&
-            (n < 12 || n > 72 || value('password').trim().isEmpty)) {
+      if (!widget.binding && !smsMode) {
+        if ((registerMode || setup) && !validNewPassword(value('password'))) {
           invalid['password'] = text(
-            '密码需12–72个UTF-8字节',
-            'Use 12–72 UTF-8 bytes',
+            '请输入8–20位密码',
+            'Enter an 8–20 character password',
           );
         } else if (value('password').isEmpty) {
           invalid['password'] = text('请填写密码', 'Enter your password');
@@ -149,54 +279,96 @@ class _LoginScreenState extends State<LoginScreen> {
       focusErrors();
       return;
     }
+    if (registerMode && !send && acceptedAgreements.length != 2) {
+      setState(() => error = m.t('agreement_required'));
+      return;
+    }
     setState(() => busy = true);
     bool registrationRequestStarted = false;
     try {
       if (!legacy) {
         var capabilities = await m.clientCapabilities();
-        if (capabilities['phone_password_auth'] != true) {
+        final capability = send && registerMode
+            ? 'phone_sms_register'
+            : smsMode
+            ? 'phone_sms_auth'
+            : 'phone_password_auth';
+        if (capabilities[capability] != true) {
           capabilities = await m.clientCapabilities(refresh: true);
         }
-        if (capabilities['phone_password_auth'] != true) {
+        if (capabilities[capability] != true) {
           throw ApiFailure('phoneAuthUpgradeRequired');
         }
       }
       if (!mounted || m.baseUrl != source) return;
       final path = legacy
-          ? (widget.visitor ? '/auth/visitor' : '/auth/merchant')
+          ? (registerMode
+                ? (widget.visitor
+                      ? '/auth/visitor/register'
+                      : '/auth/merchant/register')
+                : (widget.visitor ? '/auth/visitor' : '/auth/merchant'))
           : widget.binding
           ? (send ? '/auth/me/phone/code' : '/auth/me/phone')
           : send
           ? '/auth/phone/code'
+          : smsMode
+          ? '/auth/phone/login'
           : setup
           ? '/auth/phone/password/setup'
           : registerMode
           ? '/auth/phone/register'
           : '/auth/phone/password';
+      Json proof = {};
+      if (send) {
+        if (smsRequestPhone != value('phone').trim() ||
+            smsRequestPurpose != smsPurpose) {
+          smsRequestKey = '';
+        }
+        smsRequestPhone = value('phone').trim();
+        smsRequestPurpose = smsPurpose;
+        if (smsRequestKey.isEmpty) smsRequestKey = newServiceCredential();
+        if ((await m.clientCapabilities())['sms_challenge'] == true) {
+          final verified = await smsProof(m);
+          if (verified == null || !mounted || source != m.baseUrl) return;
+          proof = verified;
+        }
+      }
       registrationRequestStarted = registerMode && !send;
       final result = asMap(
         await m.api(
           path,
           method: widget.binding && !send ? 'PUT' : 'POST',
           data: {
+            if (send) ...proof,
+            if (send) 'request_id': smsRequestKey,
+            if (registerMode && !send) 'agreements': acceptedAgreements,
+            if (registerMode && !send)
+              'source': Platform.isIOS ? 'ios' : 'android',
             if (legacy)
-              'username': value('login_name').trim()
+              (registerMode ? 'login_name' : 'username'): value(
+                'login_name',
+              ).trim()
             else
               'phone': value('phone').trim(),
             if (send && !widget.binding)
-              'purpose': setup ? 'setup_password' : 'register',
+              'purpose': smsMode
+                  ? 'login'
+                  : setup
+                  ? 'setup_password'
+                  : 'register',
             if (!send && verifying) 'code': value('code').trim(),
-            if (!send && !widget.binding) 'password': value('password'),
-            if (!send && registerMode)
-              'role': widget.visitor ? 'visitor' : 'merchant',
+            if (!send && !widget.binding && !smsMode)
+              'password': value('password'),
+            if (!send && registerMode) 'role': 'visitor',
           },
         ),
       );
       if (!mounted || source != m.baseUrl) return;
       if (send) {
+        smsRequestKey = '';
         setState(() {
           dev = (result['development_code'] ?? '').toString();
-          cooldown = 60;
+          cooldown = (result['retry_after'] as num?)?.toInt() ?? 60;
         });
         timer?.cancel();
         timer = Timer.periodic(const Duration(seconds: 1), (t) {
@@ -218,7 +390,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         if (legacy && m.account['requires_phone_binding'] == true) {
           final capable =
-              (await m.clientCapabilities())['phone_password_auth'] == true;
+              (await m.clientCapabilities())['phone_sms_bind'] == true;
           if (!mounted) return;
           if (capable) {
             await Navigator.push<bool>(
@@ -242,7 +414,12 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       if (!mounted || source != m.baseUrl) return;
       final f = e is ApiFailure ? e : ApiFailure('network_error');
+      if (send && f.code != 'network_error') smsRequestKey = '';
       setState(() {
+        if (f.code == 'agreement_required') {
+          acceptedAgreements = [];
+          agreementGeneration++;
+        }
         if (f.fields.isNotEmpty) {
           errors = {for (final x in f.fields) x['field']: fieldIssueText(m, x)};
         } else {
@@ -264,8 +441,8 @@ class _LoginScreenState extends State<LoginScreen> {
         if (registrationRequestStarted && f.code == 'network_error') {
           unconfirmed = true;
           error = text(
-            '无法确认账号是否已注册。请用该手机号和刚设置的密码登录继续。',
-            'Registration could not be confirmed. Sign in with this mobile number and the password you just set.',
+            '无法确认账号是否已注册。请用刚填写的账号和密码登录继续。',
+            'Registration could not be confirmed. Sign in with the account and password you just entered.',
           );
         }
       });
@@ -280,74 +457,83 @@ class _LoginScreenState extends State<LoginScreen> {
     String label, {
     bool secret = false,
     bool confirm = false,
-  }) => TextField(
-    key: ValueKey('auth-$key'),
-    controller: controls[key],
-    focusNode: focuses[key],
-    enabled: !busy,
-    obscureText: secret && !(confirm ? confirmationVisible : visible),
-    keyboardType: key == 'phone'
-        ? TextInputType.phone
-        : key == 'code'
-        ? TextInputType.number
-        : null,
-    autocorrect: false,
-    enableSuggestions: false,
-    inputFormatters: key == 'phone'
-        ? [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(11),
-          ]
-        : key == 'code'
-        ? [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(6),
-          ]
-        : null,
-    textInputAction: key == 'confirmation' || !verifying && key == 'password'
-        ? TextInputAction.done
-        : TextInputAction.next,
-    onSubmitted: (_) => key == 'confirmation' || !verifying && key == 'password'
-        ? submit()
-        : FocusScope.of(context).nextFocus(),
-    autofillHints: key == 'phone'
-        ? [AutofillHints.telephoneNumberNational]
-        : key == 'code'
-        ? [AutofillHints.oneTimeCode]
-        : key == 'login_name'
-        ? [AutofillHints.username]
-        : null,
-    onChanged: (_) => setState(() {
-      errors.remove(key);
-      if (key == 'phone') {
-        controls['code']!.clear();
-        dev = '';
-      }
-    }),
-    decoration: InputDecoration(
-      labelText: label,
-      errorText: errors[key],
-      errorMaxLines: 4,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-      suffixIcon: secret
-          ? IconButton(
-              tooltip: (confirm ? confirmationVisible : visible)
-                  ? text('隐藏$label', 'Hide $label')
-                  : text('显示$label', 'Show $label'),
-              onPressed: () => setState(() {
-                if (confirm) {
-                  confirmationVisible = !confirmationVisible;
-                } else {
-                  visible = !visible;
-                }
-              }),
-              icon: Icon(
-                (confirm ? confirmationVisible : visible)
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined,
-              ),
-            )
+  }) => NativeFieldLabel(
+    label: label,
+    child: TextField(
+      key: ValueKey('auth-$key'),
+      controller: controls[key],
+      focusNode: focuses[key],
+      enabled: !busy,
+      obscureText: secret && !(confirm ? confirmationVisible : visible),
+      keyboardType: key == 'phone'
+          ? TextInputType.phone
+          : key == 'code'
+          ? TextInputType.number
           : null,
+      autocorrect: false,
+      enableSuggestions: false,
+      inputFormatters: key == 'phone'
+          ? [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(11),
+            ]
+          : key == 'code'
+          ? [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(6),
+            ]
+          : null,
+      textInputAction:
+          key == 'confirmation' ||
+              smsMode && key == 'code' ||
+              !verifying && key == 'password'
+          ? TextInputAction.done
+          : TextInputAction.next,
+      onSubmitted: (_) =>
+          key == 'confirmation' || !verifying && key == 'password'
+          ? submit()
+          : FocusScope.of(context).nextFocus(),
+      autofillHints: key == 'phone'
+          ? [AutofillHints.telephoneNumberNational]
+          : key == 'code'
+          ? [AutofillHints.oneTimeCode]
+          : key == 'login_name'
+          ? [AutofillHints.username]
+          : null,
+      onChanged: (_) => setState(() {
+        errors.remove(key);
+        if (key == 'phone') {
+          controls['code']!.clear();
+          dev = '';
+        }
+      }),
+      decoration: InputDecoration(
+        errorText: errors[key],
+        errorMaxLines: 4,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 16,
+        ),
+        suffixIcon: secret
+            ? IconButton(
+                tooltip: (confirm ? confirmationVisible : visible)
+                    ? text('隐藏$label', 'Hide $label')
+                    : text('显示$label', 'Show $label'),
+                onPressed: () => setState(() {
+                  if (confirm) {
+                    confirmationVisible = !confirmationVisible;
+                  } else {
+                    visible = !visible;
+                  }
+                }),
+                icon: Icon(
+                  (confirm ? confirmationVisible : visible)
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                ),
+              )
+            : null,
+      ),
     ),
   );
   @override
@@ -355,17 +541,21 @@ class _LoginScreenState extends State<LoginScreen> {
     final m = ModelScope.of(context);
     final title = widget.binding
         ? text('绑定手机号', 'Link mobile number')
+        : smsMode
+        ? text('验证码登录', 'SMS sign-in')
         : setup
         ? text('原短信账号设置密码', 'Set password for SMS account')
         : legacy
-        ? text('原账号登录', 'Original account sign-in')
+        ? (registerMode
+              ? text('公司账号注册', 'Company account registration')
+              : text('公司账号登录', 'Company account sign-in'))
         : widget.visitor
         ? (registerMode
               ? text('访客注册', 'Visitor registration')
               : text('访客登录', 'Visitor sign-in'))
         : registerMode
-        ? text('厂商注册', 'Manufacturer registration')
-        : text('厂商登录', 'Manufacturer sign-in');
+        ? text('手机号注册', 'Register with mobile')
+        : text('手机号登录', 'Mobile sign-in');
     return Theme(
       data: merchantTheme(context),
       child: Scaffold(
@@ -405,8 +595,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   )
                                 : registerMode
                                 ? text(
-                                    '验证手机号 → 完善企业资料 → 提交审核',
-                                    'Verify mobile → Complete profile → Submit for review',
+                                    legacy
+                                        ? '创建公司账号 → 完善资料 → 预览官网 → 提交审核'
+                                        : '验证手机号 → 完善企业资料 → 提交审核',
+                                    legacy
+                                        ? 'Create account → Complete profile → Preview website → Submit'
+                                        : 'Verify mobile → Complete profile → Submit for review',
                                   )
                                 : text(
                                     '登录后管理企业展厅与产品。',
@@ -421,7 +615,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           input(
                             legacy ? 'login_name' : 'phone',
                             legacy
-                                ? text('原登录账号', 'Original login name')
+                                ? text('公司账号', 'Company account')
                                 : text('手机号', 'Mobile number'),
                           ),
                           if (verifying) ...[
@@ -463,7 +657,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             if (dev.isNotEmpty) Text('${m.t('devCode')}: $dev'),
                           ],
-                          if (!widget.binding) ...[
+                          if (smsMode)
+                            Text(
+                              text(
+                                '仅登录已有且验证过手机号的业务账号。新用户请先注册，不会自动创建厂商。',
+                                'Existing verified accounts only. Register separately; sign-in never creates a supplier.',
+                              ),
+                            ),
+                          if (!widget.binding && !smsMode) ...[
                             space(16),
                             input(
                               'password',
@@ -483,8 +684,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               space(12),
                               Text(
                                 text(
-                                  '密码12–72个UTF-8字节，不能全为空白。',
-                                  'Password: 12–72 UTF-8 bytes; not all whitespace.',
+                                  '密码长度为8–20位，建议使用字母和数字组合。',
+                                  'Use 8–20 characters; letters and numbers are recommended.',
                                 ),
                                 style: const TextStyle(
                                   fontSize: 12,
@@ -493,6 +694,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ],
                           ],
+                          if (registerMode)
+                            NativeRegistrationAgreements(
+                              key: ValueKey(
+                                'registration-agreements-$agreementGeneration',
+                              ),
+                              onChanged: (refs) => acceptedAgreements = refs,
+                            ),
                           if (error.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 12),
@@ -521,6 +729,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                   : text('登录', 'Sign in'),
                             ),
                           ),
+                          if (!widget.binding &&
+                              !registerMode &&
+                              !setup &&
+                              !legacy)
+                            TextButton(
+                              onPressed: busy
+                                  ? null
+                                  : () {
+                                      final next = !smsMode;
+                                      mode();
+                                      setState(() => smsMode = next);
+                                    },
+                              child: Text(
+                                smsMode
+                                    ? text('使用密码登录', 'Use password')
+                                    : text(
+                                        '短信验证码登录',
+                                        'SMS verification sign-in',
+                                      ),
+                              ),
+                            ),
                           if (widget.binding)
                             TextButton(
                               onPressed: busy
@@ -534,8 +763,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: busy
                                   ? null
                                   : () => mode(
-                                      registration:
-                                          !registerMode && !legacy && !setup,
+                                      registration: !registerMode && !setup,
+                                      old:
+                                          widget.companyAccount &&
+                                          !widget.visitor,
                                     ),
                               child: Text(
                                 unconfirmed
@@ -611,17 +842,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
 Future<bool> confirmMerchantUpgrade(BuildContext context) async {
   final m = ModelScope.of(context);
-  if (m.account['phone_verified'] != true) {
-    await Navigator.push<bool>(
-      context,
-      MaterialPageRoute(builder: (_) => const LoginScreen(binding: true)),
-    );
-    if (!context.mounted || m.account['phone_verified'] != true) return false;
-  }
   final ok = await showDialog<bool>(
     context: context,
     builder: (c) => AlertDialog(
-      title: Text(syncText(c, '升级为厂商账号', 'Upgrade to manufacturer')),
+      title: Text(syncText(c, '申请免费企业展厅', 'Upgrade to manufacturer')),
       content: Text(
         syncText(
           c,
@@ -636,7 +860,7 @@ Future<bool> confirmMerchantUpgrade(BuildContext context) async {
         ),
         FilledButton(
           onPressed: () => Navigator.pop(c, true),
-          child: Text(syncText(c, '确认升级', 'Confirm upgrade')),
+          child: Text(syncText(c, '确认申请', 'Confirm upgrade')),
         ),
       ],
     ),

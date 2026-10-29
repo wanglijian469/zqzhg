@@ -12,6 +12,9 @@ import (
 // at available_at without a separate queue or a restart-sensitive timer.
 // The worker only collects uploads never attached to a submitted draft/message.
 func (a *App) startProcurementWorker(ctx context.Context) {
+	if !procurementEnabled() {
+		return
+	}
 	go func() {
 		timer := time.NewTicker(time.Minute)
 		defer timer.Stop()
@@ -26,6 +29,9 @@ func (a *App) startProcurementWorker(ctx context.Context) {
 	}()
 }
 func (a *App) cleanupProcurementUploads(ctx context.Context) {
+	if !procurementEnabled() {
+		return
+	}
 	runtime := a.operations()
 	if runtime.maintenance.Load() || runtime.pauseWrites.Load() {
 		return

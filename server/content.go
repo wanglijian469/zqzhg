@@ -17,7 +17,7 @@ func id(c *gin.Context) uint64 { v, _ := strconv.ParseUint(c.Param("id"), 10, 64
 func view(content Content, rev Revision) View {
 	var data Payload
 	json.Unmarshal([]byte(rev.Payload), &data)
-	return View{Content: content, ShowroomSlug: showroomSlug(content), PublicVisible: content.Visible && content.PublishedRevisionID != 0, Data: data, Status: rev.Status, RevisionID: rev.ID, ReviewNote: rev.ReviewNote}
+	return View{Demonstration: strings.HasPrefix(rev.ReviewNote, publicDemoNote), Content: content, ShowroomSlug: showroomSlug(content), PublicVisible: content.Visible && content.PublishedRevisionID != 0, Data: data, Status: rev.Status, RevisionID: rev.ID, ReviewNote: rev.ReviewNote}
 }
 func (a *App) privateView(content Content, rev Revision) View {
 	result := view(content, rev)
@@ -33,6 +33,11 @@ func (a *App) privateView(content Content, rev Revision) View {
 	return result
 }
 func dbFail(c *gin.Context, e error) {
+	var serviceErr serviceFailure
+	if errors.As(e, &serviceErr) {
+		fail(c, serviceErr.status, serviceErr.code)
+		return
+	}
 	if errors.Is(e, gorm.ErrRecordNotFound) {
 		fail(c, 404, "not_found")
 		return
@@ -357,6 +362,17 @@ func (a *App) submit(c *gin.Context) {
 		if content.Epoch != rev.BaseEpoch {
 			return fmt.Errorf("stale_revision")
 		}
+		var publicationData Payload
+		if e = json.Unmarshal([]byte(rev.Payload), &publicationData); e != nil {
+			return e
+		}
+		var vendorData *Payload
+		if content.Kind == "vendor" {
+			vendorData = &publicationData
+		}
+		if e = publicationCompliance(tx, content.OwnerID, content.VendorID, vendorData); e != nil {
+			return e
+		}
 		if e = submitTaxonomy(tx, content, rev); e != nil {
 			return e
 		}
@@ -558,6 +574,9 @@ func (a *App) listContents(c *gin.Context, admin bool) {
 		if v := c.Query("region_id"); v != "" {
 			q = q.Where("(contents.kind='vendor' AND dr.region_id=?) OR (contents.kind='product' AND EXISTS (SELECT 1 FROM contents bv JOIN revisions br ON br.id=bv.draft_revision_id WHERE bv.id=contents.vendor_id AND br.region_id=?))", v, v)
 		}
+		if owner := c.Query("owner_id"); owner != "" {
+			q = q.Where("contents.owner_id=?", positiveFilterID(owner))
+		}
 		if v := c.Query("featured"); v == "1" || v == "0" {
 			q = q.Where("contents.featured=?", v == "1")
 		}
@@ -635,16 +654,11 @@ func (a *App) featured(c *gin.Context) {
 			if count != 1 {
 				return fmt.Errorf("invalid_request")
 			}
-			if content.Kind == "vendor" && !content.Featured {
-				if e := ta.publicQuery("vendor", true).Where("contents.featured=1 AND contents.hall_id=?", content.HallID).Count(&count).Error; e != nil {
-					return e
-				}
-				if count >= homeVendorLimit {
-					return fmt.Errorf("featured_limit_reached")
-				}
-			}
 		}
 		if e = tx.Model(&content).Updates(map[string]any{"featured": req.Featured, "sort_order": req.SortOrder}).Error; e != nil {
+			return e
+		}
+		if e = syncLegacyHomePool(tx, content, req.Featured, actor(c).ID); e != nil {
 			return e
 		}
 		return recordOperation(tx, actor(c).ID, content.Kind, content.ID, "featured_changed", fmt.Sprintf("featured=%t sort=%d", req.Featured, req.SortOrder))

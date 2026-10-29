@@ -1,0 +1,13 @@
+{
+  "base": "http://localhost:8080",
+  "checks": [
+    "Local homepage opens agriculture directly",
+    "Local industry hall identity and hidden procurement",
+    "188 selectable CIAME entries",
+    "Company account entry and ICP registration",
+    "Paused historical page and API"
+  ],
+  "errors": [],
+  "readOnly": true,
+  "productionWrites": false
+}

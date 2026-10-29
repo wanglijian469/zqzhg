@@ -1,0 +1,15 @@
+{
+  "sha256": "2b549ea955211249a67b972cb837a5711bceb74df60f032f43bfc640449a8a90",
+  "bytes": 85461293,
+  "official_downloads_unchanged": true,
+  "official_download_files": 2,
+  "website_release_unchanged": "/opt/zqzt/releases/auth-1.10.2-20261029-r2",
+  "https_status": 200,
+  "url": "https://zqzhg.com/acceptance/dalunongji-1.10.3-41.apk",
+  "version": "1.10.3+41",
+  "certificate_sha256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+  "application_id": "com.zqzt.dalunongji",
+  "app_name": "大陆农机",
+  "device_validation": false,
+  "agent_real_sms_sends": 0
+}

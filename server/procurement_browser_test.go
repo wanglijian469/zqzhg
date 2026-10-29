@@ -21,6 +21,9 @@ func TestProcurementBrowser(t *testing.T) {
 		t.Fatal(e)
 	}
 	a.Config.WebDir = filepath.Join(root, "web", "dist")
+	if dir := os.Getenv("TEST_WEB_DIR"); dir != "" {
+		a.Config.WebDir = dir
+	}
 	buyer, buyerToken := procurementTestAccount(t, a, "visitor")
 	cat := procurementCategory(t, a)
 	s1, t1, v1, product := procurementSupplier(t, a, cat)

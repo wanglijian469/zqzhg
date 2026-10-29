@@ -1,0 +1,253 @@
+{
+  "checks": [
+    "Portal → industry hall with matching website identity",
+    "Company registration → minimal CIAME profile → draft → shared-template preview → review → public website",
+    "Historical procurement routes show pause; no active links; ICP registration is visible"
+  ],
+  "layouts": [
+    {
+      "width": 360,
+      "lang": "zh",
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "path": "/?hall=agriculture",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "path": "/browse",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "path": "/v/v-1",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "path": "/join",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "path": "/?hall=agriculture",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "path": "/browse",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "path": "/v/v-1",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "path": "/join",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "path": "/?hall=agriculture",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "path": "/browse",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "path": "/v/v-1",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "path": "/join",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "path": "/?hall=agriculture",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "path": "/browse",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "path": "/v/v-1",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "path": "/join",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "path": "/?hall=agriculture",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "path": "/browse",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "path": "/v/v-1",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "path": "/join",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "path": "/?hall=agriculture",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "path": "/browse",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "path": "/v/v-1",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "path": "/join",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "path": "/?hall=agriculture",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "path": "/browse",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "path": "/v/v-1",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "path": "/join",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "path": "/?hall=agriculture",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "path": "/browse",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "path": "/v/v-1",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "path": "/join",
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "isolatedDatabase": true,
+  "productionWrites": false,
+  "realDeviceVerified": false
+}

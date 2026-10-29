@@ -1,7 +1,7 @@
 import {useEffect,useState} from 'react';
 import {Link} from 'react-router-dom';
 import {Smartphone,Download} from 'lucide-react';
-import {useLanguage,useLoad,ErrorState,Loading} from './main';
+import {useLanguage,useLoad,ErrorState,Loading} from './ui';
 import {qrDataURL} from './showroom-share';
 export function AppDownloadLinks(){const {t}=useLanguage();return <div className="app-download-links"><Link className="button" to="/app#android"><Download size={18}/>{t('androidDownload')}</Link><Link className="button secondary" to="/app#ios"><Smartphone size={18}/>{t('iosSoon')}</Link></div>}
 export function AppDownload(){

@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {api,APIError,token} from './api';
 import {apiURL,type ImageWatermarkConfig} from './runtime-config';
-import {useLanguage} from './main';
+import {useLanguage} from './ui';
 import './watermark-settings.css';
 type Vendor={id:number;name:string;short_name:string};
 export function WatermarkSettings({value,onChange,disabled}:{value?:ImageWatermarkConfig;onChange:(next:ImageWatermarkConfig)=>void;disabled:boolean}){

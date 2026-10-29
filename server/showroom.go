@@ -186,13 +186,17 @@ func (a *App) publicShowroom(c *gin.Context) {
 	}
 	item := items[0]
 	var total int64
-	var ids []uint64
-	q := a.publicQuery("product").Where("contents.vendor_id=?", item.ID)
-	if e = q.Count(&total).Error; e != nil {
-		dbFail(c, e)
-		return
+	var counts []struct {
+		CategoryID uint64
+		Total      int64
 	}
-	if e = a.publicQuery("product").Where("contents.vendor_id=?", item.ID).Distinct("COALESCE((SELECT rc.category_id FROM revision_categories rc WHERE rc.revision_id=r.id AND rc.role='product' LIMIT 1),r.category_id)").Pluck("COALESCE((SELECT rc.category_id FROM revision_categories rc WHERE rc.revision_id=r.id AND rc.role='product' LIMIT 1),r.category_id)", &ids).Error; e != nil {
+	// Classify each published product before grouping. Strict MySQL cannot infer
+	// functional dependency through the correlated revision-category expression.
+	classified := a.publicQuery("product").Where("contents.vendor_id=?", item.ID).
+		Select("COALESCE((SELECT rc.category_id FROM revision_categories rc WHERE rc.revision_id=r.id AND rc.role='product' LIMIT 1),r.category_id) AS category_id")
+	if e = a.DB.Table("(?) AS classified_products", classified).
+		Select("classified_products.category_id,COUNT(*) AS total").
+		Group("classified_products.category_id").Scan(&counts).Error; e != nil {
 		dbFail(c, e)
 		return
 	}
@@ -203,8 +207,9 @@ func (a *App) publicShowroom(c *gin.Context) {
 		return
 	}
 	wanted := map[uint64]bool{}
-	for _, id := range ids {
-		id = canonicalCategory(a.DB, id)
+	for _, count := range counts {
+		total += count.Total
+		id := canonicalCategory(a.DB, count.CategoryID)
 		wanted[id] = true
 	}
 	for changed := true; changed; {
@@ -219,14 +224,6 @@ func (a *App) publicShowroom(c *gin.Context) {
 	type ShowroomCategory struct {
 		Category
 		ProductCount int64 `json:"product_count"`
-	}
-	var counts []struct {
-		CategoryID uint64
-		Total      int64
-	}
-	if e = a.publicQuery("product").Where("contents.vendor_id=?", item.ID).Select("COALESCE((SELECT rc.category_id FROM revision_categories rc WHERE rc.revision_id=r.id AND rc.role='product' LIMIT 1),r.category_id) AS category_id,COUNT(*) AS total").Group("COALESCE((SELECT rc.category_id FROM revision_categories rc WHERE rc.revision_id=r.id AND rc.role='product' LIMIT 1),r.category_id)").Scan(&counts).Error; e != nil {
-		dbFail(c, e)
-		return
 	}
 	byID := map[uint64]Category{}
 	for _, cat := range all {
@@ -338,15 +335,21 @@ func (a *App) showroomHTML(c *gin.Context, index string) bool {
 	if data.CompanyProfile != nil && data.CompanyProfile.Summary != "" {
 		desc = data.CompanyProfile.Summary
 	}
+	desc = data.Name + "企业展厅。" + desc
 	runes := []rune(strings.TrimSpace(desc))
 	if len(runes) > 160 {
 		desc = string(runes[:160])
 	}
-	title := data.Name
-	if strings.TrimSpace(data.MainProducts) != "" {
-		title += " · " + data.MainProducts
+	tab := c.Query("tab")
+	if tab == "" {
+		for _, key := range []string{"q", "category_id", "page"} {
+			if c.Request.URL.Query().Has(key) {
+				tab = "products"
+				break
+			}
+		}
 	}
-	title += " | " + a.brandName()
+	title := showroomSEOTitle(data.Name, tab, a.brandName())
 	robots := "index,follow"
 	if showroomSearchVariant(c.Request.URL.Query()) {
 		robots = "noindex,follow"

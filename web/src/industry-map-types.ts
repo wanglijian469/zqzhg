@@ -14,7 +14,7 @@ export interface BoundaryResource {
 export interface BoundaryManifest {version:1;catalog_version:string;resources:Record<string,BoundaryResource>}
 export interface BoundaryGeometry {type:'FeatureCollection';features:{type:'Feature';properties:{adcode:string;code?:string;name?:string};geometry:unknown}[]}
 export interface PreviewBoundary {
- region_code:string;usage:'local-learning-only';catalog_version:string;sha256:string;
+ region_code:string;usage:'local-learning-only'|'development-demonstration';catalog_version:string;sha256:string;
  geometry:{type:'FeatureCollection';features:{type:'Feature';properties:{adcode:string;name?:string;mapped:boolean;decoration?:boolean;cp?:number[];source_adcode?:string};geometry:unknown}[]};
  sources:{url:string;sha256:string;acquired_at:string;usage:string}[];
  missing_codes:string[];unmapped_count:number;

@@ -247,7 +247,6 @@ InputDecoration guidedDecoration(
   final r = formRules[path.replaceAll(RegExp(r'\.\d+\.'), '.*.')];
   if (r == null) {
     return InputDecoration(
-      labelText: label,
       errorText: issue == null ? null : fieldIssueText(m, issue),
     );
   }
@@ -255,7 +254,6 @@ InputDecoration guidedDecoration(
       ? utf8.encode(value).length
       : value.runes.length;
   return InputDecoration(
-    labelText: label,
     hintText: r[m.language == 'zh' ? 'sample_zh' : 'sample_en'],
     helperText:
         '${r[m.language]} · $count/${r['max']} ${m.language == 'zh' ? (r['unit'] == 'bytes' ? '字节' : '字') : r['unit']}\n${m.language == 'zh' ? '例：' : 'e.g. '}${r[m.language == 'zh' ? 'sample_zh' : 'sample_en']}',
@@ -369,44 +367,51 @@ class _NativeCategoryPickerState extends State<NativeCategoryPicker> {
                       : 'Initially available to your company; standardized later.',
                 ),
                 space(),
-                TextField(
-                  controller: name,
-                  decoration: InputDecoration(
-                    labelText: m.language == 'zh'
-                        ? '中文分类名称'
-                        : 'Chinese category name',
-                    hintText: '液压翻转犁',
-                    helperText: '最多300字节 / up to 300 bytes',
+                NativeFieldLabel(
+                  label: m.language == 'zh'
+                      ? '中文分类名称'
+                      : 'Chinese category name',
+                  child: TextField(
+                    controller: name,
+                    decoration: InputDecoration(
+                      hintText: '液压翻转犁',
+                      helperText: '最多300字节 / up to 300 bytes',
+                    ),
                   ),
                 ),
                 space(),
-                TextField(
-                  controller: en,
-                  decoration: InputDecoration(
-                    labelText: m.t('nameEN'),
-                    hintText: 'Hydraulic reversible plough',
+                NativeFieldLabel(
+                  label: m.t('nameEN'),
+                  child: TextField(
+                    controller: en,
+                    decoration: InputDecoration(
+                      hintText: 'Hydraulic reversible plough',
+                    ),
                   ),
                 ),
                 space(),
-                DropdownButtonFormField<int>(
-                  initialValue: parent,
-                  isExpanded: true,
-                  decoration: InputDecoration(labelText: m.t('parent')),
-                  items: [
-                    DropdownMenuItem(
-                      value: 0,
-                      child: Text(
-                        syncText(context, '顶级（一级）分类', 'Top-level category'),
+                NativeFieldLabel(
+                  label: m.t('parent'),
+                  child: DropdownButtonFormField<int>(
+                    initialValue: parent,
+                    isExpanded: true,
+                    decoration: InputDecoration(),
+                    items: [
+                      DropdownMenuItem(
+                        value: 0,
+                        child: Text(
+                          syncText(context, '顶级（一级）分类', 'Top-level category'),
+                        ),
                       ),
-                    ),
-                    ...formal.map(
-                      (c) => DropdownMenuItem<int>(
-                        value: c['id'],
-                        child: Text(m.content(c, 'name')),
+                      ...formal.map(
+                        (c) => DropdownMenuItem<int>(
+                          value: c['id'],
+                          child: Text(m.content(c, 'name')),
+                        ),
                       ),
-                    ),
-                  ],
-                  onChanged: (v) => parent = v ?? 0,
+                    ],
+                    onChanged: (v) => parent = v ?? 0,
+                  ),
                 ),
                 if (error.isNotEmpty)
                   Text(error, style: const TextStyle(color: Colors.red)),
@@ -499,43 +504,49 @@ class _NativeCategoryPickerState extends State<NativeCategoryPicker> {
                 .where((a) => a['source_id'] == widget.value)
                 .firstOrNull?['target_id'] ??
             widget.value;
+        cats.removeWhere((c) => c['enabled'] == false && c['id'] != selected);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DropdownButtonFormField<int>(
-              key: ValueKey('${widget.value}:${cats.length}'),
-              initialValue: selected,
-              isExpanded: true,
-              decoration: InputDecoration(
-                labelText: widget.label ?? m.t('category'),
-                errorText: widget.issue == null
-                    ? null
-                    : fieldIssueText(m, widget.issue!),
-              ),
-              items: [
-                DropdownMenuItem(value: 0, child: Text(m.t('optional'))),
-                ...cats.map(
-                  (c) => DropdownMenuItem<int>(
-                    value: c['id'],
-                    enabled:
-                        c['id'] == widget.value ||
-                        (c['enabled'] == true &&
-                            c['selectable'] != false &&
-                            !widget.excludeIDs.contains(c['id']) &&
-                            (widget.kind != 'product' ||
-                                !cats.any((v) => v['parent_id'] == c['id']))),
-                    child: Text(
-                      '${nativeCategoryPath(cats, c['id'], m)}${c['suggestion_status'] == 'pending' ? (m.language == 'zh' ? '（待管理员规范）' : ' (pending)') : ''}',
-                      overflow: TextOverflow.ellipsis,
+            NativeFieldLabel(
+              label: widget.label ?? m.t('category'),
+              child: DropdownButtonFormField<int>(
+                key: ValueKey('${widget.value}:${cats.length}'),
+                initialValue: selected,
+                isExpanded: true,
+                decoration: InputDecoration(
+                  errorText: widget.issue == null
+                      ? null
+                      : fieldIssueText(m, widget.issue!),
+                ),
+                items: [
+                  DropdownMenuItem(value: 0, child: Text(m.t('optional'))),
+                  ...cats.map(
+                    (c) => DropdownMenuItem<int>(
+                      value: c['id'],
+                      enabled:
+                          c['id'] == widget.value ||
+                          (c['enabled'] == true &&
+                              c['selectable'] != false &&
+                              !widget.excludeIDs.contains(c['id']) &&
+                              (widget.kind != 'product' ||
+                                  !cats.any((v) => v['parent_id'] == c['id']))),
+                      child: Text(
+                        '${nativeCategoryPath(cats, c['id'], m)}${c['suggestion_status'] == 'pending' ? (m.language == 'zh' ? '（待管理员规范）' : ' (pending)') : ''}',
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
-                ),
-                if (selected > 0 && !cats.any((c) => c['id'] == selected))
-                  DropdownMenuItem(value: selected, child: Text('#$selected')),
-              ],
-              onChanged: widget.enabled
-                  ? (v) => widget.onChanged(v ?? 0)
-                  : null,
+                  if (selected > 0 && !cats.any((c) => c['id'] == selected))
+                    DropdownMenuItem(
+                      value: selected,
+                      child: Text('#$selected'),
+                    ),
+                ],
+                onChanged: widget.enabled
+                    ? (v) => widget.onChanged(v ?? 0)
+                    : null,
+              ),
             ),
             OutlinedButton.icon(
               onPressed: widget.enabled

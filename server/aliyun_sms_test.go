@@ -1,150 +1,117 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
+	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/utils"
+	dysms "github.com/alibabacloud-go/dysmsapi-20170525/v5/client"
+	"github.com/alibabacloud-go/tea/dara"
+	"github.com/aliyun/credentials-go/credentials"
 	"io"
 	"net/http"
-	"os"
 	"strings"
 	"testing"
-	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
-type smsTransport func(*http.Request) (*http.Response, error)
+type smsHTTPMock func(*http.Request) (*http.Response, error)
 
-func (send smsTransport) RoundTrip(r *http.Request) (*http.Response, error) { return send(r) }
-
-func TestAliyunRPCPercentEncoding(t *testing.T) {
-	if got := rpcEscape("a b*~+中文"); got != "a%20b%2A~%2B%E4%B8%AD%E6%96%87" {
-		t.Fatalf("RPC signature encoding does not match RFC3986: %s", got)
-	}
-}
-
-func TestAliyunSMSRequestAndErrors(t *testing.T) {
-	for _, test := range []struct {
-		name           string
-		status         int
-		body           string
-		networkFailure bool
-		wantError      bool
+func (f smsHTTPMock) Call(r *http.Request, _ *http.Transport) (*http.Response, error) { return f(r) }
+func TestAliyunOfficialSDKRequestAndErrors(t *testing.T) {
+	for _, tt := range []struct {
+		name, body string
+		network    bool
+		wantError  bool
 	}{
-		{"accepted", 200, `{"Code":"OK","RequestId":"test-request","BizId":"test-business"}`, false, false},
-		{"provider_limit", 200, `{"Code":"isv.BUSINESS_LIMIT_CONTROL","Message":"test-only"}`, false, true},
-		{"http_failure", 503, `{"Code":"OK"}`, false, true},
-		{"invalid_response", 200, `not-json`, false, true},
-		{"network_failure", 0, "", true, true},
+		{"accepted", `{"Code":"OK","RequestId":"test-request","BizId":"test-biz","Message":"OK"}`, false, false},
+		{"denied", `{"Code":"isv.BUSINESS_LIMIT_CONTROL","Message":"blocked"}`, false, true},
+		{"broken_json", `not-json`, false, true}, {"timeout", "", true, true},
 	} {
-		t.Run(test.name, func(t *testing.T) {
-			provider := AliyunSMS{KeyID: "test-only-id", Secret: "test-only-secret", Sign: "测试验证码签名", Template: "SMS_TEST_ONLY"}
-			provider.Client = &http.Client{Transport: smsTransport(func(r *http.Request) (*http.Response, error) {
-				if r.Method != "POST" || r.URL.String() != "https://dysmsapi.aliyuncs.com/" {
-					t.Fatal("unexpected SMS endpoint or method")
+		t.Run(tt.name, func(t *testing.T) {
+			calls := 0
+			// Synthetic credentials only, intercepted by the in-memory SDK transport.
+			cred, err := credentials.NewCredential(&credentials.Config{Type: dara.String("sts"), AccessKeyId: dara.String("test-only-id"), AccessKeySecret: dara.String("test-only-secret"), SecurityToken: dara.String("test-only-session")})
+			if err != nil {
+				t.Fatal(err)
+			}
+			client, err := dysms.NewClient(&openapi.Config{Credential: cred, Endpoint: dara.String("dysmsapi.aliyuncs.com"), HttpClient: smsHTTPMock(func(r *http.Request) (*http.Response, error) {
+				calls++
+				if r.URL.Host != "dysmsapi.aliyuncs.com" || r.URL.Scheme != "https" || r.Method != "POST" {
+					t.Fatal("unexpected SDK target")
 				}
-				if len(r.URL.RawQuery) != 0 {
-					t.Fatal("SMS parameters must be in the POST body")
+				r.Form = r.URL.Query()
+				if r.Form.Get("PhoneNumbers") != "13900000008" || r.Form.Get("SignName") != "河北企元" || r.Form.Get("TemplateCode") != "SMS_512636763" {
+					t.Fatal("incorrect SDK fields")
 				}
-				if e := r.ParseForm(); e != nil {
-					t.Fatal(e)
+				var param map[string]string
+				if json.Unmarshal([]byte(r.Form.Get("TemplateParam")), &param) != nil || len(param) != 1 || param["code"] != "012345" {
+					t.Fatal("incorrect approved template variables")
 				}
-				for key, want := range map[string]string{"Action": "SendSms", "Version": "2017-05-25", "PhoneNumbers": "13900000008", "SignName": provider.Sign, "TemplateCode": provider.Template, "SignatureMethod": "HMAC-SHA1", "SignatureVersion": "1.0"} {
-					if r.Form.Get(key) != want {
-						t.Fatalf("incorrect %s", key)
+				tokenPresent := r.Form.Get("SecurityToken") != ""
+				for k, v := range r.Header {
+					if strings.EqualFold(k, "x-acs-security-token") && len(v) > 0 && v[0] != "" {
+						tokenPresent = true
 					}
 				}
-				var params map[string]string
-				if json.Unmarshal([]byte(r.Form.Get("TemplateParam")), &params) != nil || params["code"] != "012345" {
-					t.Fatal("invalid verification template parameter")
+				if !tokenPresent {
+					t.Fatal("STS token missing")
 				}
-				if r.Form.Get("Signature") == "" || r.Form.Get("SignatureNonce") == "" {
-					t.Fatal("missing authentication fields")
+				if tt.network {
+					return nil, errors.New("synthetic timeout")
 				}
-				if _, e := time.Parse(time.RFC3339, r.Form.Get("Timestamp")); e != nil {
-					t.Fatal("invalid UTC timestamp")
-				}
-				if test.networkFailure {
-					return nil, errors.New("test-only network failure")
-				}
-				return &http.Response{StatusCode: test.status, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(test.body))}, nil
-			})}
-			e := provider.Send("13900000008", "012345")
-			if (e != nil) != test.wantError {
-				t.Fatalf("unexpected delivery result: %v", e)
+				return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(tt.body))}, nil
+			})})
+			if err != nil {
+				t.Fatal(err)
+			}
+			s := AliyunSMS{Sign: "河北企元", Templates: map[string]smsTemplate{"register": {"SMS_512636763", "code"}}, Client: client}
+			result, err := s.SendPurpose(context.Background(), "13900000008", "012345", "register", "request-only-test")
+			if (err != nil) != tt.wantError {
+				t.Fatal("unexpected send result")
+			}
+			if calls != 1 {
+				t.Fatalf("SDK made %d calls; uncertain sends must never auto-retry", calls)
+			}
+			if !tt.wantError && (result.RequestID != "test-request" || result.BizID != "test-biz") {
+				t.Fatal("provider receipt not retained")
+			}
+			if s.Ready("login") {
+				t.Fatal("registration template enabled SMS login")
 			}
 		})
 	}
 }
-
-func TestAliyunSMSRequiresCompleteConfiguration(t *testing.T) {
-	keys := []string{"ALIYUN_ACCESS_KEY_ID", "ALIYUN_ACCESS_KEY_SECRET", "ALIYUN_SMS_SIGN_NAME", "ALIYUN_SMS_TEMPLATE_CODE"}
-	for _, missing := range keys {
-		t.Run(missing, func(t *testing.T) {
-			for _, key := range keys {
-				t.Setenv(key, "test-only")
-			}
-			t.Setenv(missing, "")
-			if _, e := NewAliyunSMS(); e == nil {
-				t.Fatal("incomplete SMS configuration was accepted")
-			}
-		})
+func TestAliyunConfigurationNeedsNoStaticAccessKey(t *testing.T) {
+	for _, key := range []string{"ALIYUN_ACCESS_KEY_ID", "ALIYUN_ACCESS_KEY_SECRET", "ALIBABA_CLOUD_ACCESS_KEY_ID", "ALIBABA_CLOUD_ACCESS_KEY_SECRET"} {
+		t.Setenv(key, "")
+	}
+	t.Setenv("ALIYUN_SMS_SIGN_NAME", "河北企元")
+	t.Setenv("ALIYUN_SMS_TEMPLATE_CODE", "SMS_512636763")
+	t.Setenv("ALIYUN_SMS_ENDPOINT", "dysmsapi.aliyuncs.com")
+	t.Setenv("ALIYUN_SMS_LOGIN_TEMPLATE_CODE", "")
+	s, err := NewAliyunSMS()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if s.Credential == nil || !s.Ready("register") || s.Ready("login") {
+		t.Fatal("invalid purpose readiness")
+	}
+	t.Setenv("ALIYUN_SMS_ENDPOINT", "http://untrusted.invalid")
+	if _, err = NewAliyunSMS(); err == nil {
+		t.Fatal("untrusted endpoint accepted")
 	}
 }
-
-func TestAliyunVerificationLoginFlow(t *testing.T) {
-	if os.Getenv("RUN_MYSQL_TESTS") != "1" {
-		t.Skip("set RUN_MYSQL_TESTS=1 to run on an isolated MySQL database")
+func TestSMSDigestAndDiagnosticPrivacy(t *testing.T) {
+	t.Setenv("SMS_HASH_KEY", strings.Repeat("a", 32))
+	a := smsCodeDigest("salt", "13900000008", "register", "012345")
+	if a == smsCodeDigest("salt", "13900000008", "login", "012345") {
+		t.Fatal("purpose not bound")
 	}
-	name := fmt.Sprintf("zqzt_exhibition_test_%d", time.Now().UnixNano())
-	db, e := openDB(name)
-	if e != nil {
-		t.Fatal(e)
+	t.Setenv("SMS_HASH_KEY", strings.Repeat("b", 32))
+	if a == smsCodeDigest("salt", "13900000008", "register", "012345") {
+		t.Fatal("server key ignored")
 	}
-	pool, _ := db.DB()
-	defer pool.Close()
-	defer func() {
-		if e := db.Exec("DROP DATABASE `" + name + "`").Error; e != nil {
-			t.Error("could not clean up this test database:", e)
-		}
-	}()
-	if e := migrate(db); e != nil {
-		t.Fatal(e)
+	if strings.Contains(safeSMSMessage("phone=13900000008 code=012345"), "012345") || strings.Contains(safeSMSMessage("phone=13900000008"), "13900000008") {
+		t.Fatal("diagnostic leaked sensitive digits")
 	}
-	code := ""
-	accept := true
-	provider := AliyunSMS{KeyID: "test-only-id", Secret: "test-only-secret", Sign: "测试签名", Template: "SMS_TEST_ONLY", Client: &http.Client{Transport: smsTransport(func(r *http.Request) (*http.Response, error) {
-		if e := r.ParseForm(); e != nil {
-			t.Fatal(e)
-		}
-		var params map[string]string
-		if json.Unmarshal([]byte(r.Form.Get("TemplateParam")), &params) != nil {
-			t.Fatal("invalid SMS request")
-		}
-		code = params["code"]
-		body := `{"Code":"OK"}`
-		if !accept {
-			body = `{"Code":"isv.BUSINESS_LIMIT_CONTROL"}`
-		}
-		return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(body))}, nil
-	})}}
-	a := &App{DB: db, Config: Config{Env: "development", SMSProvider: "aliyun", MediaDir: t.TempDir(), WebDir: t.TempDir()}, SMS: provider}
-	tc := testClient{t, a.router()}
-	response := tc.call("POST", "/auth/sms", "", gin.H{"phone": "13900000008"}, 200)
-	if _, leaked := response["development_code"]; leaked {
-		t.Fatal("Aliyun mode must never expose a verification code, including in development")
-	}
-	if len(code) != 6 || response["sent"] != true {
-		t.Fatal("SMS was not passed to the adapter")
-	}
-	tc.call("POST", "/auth/phone", "", gin.H{"phone": "13900000008", "code": "wrong"}, 401)
-	session := tc.call("POST", "/auth/phone", "", gin.H{"phone": "13900000008", "code": code}, 200)
-	tc.call("GET", "/merchant/contents", session["token"].(string), nil, 200)
-	tc.call("POST", "/auth/phone", "", gin.H{"phone": "13900000008", "code": code}, 401)
-	tc.call("POST", "/auth/sms", "", gin.H{"phone": "13900000008"}, 429)
-	accept = false
-	tc.call("POST", "/auth/sms", "", gin.H{"phone": "13900000007"}, 503)
-	tc.call("POST", "/auth/phone", "", gin.H{"phone": "13900000007", "code": code}, 401)
-	t.Log("Aliyun request/login integration verified without external SMS: no code leakage, single-use login, cooldown and failed-delivery rollback")
 }

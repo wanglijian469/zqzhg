@@ -29,6 +29,8 @@ type Config struct {
 	Env, Addr, MediaDir, WebDir, CORS, SMSProvider, PublicBaseURL string
 	ProcurementDemo                                               bool
 	MapPreviewEnabled                                             bool
+	MapDemoEnabled                                                bool
+	MapDemoDir                                                    string
 	MapPreviewDir                                                 string
 }
 type App struct {
@@ -45,6 +47,8 @@ type App struct {
 	operationsRuntime    *OperationsRuntime
 	mapPreviewMu         sync.Mutex
 	mapPreviewClient     *http.Client
+	imageCacheOnce       sync.Once
+	imageCache           *imageVariantCache
 }
 
 func env(key, fallback string) string {
@@ -87,7 +91,8 @@ func openDB(name string) (*gorm.DB, error) {
 	cfg.Loc = time.UTC
 	cfg.Params = map[string]string{"charset": "utf8mb4"}
 	cfg.Timeout = 5 * time.Second
-	db, e := gorm.Open(mysql.Open(cfg.FormatDSN()), &gorm.Config{})
+	dbLogger := newDatabaseLogger(os.Stdout)
+	db, e := gorm.Open(mysql.Open(cfg.FormatDSN()), &gorm.Config{Logger: dbLogger})
 	if e != nil {
 		return nil, e
 	}
@@ -97,7 +102,7 @@ func openDB(name string) (*gorm.DB, error) {
 	sqlDB, _ := db.DB()
 	sqlDB.Close()
 	cfg.DBName = name
-	db, e = gorm.Open(mysql.Open(cfg.FormatDSN()), &gorm.Config{})
+	db, e = gorm.Open(mysql.Open(cfg.FormatDSN()), &gorm.Config{Logger: dbLogger})
 	if e == nil {
 		pool, _ := db.DB()
 		pool.SetMaxOpenConns(12)
@@ -107,6 +112,11 @@ func openDB(name string) (*gorm.DB, error) {
 	return db, e
 }
 func migrate(db *gorm.DB) error {
+	return migrateThrough(db, 0)
+}
+
+// The bounded runner also lets migration regressions start from a real older schema.
+func migrateThrough(db *gorm.DB, maximum int) error {
 	if e := db.Exec("CREATE TABLE IF NOT EXISTS schema_migrations (version INT PRIMARY KEY, applied_at DATETIME(3) NOT NULL)").Error; e != nil {
 		return e
 	}
@@ -121,6 +131,9 @@ func migrate(db *gorm.DB) error {
 		version, e := strconv.Atoi(strings.SplitN(file.Name(), "_", 2)[0])
 		if e != nil {
 			return e
+		}
+		if maximum > 0 && version > maximum {
+			continue
 		}
 		var n int64
 		if e = db.Table("schema_migrations").Where("version = ?", version).Count(&n).Error; e != nil {
@@ -158,6 +171,26 @@ func migrate(db *gorm.DB) error {
 		}
 		if version == 16 {
 			if e = backfillAdministrativeSnapshots(db); e != nil {
+				return e
+			}
+		}
+		if version == 26 {
+			if e = migrateContentReview(db); e != nil {
+				return e
+			}
+		}
+		if version == 27 {
+			if e = migrateContentReviewPrivacy(db); e != nil {
+				return e
+			}
+		}
+		if version == 23 {
+			if e = migrateFreeDisplay(db); e != nil {
+				return e
+			}
+		}
+		if version == 22 {
+			if e = migrateCIAMETaxonomy(db); e != nil {
 				return e
 			}
 		}
@@ -205,6 +238,12 @@ func seed(db *gorm.DB) error {
 }
 func main() {
 	loadEnv()
+	if len(os.Args) == 2 && os.Args[1] == "sms-preflight" {
+		if err := smsPreflight(); err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
 	cfg := Config{Env: env("APP_ENV", "development"), Addr: env("HTTP_ADDR", "0.0.0.0:8080"), MediaDir: env("MEDIA_DIR", "./data/media"), WebDir: env("WEB_DIR", "../web/dist"), CORS: env("CORS_ORIGIN", "http://localhost:5173"), SMSProvider: env("SMS_PROVIDER", "development"), PublicBaseURL: strings.TrimRight(env("PUBLIC_BASE_URL", ""), "/")}
 	cfg.ProcurementDemo = env("PROCUREMENT_DEMO", "false") == "true"
 	if len(os.Args) == 2 && (os.Args[1] == "seed-procurement-demo" || os.Args[1] == "reset-procurement-demo") && !cfg.ProcurementDemo {
@@ -213,8 +252,19 @@ func main() {
 	if e := validateProcurementDemo(cfg, env("DB_NAME", "zqzt_exhibition")); e != nil {
 		log.Fatal(e)
 	}
+	cfg.MapDemoEnabled = env("MAP_DEMO_ENABLED", "false") == "true"
+	cfg.MapDemoDir = env("MAP_DEMO_DIR", "./data/map-demo")
 	cfg.MapPreviewEnabled = env("MAP_PREVIEW_ENABLED", "false") == "true"
 	cfg.MapPreviewDir = env("MAP_PREVIEW_DIR", "../.local/map-preview")
+	if enabled, set := os.LookupEnv("SMS_ENABLED"); set {
+		if enabled == "true" {
+			cfg.SMSProvider = "aliyun"
+		} else if enabled == "false" {
+			cfg.SMSProvider = "disabled"
+		} else {
+			log.Fatal("SMS_ENABLED must be true or false")
+		}
+	}
 	if e := validateSMSMode(cfg.Env, cfg.SMSProvider); e != nil {
 		log.Fatal(e)
 	}
@@ -277,7 +327,7 @@ func main() {
 	if e = validateRuntimePaths(a); e != nil {
 		log.Fatal(e)
 	}
-	if e = db.Where("1=1").Delete(&MediaUploadReservation{}).Error; e != nil {
+	if e = db.Where("expires_at<=?", time.Now().UTC()).Delete(&MediaUploadReservation{}).Error; e != nil {
 		log.Fatal(e)
 	}
 	if len(os.Args) == 3 && os.Args[1] == "set-merchant-login" {
@@ -286,6 +336,21 @@ func main() {
 			log.Fatal(err)
 		}
 		json.NewEncoder(os.Stdout).Encode(account)
+		return
+	}
+	if len(os.Args) == 3 && os.Args[1] == "set-public-origin" {
+		if err := a.setPublicOrigin(os.Args[2]); err != nil {
+			log.Fatal(err)
+		}
+		json.NewEncoder(os.Stdout).Encode(map[string]any{"public_origin": os.Args[2]})
+		return
+	}
+	if len(os.Args) == 3 && os.Args[1] == "import-public-demo" {
+		result, err := a.importPublicDemo(os.Args[2])
+		if err != nil {
+			log.Fatal("public demo import failed: ", err)
+		}
+		json.NewEncoder(os.Stdout).Encode(result)
 		return
 	}
 	if len(os.Args) == 3 && os.Args[1] == "import-vendor" {
@@ -301,15 +366,27 @@ func main() {
 		if e != nil {
 			log.Fatal(e)
 		}
+		if cfg.Env == "production" {
+			if e := provider.CheckECSCredential(); e != nil {
+				log.Fatal(e)
+			}
+			if len(os.Getenv("SMS_HASH_KEY")) < 32 {
+				log.Fatal("SMS_HASH_KEY must contain at least 32 characters")
+			}
+		}
 		a.SMS = provider
 	} else if cfg.SMSProvider == "disabled" {
 		a.SMS = DisabledSMS{}
 	} else if cfg.SMSProvider != "development" {
 		log.Fatal("unknown SMS_PROVIDER")
 	}
-	a.startMediaWorker(context.Background())
-	a.startProcurementWorker(context.Background())
-	a.startOperations(context.Background())
+	if env("BACKGROUND_WORKERS_ENABLED", "true") == "true" {
+		a.startSMSMaintenance(context.Background())
+		a.startMediaWorker(context.Background())
+		a.startProcurementWorker(context.Background())
+		a.startHomeRotation(context.Background())
+		a.startOperations(context.Background())
+	}
 	srv := &http.Server{Addr: cfg.Addr, Handler: a.router(), ReadHeaderTimeout: 10 * time.Second, ReadTimeout: 15 * time.Minute, WriteTimeout: 15 * time.Minute, IdleTimeout: 60 * time.Second}
 	log.Printf("中企展馆 API listening on %s (%s)", cfg.Addr, cfg.Env)
 	log.Fatal(srv.ListenAndServe())
@@ -317,7 +394,7 @@ func main() {
 func (a *App) router() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
-	r.Use(gin.Logger(), gin.Recovery(), a.operationsGate())
+	r.Use(gin.Logger(), gin.Recovery(), a.operationsGate(), a.smsHTTPS, a.legacyWebsiteOrigin)
 	trusted := []string{}
 	if raw := strings.TrimSpace(env("TRUSTED_PROXIES", "")); raw != "" {
 		trusted = strings.Split(raw, ",")
@@ -329,7 +406,7 @@ func (a *App) router() *gin.Engine {
 		panic("Invalid TRUSTED_PROXIES: " + err.Error())
 	}
 	r.Use(func(c *gin.Context) {
-		if strings.HasPrefix(c.Request.URL.Path, "/api/") && !strings.HasSuffix(c.Request.URL.Path, "/media") && !strings.HasSuffix(c.Request.URL.Path, "/attachments") && !strings.HasSuffix(c.Request.URL.Path, "/resource-media") && !(strings.HasPrefix(c.Request.URL.Path, "/api/v1/admin/backups/imports/") && strings.Contains(c.Request.URL.Path, "/chunks/")) {
+		if strings.HasPrefix(c.Request.URL.Path, "/api/") && !strings.HasSuffix(c.Request.URL.Path, "/service-evidence") && !strings.HasSuffix(c.Request.URL.Path, "/media") && !strings.HasSuffix(c.Request.URL.Path, "/attachments") && !strings.HasSuffix(c.Request.URL.Path, "/resource-media") && !(strings.HasPrefix(c.Request.URL.Path, "/api/v1/admin/backups/imports/") && strings.Contains(c.Request.URL.Path, "/chunks/")) {
 			c.Request.Body = httpMaxBody(c, 1<<20)
 		}
 		c.Header("X-Content-Type-Options", "nosniff")
@@ -340,11 +417,17 @@ func (a *App) router() *gin.Engine {
 		if strings.HasPrefix(c.Request.URL.Path, "/api/v1/procurement/") || strings.HasPrefix(c.Request.URL.Path, "/api/v1/admin/procurement/") {
 			c.Header("X-Robots-Tag", "noindex")
 		}
+
+		if !procurementEnabled() && (strings.HasPrefix(c.Request.URL.Path, "/api/v1/procurement/") || strings.HasPrefix(c.Request.URL.Path, "/api/v1/admin/procurement/") || strings.HasPrefix(c.Request.URL.Path, "/api/v1/public/procurements") || c.Request.URL.Path == "/api/v1/public/procurement-vendors") {
+			c.Abort()
+			fail(c, 503, "proc_disabled")
+			return
+		}
 		if a.allowedSiteOrigin(c.GetHeader("Origin")) {
 			c.Header("Access-Control-Allow-Origin", c.GetHeader("Origin"))
 			c.Header("Vary", "Origin")
-			c.Header("Access-Control-Allow-Headers", "Authorization, Content-Type, Range, If-Range, Idempotency-Key")
-			c.Header("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges, Retry-After")
+			c.Header("Access-Control-Allow-Headers", "Authorization, Content-Type, X-Service-Credential, Range, If-Range, If-None-Match, If-Modified-Since, Idempotency-Key")
+			c.Header("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges, Retry-After, ETag")
 			c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		}
 		if c.Request.Method == "OPTIONS" {
@@ -375,7 +458,11 @@ func (a *App) router() *gin.Engine {
 	api.POST("/auth/sms", a.sendCode)
 	api.POST("/auth/phone", a.phoneLogin)
 	api.POST("/auth/phone/code", a.phoneCode)
+	api.POST("/auth/phone/challenge", a.smsChallenge)
 	api.POST("/auth/phone/register", a.phoneRegister)
+	api.POST("/auth/password", a.unifiedPasswordLogin)
+	api.POST("/auth/phone/verify", a.verifyPhoneAction)
+	api.POST("/auth/phone/password/reset", a.resetPhonePassword)
 	api.POST("/auth/phone/login", a.phoneSMSLogin)
 	api.POST("/auth/phone/password", a.phonePasswordLogin)
 	api.POST("/auth/phone/password/setup", a.setupPhonePassword)
@@ -385,6 +472,7 @@ func (a *App) router() *gin.Engine {
 	api.POST("/auth/visitor/register", a.visitorRegister)
 	api.POST("/auth/admin", a.adminLogin)
 	auth := api.Group("/auth", a.requireAuth(""))
+	auth.POST("/me/welcome", a.completeWelcome)
 	auth.GET("/me", func(c *gin.Context) { c.JSON(200, a.accountJSON(actor(c))) })
 	auth.POST("/logout", a.logout)
 	auth.POST("/me/phone/code", a.bindingPhoneCode)
@@ -394,6 +482,8 @@ func (a *App) router() *gin.Engine {
 	pub.GET("/showrooms/:slug", a.publicShowroom)
 	pub.GET("/administrative-regions", a.administrativeRegions)
 	pub.GET("/industry-map/regions", a.industryMapRegions)
+	pub.GET("/map-demo/config", a.mapDemoConfiguration)
+	pub.GET("/map-demo/regions", a.mapDemoRegions)
 	pub.GET("/industry-map/vendors", a.industryMapVendors)
 	pub.GET("/halls", a.publicHalls)
 	pub.GET("/home", a.home)
@@ -434,6 +524,9 @@ func (a *App) router() *gin.Engine {
 	a.jobRoutes(admin, api)
 	a.storageRoutes(admin)
 	a.settingsRoutes(admin, pub)
+	a.serviceDocumentRoutes(pub, merchant, admin)
+	a.serviceCaseRoutes(pub, merchant, admin)
+	a.homeRotationRoutes(admin)
 	a.storageUsageRoutes(admin, merchant)
 	a.analyticsRoutes(pub, admin)
 	a.backupRoutes(admin)
@@ -490,12 +583,19 @@ func (a *App) router() *gin.Engine {
 		}
 		path := filepath.Join(a.Config.WebDir, filepath.Clean("/"+c.Request.URL.Path))
 		if st, e := os.Stat(path); e == nil && !st.IsDir() {
-			c.File(path)
+			a.serveWebAsset(c, path)
 			return
 		}
 		index := filepath.Join(a.Config.WebDir, "index.html")
 		if _, e := os.Stat(index); e != nil {
 			c.JSON(200, gin.H{"service": "中企展馆", "website": "Build web first. API: /api/v1/health"})
+			return
+		}
+		if normalized := normalizedSPAPath(c.Request.URL.Path); normalized != c.Request.URL.Path {
+			if c.Request.URL.RawQuery != "" {
+				normalized += "?" + c.Request.URL.RawQuery
+			}
+			c.Redirect(301, normalized)
 			return
 		}
 		if a.publicHTML(c, index) {
@@ -504,21 +604,23 @@ func (a *App) router() *gin.Engine {
 		if a.showroomHTML(c, index) {
 			return
 		}
-		if strings.HasPrefix(c.Request.URL.Path, "/buyer") || c.Request.URL.Path == "/procurement" {
-			if a.sendPublicHTML(c, index, 200, "采购询比价 | "+a.brandName(), "采购需求与厂商在线询比价", a.publicBase(c)+c.Request.URL.Path, "noindex,follow") {
+		if privateSPAPath(c.Request.URL.Path) {
+			if a.sendPublicHTML(c, index, 200, a.brandName(), "业务工作台", a.publicBase(c)+c.Request.URL.Path, "noindex,follow") {
 				return
 			}
 		}
-		raw, err := os.ReadFile(index)
-		if err != nil {
-			fail(c, 500, "internal_error")
+		if c.Request.URL.Path == "/app" && a.sendPublicHTML(c, index, 200, "App 下载 | "+a.brandName(), "中企展馆客户端下载", a.publicBase(c)+"/app", "index,follow") {
 			return
 		}
-		c.Data(200, "text/html; charset=utf-8", []byte(a.runtimeHTML(c, string(raw))))
+		if !a.sendPublicHTML(c, index, 404, "页面不存在 | "+a.brandName(), "请求的页面不存在", a.publicBase(c)+c.Request.URL.Path, "noindex,follow") {
+			fail(c, 503, "internal_error")
+		}
 	})
 	return r
 }
 func fail(c *gin.Context, status int, code string) {
+	c.Header("Cache-Control", "no-store")
+	c.Writer.Header().Del("ETag")
 	c.AbortWithStatusJSON(status, gin.H{"error": gin.H{"code": code}})
 }
 func actor(c *gin.Context) Account { v, _ := c.Get("account"); return v.(Account) }

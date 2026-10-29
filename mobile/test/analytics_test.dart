@@ -14,6 +14,7 @@ void main() {
     () async {
       SharedPreferences.setMockInitialValues({
         'base_url': 'http://analytics.test',
+        'service.analytics_consent': true,
       });
       final sent = <Json>[];
       var fail = false;
@@ -21,7 +22,8 @@ void main() {
       final model = AppModel(
         await SharedPreferences.getInstance(),
         {'zh': {}, 'en': {}},
-        analyticsEnabled: true,
+        testBaseUrl: 'http://analytics.test',
+    analyticsEnabled: true,
         client: MockClient((r) async {
           attempts++;
           expect(r.headers.containsKey('Authorization'), isFalse);

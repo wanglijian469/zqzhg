@@ -8,7 +8,7 @@ import {BrowserRouter} from 'react-router-dom';
 import {App} from './main';
 import {emptyData} from './types';
 const account={id:2,username:'managed:test',login_name:'密码重置验收厂商',vendor_id:4,vendor_name:'密码重置验收厂商',product_count:1,password_login:true,phone_login:false};
-const password='Only-Reset-In-Test-123!';
+const password='Reset-In-Test-123!';
 const response=(data:unknown)=>new Response(JSON.stringify(data),{status:200});
 let finish:((r:Response)=>void)|undefined;
 const fetchMock=vi.fn(async(url:string,opts?:RequestInit)=>{
@@ -33,7 +33,7 @@ describe('Manufacturer password reset',()=>{
   await user.click(button);dialog=screen.getByRole('dialog');
   await user.selectOptions(within(dialog).getByRole('combobox'),'manual');
   await user.type(within(dialog).getByLabelText('新密码',{exact:true}),'short');await user.click(within(dialog).getByRole('button',{name:'确认重置'}));
-  expect(within(dialog).getByRole('alert').textContent).toContain('12–72');
+  expect(within(dialog).getByRole('alert').textContent).toContain('8–20');
   await user.clear(within(dialog).getByLabelText('新密码',{exact:true}));await user.type(within(dialog).getByLabelText('新密码',{exact:true}),password);await user.click(within(dialog).getByRole('button',{name:'确认重置'}));
   expect(within(dialog).getByRole('alert').textContent).toContain('不一致');
   await user.type(within(dialog).getByLabelText('确认新密码'),password);

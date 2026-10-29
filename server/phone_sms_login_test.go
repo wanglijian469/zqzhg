@@ -53,6 +53,7 @@ func TestBusinessSMSLoginIsolationAndCodeLifecycle(t *testing.T) {
 	}
 	a.Config.SMSProvider = "aliyun" // An adapter test double avoids any actual network send.
 	a.SMS = DevelopmentSMS{}
+	smsFixtureAccount(t, a, "13900009098", "visitor")
 	out = phoneCall(t, r, "POST", "/auth/phone/code", "", gin.H{"phone": "13900009098", "purpose": "login"}, 200)
 	if out["development_code"] != nil {
 		t.Fatal("provider mode leaked code")

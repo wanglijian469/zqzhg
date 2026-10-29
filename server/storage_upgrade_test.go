@@ -34,7 +34,7 @@ func TestStorageSettingsPermissionsAndVersions(t *testing.T) {
 	raw, _ := json.Marshal(result["config"])
 	var cfg SystemConfig
 	json.Unmarshal(raw, &cfg)
-	if cfg.Uploads.DefaultQuotaBytes != 2<<30 || cfg.Uploads.ImageMiB != 10 || cfg.Uploads.PDFMiB != 50 {
+	if cfg.Uploads.DefaultQuotaBytes != 200000000 || cfg.Uploads.ImageMiB != 10 || cfg.Uploads.PDFMiB != 50 {
 		t.Fatal(cfg)
 	}
 	public := tc.call("GET", "/public/config", "", nil, 200)
@@ -196,19 +196,19 @@ func TestStorageDiskGuardAndMediaAliases(t *testing.T) {
 		}
 	}
 }
-func TestStorageQuotaDefaultTwoGiBAndExplicitDelete(t *testing.T) {
+func TestStorageQuotaDefault200MBAndExplicitDelete(t *testing.T) {
 	a := importTestApp(t)
 	tc := testClient{t, a.router()}
 	admin := resourceTestSession(t, a, "admin")
 	merchant := resourceTestSession(t, a, "merchant")
 	var acc Account
 	a.DB.Where("role='merchant'").First(&acc)
-	l, e := a.reserveUpload(acc.ID, 2<<30)
+	l, e := a.reserveUpload(acc.ID, 200000000)
 	if e != nil {
 		t.Fatal(e)
 	}
 	if _, e = a.reserveUpload(acc.ID, 1); e == nil {
-		t.Fatal("2 GiB boundary exceeded")
+		t.Fatal("200 MB boundary exceeded")
 	}
 	l.Release()
 	var imageBytes bytes.Buffer

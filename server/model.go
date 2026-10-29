@@ -161,6 +161,7 @@ type OperationLog struct {
 	CreatedAt         time.Time `json:"created_at"`
 }
 type View struct {
+	Demonstration bool `json:"demonstration,omitempty"`
 	Content
 	ShowroomSlug     string         `json:"showroom_slug,omitempty"`
 	PublicVisible    bool           `json:"public_visible"`

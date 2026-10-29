@@ -18,11 +18,15 @@ import (
 )
 
 type SiteConfig struct {
-	Name     string `json:"name"`
-	NameEN   string `json:"name_en"`
-	WebURL   string `json:"web_url"`
-	APIURL   string `json:"api_url"`
-	MediaURL string `json:"media_url"`
+	ICPNumber    string `json:"icp_number"`
+	PoliceNumber string `json:"police_number"`
+	PoliceURL    string `json:"police_url"`
+	AppNumber    string `json:"app_number"`
+	Name         string `json:"name"`
+	NameEN       string `json:"name_en"`
+	WebURL       string `json:"web_url"`
+	APIURL       string `json:"api_url"`
+	MediaURL     string `json:"media_url"`
 }
 type UploadConfig struct {
 	ImageMiB          int   `json:"image_mib"`
@@ -46,7 +50,7 @@ type SystemConfig struct {
 }
 
 func defaultSystemConfig() SystemConfig {
-	return SystemConfig{Watermark: defaultWatermarkConfig(), Version: 1, Site: SiteConfig{Name: "中企展馆", NameEN: "ZQZG", WebURL: "", APIURL: "", MediaURL: ""}, Uploads: UploadConfig{ImageMiB: settingInt("MAX_IMAGE_MIB", 10), VideoMiB: settingInt("MAX_VIDEO_MIB", 200), PDFMiB: settingInt("MAX_PDF_MIB", 50), DefaultQuotaBytes: 2 << 30}, Disk: DiskConfig{WarnPercent: 80, CriticalPercent: 90, MinFreeBytes: 1 << 30}}
+	return SystemConfig{Watermark: defaultWatermarkConfig(), Version: 1, Site: SiteConfig{ICPNumber: "冀ICP备2026047360号-2", Name: "中企展馆", NameEN: "ZQZG", WebURL: "", APIURL: "", MediaURL: ""}, Uploads: UploadConfig{ImageMiB: settingInt("MAX_IMAGE_MIB", 10), VideoMiB: settingInt("MAX_VIDEO_MIB", 200), PDFMiB: settingInt("MAX_PDF_MIB", 50), DefaultQuotaBytes: freeStorageBytes}, Disk: DiskConfig{WarnPercent: 80, CriticalPercent: 90, MinFreeBytes: 1 << 30}}
 }
 func (a *App) systemConfig() (SystemConfig, error) { return systemConfigDB(a.DB) }
 func systemConfigDB(db *gorm.DB) (SystemConfig, error) {
@@ -108,10 +112,14 @@ func (a *App) siteIdentity() string {
 func (a *App) publicRuntimeConfig(c *gin.Context) {
 	cfg := a.effectiveConfig(c)
 	c.Header("Cache-Control", "no-store")
-	c.JSON(200, gin.H{"version": cfg.Version, "site": cfg.Site, "uploads": cfg.Uploads, "watermark": cfg.Watermark, "site_id": a.siteIdentity(), "capabilities": a.publicCapabilities(), "demo_accounts": a.procurementDemoAccounts()})
+	c.JSON(200, gin.H{"company_verification_mode": companyVerificationMode, "password_policy": passwordPolicy, "service_mode": serviceMode, "service_document_versions": a.serviceDocumentVersions(), "version": cfg.Version, "site": cfg.Site, "uploads": cfg.Uploads, "watermark": cfg.Watermark, "site_id": a.siteIdentity(), "capabilities": a.publicCapabilities(), "demo_accounts": a.procurementDemoAccounts()})
 }
 func (a *App) publicMediaStatus(c *gin.Context) { c.JSON(200, gin.H{"site_id": a.siteIdentity()}) }
 func normalizeConfig(cfg *SystemConfig) {
+	cfg.Site.ICPNumber = strings.TrimSpace(cfg.Site.ICPNumber)
+	cfg.Site.PoliceNumber = strings.TrimSpace(cfg.Site.PoliceNumber)
+	cfg.Site.AppNumber = strings.TrimSpace(cfg.Site.AppNumber)
+	cfg.Site.PoliceURL = strings.TrimSpace(cfg.Site.PoliceURL)
 	cfg.Site.Name = strings.TrimSpace(cfg.Site.Name)
 	cfg.Site.NameEN = strings.TrimSpace(cfg.Site.NameEN)
 	cfg.Site.WebURL = strings.TrimRight(strings.TrimSpace(cfg.Site.WebURL), "/")
@@ -121,12 +129,21 @@ func normalizeConfig(cfg *SystemConfig) {
 	normalizeWatermark(&cfg.Watermark)
 }
 func validateSystemConfig(cfg SystemConfig) error {
+	if len([]rune(cfg.Site.PoliceNumber)) > 100 || len([]rune(cfg.Site.AppNumber)) > 100 {
+		return errors.New("invalid_system_settings")
+	}
+	if cfg.Site.PoliceURL != "" {
+		u, e := url.Parse(cfg.Site.PoliceURL)
+		if e != nil || u.Scheme != "https" || u.User != nil || (u.Host != "beian.mps.gov.cn" && u.Host != "www.beian.gov.cn") {
+			return errors.New("invalid_system_settings")
+		}
+	}
 	if cfg.watermarkPresent || cfg.Watermark != (WatermarkConfig{}) {
 		if e := validateWatermark(cfg.Watermark); e != nil {
 			return e
 		}
 	}
-	if cfg.Site.Name == "" || len([]rune(cfg.Site.Name)) > 100 || len([]rune(cfg.Site.NameEN)) > 100 {
+	if cfg.Site.Name == "" || len([]rune(cfg.Site.Name)) > 100 || len([]rune(cfg.Site.NameEN)) > 100 || len([]rune(cfg.Site.ICPNumber)) > 100 {
 		return errors.New("invalid_system_settings")
 	}
 	for i, s := range []string{cfg.Site.WebURL, cfg.Site.APIURL, cfg.Site.MediaURL} {
@@ -372,7 +389,7 @@ func (a *App) mediaAddress(c *gin.Context, id uint64, query string) string {
 func (a *App) brandName() string { cfg, _ := a.systemConfig(); return cfg.Site.Name }
 func (a *App) runtimeHTML(c *gin.Context, page string) string {
 	cfg := a.effectiveConfig(c)
-	raw, _ := json.Marshal(gin.H{"version": cfg.Version, "site": cfg.Site, "uploads": cfg.Uploads, "watermark": cfg.Watermark, "capabilities": a.publicCapabilities(), "demo_accounts": a.procurementDemoAccounts()})
+	raw, _ := json.Marshal(gin.H{"company_verification_mode": companyVerificationMode, "service_mode": serviceMode, "service_document_versions": a.serviceDocumentVersions(), "version": cfg.Version, "site": cfg.Site, "uploads": cfg.Uploads, "watermark": cfg.Watermark, "capabilities": a.publicCapabilities(), "demo_accounts": a.procurementDemoAccounts()})
 	return strings.Replace(page, "<head>", "<head><script id=\"zqzg-runtime-config\" type=\"application/json\">"+string(raw)+"</script>", 1)
 }
 func (a *App) allowedSiteOrigin(origin string) bool {

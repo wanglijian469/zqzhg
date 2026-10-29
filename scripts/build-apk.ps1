@@ -1,4 +1,5 @@
-param([string]$ApiBaseUrl = 'http://39.97.250.244:8089', [switch]$Preview)
+param([string]$ApiBaseUrl = 'https://zqzhg.com', [switch]$Preview, [switch]$BuildOnly)
+if ($ApiBaseUrl -cne 'https://zqzhg.com') { throw 'Release APK backend must be https://zqzhg.com; use Mock tests for other environments.' }
 . "$PSScriptRoot/flutter-env.ps1"
 $existingApk = Join-Path $taskRoot 'delivery/android/dalunongji.apk'
 $apkSigner = Join-Path $env:ANDROID_HOME 'build-tools/36.0.0/apksigner.bat'
@@ -14,6 +15,10 @@ $expectedCertificate = if (Test-Path -LiteralPath $existingApk) { Get-ApkCertifi
 if ($LASTEXITCODE -ne 0) { throw 'Android icon generation failed.' }
 & node (Join-Path $PSScriptRoot 'sync-form-rules.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Form rule synchronization failed.' }
+& node (Join-Path $PSScriptRoot 'sync-auth-policy.mjs')
+if ($LASTEXITCODE -ne 0) { throw 'Authentication policy synchronization failed.' }
+& "$PSScriptRoot/prepare-android-workspace.ps1"
+if ($LASTEXITCODE -ne 0) { throw 'Embedded workspace preparation failed.' }
 $signingDirectory = Join-Path $taskRoot '.local/signing'
 New-Item -ItemType Directory -Path $signingDirectory -Force | Out-Null
 $signingKey = Join-Path $signingDirectory 'dalunongji-release.jks'
@@ -69,6 +74,9 @@ try {
     foreach ($taskSource in $taskBuildSources.GetEnumerator()) {
         if ((Get-FileHash -LiteralPath $taskSource.Key -Algorithm SHA256).Hash -ne $taskSource.Value) { throw 'App sources changed while building. Rebuild before publishing the acceptance APK.' }
     }
+    foreach ($taskSourceDirectory in @('lib','assets','android/app/src')) {
+        Get-ChildItem -LiteralPath $taskSourceDirectory -Recurse -File | ForEach-Object { if (-not $taskBuildSources.ContainsKey($_.FullName)) { throw 'App sources were added while building; rebuild required.' } }
+    }
     $certificate = Get-ApkCertificate $apkSource
     if ($expectedCertificate -and $certificate -ne $expectedCertificate) { throw 'Signing certificate changed; refusing to replace downloads.' }
     $version = [regex]::Match((Get-Content (Join-Path $taskRoot 'mobile/pubspec.yaml') -Raw), '(?m)^version:\s*(\S+)').Groups[1].Value
@@ -79,6 +87,15 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'APK metadata verification failed.' }
     $taskMetadata = $taskBadging -join "`n"
     if (-not $taskMetadata.Contains("name='com.zqzt.dalunongji'") -or -not $taskMetadata.Contains("versionName='$($taskVersionParts[0])'") -or -not $taskMetadata.Contains("versionCode='$($taskVersionParts[1])'")) { throw 'APK package or version differs from pubspec.' }
+    if ($BuildOnly) {
+        $output = Join-Path $taskRoot "delivery/android-v$($taskVersionParts[0])"
+        New-Item -ItemType Directory -Force -Path $output | Out-Null
+        $artifact = Join-Path $output "大陆农机-$version.apk"
+        Copy-Item -LiteralPath $apkSource -Destination $artifact -Force
+        @{version=$version;applicationId='com.zqzt.dalunongji';appName='大陆农机';sha256=(Get-FileHash -LiteralPath $artifact -Algorithm SHA256).Hash.ToLowerInvariant();certificateSHA256=$certificate;signingMatchesPrevious=($certificate -eq $expectedCertificate);apiBaseUrl=$ApiBaseUrl;productionDeployed=$false;deviceValidation=$false} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $output 'manifest.json') -Encoding utf8
+        Write-Output "Installable APK created: $artifact; existing downloads retained."
+        return
+    }
     if ($Preview) {
         $previewDirectories = @('delivery/android-preview','web/public/downloads/previews','web/dist/downloads/previews')
         foreach ($previewOutput in $previewDirectories) {

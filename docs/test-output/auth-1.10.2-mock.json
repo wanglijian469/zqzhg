@@ -1,0 +1,26 @@
+{
+  "base": "http://127.0.0.1:18091",
+  "localMock": true,
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "errors": [],
+  "realSmsSends": 0,
+  "registration": true,
+  "welcomePersisted": true,
+  "passwordLogin": true,
+  "passwordRecovery": true,
+  "enterpriseSteps": true,
+  "passed": true
+}

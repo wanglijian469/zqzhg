@@ -13,7 +13,7 @@ import (
 )
 
 func (a *App) merchantRegister(c *gin.Context) {
-	a.registerAccount(c, "merchant")
+	a.registerAccount(c, "visitor")
 }
 func (a *App) visitorRegister(c *gin.Context) {
 	a.registerAccount(c, "visitor")
@@ -24,8 +24,10 @@ func (a *App) registerAccount(c *gin.Context, role string) {
 		return
 	}
 	var req struct {
-		LoginName string `json:"login_name"`
-		Password  string `json:"password"`
+		Agreements []AgreementRef `json:"agreements"`
+		Source     string         `json:"source"`
+		LoginName  string         `json:"login_name"`
+		Password   string         `json:"password"`
 	}
 	if c.ShouldBindJSON(&req) != nil {
 		fail(c, 400, "invalid_request")
@@ -38,7 +40,7 @@ func (a *App) registerAccount(c *gin.Context, role string) {
 	} else if utf8.RuneCountInString(req.LoginName) > 100 {
 		fields = append(fields, FieldIssue{Field: "login_name", Code: "too_long", Limit: 100, Unit: "characters"})
 	}
-	if len(req.Password) < 12 || len(req.Password) > 72 || strings.TrimSpace(req.Password) == "" {
+	if !validNewPassword(req.Password) {
 		fields = append(fields, FieldIssue{Field: "password", Code: "password_length"})
 	}
 	if len(fields) > 0 {
@@ -72,12 +74,22 @@ func (a *App) registerAccount(c *gin.Context, role string) {
 			}
 			return e
 		}
+		if e := markWelcomePending(tx, account.ID); e != nil {
+			return e
+		}
+		if e := acceptServiceDocuments(tx, account.ID, req.Agreements, req.Source, []string{"terms", "privacy"}); e != nil {
+			return e
+		}
 		var e error
 		result, e = a.phoneSession(tx, account, false)
 		if e != nil {
 			return e
 		}
-		return recordOperation(tx, account.ID, "account", account.ID, role+"_registered", req.LoginName)
+		note := req.LoginName
+		if mainlandPhone.MatchString(note) {
+			note = phoneMask(note)
+		}
+		return recordOperation(tx, account.ID, "account", account.ID, role+"_registered", note)
 	})
 	if e != nil {
 		dbFail(c, e)

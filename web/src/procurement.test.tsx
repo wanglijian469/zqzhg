@@ -8,13 +8,13 @@ import {withHallFixture} from './hall-test-fixture';
 import {emptyData} from './types';
 import {configureRuntime,runtimeConfig} from './runtime-config';
 
-let noticeItems=false;let registered=false,draftScope=false,delayedProduct=false,expandedScope=false,accountRole='merchant',notificationUnread=0;let calls:{url:string;method:string;data:Record<string,unknown>}[]=[];
+let noticeItems=false;let registered=false,draftScope=false,delayedProduct=false,expandedScope=false,accountRole='merchant',notificationUnread=0,failDraft=false;let calls:{url:string;method:string;data:Record<string,unknown>}[]=[];
 const vendor={id:3,kind:'vendor',hall_id:1,showroom_slug:'supplier-test',status:'approved',public_visible:true,revision_id:1,data:{...emptyData,name:'已有厂商'}};
 const product={id:7,kind:'product',hall_id:1,vendor_id:3,data:{...emptyData,name:'测试旋耕机',category_id:101,parameters:'型号：T-7'}};
 const items=[{id:11,category_id:101,name:'旋耕机',specification:'80千瓦',quantity:'2.500',unit:'台'},{id:12,category_id:101,name:'配件',specification:'',quantity:'10.000',unit:'件'}];
 const project={id:9,hall_id:1,state:'open',audience:'direct',version:2,published_revision_id:4,draft_revision_id:4,source_product_id:7,owner:false,participant:{id:1,vendor_id:3,state:'invited',intent:false,source:'direct'},revision:{id:4,status:'approved',title:'采购测试项目',delivery_region:'13',expected_delivery:'15天',deadline:new Date(Date.now()+86400000).toISOString(),notes:'技术要求'},items,attachments:[]};
 const response=(data:unknown)=>new Response(JSON.stringify(data));
-beforeEach(()=>{noticeItems=false;registered=false;draftScope=false;delayedProduct=false;expandedScope=false;accountRole='merchant';notificationUnread=0;calls=[];localStorage.clear();sessionStorage.clear();vi.stubGlobal('scrollTo',vi.fn());vi.stubGlobal('fetch',withHallFixture(vi.fn(async(url:string,options?:RequestInit)=>{
+beforeEach(()=>{configureRuntime({...runtimeConfig(),capabilities:{procurement:true}});noticeItems=false;registered=false;draftScope=false;delayedProduct=false;expandedScope=false;accountRole='merchant';notificationUnread=0;failDraft=false;calls=[];localStorage.clear();sessionStorage.clear();vi.stubGlobal('scrollTo',vi.fn());vi.stubGlobal('fetch',withHallFixture(vi.fn(async(url:string,options?:RequestInit)=>{
  const method=options?.method||'GET';const data=typeof options?.body==='string'?JSON.parse(options.body):{};calls.push({url,method,data});const account={id:3,role:accountRole,phone:'13900000003',phone_verified:true,buyer_registered:registered};
  if(url.includes('/public/config'))return response({version:1,site:{name:'中企展馆',name_en:'ZQZG',web_url:'',api_url:'',media_url:''},uploads:{image_mib:10,video_mib:200,pdf_mib:50,default_quota_bytes:2147483648},capabilities:{procurement:true}});
  if(url.endsWith('/auth/me'))return response(account);
@@ -26,7 +26,7 @@ beforeEach(()=>{noticeItems=false;registered=false;draftScope=false;delayedProdu
  if(url.includes('/procurement/projects/9/messages'))return response({items:[],total:0,page:1,page_size:20});
  if(url.includes('/procurement/projects/9/draft')&&method==='PUT')return response({id:9,version:3});
  if(url.includes('/procurement/projects/9'))return response({...project,audience:expandedScope?'public':project.audience,draft_revision_id:draftScope?5:project.draft_revision_id,revision:{...project.revision,id:draftScope?5:project.revision.id,...(draftScope?{requested_audience:'designated'}:{})},requested_vendor_ids:draftScope?[3]:[],contact:(location.pathname.startsWith('/buyer')&&!location.pathname.startsWith('/merchant/opportunities'))?{name:'项目采购员',phone:'13900000003'}:null,owner:!url.includes('supplier')&&(location.pathname.startsWith('/buyer')&&!location.pathname.startsWith('/merchant/opportunities'))});
- if(url.endsWith('/procurement/projects')&&method==='POST')return response({id:9,version:1});
+ if(url.endsWith('/procurement/projects')&&method==='POST')return failDraft?new Response(JSON.stringify({error:{code:'internal_error'}}),{status:500}):response({id:9,version:1});
  if(url.includes('/procurement/notifications'))return response({items:noticeItems&&method==='GET'?[{id:2,project_id:9,title:'身份消息',kind:'message',created_at:'2026-10-23T03:00:00Z',target_scope:url.includes('scope=supplier')?'supplier':'buyer'}]:[],total:0,page:1,page_size:20,unread:notificationUnread});
  if(url.includes('/public/administrative-regions'))return response({items:[{code:'13',name:'河北省'}],selected:null});
  if(url.includes('/taxonomy'))return response({categories:[{id:101,name:'整机',parent_id:0,hall_id:1,enabled:true,selectable:true,category_kind:'product'}],regions:[],halls:[]});
@@ -83,12 +83,18 @@ it('offers same-account registration in the supplier workspace without loading m
  registered=true;accountRole='visitor';mount('/merchant/opportunities',true);
  expect(await screen.findByText('厂商商机面向已入驻厂商开放，可使用当前账号入驻，无须重新注册。')).toBeTruthy();expect(screen.getByRole('button',{name:'使用同一账号入驻厂商'})).toBeTruthy();expect(location.pathname+location.search).toBe('/merchant/opportunities');expect(calls.some(c=>c.url.includes('/merchant/dashboard'))).toBe(false);
 });
+it('routes an existing buyer from the public join entry to same-account onboarding',async()=>{
+ registered=true;accountRole='visitor';sessionStorage.setItem('zqzt.merchant.role','visitor');mount('/join',true);
+ expect(await screen.findByRole('button',{name:'使用同一账号入驻厂商'})).toBeTruthy();expect(location.pathname).toBe('/merchant');
+ expect(calls.some(c=>c.url.includes('/merchant/contents')||c.url.includes('/merchant/dashboard'))).toBe(false);
+ expect(calls.some(c=>c.method==='POST')).toBe(false);
+});
 it('closes the procurement drawer on Escape, overlay and navigation without leaving a scroll lock',async()=>{
- mount('/procurement');const toggle=screen.getByRole('button',{name:'打开采购中心导航'});await userEvent.click(toggle);expect(screen.getByRole('dialog',{name:'采购中心'})).toBeTruthy();expect(document.body.style.overflow).toBe('hidden');await userEvent.keyboard('{Escape}');expect(screen.queryByRole('dialog')).toBeNull();expect(document.body.style.overflow).toBe('');expect(document.activeElement).toBe(toggle);
+ mount('/procurement');const toggle=await screen.findByRole('button',{name:'打开采购中心导航'});await userEvent.click(toggle);expect(screen.getByRole('dialog',{name:'采购中心'})).toBeTruthy();expect(document.body.style.overflow).toBe('hidden');await userEvent.keyboard('{Escape}');expect(screen.queryByRole('dialog')).toBeNull();expect(document.body.style.overflow).toBe('');expect(document.activeElement).toBe(toggle);
  await userEvent.click(toggle);await userEvent.click(screen.getByRole('button',{name:'关闭采购导航遮罩'}));expect(screen.queryByRole('dialog')).toBeNull();await userEvent.click(toggle);await userEvent.click(within(screen.getByRole('navigation',{name:'采购中心导航'})).getByRole('link',{name:'发布采购需求'}));expect(await screen.findByRole('heading',{name:'采购商登录'})).toBeTruthy();expect(screen.queryByRole('dialog')).toBeNull();expect(document.body.style.overflow).toBe('');expect(location.pathname).toBe('/buyer/new');
 });
 it('refreshes sidebar notifications when a buyer signs in without leaving the procurement shell',async()=>{
- mount('/procurement');const nav=screen.getByRole('navigation',{name:'采购中心导航'});expect(within(nav).getByRole('link',{name:'消息通知'})).toBeTruthy();
+ mount('/procurement');const nav=await screen.findByRole('navigation',{name:'采购中心导航'});expect(within(nav).getByRole('link',{name:'消息通知'})).toBeTruthy();
  registered=true;accountRole='visitor';notificationUnread=7;sessionStorage.setItem('zqzt.merchant','buyer-session');sessionStorage.setItem('zqzt.merchant.id','3');fireEvent(window,new Event('zqzt.merchant.changed'));
  expect(await within(nav).findByRole('link',{name:'消息通知 (7)'})).toBeTruthy();sessionStorage.removeItem('zqzt.merchant');fireEvent(window,new Event('zqzt.merchant.changed'));await waitFor(()=>expect(within(nav).getByRole('link',{name:'消息通知'})).toBeTruthy());expect(within(nav).queryByRole('link',{name:'消息通知 (7)'})).toBeNull();
 });
@@ -106,8 +112,31 @@ it('offers demo account switching immediately after a buyer SMS login',async()=>
 });
 
 it('scopes notification reads and destinations to the current workspace',async()=>{
- registered=true;noticeItems=true;mount('/buyer/notifications',true);expect((await screen.findByRole('link',{name:'查看'})).getAttribute('href')).toBe('/buyer/projects/9');await userEvent.click(screen.getByRole('button',{name:'全部标为已读'}));await waitFor(()=>expect(calls.some(c=>c.url.endsWith('/notifications/read')&&c.data.scope==='buyer'&&Array.isArray(c.data.ids))).toBe(true));cleanup();mount('/merchant/opportunities/notifications',true);expect((await screen.findByRole('link',{name:'查看'})).getAttribute('href')).toBe('/merchant/opportunities/projects/9');await userEvent.click(screen.getByRole('button',{name:'全部标为已读'}));await waitFor(()=>expect(calls.some(c=>c.url.endsWith('/notifications/read')&&c.data.scope==='supplier')).toBe(true));expect(calls.some(c=>c.url.includes('/notifications?scope=supplier'))).toBe(true);
+ registered=true;noticeItems=true;mount('/buyer/notifications',true);expect((await screen.findByRole('link',{name:'查看'})).getAttribute('href')).toBe('/buyer/projects/9');await userEvent.click(screen.getByRole('button',{name:'全部标为已读'}));await waitFor(()=>expect(calls.some(c=>c.url.endsWith('/notifications/read')&&c.data.scope==='buyer'&&Array.isArray(c.data.ids))).toBe(true));cleanup();mount('/merchant/opportunities/notifications',true);expect((await screen.findByRole('link',{name:'查看'})).getAttribute('href')).toBe('/merchant/opportunities/projects/9');await userEvent.click(screen.getByRole('button',{name:'全部标为已读'}));await waitFor(()=>expect(calls.some(c=>c.url.endsWith('/notifications/read')&&c.data.scope==='supplier')).toBe(true));expect(calls.some(c=>c.url.includes('/notifications?scope=supplier'))).toBe(false);
 });
 it('resets request hall filters and pagination without a supplier menu',async()=>{
  mount('/procurement?q=tractor&hall_id=1&category_id=101&region=13&state=closing_soon&page=2');expect((await screen.findByRole('textbox',{name:'项目关键词'})) as HTMLInputElement).toHaveProperty('value','tractor');await userEvent.click(screen.getByRole('button',{name:'重置'}));await waitFor(()=>expect(location.search).toBe(''));expect(screen.getByRole('textbox',{name:'项目关键词'})).toHaveProperty('value','');expect(screen.getByRole('combobox',{name:'状态'})).toHaveProperty('value','open');expect(within(screen.getByRole('navigation',{name:'采购中心导航'})).getAllByRole('link')).toHaveLength(5);
+});
+
+
+it('protects unsaved procurement input and allows cancelling or confirming navigation',async()=>{
+ registered=true;mount('/buyer/new',true);const title=await screen.findByRole('textbox',{name:'项目名称 *'});await screen.findByDisplayValue('采购员');
+ await userEvent.type(title,'未保存采购项目');await userEvent.click(within(screen.getByRole('navigation',{name:'采购中心导航'})).getByRole('link',{name:'我的询价与需求'}));
+ let dialog=screen.getByRole('dialog',{name:'离开编辑页面？'});expect(location.pathname).toBe('/buyer/new');await userEvent.click(within(dialog).getByRole('button',{name:'继续编辑'}));expect(title).toHaveProperty('value','未保存采购项目');
+ const unload=new Event('beforeunload',{cancelable:true});window.dispatchEvent(unload);expect(unload.defaultPrevented).toBe(true);
+ await userEvent.click(screen.getByRole('link',{name:'返回'}));dialog=screen.getByRole('dialog',{name:'离开编辑页面？'});await userEvent.click(within(dialog).getByRole('button',{name:'离开页面'}));await screen.findByRole('heading',{name:'我的询价与采购需求'});expect(location.pathname).toBe('/buyer');expect(calls.some(c=>c.method!=='GET')).toBe(false);
+});
+it('does not mark async buyer and product defaults as unsaved edits',async()=>{
+ registered=true;mount('/buyer/new?product=7',true);await screen.findByDisplayValue('测试旋耕机 · 采购询价');await screen.findByDisplayValue('采购员');
+ await userEvent.click(screen.getByRole('link',{name:'返回'}));await screen.findByRole('heading',{name:'我的询价与采购需求'});expect(screen.queryByRole('dialog')).toBeNull();
+});
+it('keeps the leave protection after a failed draft save and releases it after a successful save',async()=>{
+ registered=true;failDraft=true;mount('/buyer/new',true);const title=await screen.findByRole('textbox',{name:'项目名称 *'});await screen.findByDisplayValue('采购员');await userEvent.type(title,'需要保留的输入');
+ await userEvent.click(screen.getByRole('button',{name:'保存草稿'}));await screen.findByRole('alert');await userEvent.click(screen.getByRole('link',{name:'返回'}));let dialog=screen.getByRole('dialog',{name:'离开编辑页面？'});await userEvent.click(within(dialog).getByRole('button',{name:'继续编辑'}));expect(title).toHaveProperty('value','需要保留的输入');
+ failDraft=false;await userEvent.click(screen.getByRole('button',{name:'保存草稿'}));await waitFor(()=>expect(location.pathname).toBe('/buyer/projects/9/edit'));expect(screen.queryByRole('dialog')).toBeNull();
+});
+it('tracks edits and reversions on an existing demand without a false leave warning',async()=>{
+ registered=true;mount('/buyer/projects/9/edit',true);const title=await screen.findByRole('textbox',{name:'项目名称 *'});await screen.findByDisplayValue('项目采购员');
+ fireEvent.change(title,{target:{value:'变更需求名称'}});await userEvent.click(screen.getByRole('link',{name:'返回'}));const dialog=screen.getByRole('dialog',{name:'离开编辑页面？'});await userEvent.click(within(dialog).getByRole('button',{name:'继续编辑'}));
+ fireEvent.change(title,{target:{value:'采购测试项目'}});await userEvent.click(screen.getByRole('link',{name:'返回'}));await waitFor(()=>expect(location.pathname).toBe('/buyer/projects/9'));expect(screen.queryByRole('dialog')).toBeNull();
 });

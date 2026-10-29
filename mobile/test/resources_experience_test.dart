@@ -1,3 +1,4 @@
+import 'native_field_finder.dart';
 import 'legacy_hall_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -85,12 +86,12 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(ChoiceChip), findsNWidgets(6));
+      expect(find.byType(ChoiceChip), findsNWidgets(4));
       final productTab = find.widgetWithText(ChoiceChip, '产品中心');
       await tester.ensureVisible(productTab);
       await tester.tap(productTab);
       await tester.pumpAndSettle();
-      expect(find.byType(NativeCompanyHero), findsNothing);
+      expect(find.byType(NativeCompanyHero), findsOneWidget);
       await tester.tap(find.byType(ExpansionTile));
       await tester.pumpAndSettle();
       await tester.tap(find.byType(DropdownButtonFormField<int>));
@@ -150,7 +151,7 @@ void main() {
       await tester.pump();
       expect(find.text('原图册'), findsOneWidget);
       await tester.enterText(
-        find.widgetWithText(TextField, '标题 / 图册名称'),
+        nativeField( '标题 / 图册名称'),
         '修改图册',
       );
       await tester.pump(const Duration(milliseconds: 100));

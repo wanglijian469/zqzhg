@@ -1,10 +1,11 @@
 import {useContext,useEffect,useRef,useState} from 'react';
 import {Link} from 'react-router-dom';
 import {api,body,token} from './api';
-import {useLanguage,Confirmation} from './main';
+import {useLanguage,Confirmation} from './ui';
 import {type BusinessAccount,procError,procurementErrorText} from './procurement-api';
 
-export function storeBusinessSession(result:{token:string;account:BusinessAccount}){sessionStorage.setItem('zqzt.merchant',result.token);sessionStorage.setItem('zqzt.merchant.id',String(result.account.id));sessionStorage.setItem('zqzt.merchant.role',result.account.role);window.dispatchEvent(new Event('zqzt.merchant.changed'))}
+import {storeBusinessSession} from './business-session';
+export {storeBusinessSession} from './business-session';
 export function useBusinessAccount(){
  const [account,setAccount]=useState<BusinessAccount>();const [error,setError]=useState('');const [generation,setGeneration]=useState(0);
  useEffect(()=>{const update=()=>{setAccount(undefined);setError('');setGeneration(v=>v+1)};window.addEventListener('zqzt.merchant.changed',update);return()=>window.removeEventListener('zqzt.merchant.changed',update)},[]);

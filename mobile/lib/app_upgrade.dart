@@ -191,6 +191,7 @@ class NativeCompanyHeader extends StatelessWidget {
 
 class NativeCompanyHero extends StatelessWidget {
   final Json item;
+  final bool showProducts;
   final VoidCallback onProducts, onContact;
   final String slug;
   const NativeCompanyHero({
@@ -198,6 +199,7 @@ class NativeCompanyHero extends StatelessWidget {
     required this.item,
     required this.slug,
     required this.onProducts,
+    this.showProducts = true,
     required this.onContact,
   });
   @override
@@ -223,14 +225,17 @@ class NativeCompanyHero extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              FilledButton(
-                onPressed: onProducts,
-                child: Text(m.t('viewCatalog')),
-              ),
-              OutlinedButton(
-                onPressed: onContact,
-                child: Text(m.t('showroomContact')),
-              ),
+              if (showProducts)
+                FilledButton(
+                  onPressed: onProducts,
+                  child: Text(m.t('viewCatalog')),
+                ),
+              if ((d['phone'] ?? '').toString().trim().isNotEmpty ||
+                  (d['wechat'] ?? '').toString().trim().isNotEmpty)
+                OutlinedButton(
+                  onPressed: onContact,
+                  child: Text(m.t('showroomContact')),
+                ),
               IconButton(
                 tooltip: m.t('shareShowroom'),
                 onPressed: () => push(context, ShowroomPromotion(slug: slug)),

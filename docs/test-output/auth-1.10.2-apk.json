@@ -1,0 +1,13 @@
+{
+  "sha256": "16ae75aa0a742093434bf5ea3ff1f5763ab94ca92c88719cace2200a01d4e29f",
+  "bytes": 85460938,
+  "official_downloads_unchanged": true,
+  "official_download_files": 2,
+  "https_status": 200,
+  "url": "https://zqzhg.com/acceptance/dalunongji-1.10.2-40.apk",
+  "version": "1.10.2+40",
+  "application_id": "com.zqzt.dalunongji",
+  "app_name": "大陆农机",
+  "certificate_sha256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+  "device_validation": false
+}

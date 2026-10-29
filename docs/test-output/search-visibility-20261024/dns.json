@@ -1,0 +1,123 @@
+{
+  "timeZone": "Asia/Shanghai",
+  "queries": [
+    {
+      "name": "zqzhg.com",
+      "response": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [
+          {
+            "name": "zqzhg.com.",
+            "type": 1
+          }
+        ],
+        "Authority": [
+          {
+            "name": "zqzhg.com.",
+            "type": 6,
+            "TTL": 600,
+            "data": "dns29.hichina.com. hostmaster.hichina.com. 2026101514 3600 1200 86400 600"
+          }
+        ],
+        "Comment": "Response from 139.224.142.99."
+      },
+      "type": "A",
+      "provider": "Google Public DNS"
+    },
+    {
+      "name": "zqzhg.com",
+      "response": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [
+          {
+            "name": "zqzhg.com.",
+            "type": 28
+          }
+        ],
+        "Authority": [
+          {
+            "name": "zqzhg.com.",
+            "type": 6,
+            "TTL": 600,
+            "data": "dns29.hichina.com. hostmaster.hichina.com. 2026101514 3600 1200 86400 600"
+          }
+        ],
+        "Comment": "Response from 47.118.199.221."
+      },
+      "type": "AAAA",
+      "provider": "Google Public DNS"
+    },
+    {
+      "name": "zqzhg.com",
+      "response": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [
+          {
+            "name": "zqzhg.com.",
+            "type": 2
+          }
+        ],
+        "Answer": [
+          {
+            "name": "zqzhg.com.",
+            "type": 2,
+            "TTL": 21600,
+            "data": "dns30.hichina.com."
+          },
+          {
+            "name": "zqzhg.com.",
+            "type": 2,
+            "TTL": 21600,
+            "data": "dns29.hichina.com."
+          }
+        ],
+        "Comment": "Response from 120.76.107.59."
+      },
+      "type": "NS",
+      "provider": "Google Public DNS"
+    },
+    {
+      "name": "zqzhg.com",
+      "response": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [
+          {
+            "name": "zqzhg.com",
+            "type": 1
+          }
+        ],
+        "Authority": [
+          {
+            "name": "zqzhg.com",
+            "type": 6,
+            "TTL": 600,
+            "data": "dns29.hichina.com. hostmaster.hichina.com. 2026101514 3600 1200 86400 600"
+          }
+        ]
+      },
+      "type": "A",
+      "provider": "Cloudflare DNS"
+    }
+  ],
+  "checkedAt": "2026-10-24T14:20:28.4828515+00:00"
+}

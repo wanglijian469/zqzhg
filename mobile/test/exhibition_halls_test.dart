@@ -27,10 +27,7 @@ void main() {
       final m = await nav.fixture(signed: false, calls: calls);
       await tester.pumpWidget(nav.harness(m));
       await tester.pumpAndSettle();
-      expect(
-        tester.getCenter(find.text('农业机械厅')).dy,
-        closeTo(tester.getCenter(find.text('中企展馆')).dy, 5),
-      );
+      expect(find.text('中企展馆-农业机械厅'), findsOneWidget);
       expect(find.byType(ChoiceChip), findsNothing);
       expect(find.text('农业机械'), findsNothing);
       expect(find.text('农机配件'), findsNothing);
@@ -99,11 +96,11 @@ void main() {
       await tester.enterText(find.byType(TextField).first, '440');
       await tester.testTextInput.receiveAction(TextInputAction.search);
       await tester.pumpAndSettle();
-      await nav.tap(tester, find.byType(ExpansionTile).first);
-      tester
-          .widget<DropdownButton<int>>(find.byType(DropdownButton<int>).first)
-          .onChanged!(1);
-      await tester.pumpAndSettle();
+      await nav.tap(
+        tester,
+        find.byKey(const ValueKey('browse-category-filter')),
+      );
+      await nav.tap(tester, find.text('农业机械').last);
       await nav.tap(tester, find.text('下一页'));
       final controller = tester
           .widget<CustomScrollView>(find.byType(CustomScrollView).last)

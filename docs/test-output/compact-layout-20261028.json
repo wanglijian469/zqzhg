@@ -1,0 +1,162 @@
+{
+  "checks": [
+    {
+      "width": 360,
+      "lang": "zh",
+      "path": "/browse",
+      "formTop": 196.78125,
+      "headerBottom": 64,
+      "crumbHeight": 0,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "path": "/browse/products",
+      "formTop": 175.984375,
+      "headerBottom": 64,
+      "crumbHeight": 0,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "path": "/browse",
+      "formTop": 249.96875,
+      "headerBottom": 64,
+      "crumbHeight": 0,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "path": "/browse/products",
+      "formTop": 196.78125,
+      "headerBottom": 64,
+      "crumbHeight": 0,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "path": "/browse",
+      "formTop": 175.984375,
+      "headerBottom": 64,
+      "crumbHeight": 0,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "path": "/browse/products",
+      "formTop": 175.984375,
+      "headerBottom": 64,
+      "crumbHeight": 0,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "path": "/browse",
+      "formTop": 229.171875,
+      "headerBottom": 64,
+      "crumbHeight": 0,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "path": "/browse/products",
+      "formTop": 196.78125,
+      "headerBottom": 64,
+      "crumbHeight": 0,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "path": "/browse",
+      "formTop": 238.78125,
+      "headerBottom": 80,
+      "crumbHeight": 33.5,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "path": "/browse/products",
+      "formTop": 216.390625,
+      "headerBottom": 80,
+      "crumbHeight": 33.5,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "path": "/browse",
+      "formTop": 238.78125,
+      "headerBottom": 80,
+      "crumbHeight": 33.5,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "path": "/browse/products",
+      "formTop": 238.78125,
+      "headerBottom": 80,
+      "crumbHeight": 33.5,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "path": "/browse",
+      "formTop": 216.390625,
+      "headerBottom": 80,
+      "crumbHeight": 33.5,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 1440,
+      "lang": "zh",
+      "path": "/browse/products",
+      "formTop": 216.390625,
+      "headerBottom": 80,
+      "crumbHeight": 33.5,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "path": "/browse",
+      "formTop": 216.390625,
+      "headerBottom": 80,
+      "crumbHeight": 33.5,
+      "crumbPosition": "static"
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "path": "/browse/products",
+      "formTop": 216.390625,
+      "headerBottom": 80,
+      "crumbHeight": 33.5,
+      "crumbPosition": "static"
+    }
+  ],
+  "errors": [],
+  "viewports": [
+    360,
+    390,
+    768,
+    1440
+  ],
+  "languages": [
+    "zh",
+    "en"
+  ],
+  "pages": 4,
+  "productionWrites": false,
+  "isolatedDatabase": true
+}

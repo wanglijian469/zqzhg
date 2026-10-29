@@ -1,0 +1,65 @@
+{
+  "base": "http://localhost:8080",
+  "serviceMode": "free_display",
+  "defaultFreeStorageBytes": 200000000,
+  "publicVendorsBefore": 11,
+  "publicVendorsAfter": 11,
+  "publicProductsBefore": 46,
+  "publicProductsAfter": 46,
+  "oldAddressVerified": true,
+  "appNumber": "",
+  "policeNumber": "",
+  "layouts": [
+    {
+      "width": 390,
+      "path": "/"
+    },
+    {
+      "width": 390,
+      "path": "/services"
+    },
+    {
+      "width": 390,
+      "path": "/services/privacy"
+    },
+    {
+      "width": 390,
+      "path": "/service-requests"
+    },
+    {
+      "width": 390,
+      "path": "/join"
+    },
+    {
+      "width": 390,
+      "path": "/regions"
+    },
+    {
+      "width": 1440,
+      "path": "/"
+    },
+    {
+      "width": 1440,
+      "path": "/services"
+    },
+    {
+      "width": 1440,
+      "path": "/services/privacy"
+    },
+    {
+      "width": 1440,
+      "path": "/service-requests"
+    },
+    {
+      "width": 1440,
+      "path": "/join"
+    },
+    {
+      "width": 1440,
+      "path": "/regions"
+    }
+  ],
+  "errors": [],
+  "userContentWrites": false,
+  "productionDeployed": false
+}

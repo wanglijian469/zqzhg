@@ -1,0 +1,3456 @@
+{
+  "measuredAt": "2026-10-26",
+  "fixture": "Disposable MySQL databases; deterministic textured 2048x1280 images, transparent logo, 12 vendors and 24 products; no business records used",
+  "network": {
+    "downloadMbps": 1.6,
+    "latencyMs": 150,
+    "runsPerPage": 5
+  },
+  "viewports": [
+    390,
+    768,
+    1440
+  ],
+  "casesPerVersion": 40,
+  "pages": [
+    {
+      "page": "home",
+      "name": "首页",
+      "mobileImageBytesBefore": 7309236,
+      "mobileImageBytesAfter": 141154,
+      "imageReductionPercent": 98.07,
+      "weakLCPBeforeMs": 41114,
+      "weakLCPAfterMs": 2987.900000002235,
+      "weakLCPImprovementPercent": 92.73,
+      "warmImageStatuses": [
+        304,
+        304,
+        304,
+        304
+      ]
+    },
+    {
+      "page": "vendors",
+      "name": "厂商列表",
+      "mobileImageBytesBefore": 7309236,
+      "mobileImageBytesAfter": 54772,
+      "imageReductionPercent": 99.25,
+      "weakLCPBeforeMs": 1913.6000000014901,
+      "weakLCPAfterMs": 663.7999999970198,
+      "weakLCPImprovementPercent": 65.31,
+      "warmImageStatuses": [
+        304,
+        304,
+        304,
+        304,
+        304
+      ]
+    },
+    {
+      "page": "products",
+      "name": "产品列表",
+      "mobileImageBytesBefore": 25571,
+      "mobileImageBytesAfter": 16672,
+      "imageReductionPercent": 34.8,
+      "weakLCPBeforeMs": 1926.800000000745,
+      "weakLCPAfterMs": 672.5,
+      "weakLCPImprovementPercent": 65.1,
+      "warmImageStatuses": [
+        304
+      ]
+    },
+    {
+      "page": "showroom",
+      "name": "企业展厅",
+      "mobileImageBytesBefore": 2585405,
+      "mobileImageBytesAfter": 124425,
+      "imageReductionPercent": 95.19,
+      "weakLCPBeforeMs": 17333.39999999851,
+      "weakLCPAfterMs": 2662.699999999255,
+      "weakLCPImprovementPercent": 84.64,
+      "warmImageStatuses": [
+        304,
+        304
+      ]
+    },
+    {
+      "page": "product",
+      "name": "产品详情",
+      "mobileImageBytesBefore": 8626193,
+      "mobileImageBytesAfter": 100393,
+      "imageReductionPercent": 98.84,
+      "weakLCPBeforeMs": 47519.29999999702,
+      "weakLCPAfterMs": 2414.699999999255,
+      "weakLCPImprovementPercent": 94.92,
+      "warmImageStatuses": [
+        304,
+        304,
+        304,
+        304,
+        304,
+        304
+      ]
+    }
+  ],
+  "aggregateImageReductionPercent": 96.51,
+  "maxCLS": 0.03065561154637543,
+  "gzipAssets": 24,
+  "firstColdHomeImageResponses": [
+    {
+      "status": 200,
+      "cache": false,
+      "url": "http://127.0.0.1:52107/media/6?w=480",
+      "ttfbMs": 155.448
+    },
+    {
+      "status": 200,
+      "cache": false,
+      "url": "http://127.0.0.1:52107/media/7?w=240",
+      "ttfbMs": 160.127
+    },
+    {
+      "status": 200,
+      "cache": false,
+      "url": "http://127.0.0.1:52107/media/1?w=960",
+      "ttfbMs": 193.552
+    },
+    {
+      "status": 200,
+      "cache": false,
+      "url": "http://127.0.0.1:52107/media/5?w=480",
+      "ttfbMs": 304.119
+    }
+  ],
+  "baseline": {
+    "mode": "baseline",
+    "network": {
+      "downloadMbps": 1.6,
+      "latencyMs": 150
+    },
+    "rows": [
+      {
+        "page": "home",
+        "width": 390,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 589.2000000029802,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7309236,
+          "totalBytes": 8070850,
+          "imageRequests": 8
+        },
+        "warm": {
+          "lcp": 182.80000000074506,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7309236,
+          "totalBytes": 7353893,
+          "imageRequests": 8,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "vendors",
+        "width": 390,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 60.79999999701977,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7309236,
+          "totalBytes": 8073839,
+          "imageRequests": 8
+        },
+        "warm": {
+          "lcp": 41.5,
+          "cls": 0,
+          "imageBytes": 7309236,
+          "totalBytes": 7356882,
+          "imageRequests": 8,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "products",
+        "width": 390,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 183.70000000298023,
+          "cls": 0.29103703703703704,
+          "imageBytes": 25571,
+          "totalBytes": 792078,
+          "imageRequests": 1
+        },
+        "warm": {
+          "lcp": 101.5,
+          "cls": 0.29103703703703704,
+          "imageBytes": 25571,
+          "totalBytes": 75121,
+          "imageRequests": 1,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "showroom",
+        "width": 390,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 191.39999999850988,
+          "cls": 0,
+          "imageBytes": 2585405,
+          "totalBytes": 3372060,
+          "imageRequests": 9
+        },
+        "warm": {
+          "lcp": 91.29999999701977,
+          "cls": 0,
+          "imageBytes": 2585405,
+          "totalBytes": 2655103,
+          "imageRequests": 9,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "product",
+        "width": 390,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 184.20000000298023,
+          "cls": 0.33743209302785687,
+          "imageBytes": 8626193,
+          "totalBytes": 9410746,
+          "imageRequests": 12
+        },
+        "warm": {
+          "lcp": 114.19999999925494,
+          "cls": 0.33743209302785687,
+          "imageBytes": 8626193,
+          "totalBytes": 8693789,
+          "imageRequests": 12,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "home",
+        "width": 768,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 200.30000000074506,
+          "cls": 0.1994357638888889,
+          "imageBytes": 7309236,
+          "totalBytes": 8070850,
+          "imageRequests": 8
+        },
+        "warm": {
+          "lcp": 121.10000000149012,
+          "cls": 0.1994357638888889,
+          "imageBytes": 7309236,
+          "totalBytes": 7353893,
+          "imageRequests": 8,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "vendors",
+        "width": 768,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 182.59999999776483,
+          "cls": 0.17580816575038583,
+          "imageBytes": 7309236,
+          "totalBytes": 8073839,
+          "imageRequests": 8
+        },
+        "warm": {
+          "lcp": 58.19999999925494,
+          "cls": 0.17580816575038583,
+          "imageBytes": 7309236,
+          "totalBytes": 7356882,
+          "imageRequests": 8,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "products",
+        "width": 768,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 193.19999999925494,
+          "cls": 0.1994357638888889,
+          "imageBytes": 25571,
+          "totalBytes": 792078,
+          "imageRequests": 1
+        },
+        "warm": {
+          "lcp": 83,
+          "cls": 0,
+          "imageBytes": 25571,
+          "totalBytes": 75121,
+          "imageRequests": 1,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "showroom",
+        "width": 768,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 179.70000000298023,
+          "cls": 0,
+          "imageBytes": 2585405,
+          "totalBytes": 3372060,
+          "imageRequests": 9
+        },
+        "warm": {
+          "lcp": 112.30000000074506,
+          "cls": 0,
+          "imageBytes": 2585405,
+          "totalBytes": 2655103,
+          "imageRequests": 9,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "product",
+        "width": 768,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 187.69999999925494,
+          "cls": 0.17550309521082497,
+          "imageBytes": 7435962,
+          "totalBytes": 8220515,
+          "imageRequests": 12
+        },
+        "warm": {
+          "lcp": 127.5,
+          "cls": 0.1863502571514114,
+          "imageBytes": 7435962,
+          "totalBytes": 7503558,
+          "imageRequests": 12,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "home",
+        "width": 1440,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 234,
+          "cls": 0.19918055555555556,
+          "imageBytes": 7309236,
+          "totalBytes": 8070850,
+          "imageRequests": 8
+        },
+        "warm": {
+          "lcp": 128.10000000149012,
+          "cls": 0,
+          "imageBytes": 7309236,
+          "totalBytes": 7353893,
+          "imageRequests": 8,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "vendors",
+        "width": 1440,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 272,
+          "cls": 0.09850965410397376,
+          "imageBytes": 7309236,
+          "totalBytes": 8073839,
+          "imageRequests": 8
+        },
+        "warm": {
+          "lcp": 114,
+          "cls": 0,
+          "imageBytes": 7309236,
+          "totalBytes": 7356882,
+          "imageRequests": 8,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "products",
+        "width": 1440,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 187.30000000074506,
+          "cls": 0.09795637478298612,
+          "imageBytes": 25571,
+          "totalBytes": 792078,
+          "imageRequests": 1
+        },
+        "warm": {
+          "lcp": 103.10000000149012,
+          "cls": 0,
+          "imageBytes": 25571,
+          "totalBytes": 75121,
+          "imageRequests": 1,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "showroom",
+        "width": 1440,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 181.30000000074506,
+          "cls": 0,
+          "imageBytes": 2585405,
+          "totalBytes": 3372060,
+          "imageRequests": 9
+        },
+        "warm": {
+          "lcp": 93.29999999701977,
+          "cls": 0,
+          "imageBytes": 2585405,
+          "totalBytes": 2655103,
+          "imageRequests": 9,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "product",
+        "width": 1440,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 176.80000000074506,
+          "cls": 0.18676578462912058,
+          "imageBytes": 7435962,
+          "totalBytes": 8220515,
+          "imageRequests": 12
+        },
+        "warm": {
+          "lcp": 120.10000000149012,
+          "cls": 0.17110935570987654,
+          "imageBytes": 7435962,
+          "totalBytes": 7503558,
+          "imageRequests": 12,
+          "statuses": [
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            },
+            {
+              "status": 200,
+              "cache": false
+            }
+          ]
+        }
+      },
+      {
+        "page": "home",
+        "width": 390,
+        "weak": true,
+        "index": 0,
+        "cold": {
+          "lcp": 41086.300000000745,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7283665,
+          "totalBytes": 8045279,
+          "imageRequests": 7
+        },
+        "warm": null
+      },
+      {
+        "page": "vendors",
+        "width": 390,
+        "weak": true,
+        "index": 0,
+        "cold": {
+          "lcp": 1922.3999999985099,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7309236,
+          "totalBytes": 8073839,
+          "imageRequests": 8
+        },
+        "warm": null
+      },
+      {
+        "page": "products",
+        "width": 390,
+        "weak": true,
+        "index": 0,
+        "cold": {
+          "lcp": 1942,
+          "cls": 0.29103703703703704,
+          "imageBytes": 25571,
+          "totalBytes": 792078,
+          "imageRequests": 1
+        },
+        "warm": null
+      },
+      {
+        "page": "showroom",
+        "width": 390,
+        "weak": true,
+        "index": 0,
+        "cold": {
+          "lcp": 17354.699999999255,
+          "cls": 0,
+          "imageBytes": 2585405,
+          "totalBytes": 3372060,
+          "imageRequests": 9
+        },
+        "warm": null
+      },
+      {
+        "page": "product",
+        "width": 390,
+        "weak": true,
+        "index": 0,
+        "cold": {
+          "lcp": 47501.099999997765,
+          "cls": 0.33743209302785687,
+          "imageBytes": 8626193,
+          "totalBytes": 9410746,
+          "imageRequests": 12
+        },
+        "warm": null
+      },
+      {
+        "page": "home",
+        "width": 390,
+        "weak": true,
+        "index": 1,
+        "cold": {
+          "lcp": 41083.39999999851,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7283665,
+          "totalBytes": 8045279,
+          "imageRequests": 7
+        },
+        "warm": null
+      },
+      {
+        "page": "vendors",
+        "width": 390,
+        "weak": true,
+        "index": 1,
+        "cold": {
+          "lcp": 1907.7000000029802,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7309236,
+          "totalBytes": 8073839,
+          "imageRequests": 8
+        },
+        "warm": null
+      },
+      {
+        "page": "products",
+        "width": 390,
+        "weak": true,
+        "index": 1,
+        "cold": {
+          "lcp": 1931.199999999255,
+          "cls": 0.29103703703703704,
+          "imageBytes": 25571,
+          "totalBytes": 792078,
+          "imageRequests": 1
+        },
+        "warm": null
+      },
+      {
+        "page": "showroom",
+        "width": 390,
+        "weak": true,
+        "index": 1,
+        "cold": {
+          "lcp": 17328.099999997765,
+          "cls": 0,
+          "imageBytes": 2585405,
+          "totalBytes": 3372060,
+          "imageRequests": 9
+        },
+        "warm": null
+      },
+      {
+        "page": "product",
+        "width": 390,
+        "weak": true,
+        "index": 1,
+        "cold": {
+          "lcp": 47520.599999997765,
+          "cls": 0.33743209302785687,
+          "imageBytes": 8626193,
+          "totalBytes": 9410746,
+          "imageRequests": 12
+        },
+        "warm": null
+      },
+      {
+        "page": "home",
+        "width": 390,
+        "weak": true,
+        "index": 2,
+        "cold": {
+          "lcp": 41114,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7283665,
+          "totalBytes": 8045279,
+          "imageRequests": 7
+        },
+        "warm": null
+      },
+      {
+        "page": "vendors",
+        "width": 390,
+        "weak": true,
+        "index": 2,
+        "cold": {
+          "lcp": 1913.6000000014901,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7309236,
+          "totalBytes": 8073839,
+          "imageRequests": 8
+        },
+        "warm": null
+      },
+      {
+        "page": "products",
+        "width": 390,
+        "weak": true,
+        "index": 2,
+        "cold": {
+          "lcp": 1926.800000000745,
+          "cls": 0.29103703703703704,
+          "imageBytes": 25571,
+          "totalBytes": 792078,
+          "imageRequests": 1
+        },
+        "warm": null
+      },
+      {
+        "page": "showroom",
+        "width": 390,
+        "weak": true,
+        "index": 2,
+        "cold": {
+          "lcp": 17356.39999999851,
+          "cls": 0,
+          "imageBytes": 2585405,
+          "totalBytes": 3372060,
+          "imageRequests": 9
+        },
+        "warm": null
+      },
+      {
+        "page": "product",
+        "width": 390,
+        "weak": true,
+        "index": 2,
+        "cold": {
+          "lcp": 47493.199999999255,
+          "cls": 0.33743209302785687,
+          "imageBytes": 8626193,
+          "totalBytes": 9410746,
+          "imageRequests": 12
+        },
+        "warm": null
+      },
+      {
+        "page": "home",
+        "width": 390,
+        "weak": true,
+        "index": 3,
+        "cold": {
+          "lcp": 41137.699999999255,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7283665,
+          "totalBytes": 8045279,
+          "imageRequests": 7
+        },
+        "warm": null
+      },
+      {
+        "page": "vendors",
+        "width": 390,
+        "weak": true,
+        "index": 3,
+        "cold": {
+          "lcp": 1915.199999999255,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7309236,
+          "totalBytes": 8073839,
+          "imageRequests": 8
+        },
+        "warm": null
+      },
+      {
+        "page": "products",
+        "width": 390,
+        "weak": true,
+        "index": 3,
+        "cold": {
+          "lcp": 1908.5,
+          "cls": 0.29103703703703704,
+          "imageBytes": 25571,
+          "totalBytes": 792078,
+          "imageRequests": 1
+        },
+        "warm": null
+      },
+      {
+        "page": "showroom",
+        "width": 390,
+        "weak": true,
+        "index": 3,
+        "cold": {
+          "lcp": 17294.400000002235,
+          "cls": 0,
+          "imageBytes": 2585405,
+          "totalBytes": 3372060,
+          "imageRequests": 9
+        },
+        "warm": null
+      },
+      {
+        "page": "product",
+        "width": 390,
+        "weak": true,
+        "index": 3,
+        "cold": {
+          "lcp": 47519.29999999702,
+          "cls": 0.33743209302785687,
+          "imageBytes": 8626193,
+          "totalBytes": 9410746,
+          "imageRequests": 12
+        },
+        "warm": null
+      },
+      {
+        "page": "home",
+        "width": 390,
+        "weak": true,
+        "index": 4,
+        "cold": {
+          "lcp": 41154.300000000745,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7283665,
+          "totalBytes": 8045279,
+          "imageRequests": 7
+        },
+        "warm": null
+      },
+      {
+        "page": "vendors",
+        "width": 390,
+        "weak": true,
+        "index": 4,
+        "cold": {
+          "lcp": 1905.699999999255,
+          "cls": 0.29103703703703704,
+          "imageBytes": 7309236,
+          "totalBytes": 8073839,
+          "imageRequests": 8
+        },
+        "warm": null
+      },
+      {
+        "page": "products",
+        "width": 390,
+        "weak": true,
+        "index": 4,
+        "cold": {
+          "lcp": 1915.5999999977648,
+          "cls": 0.29103703703703704,
+          "imageBytes": 25571,
+          "totalBytes": 792078,
+          "imageRequests": 1
+        },
+        "warm": null
+      },
+      {
+        "page": "showroom",
+        "width": 390,
+        "weak": true,
+        "index": 4,
+        "cold": {
+          "lcp": 17333.39999999851,
+          "cls": 0,
+          "imageBytes": 2585405,
+          "totalBytes": 3372060,
+          "imageRequests": 9
+        },
+        "warm": null
+      },
+      {
+        "page": "product",
+        "width": 390,
+        "weak": true,
+        "index": 4,
+        "cold": {
+          "lcp": 47520.60000000149,
+          "cls": 0.33743209302785687,
+          "imageBytes": 8626193,
+          "totalBytes": 9410746,
+          "imageRequests": 12
+        },
+        "warm": null
+      }
+    ],
+    "errors": []
+  },
+  "optimized": {
+    "mode": "optimized",
+    "network": {
+      "downloadMbps": 1.6,
+      "latencyMs": 150
+    },
+    "rows": [
+      {
+        "page": "home",
+        "width": 390,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 745.5999999977648,
+          "cls": 0.009925925925925927,
+          "imageBytes": 141154,
+          "totalBytes": 403248,
+          "imageRequests": 4,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 155.448
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 160.127
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 193.552
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 304.119
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 156.30000000074506,
+          "cls": 0.009925925925925927,
+          "imageBytes": 948,
+          "totalBytes": 45602,
+          "imageRequests": 4,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 4.983
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 4.759
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 4.911
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 5.553
+            }
+          ]
+        }
+      },
+      {
+        "page": "vendors",
+        "width": 390,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 147.10000000149012,
+          "cls": 0.0036019393004115227,
+          "imageBytes": 54772,
+          "totalBytes": 319858,
+          "imageRequests": 5,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 5.571
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 6.822
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 8.706
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=240",
+              "ttfbMs": 166.889
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 185.861
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 56.19999999925494,
+          "cls": 0.0036019393004115227,
+          "imageBytes": 1185,
+          "totalBytes": 48831,
+          "imageRequests": 5,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 6.39
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=240",
+              "ttfbMs": 6.302
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 7.072
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 8.508
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 14.348
+            }
+          ]
+        }
+      },
+      {
+        "page": "products",
+        "width": 390,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 203.30000000074506,
+          "cls": 0.006976754115226338,
+          "imageBytes": 16672,
+          "totalBytes": 283661,
+          "imageRequests": 1,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 4.565
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 109.10000000149012,
+          "cls": 0.006976754115226338,
+          "imageBytes": 237,
+          "totalBytes": 49786,
+          "imageRequests": 1,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 3.967
+            }
+          ]
+        }
+      },
+      {
+        "page": "showroom",
+        "width": 390,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 186.5,
+          "cls": 0,
+          "imageBytes": 124425,
+          "totalBytes": 411623,
+          "imageRequests": 3,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 4.008
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 4.478
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 3.503
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 87.39999999850988,
+          "cls": 0,
+          "imageBytes": 474,
+          "totalBytes": 70232,
+          "imageRequests": 2,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 5.417
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 4.595
+            }
+          ]
+        }
+      },
+      {
+        "page": "product",
+        "width": 390,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 170.39999999850988,
+          "cls": 0.03065561154637543,
+          "imageBytes": 100393,
+          "totalBytes": 385777,
+          "imageRequests": 6,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 5.769
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 7.65
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 8.433
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 11.122
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=480",
+              "ttfbMs": 185.532
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 188.602
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 74.10000000149012,
+          "cls": 0.029999747348844568,
+          "imageBytes": 1422,
+          "totalBytes": 69366,
+          "imageRequests": 6,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 6.182
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=480",
+              "ttfbMs": 6.603
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 6.74
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 7.821
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 9.041
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 10.302
+            }
+          ]
+        }
+      },
+      {
+        "page": "home",
+        "width": 768,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 197.69999999925494,
+          "cls": 0.000007899305555555555,
+          "imageBytes": 141154,
+          "totalBytes": 403248,
+          "imageRequests": 4,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 4.476
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 5.025
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 5.151
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 5.606
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 110.09999999776483,
+          "cls": 0.000007899305555555555,
+          "imageBytes": 948,
+          "totalBytes": 45602,
+          "imageRequests": 4,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 5.061
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 4.953
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 6.742
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 6.33
+            }
+          ]
+        }
+      },
+      {
+        "page": "vendors",
+        "width": 768,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 132.80000000074506,
+          "cls": 0.000007899305555555555,
+          "imageBytes": 38009,
+          "totalBytes": 303095,
+          "imageRequests": 4,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 4.484
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 4.776
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 4.895
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=240",
+              "ttfbMs": 6.773
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 58.69999999925494,
+          "cls": 0.000007899305555555555,
+          "imageBytes": 948,
+          "totalBytes": 48594,
+          "imageRequests": 4,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 4.006
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 5.432
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=240",
+              "ttfbMs": 5.054
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 5.746
+            }
+          ]
+        }
+      },
+      {
+        "page": "products",
+        "width": 768,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 193.5,
+          "cls": 0.000007899305555555555,
+          "imageBytes": 16672,
+          "totalBytes": 283661,
+          "imageRequests": 1,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 4.534
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 87.40000000223517,
+          "cls": 0.000007899305555555555,
+          "imageBytes": 237,
+          "totalBytes": 49786,
+          "imageRequests": 1,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 3.629
+            }
+          ]
+        }
+      },
+      {
+        "page": "showroom",
+        "width": 768,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 146.30000000074506,
+          "cls": 0,
+          "imageBytes": 124425,
+          "totalBytes": 411623,
+          "imageRequests": 3,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 5.167
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 4.823
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 4.285
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 92.39999999850988,
+          "cls": 0,
+          "imageBytes": 711,
+          "totalBytes": 70469,
+          "imageRequests": 3,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 3.679
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 4.404
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 3.899
+            }
+          ]
+        }
+      },
+      {
+        "page": "product",
+        "width": 768,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 362.30000000074506,
+          "cls": 0.01833352538057806,
+          "imageBytes": 740735,
+          "totalBytes": 1026119,
+          "imageRequests": 12,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 5.042
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=480",
+              "ttfbMs": 5.576
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 6.867
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 6.036
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 8.134
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 8.836
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 4.795
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=960",
+              "ttfbMs": 192.553
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=960",
+              "ttfbMs": 194.215
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=960",
+              "ttfbMs": 370.871
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=960",
+              "ttfbMs": 372.862
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=960",
+              "ttfbMs": 542.857
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 87.30000000074506,
+          "cls": 0.018325626075022503,
+          "imageBytes": 2844,
+          "totalBytes": 70788,
+          "imageRequests": 12,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 5.799
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=480",
+              "ttfbMs": 6.365
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 6.758
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 6.286
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 17.132
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 17.61
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 3.814
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=960",
+              "ttfbMs": 5.679
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=960",
+              "ttfbMs": 5.862
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=960",
+              "ttfbMs": 6.497
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=960",
+              "ttfbMs": 7.423
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=960",
+              "ttfbMs": 8.488
+            }
+          ]
+        }
+      },
+      {
+        "page": "home",
+        "width": 1440,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 204.89999999850988,
+          "cls": 0.000002633101851851852,
+          "imageBytes": 174708,
+          "totalBytes": 436802,
+          "imageRequests": 6,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 4.606
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 4.75
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 6.001
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 6.233
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 6.306
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 8.34
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 157.70000000298023,
+          "cls": 0.000002633101851851852,
+          "imageBytes": 1422,
+          "totalBytes": 46076,
+          "imageRequests": 6,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 4.508
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 5.862
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 6.57
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 6.347
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 7.548
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 10.591
+            }
+          ]
+        }
+      },
+      {
+        "page": "vendors",
+        "width": 1440,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 211.29999999701977,
+          "cls": 0.000002633101851851852,
+          "imageBytes": 71563,
+          "totalBytes": 336649,
+          "imageRequests": 6,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 5.137
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 6.108
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 6.342
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 5.976
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=240",
+              "ttfbMs": 8.693
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 7.711
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 102.80000000074506,
+          "cls": 0.000002633101851851852,
+          "imageBytes": 1422,
+          "totalBytes": 49068,
+          "imageRequests": 6,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 5.657
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 5.999
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=240",
+              "ttfbMs": 6.083
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 6.718
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 6.949
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 8.131
+            }
+          ]
+        }
+      },
+      {
+        "page": "products",
+        "width": 1440,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 195.19999999925494,
+          "cls": 0.000002633101851851852,
+          "imageBytes": 16672,
+          "totalBytes": 283661,
+          "imageRequests": 1,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 4.894
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 111.5,
+          "cls": 0.000002633101851851852,
+          "imageBytes": 237,
+          "totalBytes": 49786,
+          "imageRequests": 1,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 4.3
+            }
+          ]
+        }
+      },
+      {
+        "page": "showroom",
+        "width": 1440,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 154,
+          "cls": 0,
+          "imageBytes": 124425,
+          "totalBytes": 411623,
+          "imageRequests": 3,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 5.044
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 3.761
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 3.792
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 94.10000000149012,
+          "cls": 0,
+          "imageBytes": 711,
+          "totalBytes": 70469,
+          "imageRequests": 3,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 3.846
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 4.337
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 4.337
+            }
+          ]
+        }
+      },
+      {
+        "page": "product",
+        "width": 1440,
+        "weak": false,
+        "index": 0,
+        "cold": {
+          "lcp": 184.5,
+          "cls": 0.011127088641466264,
+          "imageBytes": 740735,
+          "totalBytes": 1026119,
+          "imageRequests": 12,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 5.796
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=480",
+              "ttfbMs": 6.132
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 7.57
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 7.082
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 8.068
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 8.418
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 3.972
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=960",
+              "ttfbMs": 6.122
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=960",
+              "ttfbMs": 6.735
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=960",
+              "ttfbMs": 7.279
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=960",
+              "ttfbMs": 7.645
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=960",
+              "ttfbMs": 8.078
+            }
+          ]
+        },
+        "warm": {
+          "lcp": 89.60000000149012,
+          "cls": 0.011124455539614412,
+          "imageBytes": 2844,
+          "totalBytes": 70788,
+          "imageRequests": 12,
+          "statuses": [
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 5.222
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=480",
+              "ttfbMs": 5.968
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 6.81
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 7.249
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 8.52
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 12.829
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 4.381
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=960",
+              "ttfbMs": 5.667
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=960",
+              "ttfbMs": 5.969
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=960",
+              "ttfbMs": 6.866
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=960",
+              "ttfbMs": 7.914
+            },
+            {
+              "status": 304,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=960",
+              "ttfbMs": 12.04
+            }
+          ]
+        }
+      },
+      {
+        "page": "home",
+        "width": 390,
+        "weak": true,
+        "index": 0,
+        "cold": {
+          "lcp": 2980.89999999851,
+          "cls": 0.009925925925925927,
+          "imageBytes": 141154,
+          "totalBytes": 403248,
+          "imageRequests": 4,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 175.718
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 177.523
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 177.444
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 192.9
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "vendors",
+        "width": 390,
+        "weak": true,
+        "index": 0,
+        "cold": {
+          "lcp": 669.1000000014901,
+          "cls": 0.0036019393004115227,
+          "imageBytes": 54772,
+          "totalBytes": 319858,
+          "imageRequests": 5,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 173.086
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 173.005
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 177.605
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=240",
+              "ttfbMs": 187.946
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 202.674
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "products",
+        "width": 390,
+        "weak": true,
+        "index": 0,
+        "cold": {
+          "lcp": 672.5,
+          "cls": 0.006976754115226338,
+          "imageBytes": 16672,
+          "totalBytes": 283661,
+          "imageRequests": 1,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 166.769
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "showroom",
+        "width": 390,
+        "weak": true,
+        "index": 0,
+        "cold": {
+          "lcp": 2688.800000000745,
+          "cls": 0,
+          "imageBytes": 124425,
+          "totalBytes": 411623,
+          "imageRequests": 3,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 166.542
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 176.311
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 176.198
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "product",
+        "width": 390,
+        "weak": true,
+        "index": 0,
+        "cold": {
+          "lcp": 2408.7999999970198,
+          "cls": 0.03065561154637543,
+          "imageBytes": 100393,
+          "totalBytes": 385777,
+          "imageRequests": 6,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 170.62
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=480",
+              "ttfbMs": 170.593
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 184.895
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 185.553
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 185.602
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 174.58
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "home",
+        "width": 390,
+        "weak": true,
+        "index": 1,
+        "cold": {
+          "lcp": 2988.60000000149,
+          "cls": 0.009925925925925927,
+          "imageBytes": 141154,
+          "totalBytes": 403248,
+          "imageRequests": 4,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 172.31
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 179.667
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 179.574
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 194.618
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "vendors",
+        "width": 390,
+        "weak": true,
+        "index": 1,
+        "cold": {
+          "lcp": 656.1999999992549,
+          "cls": 0.0036019393004115227,
+          "imageBytes": 54772,
+          "totalBytes": 319858,
+          "imageRequests": 5,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 181.102
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 180.968
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 195.882
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=240",
+              "ttfbMs": 196.356
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 211.865
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "products",
+        "width": 390,
+        "weak": true,
+        "index": 1,
+        "cold": {
+          "lcp": 659.9000000022352,
+          "cls": 0.006976754115226338,
+          "imageBytes": 16672,
+          "totalBytes": 283661,
+          "imageRequests": 1,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 172.898
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "showroom",
+        "width": 390,
+        "weak": true,
+        "index": 1,
+        "cold": {
+          "lcp": 2672.89999999851,
+          "cls": 0,
+          "imageBytes": 124425,
+          "totalBytes": 411623,
+          "imageRequests": 3,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 167.94
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 180.869
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 166.764
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "product",
+        "width": 390,
+        "weak": true,
+        "index": 1,
+        "cold": {
+          "lcp": 2403.900000002235,
+          "cls": 0.03065561154637543,
+          "imageBytes": 100393,
+          "totalBytes": 385777,
+          "imageRequests": 6,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 168.702
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=480",
+              "ttfbMs": 168.437
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 182.558
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 198.839
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 198.176
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 157.654
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "home",
+        "width": 390,
+        "weak": true,
+        "index": 2,
+        "cold": {
+          "lcp": 2987.900000002235,
+          "cls": 0.009925925925925927,
+          "imageBytes": 141154,
+          "totalBytes": 403248,
+          "imageRequests": 4,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 174.54
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 170.473
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 170.4
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 184.934
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "vendors",
+        "width": 390,
+        "weak": true,
+        "index": 2,
+        "cold": {
+          "lcp": 673.0999999977648,
+          "cls": 0.0036019393004115227,
+          "imageBytes": 54772,
+          "totalBytes": 319858,
+          "imageRequests": 5,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 181.501
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 181.25
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 181.234
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=240",
+              "ttfbMs": 194.181
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 195.581
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "products",
+        "width": 390,
+        "weak": true,
+        "index": 2,
+        "cold": {
+          "lcp": 657.7999999970198,
+          "cls": 0.006976754115226338,
+          "imageBytes": 16672,
+          "totalBytes": 283661,
+          "imageRequests": 1,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 175.12
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "showroom",
+        "width": 390,
+        "weak": true,
+        "index": 2,
+        "cold": {
+          "lcp": 2637.5,
+          "cls": 0,
+          "imageBytes": 124425,
+          "totalBytes": 411623,
+          "imageRequests": 3,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 168.575
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 176.389
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 181.344
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "product",
+        "width": 390,
+        "weak": true,
+        "index": 2,
+        "cold": {
+          "lcp": 2414.699999999255,
+          "cls": 0.03065561154637543,
+          "imageBytes": 100393,
+          "totalBytes": 385777,
+          "imageRequests": 6,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 168.915
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=480",
+              "ttfbMs": 168.85
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 182.622
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 183.016
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 198.905
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 173.218
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "home",
+        "width": 390,
+        "weak": true,
+        "index": 3,
+        "cold": {
+          "lcp": 2989.5,
+          "cls": 0.009925925925925927,
+          "imageBytes": 141154,
+          "totalBytes": 403248,
+          "imageRequests": 4,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 169.851
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 173.067
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 172.521
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 187.781
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "vendors",
+        "width": 390,
+        "weak": true,
+        "index": 3,
+        "cold": {
+          "lcp": 663.7999999970198,
+          "cls": 0.0036019393004115227,
+          "imageBytes": 54772,
+          "totalBytes": 319858,
+          "imageRequests": 5,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 172.265
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 172.149
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=240",
+              "ttfbMs": 179.431
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 179.525
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 201.858
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "products",
+        "width": 390,
+        "weak": true,
+        "index": 3,
+        "cold": {
+          "lcp": 684.5,
+          "cls": 0.006976754115226338,
+          "imageBytes": 16672,
+          "totalBytes": 283661,
+          "imageRequests": 1,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 170.136
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "showroom",
+        "width": 390,
+        "weak": true,
+        "index": 3,
+        "cold": {
+          "lcp": 2662.699999999255,
+          "cls": 0,
+          "imageBytes": 124425,
+          "totalBytes": 411623,
+          "imageRequests": 3,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 177.46
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 175.515
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 180.306
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "product",
+        "width": 390,
+        "weak": true,
+        "index": 3,
+        "cold": {
+          "lcp": 2436.199999999255,
+          "cls": 0.03065561154637543,
+          "imageBytes": 100393,
+          "totalBytes": 385777,
+          "imageRequests": 6,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 166.687
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=480",
+              "ttfbMs": 182.144
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 181.743
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 181.341
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 197.051
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 167.928
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "home",
+        "width": 390,
+        "weak": true,
+        "index": 4,
+        "cold": {
+          "lcp": 2980.60000000149,
+          "cls": 0.009925925925925927,
+          "imageBytes": 141154,
+          "totalBytes": 403248,
+          "imageRequests": 4,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 171.493
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 163.445
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 178.139
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 193.382
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "vendors",
+        "width": 390,
+        "weak": true,
+        "index": 4,
+        "cold": {
+          "lcp": 647.6000000014901,
+          "cls": 0.0036019393004115227,
+          "imageBytes": 54772,
+          "totalBytes": 319858,
+          "imageRequests": 5,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 170.005
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 169.908
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=240",
+              "ttfbMs": 180.068
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 184.165
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 199.926
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "products",
+        "width": 390,
+        "weak": true,
+        "index": 4,
+        "cold": {
+          "lcp": 677.6000000014901,
+          "cls": 0.006976754115226338,
+          "imageBytes": 16672,
+          "totalBytes": 283661,
+          "imageRequests": 1,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 172.072
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "showroom",
+        "width": 390,
+        "weak": true,
+        "index": 4,
+        "cold": {
+          "lcp": 2651.2999999970198,
+          "cls": 0,
+          "imageBytes": 124425,
+          "totalBytes": 411623,
+          "imageRequests": 3,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 166.912
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=960",
+              "ttfbMs": 177.778
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/7?w=240",
+              "ttfbMs": 177.716
+            }
+          ]
+        },
+        "warm": null
+      },
+      {
+        "page": "product",
+        "width": 390,
+        "weak": true,
+        "index": 4,
+        "cold": {
+          "lcp": 2432.400000002235,
+          "cls": 0.03065561154637543,
+          "imageBytes": 100393,
+          "totalBytes": 385777,
+          "imageRequests": 6,
+          "responses": [
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/1?w=480",
+              "ttfbMs": 166.828
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/2?w=480",
+              "ttfbMs": 181.85
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/5?w=480",
+              "ttfbMs": 180.818
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/3?w=480",
+              "ttfbMs": 196.184
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/4?w=480",
+              "ttfbMs": 196.276
+            },
+            {
+              "status": 200,
+              "cache": false,
+              "url": "http://127.0.0.1:52107/media/6?w=480",
+              "ttfbMs": 172.563
+            }
+          ]
+        },
+        "warm": null
+      }
+    ],
+    "errors": []
+  }
+}

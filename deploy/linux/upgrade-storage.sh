@@ -8,6 +8,7 @@ INSTALL_DIR="${INSTALL_DIR:-/opt/zqzt}"
 ENV_FILE="${ENV_FILE:-/etc/zqzt/exhibition.env}"
 SERVICE="${SERVICE:-zqzt-exhibition.service}"
 MODE=check
+HEALTH_TIMEOUT="${HEALTH_TIMEOUT:-180}"
 case "${1:---check}" in
  --check) ;;
  --apply) MODE=apply;;
@@ -18,6 +19,7 @@ fail(){ printf 'ERROR: %s\n' "$*" >&2; exit 1; }
 [[ "$(uname -s)" == Linux ]] || fail 'Run on the Linux ECS host.'
 [[ "$INSTALL_DIR" == /* && "$INSTALL_DIR" != / && "$ENV_FILE" == /* ]] || fail 'Use absolute server paths.'
 [[ "$SERVICE" =~ ^[A-Za-z0-9_.@-]+$ ]] || fail 'Invalid service name.'
+[[ "$HEALTH_TIMEOUT" =~ ^[0-9]{2,4}$ ]] && ((10#$HEALTH_TIMEOUT>=30 && 10#$HEALTH_TIMEOUT<=1800)) || fail 'HEALTH_TIMEOUT must be 30-1800 seconds.'
 for command in python3 sha256sum systemctl curl tar install; do command -v "$command" >/dev/null || fail "Missing tool: $command"; done
 [[ -L "$INSTALL_DIR/current" && -f "$ENV_FILE" ]] || fail 'Existing managed current symlink and environment file required.'
 (cd "$BUNDLE" && sha256sum --check --quiet SHA256SUMS) || fail 'Bundle checksum mismatch.'
@@ -25,8 +27,21 @@ case "$(uname -m)" in x86_64|amd64) ARCH=amd64;; aarch64|arm64) ARCH=arm64;; *) 
 [[ -f "$BUNDLE/server/exhibition-linux-$ARCH" && -d "$BUNDLE/web/dist" ]] || fail 'Matching binary or static files missing.'
 CONTEXT="$(python3 "$BUNDLE/aliyun-upgrade-support.py" inspect --env-file "$ENV_FILE" --install-dir "$INSTALL_DIR")"
 printf '%s\n' "$CONTEXT"
+PRESERVE_DOWNLOADS="$(python3 -c 'import json,sys; value=json.load(open(sys.argv[1])).get("preserveDownloads",False); assert isinstance(value,bool), "preserveDownloads must be boolean"; print("true" if value else "false")' "$BUNDLE/manifest.json")"
+if [[ "$PRESERVE_DOWNLOADS" == true ]]; then
+ [[ -f "$BUNDLE/preserve-downloads.py" && ! -e "$BUNDLE/web/dist/downloads" && ! -L "$BUNDLE/web/dist/downloads" ]] || fail 'Preserving downloads requires the helper and a bundle without replacement downloads.'
+ DOWNLOAD_RELEASE="$(readlink -f "$INSTALL_DIR/current")"
+ [[ "$DOWNLOAD_RELEASE" == "$INSTALL_DIR/releases/"* ]] || fail 'Current release is outside the managed releases directory.'
+ python3 "$BUNDLE/preserve-downloads.py" check --source "$DOWNLOAD_RELEASE/web/dist/downloads"
+fi
 [[ "$MODE" == apply ]] || { echo 'Preflight passed. No files, environment, database or service changed.'; exit 0; }
 ((EUID==0)) || fail 'Run apply with sudo/root.'
+command -v flock >/dev/null || fail 'Install util-linux (flock) before applying an upgrade.'
+exec 9>"$INSTALL_DIR/.upgrade.lock"
+flock -n 9 || fail 'Another upgrade is already running for this installation.'
+# Repeat inspection after acquiring the lock; configuration may have changed
+# while the caller was reading preflight output.
+python3 "$BUNDLE/aliyun-upgrade-support.py" inspect --env-file "$ENV_FILE" --install-dir "$INSTALL_DIR" >/dev/null
 OLD="$(readlink -f "$INSTALL_DIR/current")"
 [[ "$OLD" == "$INSTALL_DIR/releases/"* ]] || fail 'Current release is outside the managed releases directory.'
 VERSION="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["release"])' "$BUNDLE/manifest.json")"
@@ -56,6 +71,9 @@ trap finish EXIT
 install -d -m 0755 "$RELEASE/server" "$RELEASE/web"
 install -m 0755 "$BUNDLE/server/exhibition-linux-$ARCH" "$RELEASE/server/exhibition"
 cp -a "$BUNDLE/web/dist" "$RELEASE/web/"
+if [[ "$PRESERVE_DOWNLOADS" == true ]]; then
+ python3 "$BUNDLE/preserve-downloads.py" copy --source "$OLD/web/dist/downloads" --destination "$RELEASE/web/dist/downloads"
+fi
 cp -a "$BUNDLE/migrations" "$BUNDLE/catalog" "$BUNDLE/licenses" "$RELEASE/server/"
 OWNER="$(systemctl show "$SERVICE" --property=User --value)"
 [[ -z "$OWNER" ]] || chown -R "$OWNER" "$RELEASE"
@@ -70,8 +88,9 @@ ln -s "$RELEASE" "$INSTALL_DIR/current.next-$STAMP"
 SWITCHED=1
 mv -Tf "$INSTALL_DIR/current.next-$STAMP" "$INSTALL_DIR/current"
 systemctl start "$SERVICE"
-for attempt in {1..45}; do
- if curl --noproxy '*' -fsS --max-time 2 "http://127.0.0.1:$PORT/api/v1/health" >/dev/null; then
+for ((attempt=1;attempt<=10#$HEALTH_TIMEOUT;attempt++)); do
+ if systemctl is-active --quiet "$SERVICE" && curl --noproxy '*' -fsS --max-time 2 "http://127.0.0.1:$PORT/api/v1/health" >/dev/null && \
+    curl --noproxy '*' -fsS --max-time 2 "http://127.0.0.1:$PORT/api/v1/public/config" | python3 -c 'import json,sys; c=json.load(sys.stdin).get("capabilities",{}); sys.exit(0 if isinstance(c.get("procurement"),bool) else 1)'; then
   STOPPED=0
   printf 'Healthy. New release: %s\nPrevious program retained: %s\nPrivate backup: %s\n' "$RELEASE" "$OLD" "$BACKUP"
   exit 0
