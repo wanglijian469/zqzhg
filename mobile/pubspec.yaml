@@ -1,7 +1,7 @@
 name: dalunongji
 description: 大陆农机，中企展馆农业机械厅与厂商官网
 publish_to: none
-version: 1.10.4+42
+version: 1.10.5+43
 environment:
   sdk: '>=3.10.0 <4.0.0'
 dependencies:

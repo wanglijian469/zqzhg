@@ -309,29 +309,34 @@ class HomeBrandBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) => mediaID == null || mediaID! <= 0
       ? const SizedBox.shrink(key: ValueKey('home-banner'))
-      : Container(
-          key: const ValueKey('home-banner'),
-          height: 88,
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
+      : Semantics(
+          button: true,
+          label: syncText(context, '查看完整图片', 'View full image'),
+          child: Material(
+            key: const ValueKey('home-banner'),
             color: industrialSurface,
             borderRadius: BorderRadius.circular(12),
-          ),
-          child: mediaID != null && mediaID! > 0
-              ? Photo(
-                  key: const ValueKey('home-landmark-photo'),
-                  id: mediaID!,
-                  thumb: false,
-                  height: 88,
-                  fit: BoxFit.cover,
-                )
-              : const Center(
-                  child: Icon(
-                    Icons.agriculture_outlined,
-                    color: industrialBlue,
-                    size: 36,
-                  ),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: () => push(
+                context,
+                PhotoViewer(
+                  ids: [mediaID!],
+                  initial: 0,
+                  title: syncText(context, '图片预览', 'Image preview'),
                 ),
+              ),
+              child: Photo(
+                key: const ValueKey('home-landmark-photo'),
+                id: mediaID!,
+                thumb: false,
+                aspectRatio: 2.5,
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+                radius: 0,
+              ),
+            ),
+          ),
         );
 }
 

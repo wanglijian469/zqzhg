@@ -751,13 +751,19 @@ Widget dataDetails(
 class PhotoViewer extends StatelessWidget {
   final List<int> ids;
   final int initial;
-  const PhotoViewer({super.key, required this.ids, required this.initial});
+  final String? title;
+  const PhotoViewer({
+    super.key,
+    required this.ids,
+    required this.initial,
+    this.title,
+  });
   @override
   Widget build(BuildContext context) {
     final m = ModelScope.of(context);
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: appBar(context, m.t('gallery')),
+      appBar: appBar(context, title ?? m.t('gallery')),
       body: PageView(
         controller: PageController(initialPage: initial),
         children: ids
