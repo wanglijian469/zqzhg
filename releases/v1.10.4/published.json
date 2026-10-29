@@ -1,0 +1,26 @@
+{
+  "url": "https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.4",
+  "tag": "v1.10.4",
+  "commit": "0d3dd9712b768daea9c34249749a785b62f7e64a",
+  "draft": false,
+  "assets": [
+    {
+      "name": "dalunongji-1.10.4+42.apk",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.4/dalunongji-1.10.4%2B42.apk",
+      "size": 85346497,
+      "digest": "sha256:98170cdd59b658337cc45fd7705ed58729af6034bdb6997dc12ab53dcdaff16d"
+    },
+    {
+      "name": "manifest.json",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.4/manifest.json",
+      "size": 830,
+      "digest": "sha256:e1a589eaf28ab98ac2a237c16ac0fa6401bbb655de26e0c594d03cacf7a23040"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.4/SHA256SUMS.txt",
+      "size": 171,
+      "digest": "sha256:7dc5906dc93c59cdba40b167f4036c91432c5ab063bcfc1aed1bc22f2653d80b"
+    }
+  ]
+}
