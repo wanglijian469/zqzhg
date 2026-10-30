@@ -1,0 +1,12 @@
+{
+  "certificate_domains": [
+    "zqzhg.com",
+    "www.zqzhg.com"
+  ],
+  "renewal_dry_run_passed": true,
+  "nginx_deploy_hook_passed": true,
+  "existing_timer_enabled": true,
+  "security_group_80_confirmed_by_user": true,
+  "public_http_challenge_verified": true,
+  "private_material_exported": false
+}

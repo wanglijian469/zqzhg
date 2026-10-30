@@ -1,0 +1,91 @@
+{
+  "redirects": [
+    {
+      "url": "http://zqzhg.com/",
+      "status": 301,
+      "location": "https://zqzhg.com/"
+    },
+    {
+      "url": "http://zqzhg.com/regions?region=130528&lang=en",
+      "status": 301,
+      "location": "https://zqzhg.com/regions?region=130528&lang=en"
+    },
+    {
+      "url": "http://zqzhg.com/app",
+      "status": 301,
+      "location": "https://zqzhg.com/app"
+    },
+    {
+      "url": "http://zqzhg.com/downloads/dalunongji.apk",
+      "status": 301,
+      "location": "https://zqzhg.com/downloads/dalunongji.apk"
+    },
+    {
+      "url": "http://www.zqzhg.com/",
+      "status": 301,
+      "location": "https://zqzhg.com/"
+    },
+    {
+      "url": "http://www.zqzhg.com/regions?region=130528&lang=en",
+      "status": 301,
+      "location": "https://zqzhg.com/regions?region=130528&lang=en"
+    },
+    {
+      "url": "http://www.zqzhg.com/app",
+      "status": 301,
+      "location": "https://zqzhg.com/app"
+    },
+    {
+      "url": "http://www.zqzhg.com/downloads/dalunongji.apk",
+      "status": 301,
+      "location": "https://zqzhg.com/downloads/dalunongji.apk"
+    },
+    {
+      "url": "https://www.zqzhg.com/",
+      "status": 301,
+      "location": "https://zqzhg.com/"
+    },
+    {
+      "url": "https://www.zqzhg.com/regions?region=130528&lang=en",
+      "status": 301,
+      "location": "https://zqzhg.com/regions?region=130528&lang=en"
+    },
+    {
+      "url": "https://www.zqzhg.com/app",
+      "status": 301,
+      "location": "https://zqzhg.com/app"
+    },
+    {
+      "url": "https://www.zqzhg.com/downloads/dalunongji.apk",
+      "status": 301,
+      "location": "https://zqzhg.com/downloads/dalunongji.apk"
+    }
+  ],
+  "tls": [
+    {
+      "host": "zqzhg.com",
+      "verified": true,
+      "domains": [
+        "www.zqzhg.com",
+        "zqzhg.com"
+      ],
+      "not_after": "Jan 28 02:36:08 2027 GMT"
+    },
+    {
+      "host": "www.zqzhg.com",
+      "verified": true,
+      "domains": [
+        "www.zqzhg.com",
+        "zqzhg.com"
+      ],
+      "not_after": "Jan 28 02:36:08 2027 GMT"
+    }
+  ],
+  "real_sms_sent": 0,
+  "showroom_checked": true,
+  "download_version": "1.10.5+43",
+  "download_bytes": 85346413,
+  "qr_url_verified": true,
+  "other_site_available": true,
+  "passed": true
+}

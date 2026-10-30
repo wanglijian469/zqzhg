@@ -1,5 +1,7 @@
 # 中企展馆 ZQZG V2.0
 
+2026-10-30 域名入口修复：HTTP裸域名、HTTP／HTTPS的www统一301跳转至 `https://zqzhg.com`；双域名证书与自动续期演练通过，原官网、地图及App下载保持正常。[配置、验证及维护说明](docs/WWW_DOMAIN_20261030.md)。
+
 2026-10-29 App正式下载更新为 **大陆农机1.10.5+43**：修复首页招牌裁切，点击图片可查看完整原图并缩放。原签名、包名及固定HTTPS地址保持；ECS旧包已备份，网站服务保持正常。[正式下载](https://zqzhg.com/downloads/dalunongji.apk) · [源码与受控安装包](https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.5) · [本版说明](releases/v1.10.5/README.md)。以下各轮保留为历史发布记录。
 
 2026-10-29 当前正式版本：网站已升级至企业内容审核流程（schema27）；Android **大陆农机1.10.4+42** 固定连接 `https://zqzhg.com`，原包名及签名保持。取消独立敏感材料核验，统一注册／密码登录、200 MB免费存储与采购关闭规则。正式App下载已更新。[正式下载](https://zqzhg.com/downloads/dalunongji.apk) · [GitHub源码与安装包](https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.4) · [发布、测试及回退说明](releases/v1.10.4/README.md)。**以下按时间保留历史记录，旧版“当前”描述不代表现状。**

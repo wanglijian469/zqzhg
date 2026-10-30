@@ -3,10 +3,11 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const {chromium}=require('../.tools/browser-qa/node_modules/playwright');
 const label=process.env.MAP_ACCEPTANCE_LABEL||'auth-1.10.2';
 const bundle=process.env.MAP_BUNDLED_ROOT?path.resolve(process.env.MAP_BUNDLED_ROOT):null;
+const developmentCache=process.env.MAP_DEVELOPMENT_CACHE?path.resolve(process.env.MAP_DEVELOPMENT_CACHE):null;
 const base='https://zqzhg.com',dir=`docs/screenshots/${label}/map`;fs.mkdirSync(dir,{recursive:true});
 (async()=>{
  const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,args:['--no-proxy-server']});
- const receipt={origin:base,bundledAPK:!!bundle,map:[],viewports:[],errors:[]};
+ const receipt={origin:base,bundledAPK:!!bundle,developmentReference:developmentCache?'saved-development-cache':'live-development-api',map:[],viewports:[],errors:[]};
  try {
   const ctx=await browser.newContext({viewport:{width:1440,height:900}}),page=await ctx.newPage();
   ctx.setDefaultTimeout(30000);ctx.setDefaultNavigationTimeout(45000);
@@ -47,7 +48,7 @@ const base='https://zqzhg.com',dir=`docs/screenshots/${label}/map`;fs.mkdirSync(
    await ready();const suffix=code?'?region_code='+code:'';
    const stats=await get(base+'/api/v1/public/industry-map/regions'+suffix),vendors=await get(base+'/api/v1/public/industry-map/vendors'+suffix),boundary=await get(base+'/api/v1/public/map-demo/regions'+suffix);
    assert.equal(stats.total,vendors.total);await total(stats.total);assert.equal(boundary.usage,'development-demonstration');
-   const local=await get('http://127.0.0.1:8080/api/v1/dev/map-preview/regions'+suffix);assert.equal(boundary.sha256,local.sha256,'exact development geometry hash');assert.deepEqual(boundary.geometry,local.geometry);
+   const local=developmentCache?JSON.parse(fs.readFileSync(path.join(developmentCache,(code||'national')+'.mapping.json'),'utf8')):await get('http://127.0.0.1:8080/api/v1/dev/map-preview/regions'+suffix);assert.equal(boundary.sha256,local.sha256,'exact development geometry hash');assert.deepEqual(boundary.geometry,local.geometry);
    await ready();assert.ok(await page.locator('.industry-chart svg path').count()>0);assert.equal(await page.getByRole('button',{name:'切回区划示意图',exact:true}).count(),0);
    receipt.map.push({code,name,total:stats.total,sha256:boundary.sha256,features:boundary.geometry.features.length,missing_codes:boundary.missing_codes});
    await page.screenshot({path:path.join(dir,'map-'+(code||'national')+'.png')});
