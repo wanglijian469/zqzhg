@@ -72,6 +72,10 @@ func TestSearchSettingsSecretsAndVerification(t *testing.T) {
 	a := importTestApp(t)
 	a.Config.PublicBaseURL = "https://seo.example"
 	seoTestIndex(t, a)
+	adminPage := seoGet(a.router(), "/admin/seo")
+	if adminPage.Code != 200 || !strings.Contains(adminPage.Body.String(), "noindex,follow") {
+		t.Fatal("SEO administration must serve a private, non-indexable SPA shell")
+	}
 	tc, token := searchAdmin(t, a)
 	r := tc.call("GET", "/admin/seo/settings", token, nil, 200)
 	o := defaultSearchOptions()
