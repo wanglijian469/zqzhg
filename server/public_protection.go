@@ -185,7 +185,7 @@ func deniedAgent(ua string) bool {
 }
 func robotsPolicy() string {
 	// Public runtime APIs are needed when a search crawler renders the React page.
-	s := "User-agent: *\nDisallow: /api/\nAllow: /api/v1/public/\nAllow: /api/v1/media/\nDisallow: /admin\nDisallow: /merchant\n\n"
+	s := "User-agent: *\nDisallow: /api/\nAllow: /api/v1/public/\nAllow: /api/v1/media/\nDisallow: /api/v1/public/service-requests\nDisallow: /api/v1/public/service-evidence\nDisallow: /admin\nDisallow: /merchant\nDisallow: /auth\nDisallow: /login\nDisallow: /register\nDisallow: /service-requests\n\n"
 	for _, ua := range deniedAgents {
 		s += "User-agent: " + ua + "\nDisallow: /\n\n"
 	}

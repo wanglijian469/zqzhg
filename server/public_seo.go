@@ -77,6 +77,15 @@ func (a *App) sendPublicHTML(c *gin.Context, index string, status int, title, de
 	}
 	escape := html.EscapeString
 	meta := "<title>" + escape(title) + "</title><meta name='description' content='" + escape(desc) + "'><link rel='canonical' href='" + escape(canonical) + "'><meta name='robots' content='" + robots + "'><meta name='zqzg-public-base' content='" + escape(a.publicBase(c)) + "'>"
+	// Only allowlisted verification names and escaped code values, never arbitrary HTML.
+	{
+		options := a.searchPublicOptions()
+		for name, value := range options.Verification {
+			if key := verificationNames[name]; key != "" && searchCodePattern.MatchString(value) {
+				meta += "<meta name='" + key + "' content='" + escape(value) + "'>"
+			}
+		}
+	}
 	for k, v := range map[string]string{"og:title": title, "og:description": desc, "og:url": canonical, "og:type": "website"} {
 		meta += "<meta property='" + k + "' content='" + escape(v) + "'>"
 	}
@@ -183,6 +192,7 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 				desc = hall.Name + "正在筹建，敬请期待。"
 			}
 			robots = "noindex,follow"
+			content = append(content, seoContent{Body: "<main class='container section seo-content' data-seo-content><h1>" + html.EscapeString(title) + "</h1><p>" + html.EscapeString(desc) + "</p><p><a href='/'>返回展馆</a></p></main>"})
 		} else if path == "/regions" {
 			title = "厂商地图 | " + title
 			desc = "按行政区划浏览" + hall.Name + "的公开厂商。行政目录覆盖大陆31个省级行政区，版本2023-06-30。"
@@ -209,12 +219,16 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 				values = append(values, publicSEOCopy.ZH.ProductTerms...)
 			}
 			landing.Keywords = seoKeywords(values...)
+			landing.Structured = map[string]any{"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": desc, "url": canonical}
 			content = append(content, landing)
 		}
 		for _, k := range []string{"q", "category_id", "region_id", "region_code", "unassigned", "vendor_id", "sort"} {
 			if c.Query(k) != "" {
 				robots = "noindex,follow"
 			}
+		}
+		if page, _ := strconv.Atoi(c.Query("page")); page > 1 {
+			robots = "noindex,follow"
 		}
 	}
 	runes := []rune(strings.TrimSpace(desc))

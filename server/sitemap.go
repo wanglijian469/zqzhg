@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -72,6 +73,22 @@ func (a *App) sitemapIndex(c *gin.Context) {
 }
 
 func (a *App) sitemapPage(c *gin.Context) {
+	if c.Param("file") == "dead-links.txt" {
+		var pages []SearchPage
+		if e := a.DB.Where("was_public=1 AND is_public=0").Order("content_id").Limit(10000).Find(&pages).Error; e != nil {
+			sitemapError(c, 503)
+			return
+		}
+		lines := []string{}
+		for _, p := range pages {
+			if strings.HasPrefix(p.URL, searchBase(a)+"/") {
+				lines = append(lines, p.URL)
+			}
+		}
+		c.Header("Cache-Control", "no-store")
+		c.Data(200, "text/plain; charset=utf-8", []byte(strings.Join(lines, "\n")))
+		return
+	}
 	if c.Param("file") == "pages.xml" {
 		var halls []Hall
 		if err := a.DB.Where("status=?", "open").Order("id ASC").Find(&halls).Error; err != nil {

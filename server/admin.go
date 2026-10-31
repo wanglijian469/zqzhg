@@ -19,6 +19,9 @@ import (
 )
 
 func recordOperation(tx *gorm.DB, actorID uint64, kind string, target uint64, action, note string) error {
+	if e := markSearchDirty(tx, kind, target); e != nil {
+		return e
+	}
 	return tx.Create(&OperationLog{ActorID: actorID, TargetKind: kind, TargetID: target, Action: action, Note: note}).Error
 }
 func recordReview(tx *gorm.DB, log ReviewLog) error {
@@ -27,6 +30,9 @@ func recordReview(tx *gorm.DB, log ReviewLog) error {
 	}
 	var content Content
 	if e := tx.First(&content, log.ContentID).Error; e != nil {
+		return e
+	}
+	if e := markSearchDirty(tx, content.Kind, content.ID); e != nil {
 		return e
 	}
 	return tx.Create(&OperationLog{ActorID: log.ActorID, TargetKind: content.Kind, TargetID: log.ContentID, Action: log.Action, Note: log.Note, SourceReviewLogID: &log.ID, CreatedAt: log.CreatedAt}).Error

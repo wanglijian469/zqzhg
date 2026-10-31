@@ -21,6 +21,7 @@ type Permission struct {
 }
 
 var permissionCatalog = []Permission{
+	{"seo.read", "查看SEO与提交记录", "View SEO and submission logs"}, {"seo.manage", "管理搜索引擎提交", "Manage search engine submissions"},
 	{"compliance.review", "审核企业身份", "Review company verification"}, {"service.manage", "处理服务工单", "Manage service requests"}, {"legal.manage", "管理服务协议", "Manage service documents"},
 	{"procurement.read", "查看采购询价", "View procurement"}, {"procurement.review", "审核采购需求", "Review procurement"}, {"procurement.quote", "查看采购报价", "View procurement quotes"}, {"procurement.match", "管理厂商匹配", "Manage procurement matching"}, {"procurement.manage", "处理采购异常", "Moderate procurement"}, {"procurement.stats", "采购统计", "Procurement statistics"},
 	{"vendor.read", "查看厂商", "View manufacturers"}, {"vendor.write", "编辑厂商", "Edit manufacturers"}, {"vendor.review", "审核厂商", "Review manufacturers"}, {"vendor.offline", "下架厂商", "Unpublish manufacturers"},
@@ -67,6 +68,9 @@ func normalizePermissions(values []string) ([]string, error) {
 		}
 		if key == "analytics.export" {
 			set["analytics.read"] = true
+		}
+		if key == "seo.manage" {
+			set["seo.read"] = true
 		}
 		if key == "product.write" || key == "resource.write" {
 			set["vendor.read"] = true
@@ -168,6 +172,11 @@ func (a *App) permissionForRequest(c *gin.Context) string {
 		}
 	}
 	switch {
+	case strings.HasPrefix(path, "seo/"):
+		if method == "GET" || method == "HEAD" {
+			return "seo.read"
+		}
+		return "seo.manage"
 	case strings.HasPrefix(path, "verifications"):
 		return "compliance.review"
 	case strings.HasPrefix(path, "service-requests"):

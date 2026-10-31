@@ -34,10 +34,10 @@ const {chromium} = require('../.tools/browser-qa/node_modules/playwright');
         const response=await page.goto(base+route);
         assert.equal(response.status(),200);
         const initial=await response.text();
-        assert(initial.includes('内卷网')&&initial.includes('data-seo-content'),'Missing initial public search content');
-        await page.locator(route==='/'?'.seo-introduction':'.browse-page').waitFor();
+        assert(initial.includes('企业展厅')&&initial.includes('data-seo-content'),'Missing initial public search content');
+        await page.locator(route==='/'?'.hero-search':'.browse-page').waitFor();
         await metadata(page,base+route,'index,follow');
-        assert((await page.locator('meta[name=keywords]').getAttribute('content')).includes('内卷网'));
+        assert((await page.locator('meta[name=keywords]').getAttribute('content')).includes('企业展厅'));
         if(lang==='zh'){
           const server=await page.evaluate(raw=>{const doc=new DOMParser().parseFromString(raw,'text/html');return {title:doc.title,description:doc.querySelector('meta[name=description]')?.content,keywords:doc.querySelector('meta[name=keywords]')?.content}},initial);
           assert.equal(await page.title(),server.title);

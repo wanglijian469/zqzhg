@@ -1,4 +1,5 @@
 const actions:Record<string,[string,string]>={
+ seo_settings_saved:['修改搜索引擎配置','Updated search engine settings'],seo_manual_queued:['创建搜索引擎提交任务','Queued search engine submissions'],
  visitor_registered:['普通账号注册','Account registration'],merchant_registered:['历史厂商账号注册','Company account registration'],
  phone_registered:['手机账号注册','Mobile account registration'],phone_registration:['手机账号注册','Mobile account registration'],
  phone_password_login:['密码登录','Password sign-in'],phone_login:['密码登录','Password sign-in'],

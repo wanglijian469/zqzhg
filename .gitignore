@@ -56,3 +56,7 @@ __pycache__/
 
 # Operator-only SSH connection credentials; never package or commit.
 /需求文档/39.97.250.244.txt
+# SEO production observations and browser evidence remain local unless explicitly approved for publication.
+/docs/SEARCH_ENGINES_20261031.md
+/docs/screenshots/search-engines-20261031/
+/docs/test-output/search-*-20261031.json

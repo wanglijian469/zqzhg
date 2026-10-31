@@ -6,13 +6,14 @@ import {emptyData,type Hall} from './types';
 const hall:Hall={id:1,slug:'agriculture',name:'农业机械厅',name_en:'Agricultural Machinery',icon:'tractor',status:'open',theme:'green'};
 it('targets search phrases only on platform landing pages, without declaring brand aliases',()=>{
  const home=publicPageSEO('/','中企展馆',hall,'zh')!;
- expect(home.description).toContain('内卷网');
- expect(home.keywords).toContain('河北内卷网,内卷网,不卷网');
+ expect(home.description).toContain('农业机械');
+ expect(home.description).not.toContain('内卷网');
+ for(const word of ['中企展馆','企业展厅','厂家直连'])expect(home.keywords.split(',')).toContain(word);
  expect(home.title).toBe('中企展馆-农业机械厅');
  expect(publicPageSEO('/browse','中企展馆',hall,'zh')?.title).toContain('企业名单与厂家展厅');
  expect(publicPageSEO('/browse/products','中企展馆',hall,'zh')?.keywords).not.toContain('内卷网');
  expect(publicPageSEO('/merchant','中企展馆',hall,'zh')).toBeUndefined();
- expect(publicPageSEO('/','中企展馆',{...hall,status:'preparing'},'zh')).toBeUndefined();
+ expect(publicPageSEO('/','中企展馆',{...hall,status:'preparing'},'zh')?.description).toContain('正在筹备');
 });
 it('builds company and product metadata from actual names, with English fallback and bounded keywords',()=>{
  const vendor={...emptyData,name:'河北冀农农机具有限公司',main_products:'耕地机械',region_name:'河北省',keywords:'耕地机械，农机',company_profile:{short_name:'冀农',summary:'真实企业简介'}};

@@ -49,6 +49,7 @@ type App struct {
 	mapPreviewClient     *http.Client
 	imageCacheOnce       sync.Once
 	imageCache           *imageVariantCache
+	searchHTTP           *http.Client
 }
 
 func env(key, fallback string) string {
@@ -386,6 +387,7 @@ func main() {
 		a.startProcurementWorker(context.Background())
 		a.startHomeRotation(context.Background())
 		a.startOperations(context.Background())
+		a.startSearchWorker(context.Background())
 	}
 	srv := &http.Server{Addr: cfg.Addr, Handler: a.router(), ReadHeaderTimeout: 10 * time.Second, ReadTimeout: 15 * time.Minute, WriteTimeout: 15 * time.Minute, IdleTimeout: 60 * time.Second}
 	log.Printf("中企展馆 API listening on %s (%s)", cfg.Addr, cfg.Env)
@@ -443,6 +445,8 @@ func (a *App) router() *gin.Engine {
 	r.HEAD("/sitemap.xml", a.sitemapIndex)
 	r.GET("/sitemaps/:file", a.sitemapPage)
 	r.HEAD("/sitemaps/:file", a.sitemapPage)
+	r.GET("/indexnow.txt", a.searchVerificationFile)
+	r.HEAD("/indexnow.txt", a.searchVerificationFile)
 	api := r.Group("/api/v1")
 	api.GET("/dev/map-preview/config", a.mapPreviewConfiguration)
 	api.GET("/dev/map-preview/regions", a.mapPreviewRegions)
@@ -533,6 +537,15 @@ func (a *App) router() *gin.Engine {
 	a.backupDownloadRoutes(admin, api)
 	a.procurementRoutes(api, pub, admin)
 	admin.GET("/dashboard", a.adminDashboard)
+	admin.GET("/seo/settings", a.getSearchSettings)
+	admin.PUT("/seo/settings", a.saveSearchSettings)
+	admin.GET("/seo/overview", a.searchOverview)
+	admin.GET("/seo/jobs", a.searchLogs)
+	admin.GET("/seo/jobs/:id/attempts", a.searchAttempts)
+	admin.POST("/seo/submit", a.enqueueSearchAdmin)
+	admin.POST("/seo/sitemap/refresh", a.refreshSearchSitemap)
+	admin.POST("/seo/process", a.runSearchQueue)
+	admin.POST("/seo/jobs/:id/retry", a.retrySearchJob)
 	admin.GET("/accounts", a.adminAccounts)
 	admin.POST("/accounts/:id/password-reset", a.adminPasswordReset)
 	admin.GET("/operation-logs", a.adminLogs)
