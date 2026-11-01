@@ -5,7 +5,7 @@
 - 网站：[中企展馆](https://zqzhg.com/)
 - 指南：[厂商入驻与使用指南](https://zqzhg.com/guide)
 - 安装包：[正式安卓下载](https://zqzhg.com/downloads/dalunongji.apk)
-- GitHub：[v1.10.6 Release](https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.6)
+- GitHub：[v1.10.6 Release](https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.6-r2)
 
 安卓保持包名 `com.zqzt.dalunongji`，versionCode 为 44。原签名证书 SHA-256：`85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585`。安装包具体大小、文件哈希及下载地址见本目录 `manifest.json`，GitHub 附件配套提供 SHA256 清单。
 
