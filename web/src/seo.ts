@@ -15,6 +15,7 @@ export function seoKeywords(...values:(string|undefined)[]){
 }
 const name=(data:Data,lang:Lang)=>lang==='en'&&data.name_en?data.name_en:data.name;
 export function publicPageSEO(path:string,brand:string,hall:Hall|undefined,lang:Lang){
+ if(path==='/guide')return {title:'厂商入驻与使用指南 | '+brand,description:'从免费注册、填写企业资料、添加产品到提交审核、分享展厅，跟着真实页面一步一步操作。基础入驻免费，手机也能使用。',keywords:seoKeywords(brand,'厂商入驻','使用指南','企业展厅')};
  const globalTitles:Record<string,[string,string]>={'/services':['企业入驻与服务说明','Admission and services'],'/services/service-info':['企业入驻与服务说明','Admission and services'],'/services/showroom-agreement':['企业展厅服务协议','Showroom service agreement'],'/services/terms':['用户协议','User agreement'],'/services/privacy':['隐私政策','Privacy policy'],'/service-requests':['投诉与服务申请','Complaints and service requests']};if(globalTitles[path])return {title:globalTitles[path][lang==='zh'?0:1]+' | '+brand,description:lang==='zh'?'基础入驻永久免费，标准企业展厅、专属网址及二维码免费，默认免费存储200 MB。':'Permanently free basic admission, standard showrooms, platform URLs and QR codes. Default free storage: 200 MB.',keywords:brand};
  if(!hall||!['/','/browse','/browse/products'].includes(path))return undefined;
  if(hall.status!=='open'){const hallName=lang==='en'?hall.name_en:hall.name;return {title:brand+'-'+hallName,description:limitSEODescription((lang==='en'?hall.description_en:hall.description)||hallName+(lang==='zh'?'正在筹备，敬请期待。':' is being prepared.')),keywords:seoKeywords(brand,hallName)}}
@@ -51,4 +52,4 @@ export function showroomSearchVariant(path:string,search:string){const q=new URL
 export function filteredSearch(search:string){const q=new URLSearchParams(search);return Number(q.get('page'))>1||['q','category_id','region_id','region_code','unassigned','vendor_id','sort'].some(k=>!!q.get(k)?.trim())}
 
 // Unknown client routes must not overwrite the server 404 with indexable metadata.
-export function indexablePublicPath(path:string){return ["/","/browse","/browse/products","/regions","/app","/services","/services/service-info","/services/showroom-agreement","/services/terms","/services/privacy","/service-requests"].includes(path)||/^\/(?:products|vendors)\/[1-9][0-9]*\/?$/.test(path)||/^\/v\/[a-z0-9-]+\/?$/.test(path)}
+export function indexablePublicPath(path:string){return ["/guide","/","/browse","/browse/products","/regions","/app","/services","/services/service-info","/services/showroom-agreement","/services/terms","/services/privacy","/service-requests"].includes(path)||/^\/(?:products|vendors)\/[1-9][0-9]*\/?$/.test(path)||/^\/v\/[a-z0-9-]+\/?$/.test(path)}

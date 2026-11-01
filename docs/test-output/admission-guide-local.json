@@ -1,0 +1,83 @@
+{
+  "base": "http://localhost:8080",
+  "guide": "http://localhost:8080/guide",
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/guide",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/guide",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/guide?hall=cable",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/guide/unknown",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/sitemaps/pages.xml",
+      "status": 200
+    },
+    {
+      "browserPath": "/",
+      "footerGuide": true,
+      "noOverflow": true
+    },
+    {
+      "browserPath": "/browse",
+      "footerGuide": true,
+      "noOverflow": true
+    },
+    {
+      "browserPath": "/browse/products",
+      "footerGuide": true,
+      "noOverflow": true
+    },
+    {
+      "browserPath": "/join",
+      "footerGuide": true,
+      "noOverflow": true
+    },
+    {
+      "browserPath": "/merchant/login",
+      "footerGuide": true,
+      "noOverflow": true
+    },
+    {
+      "browserPath": "/services",
+      "footerGuide": true,
+      "noOverflow": true
+    },
+    {
+      "browserPath": "/service-requests",
+      "footerGuide": true,
+      "noOverflow": true
+    },
+    {
+      "browserPath": "/v/v-37",
+      "footerGuide": true,
+      "noOverflow": true
+    },
+    {
+      "browserPath": "/products/2",
+      "footerGuide": true,
+      "noOverflow": true
+    }
+  ],
+  "errors": [],
+  "smsProvider": "development",
+  "existingVendors": 11,
+  "existingProducts": 46,
+  "contentWrites": false,
+  "productionDeployed": false,
+  "passed": true
+}

@@ -1,0 +1,25 @@
+{
+  "total": 106,
+  "passed": 91,
+  "historicalFailures": 15,
+  "newFailures": 0,
+  "sameFailureNamesAsPriorBaseline": true,
+  "baselineCommit": "b913349de23d3796f435ecd074750f3f5bde6cdf",
+  "failures": [
+    "src/app.test.tsx > Browser workflows > opens a product from its vendor gallery without rendering the previous page response",
+    "src/app.test.tsx > Browser workflows > signs in with a company account and loads its existing booth for editing",
+    "src/company-editor.test.tsx > restores a matching old region without rewriting it, preserves English and locks pending content",
+    "src/merchant-registration.test.tsx > adds a company category after registration without creating the company",
+    "src/merchant-registration.test.tsx > does not repeat an uncertain registration and supports explicit company sign-in",
+    "src/merchant-registration.test.tsx > never carries an automatic submit intent from signup into the editor",
+    "src/merchant-registration.test.tsx > protects the existing company and retains unrelated guest text on company sign-in",
+    "src/merchant-registration.test.tsx > registers into the workspace, restores guest text and only creates after explicit saving",
+    "src/merchant-registration.test.tsx > retries a failed logo and keeps the already successful cover on save",
+    "src/merchant-registration.test.tsx > retries a failed submission using the same company draft",
+    "src/merchant-registration.test.tsx > retries only failed gallery files and keeps uploaded IDs",
+    "src/merchant-registration.test.tsx > validates login length and UTF8 password bytes without truncating guest company text",
+    "src/merchant-workspace.test.tsx > guards direct links and offers company entry for an account without a booth",
+    "src/merchant-workspace.test.tsx > keeps an editing page mounted while a lost session is reauthenticated",
+    "src/merchant-workspace.test.tsx > separates the workspace, redirects owned entry and legacy links, and preserves filters"
+  ]
+}

@@ -97,7 +97,7 @@ func (a *App) sitemapPage(c *gin.Context) {
 		}
 		urls := sitemapURLs{XMLNS: sitemapNamespace}
 		base := a.publicBase(c)
-		for _, path := range []string{"/services", "/services/showroom-agreement", "/services/terms", "/services/privacy"} {
+		for _, path := range []string{"/guide", "/services", "/services/showroom-agreement", "/services/terms", "/services/privacy"} {
 			urls.Entries = append(urls.Entries, sitemapLocation{base + path})
 		}
 		for _, hall := range halls {

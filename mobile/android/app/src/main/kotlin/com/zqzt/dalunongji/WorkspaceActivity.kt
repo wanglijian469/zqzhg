@@ -85,7 +85,7 @@ class WorkspaceActivity : Activity() {
                     if (path.startsWith("/api/")) return null
                     if (path.contains('\\') || path.split('/').any { it == ".." }) return blocked()
                     val resource = when {
-                        path.startsWith("/assets/") || path.startsWith("/pdfjs/") || path.startsWith("/maps/") || path == "/brand.svg" -> path.trimStart('/')
+                        path.startsWith("/assets/") || path.startsWith("/pdfjs/") || path.startsWith("/maps/") || path.startsWith("/guide-images/") || path == "/brand.svg" -> path.trimStart('/')
                         routePath(path) -> "index.html"
                         else -> return blocked()
                     }
@@ -145,7 +145,7 @@ class WorkspaceActivity : Activity() {
         val mapStyle = assets.open("native-map.css").bufferedReader().use { it.readText() }
         return html.replace("<head>", "<head>$runtime$bootstrap<style id=\"native-map-layout\">$mapStyle</style>")
     }
-    private fun routePath(path: String) = path == "/" || Regex("^/procurement(?:/[1-9][0-9]*)?$").matches(path) || path in listOf("/join", "/app", "/browse", "/browse/products", "/regions", "/merchant") || listOf("/buyer", "/merchant/", "/products/", "/vendors/", "/v/").any { path == it || path.startsWith(if (it.endsWith('/')) it else "$it/") }
+    private fun routePath(path: String) = path == "/" || Regex("^/procurement(?:/[1-9][0-9]*)?$").matches(path) || path in listOf("/join", "/guide", "/services", "/service-requests", "/app", "/browse", "/browse/products", "/regions", "/merchant") || listOf("/services/", "/buyer", "/merchant/", "/products/", "/vendors/", "/v/").any { path == it || path.startsWith(if (it.endsWith('/')) it else "$it/") }
     private fun mime(path: String): String = when (path.substringAfterLast('.')) { "js", "mjs" -> "text/javascript"; "css" -> "text/css"; "json" -> "application/json"; "wasm" -> "application/wasm"; "svg" -> "image/svg+xml"; else -> android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(path.substringAfterLast('.')) ?: "application/octet-stream" }
     private fun blocked() = WebResourceResponse("text/plain", "UTF-8", 404, "Not Found", mapOf("Cache-Control" to "no-store"), ByteArrayInputStream(ByteArray(0)))
     private fun dp(n: Int) = (n * resources.displayMetrics.density).toInt()

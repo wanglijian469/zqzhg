@@ -122,6 +122,9 @@ func (a *App) sendPublicHTML(c *gin.Context, index string, status int, title, de
 }
 func (a *App) publicHTML(c *gin.Context, index string) bool {
 	path := c.Request.URL.Path
+	if path == "/guide" {
+		return a.sendPublicHTML(c, index, 200, "厂商入驻与使用指南 | "+a.brandName(), "从免费注册、填写企业资料、添加产品到提交审核、分享展厅，跟着真实页面一步一步操作。基础入驻免费，手机也能使用。", canonicalPublic(a.publicBase(c), path, nil), "index,follow", seoContent{Body: `<article data-seo-content><h1>厂商入驻与使用指南</h1><p>5步完成入驻：免费注册、填写企业资料、添加产品、提交审核、分享展厅。资料审核通过后才会公开。</p><p>基础入驻免费，手机也能操作。</p><a href="/join">立即免费入驻</a> · <a href="/merchant/login">登录</a> · <a href="/services">入驻与服务说明</a> · <a href="/service-requests">投诉与服务申请</a></article>`})
+	}
 	if path == "/services" || strings.HasPrefix(path, "/services/") || path == "/service-requests" {
 		return a.servicePageHTML(c, index)
 	}

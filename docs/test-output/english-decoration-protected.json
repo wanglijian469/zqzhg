@@ -1,0 +1,22 @@
+[
+  {
+    "path": "web/src/public-footer.tsx",
+    "unchanged": true
+  },
+  {
+    "path": "web/src/public-footer.css",
+    "unchanged": true
+  },
+  {
+    "path": "web/src/showroom-footer.css",
+    "unchanged": true
+  },
+  {
+    "path": "web/src/merchant-entry.tsx",
+    "unchanged": true
+  },
+  {
+    "path": "web/src/company-profile.tsx",
+    "unchanged": true
+  }
+]

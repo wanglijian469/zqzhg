@@ -1,4 +1,4 @@
-import {ICPRegistration} from './site-common';
+import {useRuntimeConfig} from './runtime-config';
 import {companySEO} from './seo';
 import {CompanyWebsiteHero} from './company-website-preview';
 import {useDebouncedSearch} from './search-debounce';
@@ -16,11 +16,13 @@ import {vendorPath} from './showroom-share';
 import {TaxonomySummary} from './taxonomy-summary';
 import type {Page,ShowroomResponse,Taxonomy} from './types';
 import './showroom.css';
+import './showroom-footer.css';
 import {useHall,useContentHall,usePageMetadata} from './halls';
 
 const allTabs=[['home','portalHome'],['about','companyIntro'],['products','showroomProducts'],['videos','shortVideos'],['catalogs','electronicCatalogs'],['contact','showroomContact']];
 export function Showroom(){
  const {href,hall}=useHall();const {slug,id}=useParams();const {lang,t,toggle}=useLanguage();const location=useLocation();const navigate=useNavigate();const [params]=useSearchParams();
+ const {site}=useRuntimeConfig();const shareLabel=lang==='zh'?'分享展厅':'Share showroom';
  const [visited,setVisited]=useState<Set<string>>(()=>new Set());
  useEffect(()=>setVisited(new Set()),[slug,id]);
  const [q,setQ]=useState(params.get('q')||'');const [share,setShare]=useState(false);const [copyState,setCopyState]=useState('');
@@ -57,7 +59,7 @@ export function Showroom(){
  return <div className={'showroom showroom-v2 '+(data.phone||data.wechat?'has-quick-contact':'')}>
   <header className="sr-platform-header"><div className="container sr-platform-inner"><Link to="/" className="sr-platform-brand"><Tractor size={24}/><strong>{t('brand')}</strong></Link><Link className="sr-hall-back" to={href('/')}>{t('backExhibition')} · {lang==='en'?hall?.name_en:hall?.name}<ArrowUpRight size={15}/></Link><button className="language-button" onClick={toggle}><Globe2 size={16}/>{lang==='zh'?'English':'中文'}</button></div></header>
   <main>{origin&&<div className="container showroom-back"><Link className="text-link" to={back}>{t(back.startsWith('/regions')?'imBackMap':back.startsWith('/browse/products')?'navProducts':'navBrowse')}</Link></div>}
-  {item.demonstration&&<p className="container notice">{lang==='zh'?'开发演示展台，仅供功能测试和交流。':'Development demonstration showroom for testing and exchange.'}</p>}<CompanyWebsiteHero data={data} actions={<>{hasProducts&&<button className="button" onClick={()=>selectTab('products')}>{t('viewCatalog')}<ArrowUpRight size={17}/></button>}{contactAction}<button className="text-link" onClick={()=>setShare(true)} aria-label={t('shareShowroom')}><Share2 size={18}/></button></>}/>
+  {item.demonstration&&<p className="container notice">{lang==='zh'?'开发演示展台，仅供功能测试和交流。':'Development demonstration showroom for testing and exchange.'}</p>}<CompanyWebsiteHero data={data} actions={<>{hasProducts&&<button className="button" onClick={()=>selectTab('products')}>{t('viewCatalog')}<ArrowUpRight size={17}/></button>}{contactAction}<button className="text-link" onClick={()=>setShare(true)} aria-label={shareLabel}><Share2 size={18}/></button></>}/>
 
   <div className="sr-navigation" id="showroom-tabs"><div className="container"><div ref={tabStrip} id="sr-tabs" className="sr-tabs" role="tablist" aria-label={t('showroom')} onKeyDown={e=>{const index=tabs.findIndex(([key])=>key===activeTab);const next=e.key==='ArrowRight'?(index+1)%tabs.length:e.key==='ArrowLeft'?(index+tabs.length-1)%tabs.length:e.key==='Home'?0:e.key==='End'?tabs.length-1:-1;if(next>=0){e.preventDefault();selectTab(tabs[next][0]);document.getElementById('tab-'+tabs[next][0])?.focus({preventScroll:true})}}}>{tabs.map(([key,title])=><button type="button" role="tab" id={'tab-'+key} aria-controls={'panel-'+key} aria-selected={activeTab===key} tabIndex={activeTab===key?0:-1} key={key} onClick={()=>selectTab(key)}>{t(title)}</button>)}</div></div></div>
   <div className="sr-content"><div className="container showroom-section">
@@ -73,7 +75,7 @@ export function Showroom(){
   {(['videos','catalogs'] as const).map(tab=>(activeTab===tab||visited.has(tab))&&<section key={tab} id={'panel-'+tab} role="tabpanel" aria-labelledby={'tab-'+tab} hidden={activeTab!==tab}><h2>{t(tab==='videos'?'shortVideos':'electronicCatalogs')}</h2><ResourceList vendorID={item.id} slug={item.showroom_slug||'v-'+item.id} kind={tab==='videos'?'video':'catalog'}/></section>)}
   {(activeTab==='contact'||visited.has('contact'))&&<section id="panel-contact" role="tabpanel" aria-labelledby="tab-contact" hidden={activeTab!=='contact'}><h2>{t('showroomContact')}</h2>{contactDetails}{!!p?.contacts?.length&&<section className="sr-regional"><h3>{t('regionalContacts')}</h3><div className="regional-contacts">{p.contacts.filter(c=>c.phone||c.wechat||c.name).map((c,i)=><article className="regional-contact" key={i}>{c.area&&<small>{lang==='en'&&c.area_en?c.area_en:c.area}</small>}{c.name&&<strong>{lang==='en'&&c.name_en?c.name_en:c.name}</strong>}{c.phone&&<PublicPhone value={c.phone}/>}{c.wechat&&<CopyWechat value={c.wechat}/>}</article>)}</div></section>}</section>}
   </div></div></main>
-  <footer className="showroom-footer container"><strong>{name}</strong><Link to={href('/')}>{t('brand')} · {lang==='en'?hall?.name_en:hall?.name}</Link><small>{t('copyright')} · {t('technicalSupport')}</small><ICPRegistration/><button className="text-link" onClick={()=>setShare(true)}>{t('shareShowroom')}</button></footer>
+  <footer className="showroom-footer showroom-footer-simple container"><div className="showroom-footer-identity"><strong>{name}</strong><div className="showroom-footer-meta"><span className="showroom-footer-source">{lang==='zh'?<>由<Link to="/">中企展馆</Link>提供展示服务</>:<>Display service provided by <Link to="/">{t('brand')}</Link></>}</span><span className="showroom-footer-registration"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">{site.icp_number||'冀ICP备2026047360号-2'}</a>{site.police_number&&<a href={site.police_url||'https://beian.mps.gov.cn/'} target="_blank" rel="noopener noreferrer">{site.police_number}</a>}</span></div></div><button className="text-link showroom-footer-share" onClick={()=>setShare(true)}><Share2 size={15}/>{shareLabel}</button></footer>
   {(data.phone||data.wechat)&&<div ref={quickContact} className="showroom-mobile-contact">{data.phone&&<PublicPhone value={data.phone} compact/>}{data.wechat&&<CopyWechat value={data.wechat}/>}<button onClick={()=>selectTab('contact')}>{t('showroomContact')}<ArrowUpRight size={16}/></button></div>}
-  {share&&<ShareShowroom item={item} canonical={canonical} close={()=>setShare(false)}/>}</div>
+  {share&&<ShareShowroom item={item} canonical={canonical} close={()=>setShare(false)} shareLabel={shareLabel}/>}</div>
 }

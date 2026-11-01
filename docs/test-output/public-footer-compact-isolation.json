@@ -1,0 +1,19 @@
+{
+  "allUnchanged": true,
+  "protectedFiles": {
+    "web/src/showroom.tsx": "112ac5f2d6aea3ac7bce769ae9a7ad92c06d6493048b5b8c54aec51ed242e888",
+    "web/src/showroom-footer.css": "3f8acc6aea4dd92df4247b3f55ebf7ff4179d1f6af4d6e750494f7724d58da69",
+    "web/src/company-profile.tsx": "d11c7914d8bca48bc156629a1b2cd19bb611301c116b3e596ec4bc683d5ef243",
+    "web/src/merchant-entry.tsx": "56e63030ddd40000678b065374b3705355f4112c46c163c9d2e2e8ba69d53ccc",
+    "web/src/merchant-entry.css": "1ea4669e1f603ed2105bdfef9d27a5709074a523eb491ea59e7bf57fc90cec04",
+    "web/src/industry-map.css": "7790d053f0a0066beaa2b5381f7b76d94619db11365412e019c5788ec2f26456"
+  },
+  "after": {
+    "web/src/showroom.tsx": "112ac5f2d6aea3ac7bce769ae9a7ad92c06d6493048b5b8c54aec51ed242e888",
+    "web/src/showroom-footer.css": "3f8acc6aea4dd92df4247b3f55ebf7ff4179d1f6af4d6e750494f7724d58da69",
+    "web/src/company-profile.tsx": "d11c7914d8bca48bc156629a1b2cd19bb611301c116b3e596ec4bc683d5ef243",
+    "web/src/merchant-entry.tsx": "56e63030ddd40000678b065374b3705355f4112c46c163c9d2e2e8ba69d53ccc",
+    "web/src/merchant-entry.css": "1ea4669e1f603ed2105bdfef9d27a5709074a523eb491ea59e7bf57fc90cec04",
+    "web/src/industry-map.css": "7790d053f0a0066beaa2b5381f7b76d94619db11365412e019c5788ec2f26456"
+  }
+}

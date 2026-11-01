@@ -1,0 +1,272 @@
+{
+  "base": "http://localhost:8080",
+  "productionDeployed": false,
+  "contentWrites": false,
+  "layouts": [
+    {
+      "width": 1440,
+      "equivalentZoom": 1,
+      "cssWidth": 1440,
+      "columns": 3,
+      "height": 263,
+      "aligned": true,
+      "noOverflow": true,
+      "mobileTouchAreas": true
+    },
+    {
+      "width": 1280,
+      "equivalentZoom": 1,
+      "cssWidth": 1280,
+      "columns": 3,
+      "height": 263,
+      "aligned": true,
+      "noOverflow": true,
+      "mobileTouchAreas": true
+    },
+    {
+      "width": 768,
+      "equivalentZoom": 1,
+      "cssWidth": 768,
+      "columns": 3,
+      "height": 263,
+      "aligned": true,
+      "noOverflow": true,
+      "mobileTouchAreas": true
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1,
+      "cssWidth": 390,
+      "columns": 2,
+      "height": 457.375,
+      "aligned": true,
+      "noOverflow": true,
+      "mobileTouchAreas": true
+    },
+    {
+      "width": 360,
+      "equivalentZoom": 1,
+      "cssWidth": 360,
+      "columns": 2,
+      "height": 481.96875,
+      "aligned": true,
+      "noOverflow": true,
+      "mobileTouchAreas": true
+    },
+    {
+      "width": 320,
+      "equivalentZoom": 1,
+      "cssWidth": 320,
+      "columns": 1,
+      "height": 654.96875,
+      "aligned": true,
+      "noOverflow": true,
+      "mobileTouchAreas": true
+    },
+    {
+      "width": 390,
+      "equivalentZoom": 1.25,
+      "cssWidth": 312,
+      "columns": 1,
+      "height": 654.96875,
+      "aligned": true,
+      "noOverflow": true,
+      "mobileTouchAreas": true
+    },
+    {
+      "width": 1440,
+      "equivalentZoom": 1.25,
+      "cssWidth": 1152,
+      "columns": 3,
+      "height": 263,
+      "aligned": true,
+      "noOverflow": true,
+      "mobileTouchAreas": true
+    }
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "sharedFooter": true,
+      "noOverflow": true
+    },
+    {
+      "path": "/browse",
+      "sharedFooter": true,
+      "noOverflow": true
+    },
+    {
+      "path": "/browse/products",
+      "sharedFooter": true,
+      "noOverflow": true
+    },
+    {
+      "path": "/guide",
+      "sharedFooter": true,
+      "noOverflow": true
+    },
+    {
+      "path": "/services",
+      "sharedFooter": true,
+      "noOverflow": true
+    },
+    {
+      "path": "/service-requests",
+      "sharedFooter": true,
+      "noOverflow": true
+    },
+    {
+      "path": "/services/terms",
+      "sharedFooter": true,
+      "noOverflow": true
+    },
+    {
+      "path": "/services/privacy",
+      "sharedFooter": true,
+      "noOverflow": true
+    },
+    {
+      "path": "/services/showroom-agreement",
+      "sharedFooter": true,
+      "noOverflow": true
+    },
+    {
+      "path": "/products/2",
+      "sharedFooter": true,
+      "noOverflow": true
+    }
+  ],
+  "entries": [
+    {
+      "width": 1440,
+      "path": "/admin",
+      "keyboardEntry": true,
+      "loginRequired": true
+    },
+    {
+      "width": 1440,
+      "label": "免费入驻",
+      "path": "/join",
+      "clicked": true
+    },
+    {
+      "width": 1440,
+      "label": "入驻使用指南",
+      "path": "/guide",
+      "clicked": true
+    },
+    {
+      "width": 1440,
+      "label": "入驻与服务说明",
+      "path": "/services",
+      "clicked": true
+    },
+    {
+      "width": 1440,
+      "label": "投诉与服务申请",
+      "path": "/service-requests",
+      "clicked": true
+    },
+    {
+      "width": 1440,
+      "label": "下载 App",
+      "path": "/app",
+      "clicked": true
+    },
+    {
+      "width": 1440,
+      "label": "企业登录",
+      "path": "/merchant/login",
+      "clicked": true
+    },
+    {
+      "width": 390,
+      "path": "/admin",
+      "keyboardEntry": true,
+      "loginRequired": true
+    },
+    {
+      "width": 390,
+      "label": "免费入驻",
+      "path": "/join",
+      "clicked": true
+    },
+    {
+      "width": 390,
+      "label": "入驻使用指南",
+      "path": "/guide",
+      "clicked": true
+    },
+    {
+      "width": 390,
+      "label": "入驻与服务说明",
+      "path": "/services",
+      "clicked": true
+    },
+    {
+      "width": 390,
+      "label": "投诉与服务申请",
+      "path": "/service-requests",
+      "clicked": true
+    },
+    {
+      "width": 390,
+      "label": "下载 App",
+      "path": "/app",
+      "clicked": true
+    },
+    {
+      "width": 390,
+      "label": "企业登录",
+      "path": "/merchant/login",
+      "clicked": true
+    }
+  ],
+  "specialPages": [
+    {
+      "width": 1440,
+      "path": "/regions",
+      "compactFooter": true
+    },
+    {
+      "width": 1440,
+      "path": "/join",
+      "compactFooter": true
+    },
+    {
+      "width": 1440,
+      "path": "/merchant/login",
+      "compactFooter": true
+    },
+    {
+      "width": 390,
+      "path": "/regions",
+      "compactFooter": true
+    },
+    {
+      "width": 390,
+      "path": "/join",
+      "compactFooter": true
+    },
+    {
+      "width": 390,
+      "path": "/merchant/login",
+      "compactFooter": true
+    },
+    {
+      "width": 1440,
+      "path": "/v/v-37",
+      "showroomFooter": true
+    },
+    {
+      "width": 390,
+      "path": "/v/v-37",
+      "showroomFooter": true
+    }
+  ],
+  "errors": [],
+  "unexpectedWrites": [],
+  "adminUnauthenticatedStatus": 401,
+  "englishNavigation": true,
+  "passed": true
+}

@@ -1,0 +1,26 @@
+{
+  "isolatedDatabase": true,
+  "productionDeployed": false,
+  "realSmsSends": 0,
+  "checks": [
+    "registration → visitor → free company application → merchant; draft saved; unpublished sharing unavailable",
+    "company and product saved as private drafts, submitted separately, approved and discoverable through real public searches",
+    "published showroom sharing, real QR generation, poster preview and image download",
+    "shared guide footer across homepage, search, product, showroom, login/register, map, services and requests",
+    "mobile verification → password → agreements → ordinary account registration using development SMS only"
+  ],
+  "screenshots": [
+    "register-phone",
+    "register-account",
+    "company-apply",
+    "company-basics",
+    "product-basics",
+    "product-submit",
+    "company-agreements",
+    "company-submit",
+    "showroom-share"
+  ],
+  "layouts": [],
+  "errors": [],
+  "passed": true
+}

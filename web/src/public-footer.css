@@ -1,0 +1,37 @@
+/* This footer is used only by ordinary platform pages, not showroom/map/auth footers. */
+.public-web .public-footer{background:#081a31;color:#cad6e5;border:0;padding-block:22px 14px;font-size:15px;line-height:1.6}
+.public-footer .public-footer-columns{display:grid;grid-template-columns:minmax(0,1.2fr) repeat(2,minmax(0,1fr));column-gap:32px;padding-block:0 14px}
+.public-footer .public-footer-intro{min-width:0}
+.public-footer .public-footer-brand{display:inline-block;color:#fff;font-size:20px;font-weight:700;line-height:1.5}
+.public-footer .public-footer-intro p{max-width:360px;font-size:14px;line-height:1.8;margin:6px 0 0;color:#b0c2d8}
+.public-footer nav.public-footer-group{display:block;position:static;inset:auto;min-width:0;padding:0;margin:0;background:none;border:0;font-size:15px;text-align:left}
+.public-footer .public-footer-group h2{color:#fff;font-size:16px;font-weight:700;line-height:1.5;margin:0 0 8px}
+.public-footer .public-footer-group ul{display:flex;flex-wrap:wrap;gap:4px 12px;list-style:none;padding:0;margin:0}
+.public-footer .public-footer-group li{min-width:0;margin:0;padding:0}
+.public-footer .public-footer-group li>a{display:inline-flex;align-items:center;max-width:100%;padding:0;color:#cad6e5;font-size:15px;line-height:1.6;white-space:normal;overflow-wrap:anywhere;text-decoration:none}
+.public-footer .public-footer-group li>a.public-footer-join{color:#d4eaff;font-weight:600}
+.public-footer .public-footer-legal{border-top:1px solid #ffffff20;padding-block:10px 0;color:#9fb1c8;font-size:12px}
+.public-footer .public-footer-registration{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 14px;line-height:1.8}
+.public-footer .public-footer-registration>span{min-width:0;overflow-wrap:anywhere}
+.public-footer .public-footer-filings{display:inline-flex;flex-wrap:wrap;gap:2px 12px}
+.public-footer .public-footer-bottom{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px 16px;margin:0}
+.public-footer nav.public-footer-legal-nav{display:flex;position:static;inset:auto;flex-direction:row;align-items:center;flex-wrap:wrap;justify-content:flex-start;gap:0 16px;min-width:0;margin:0;padding:0;border:0;background:none;font-size:12px}
+.public-footer .public-footer-legal-nav>a{display:inline-flex;align-items:center;padding:2px 0;line-height:1.6;color:#afc0d5;font-size:12px;white-space:normal;overflow-wrap:anywhere}
+.public-footer .public-footer-legal-nav>a.public-footer-admin{color:#9fb1c8}
+.public-footer .public-footer-group li>a:hover,.public-footer .public-footer-legal-nav>a:hover,.public-footer .public-footer-filings>a:hover,.public-footer a.public-footer-brand:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+.public-footer a:focus-visible{color:#fff;outline:2px solid #91c4ff;outline-offset:4px;border-radius:2px}
+@media(max-width:767px){
+ .public-web .public-footer{padding-block:20px 12px}
+ .public-footer .public-footer-columns{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 24px}
+ .public-footer .public-footer-intro{grid-column:1/-1}
+ .public-footer .public-footer-intro p{margin-top:6px}
+ .public-footer .public-footer-group ul{row-gap:0}
+ .public-footer .public-footer-group li>a{min-height:44px;padding-block:8px}
+ .public-footer .public-footer-registration{gap:2px 12px}
+ .public-footer .public-footer-registration a{display:inline-flex;align-items:center;min-height:44px}
+ .public-footer .public-footer-bottom{display:block}
+ .public-footer nav.public-footer-legal-nav{gap:0 12px}
+ .public-footer .public-footer-legal-nav>a{min-height:44px;padding-block:8px}
+ .public-footer .public-footer-brand{min-height:44px;display:inline-flex;align-items:center}
+}
+@media(max-width:359px){.public-footer .public-footer-columns{grid-template-columns:minmax(0,1fr);gap:16px}.public-footer .public-footer-intro{grid-column:auto}}

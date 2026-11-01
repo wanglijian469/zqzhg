@@ -1,0 +1,45 @@
+.admission-guide{--guide-blue:#164e91;--guide-ink:#18314f;--guide-muted:#52657a;color:var(--guide-ink);font-size:16px;line-height:1.85;background:#f4f7fb}
+.guide-hero{background:linear-gradient(120deg,#eaf2fb 0%,#f8fbff 68%,#e7f1ee 100%);border-bottom:1px solid #dbe5ef}
+.guide-hero-inner{max-width:1200px;margin:auto;padding:64px 32px 48px}
+.guide-eyebrow{display:flex;align-items:center;gap:9px;color:var(--guide-blue);font-size:15px;font-weight:700;letter-spacing:1px}
+.guide-hero h1{font-size:clamp(28px,3.2vw,44px);line-height:1.3;letter-spacing:-.7px;margin:17px 0}
+.guide-lead{font-size:19px;color:var(--guide-muted);line-height:1.8;margin:0 0 26px}
+.admission-guide .guide-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.admission-guide .button{min-height:48px;padding:10px 20px;font-size:16px;white-space:normal;display:inline-flex;align-items:center;justify-content:center;gap:9px;text-align:center;line-height:1.55}
+.admission-guide .button.secondary{background:#fff;border:1px solid #c8d6e5;color:var(--guide-blue)}
+.guide-service-link{display:inline-flex;align-items:center;gap:4px;padding:10px 4px;min-height:44px;color:var(--guide-blue)}
+.guide-free-note{display:flex;align-items:center;gap:7px;font-size:15px;color:#326b59;margin:20px 0 0}
+.guide-content{max-width:1200px;padding-top:30px;padding-bottom:64px}
+.guide-five{background:#fff;border:1px solid #dce5ee;border-radius:16px;padding:26px 30px;margin-bottom:32px;box-shadow:0 6px 24px #19334f04}
+.guide-five h2{margin:0;font-size:23px}.guide-five p{color:var(--guide-muted);margin:5px 0 22px}
+.guide-five ol{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;list-style:none;margin:0;padding:0}
+.guide-five a{display:flex;align-items:center;gap:10px;color:var(--guide-ink);min-height:56px;text-decoration:none}
+.guide-five a>span{background:#eaf2fc;color:var(--guide-blue);border:1px solid #d4e4f6;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;flex-shrink:0;font-weight:700}
+.guide-five strong{font-size:16px}.guide-five svg{margin-left:auto;flex-shrink:0;color:#8ca1ba}
+.guide-layout{display:grid;grid-template-columns:240px minmax(0,1fr);align-items:start;gap:30px}
+.guide-directory{display:block;position:sticky;top:95px;left:auto;right:auto;font-size:16px;padding:24px 20px;background:#fff;border:1px solid #dce5ee;border-radius:14px;scroll-margin-top:110px}
+.guide-directory>span{font-size:14px;color:var(--guide-muted)}.guide-directory h2{font-size:21px;margin:2px 0 15px}
+.guide-directory ol{list-style:none;padding:0;margin:0}.guide-directory li a{display:flex;align-items:center;gap:12px;color:var(--guide-ink);text-decoration:none;min-height:44px;padding:5px 0}
+.guide-directory li a:hover{color:var(--guide-blue)}.guide-directory small{font-size:13px;color:#7c90a7;flex-shrink:0}
+.guide-directory>p{border-top:1px solid #e4ebf2;padding-top:18px;margin:18px 0 0;font-size:15px;color:var(--guide-muted)}.guide-directory>p svg{vertical-align:middle;margin-right:6px}.guide-directory>p a{display:block;font-weight:600;color:var(--guide-blue)}
+.guide-article{min-width:0}.guide-chapter{padding:30px 32px;margin-bottom:22px;background:white;border:1px solid #dce5ee;border-radius:14px;scroll-margin-top:110px;outline-offset:4px}
+.guide-chapter-heading{display:flex;gap:13px;align-items:center;border-bottom:1px solid #edf1f6;padding-bottom:15px;margin-bottom:20px}
+.guide-chapter-heading>span{font-size:15px;color:var(--guide-blue);font-weight:700;background:#eef4fb;border-radius:7px;padding:2px 10px}.guide-chapter h2{font-size:24px;line-height:1.5;margin:0}
+.guide-chapter h3{font-size:18px;margin:22px 0 14px}.guide-chapter p{margin:12px 0}.guide-chapter p a{color:var(--guide-blue);text-decoration:underline;text-underline-offset:3px}
+.guide-instructions{list-style:none;padding:0;margin:18px 0 22px}.guide-instructions li{display:flex;align-items:flex-start;gap:12px;margin:15px 0}.guide-instructions li>span{margin-top:3px;width:25px;height:25px;line-height:25px;text-align:center;flex:0 0 25px;background:#f0f4f9;border-radius:5px;color:var(--guide-blue);font-size:14px;font-weight:700}
+.guide-note{padding:14px 17px;background:#f1f6fc;border-left:3px solid #a8c3e2;border-radius:0 7px 7px 0;color:#3b5571}
+.guide-top{display:block;width:max-content;max-width:100%;font-size:14px;color:var(--guide-muted);margin-top:22px;min-height:44px;padding-top:10px;text-decoration:none}
+.guide-image{margin:20px 0 24px;border:1px solid #dce5ee;border-radius:9px;overflow:hidden;background:#f4f7fb;min-width:0}
+.guide-image-button{position:relative;display:block;width:100%;padding:12px;border:0;background:#eef3f8;cursor:zoom-in;font:inherit}
+.guide-image-button img{width:100%;height:270px;object-fit:contain;display:block;object-position:top}
+.guide-image-button>span{display:flex;align-items:center;gap:6px;background:#fff;color:var(--guide-blue);padding:4px 10px;border-radius:6px;font-size:14px;position:absolute;right:18px;bottom:18px;box-shadow:0 2px 10px #142b4915;min-height:30px}
+.guide-image figcaption{background:#fff;padding:12px 16px;font-size:15px;font-weight:600;line-height:1.7}.guide-image figcaption small{display:block;font-size:13px;font-weight:400;color:var(--guide-muted);margin-top:3px}
+.guide-image-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.guide-image-fallback{padding:20px;color:var(--guide-muted)}
+.guide-faq details{border-top:1px solid #e3eaf2;padding:0}.guide-faq details:last-child{border-bottom:1px solid #e3eaf2}
+.guide-faq summary{padding:16px 24px 16px 0;font-weight:600;cursor:pointer;line-height:1.7}.guide-faq details p{margin:0;padding:0 0 20px;color:var(--guide-muted)}
+.guide-finish{padding:34px;text-align:center;border:1px solid #d7e5f4;border-radius:14px;background:#eaf2fc}.guide-finish>svg{color:var(--guide-blue)}.guide-finish h2{font-size:24px;margin:10px 0}.guide-finish p{color:var(--guide-muted);margin:6px 0 22px}
+.guide-image-modal{max-width:1040px;width:calc(100vw - 36px);max-height:90dvh;overflow:auto}.guide-image-modal h2{font-size:20px;padding-right:35px;line-height:1.5}.guide-image-modal p{font-size:15px;color:#52657a}.guide-image-modal>img{display:block;max-width:100%;height:auto;margin:auto}
+.admission-guide :is(a,button,summary):focus-visible{outline:3px solid #377cc3;outline-offset:4px}
+@media(max-width:1000px){.guide-layout{grid-template-columns:200px minmax(0,1fr);gap:20px}.guide-five{padding:22px}.guide-five ol{gap:10px}.guide-five a{flex-wrap:wrap;gap:6px}.guide-five strong{font-size:15px}.guide-five svg{display:none}.guide-chapter{padding:25px}.guide-image-pair{grid-template-columns:1fr;gap:0}}
+@media(max-width:760px){.guide-hero-inner{padding:35px 20px 30px}.guide-hero h1{letter-spacing:0}.guide-lead{font-size:17px}.guide-desktop-break{display:none}.guide-content{padding:20px 16px 40px}.guide-free-note{font-size:14px;align-items:flex-start}.guide-free-note svg{flex-shrink:0;margin-top:5px}.guide-five{padding:20px;margin-bottom:20px}.guide-five h2{font-size:22px}.guide-five ol{grid-template-columns:1fr;gap:0}.guide-five a{min-height:54px;flex-wrap:nowrap;gap:12px;border-top:1px solid #edf1f6}.guide-five strong{font-size:16px}.guide-five svg{display:block}.guide-layout{display:block}.guide-directory{position:static;margin-bottom:20px;padding:20px;scroll-margin-top:90px}.guide-directory ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px}.guide-directory li a{gap:7px;font-size:15px;line-height:1.6}.guide-chapter{padding:22px 20px;scroll-margin-top:90px}.guide-chapter h2{font-size:21px}.guide-chapter-heading{gap:10px}.guide-chapter-heading>span{padding:1px 8px}.guide-chapter h3{font-size:18px}.guide-image-button img{height:230px}.admission-guide .guide-actions{align-items:stretch}.guide-hero .guide-actions{display:grid;grid-template-columns:minmax(0,1fr) auto}.guide-service-link{grid-column:1/-1;justify-content:flex-start}.guide-note{padding:12px 14px}.guide-finish{padding:28px 20px}.guide-finish h2{font-size:22px}.guide-image-modal{width:calc(100vw - 24px);padding:20px;max-height:92dvh}}
+@media(prefers-reduced-motion:reduce){.admission-guide{scroll-behavior:auto}}

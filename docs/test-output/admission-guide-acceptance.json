@@ -1,0 +1,122 @@
+{
+  "isolatedDatabase": true,
+  "productionDeployed": false,
+  "realSmsSends": 0,
+  "checks": [
+    "registration → visitor → free company application → merchant; draft saved; unpublished sharing unavailable",
+    "company and product saved as private drafts, submitted separately, approved and discoverable through real public searches",
+    "published showroom sharing, real QR generation, poster preview and image download",
+    "shared guide footer across homepage, search, product, showroom, login/register, map, services and requests",
+    "mobile verification → password → agreements → ordinary account registration using development SMS only",
+    "guide screenshot assets, 6 layout states, 60 directory jumps, direct/reloaded anchors, FAQ, image zoom/focus, fallback/retry and CTA navigation"
+  ],
+  "screenshots": [],
+  "layouts": [
+    {
+      "width": 1440,
+      "scale": 1,
+      "noOverflow": true,
+      "chapters": 10,
+      "directoryTargets": 10,
+      "directHash": true,
+      "reloadedHash": true
+    },
+    {
+      "width": 768,
+      "scale": 1,
+      "noOverflow": true,
+      "chapters": 10,
+      "directoryTargets": 10,
+      "directHash": true,
+      "reloadedHash": true
+    },
+    {
+      "width": 390,
+      "scale": 1,
+      "noOverflow": true,
+      "chapters": 10,
+      "directoryTargets": 10,
+      "directHash": true,
+      "reloadedHash": true
+    },
+    {
+      "width": 360,
+      "scale": 1,
+      "noOverflow": true,
+      "chapters": 10,
+      "directoryTargets": 10,
+      "directHash": true,
+      "reloadedHash": true
+    },
+    {
+      "width": 390,
+      "scale": 1.25,
+      "noOverflow": true,
+      "chapters": 10,
+      "directoryTargets": 10,
+      "directHash": true,
+      "reloadedHash": true
+    },
+    {
+      "width": 1440,
+      "scale": 1.25,
+      "noOverflow": true,
+      "chapters": 10,
+      "directoryTargets": 10,
+      "directHash": true,
+      "reloadedHash": true
+    }
+  ],
+  "errors": [],
+  "linkStatuses": [
+    {
+      "href": "/join",
+      "status": 200
+    },
+    {
+      "href": "/merchant/login",
+      "status": 200
+    },
+    {
+      "href": "/service-requests",
+      "status": 200
+    },
+    {
+      "href": "/account",
+      "status": 200
+    },
+    {
+      "href": "/merchant/products",
+      "status": 200
+    },
+    {
+      "href": "/merchant/booth",
+      "status": 200
+    },
+    {
+      "href": "/browse",
+      "status": 200
+    },
+    {
+      "href": "/browse/products",
+      "status": 200
+    },
+    {
+      "href": "/regions",
+      "status": 200
+    },
+    {
+      "href": "/merchant/promotion",
+      "status": 200
+    },
+    {
+      "href": "/services",
+      "status": 200
+    },
+    {
+      "href": "/app",
+      "status": 200
+    }
+  ],
+  "passed": true
+}

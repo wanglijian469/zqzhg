@@ -36,7 +36,7 @@
 .showroom-v2 .portal-section{margin-bottom:36px}
 .showroom-v2 .portal-section:last-child{margin-bottom:0}
 .showroom-v2 .portal-section-heading{margin-bottom:20px}
-.showroom-v2 .portal-section-heading .eyebrow{display:none}
+.showroom-v2 .portal-section-heading .eyebrow{display:none}.showroom-v2 .portal-section-heading .eyebrow.english-decoration{display:block}
 .showroom-v2 .portal-section-heading h2,.showroom-v2 .showroom-section h2{font-size:24px;color:#0b2c55;margin:0 0 20px}
 .showroom-v2 .portal-overview-layout{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px}
 .showroom-v2 .portal-description{background:#fff;color:#3f546f;border:1px solid #e2e9f2;padding:24px;justify-content:flex-start}

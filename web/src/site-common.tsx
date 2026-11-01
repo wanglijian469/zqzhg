@@ -2,10 +2,13 @@ import {Link} from 'react-router-dom';
 import {useLanguage} from './ui';
 import {useRuntimeConfig} from './runtime-config';
 
-export function ICPRegistration(){
+export function FilingLinks(){
  const config=useRuntimeConfig();
+ return <><a className="icp-registration" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">{config.site.icp_number||'冀ICP备2026047360号-2'}</a>{config.site.police_number&&<a href={config.site.police_url||'https://beian.mps.gov.cn/'} target="_blank" rel="noopener noreferrer">{config.site.police_number}</a>}</>;
+}
+export function ICPRegistration(){
  const {lang}=useLanguage();
- return <span className="site-registrations"><a className="icp-registration" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">{config.site.icp_number||'冀ICP备2026047360号-2'}</a>{config.site.police_number&&<a href={config.site.police_url||'https://beian.mps.gov.cn/'} target="_blank" rel="noopener noreferrer">{config.site.police_number}</a>}<Link to="/services">{lang==='zh'?'入驻与服务说明':'Admission and services'}</Link><Link to="/service-requests">{lang==='zh'?'投诉与服务申请':'Complaints and requests'}</Link></span>;
+ return <span className="site-registrations"><FilingLinks/><Link to="/services">{lang==='zh'?'入驻与服务说明':'Admission and services'}</Link><Link to="/guide">{lang==='zh'?'入驻使用指南':'Manufacturer guide (Chinese)'}</Link><Link to="/service-requests">{lang==='zh'?'投诉与服务申请':'Complaints and requests'}</Link></span>;
 }
 export function ProcurementPaused(){
  const {lang}=useLanguage();

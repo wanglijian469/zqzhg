@@ -21,7 +21,7 @@ if (Test-Path -LiteralPath $assetRoot) {
 }
 New-Item -ItemType Directory -Force -Path $assetRoot | Out-Null
 # Explicit allowlist: never include downloads/APKs, secrets or databases.
-foreach ($entry in @('index.html','brand.svg','assets','pdfjs','maps')) {
+foreach ($entry in @('index.html','brand.svg','assets','pdfjs','maps','guide-images')) {
     $source = Join-Path $webOutput $entry
     if (Test-Path -LiteralPath $source) { Copy-Item -LiteralPath $source -Destination $assetRoot -Recurse }
 }

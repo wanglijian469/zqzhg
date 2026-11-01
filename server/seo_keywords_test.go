@@ -65,7 +65,7 @@ func TestSEOLandingSearchTermsAndStaticSitemap(t *testing.T) {
 	}
 	w := seoGet(router, "/sitemaps/pages.xml")
 	var urls sitemapURLs
-	if w.Code != 200 || xml.Unmarshal(w.Body.Bytes(), &urls) != nil || len(urls.Entries) != 8 {
+	if w.Code != 200 || xml.Unmarshal(w.Body.Bytes(), &urls) != nil || len(urls.Entries) != 9 {
 		t.Fatal(w.Code, w.Body.String())
 	}
 	for _, entry := range urls.Entries {

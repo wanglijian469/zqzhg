@@ -1,0 +1,12 @@
+/* Only the independent company showroom uses this compact footer. */
+.showroom-v2 .showroom-footer.showroom-footer-simple{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px 20px;padding-block:12px;line-height:1.6;border-top:1px solid #e5ebf2;color:#64748b}
+.showroom-footer-simple .showroom-footer-identity{min-width:0;display:flex;flex-direction:column;gap:3px}
+.showroom-footer-simple .showroom-footer-identity>strong{font-size:14px;line-height:1.5;font-weight:600;color:#30445e;overflow-wrap:anywhere}
+.showroom-footer-simple .showroom-footer-meta{display:flex;align-items:baseline;flex-wrap:wrap;gap:3px 14px;min-width:0;font-size:12px}
+.showroom-footer-simple .showroom-footer-source a{color:#536e8f;text-underline-offset:3px}
+.showroom-footer-simple .showroom-footer-source a:hover{text-decoration:underline}
+.showroom-footer-simple .showroom-footer-registration{display:flex;flex-wrap:wrap;gap:3px 10px;color:#7c8897;font-size:11px;line-height:1.6;overflow-wrap:anywhere}
+.showroom-footer-simple .showroom-footer-registration a:hover{color:#536e8f;text-decoration:underline;text-underline-offset:3px}
+.showroom-footer-simple .showroom-footer-share{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:8px 0 8px 10px;font-size:13px;white-space:nowrap;color:#536e8f}
+.showroom-footer-simple :is(a,button):focus-visible{outline:2px solid #4377aa;outline-offset:3px}
+@media(max-width:600px){.showroom-v2 .showroom-footer.showroom-footer-simple{gap:8px 12px;padding-block:12px}.showroom-footer-simple .showroom-footer-meta{display:flex;flex-direction:column;align-items:flex-start;gap:2px}.showroom-footer-simple .showroom-footer-share{align-self:start}}

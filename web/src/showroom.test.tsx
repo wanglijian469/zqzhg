@@ -39,7 +39,7 @@ it('keeps showroom search, category, page and language across product details an
 });
 it('shares the canonical company URL without filters and provides manual copy fallback',async()=>{
  history.replaceState(null,'','/v/sample?q=TEST&page=2');render(<BrowserRouter><App/></BrowserRouter>);const user=userEvent.setup();await screen.findByRole('heading',{name:vendor.data.name});
- await user.click(screen.getAllByRole('button',{name:'分享官网'})[0]);const modal=screen.getByRole('dialog');expect((within(modal).getByRole('textbox',{name:'展厅地址'}) as HTMLInputElement).value).toBe('https://showroom.example/v/sample');
+ await user.click(screen.getAllByRole('button',{name:'分享展厅'})[0]);const modal=screen.getByRole('dialog');expect((within(modal).getByRole('textbox',{name:'展厅地址'}) as HTMLInputElement).value).toBe('https://showroom.example/v/sample');
  vi.spyOn(navigator.clipboard,'writeText').mockRejectedValueOnce(new Error('clipboard denied'));await user.click(within(modal).getByRole('button',{name:'复制地址'}));expect(await within(modal).findByText('自动复制失败，请选中地址手动复制。')).toBeTruthy();
  expect(within(modal).getByRole('button',{name:'展厅二维码'})).toBeTruthy();expect(within(modal).getByRole('button',{name:'生成海报预览'})).toBeTruthy();
 });

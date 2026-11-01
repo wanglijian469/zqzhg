@@ -1,0 +1,204 @@
+{
+  "base": "http://localhost:8080",
+  "productionDeployed": false,
+  "contentWrites": false,
+  "publishedVendors": 11,
+  "showrooms": [
+    {
+      "vendor": 37,
+      "width": 1440,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 27,
+      "width": 1440,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 21,
+      "width": 1440,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 1,
+      "width": 1440,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 56,
+      "width": 1440,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 55,
+      "width": 1440,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 53,
+      "width": 1440,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 51,
+      "width": 1440,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 48,
+      "width": 1440,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 44,
+      "width": 1440,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 39,
+      "width": 1440,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 37,
+      "width": 390,
+      "height": 87.78125,
+      "noOverflow": true
+    },
+    {
+      "vendor": 27,
+      "width": 390,
+      "height": 87.78125,
+      "noOverflow": true
+    },
+    {
+      "vendor": 21,
+      "width": 390,
+      "height": 87.78125,
+      "noOverflow": true
+    },
+    {
+      "vendor": 1,
+      "width": 390,
+      "height": 87.78125,
+      "noOverflow": true
+    },
+    {
+      "vendor": 56,
+      "width": 390,
+      "height": 87.78125,
+      "noOverflow": true
+    },
+    {
+      "vendor": 55,
+      "width": 390,
+      "height": 87.78125,
+      "noOverflow": true
+    },
+    {
+      "vendor": 53,
+      "width": 390,
+      "height": 87.78125,
+      "noOverflow": true
+    },
+    {
+      "vendor": 51,
+      "width": 390,
+      "height": 87.78125,
+      "noOverflow": true
+    },
+    {
+      "vendor": 48,
+      "width": 390,
+      "height": 87.78125,
+      "noOverflow": true
+    },
+    {
+      "vendor": 44,
+      "width": 390,
+      "height": 87.78125,
+      "noOverflow": true
+    },
+    {
+      "vendor": 39,
+      "width": 390,
+      "height": 87.78125,
+      "noOverflow": true
+    }
+  ],
+  "layouts": [
+    {
+      "vendor": 27,
+      "width": 1440,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 27,
+      "width": 768,
+      "height": 69,
+      "noOverflow": true
+    },
+    {
+      "vendor": 27,
+      "width": 390,
+      "height": 87.78125,
+      "noOverflow": true
+    },
+    {
+      "vendor": 27,
+      "width": 360,
+      "height": 87.78125,
+      "noOverflow": true
+    }
+  ],
+  "platformPages": [
+    {
+      "width": 1440,
+      "fullFooter": true,
+      "complaintEntry": true
+    },
+    {
+      "width": 390,
+      "fullFooter": true,
+      "complaintEntry": true
+    },
+    {
+      "path": "/guide",
+      "guideLink": true
+    },
+    {
+      "path": "/services",
+      "guideLink": true
+    },
+    {
+      "path": "/join",
+      "guideLink": true
+    },
+    {
+      "path": "/merchant/login",
+      "guideLink": true
+    }
+  ],
+  "errors": [],
+  "legacyNumericRoute": true,
+  "sharing": {
+    "label": "分享展厅",
+    "copy": true,
+    "qr": true,
+    "posterPreview": true,
+    "posterDownload": true
+  },
+  "passed": true
+}

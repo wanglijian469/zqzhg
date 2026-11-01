@@ -1,0 +1,107 @@
+{
+  "base": "http://localhost:8080",
+  "productionDeployed": false,
+  "layouts": [
+    {
+      "state": "home-zh",
+      "width": 1440,
+      "noOverflow": true
+    },
+    {
+      "state": "home-en",
+      "width": 1440,
+      "noOverflow": true
+    },
+    {
+      "state": "home-zh",
+      "width": 768,
+      "noOverflow": true
+    },
+    {
+      "state": "home-en",
+      "width": 768,
+      "noOverflow": true
+    },
+    {
+      "state": "home-zh",
+      "width": 390,
+      "noOverflow": true
+    },
+    {
+      "state": "home-en",
+      "width": 390,
+      "noOverflow": true
+    },
+    {
+      "state": "home-zh",
+      "width": 360,
+      "noOverflow": true
+    },
+    {
+      "state": "home-en",
+      "width": 360,
+      "noOverflow": true
+    },
+    {
+      "state": "showroom-zh",
+      "width": 1440,
+      "noOverflow": true
+    },
+    {
+      "state": "showroom-en",
+      "width": 1440,
+      "noOverflow": true
+    },
+    {
+      "state": "showroom-zh",
+      "width": 768,
+      "noOverflow": true
+    },
+    {
+      "state": "showroom-en",
+      "width": 768,
+      "noOverflow": true
+    },
+    {
+      "state": "showroom-zh",
+      "width": 390,
+      "noOverflow": true
+    },
+    {
+      "state": "showroom-en",
+      "width": 390,
+      "noOverflow": true
+    },
+    {
+      "state": "showroom-zh",
+      "width": 360,
+      "noOverflow": true
+    },
+    {
+      "state": "showroom-en",
+      "width": 360,
+      "noOverflow": true
+    }
+  ],
+  "languagePersistence": [
+    {
+      "width": 1440,
+      "language": "en",
+      "refresh": true
+    },
+    {
+      "width": 390,
+      "language": "zh",
+      "refresh": true
+    }
+  ],
+  "regressions": [
+    "current public footer retained",
+    "manufacturer search",
+    "free join entry",
+    "preparing hall zh/en/zh"
+  ],
+  "errors": [],
+  "writes": [],
+  "passed": true
+}
