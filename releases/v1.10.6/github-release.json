@@ -1,0 +1,38 @@
+{
+  "url": "https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.6-r3",
+  "tag": "v1.10.6-r3",
+  "commit": "51bfa333eaf5d1e2d2724e8ffc389f42b50d2dae",
+  "draft": false,
+  "assets": [
+    {
+      "name": "dalunongji-1.10.6+44.apk",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.6-r3/dalunongji-1.10.6%2B44.apk",
+      "size": 85755491,
+      "digest": "sha256:fd7e469c0aab61964828089413b64ae57bd3ddf77b9ce7917df12ce36ca8eacf"
+    },
+    {
+      "name": "manifest-v1.10.6-r3.json",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.6-r3/manifest-v1.10.6-r3.json",
+      "size": 8749,
+      "digest": "sha256:82157ccc0927f00aa955f9d667f88c6cca2231aecf1f5ca7cdb1165c75fda641"
+    },
+    {
+      "name": "SHA256SUMS-v1.10.6-r3.txt",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.6-r3/SHA256SUMS-v1.10.6-r3.txt",
+      "size": 376,
+      "digest": "sha256:9d56a5b03438a9b8bf590983dd5e010d5d09adaf0b147be24322cd54b92bab04"
+    },
+    {
+      "name": "zqzg-v1.10.6-r3-linux-amd64.tar.gz",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.6-r3/zqzg-v1.10.6-r3-linux-amd64.tar.gz",
+      "size": 70388271,
+      "digest": "sha256:8aea11d771e0de0fc5cd3f5ca6c07eccf6e7ed48cf23e782fae43a21ed53c6ad"
+    },
+    {
+      "name": "zqzg-v1.10.6-r3-source.zip",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.6-r3/zqzg-v1.10.6-r3-source.zip",
+      "size": 14173046,
+      "digest": "sha256:d530e40d72938aea37cdb07b41d61eafc04ddeaa1b9b70eddf56653d8e1f6c19"
+    }
+  ]
+}

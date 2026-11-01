@@ -1,0 +1,309 @@
+{
+  "releaseTag": "v1.10.6-r3",
+  "sourceCommit": "51bfa333eaf5d1e2d2724e8ffc389f42b50d2dae",
+  "recordedAt": "2026-11-01T04:49:19.139038+00:00",
+  "productionDeployed": true,
+  "website": "https://zqzhg.com/",
+  "guide": "https://zqzhg.com/guide",
+  "android": {
+    "version": "1.10.6+44",
+    "applicationId": "com.zqzt.dalunongji",
+    "sha256": "fd7e469c0aab61964828089413b64ae57bd3ddf77b9ce7917df12ce36ca8eacf",
+    "bytes": 85755491,
+    "certificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+    "officialDownload": "https://zqzhg.com/downloads/dalunongji.apk",
+    "fullPublicDownloadVerified": true,
+    "bundleFilesVerified": 237,
+    "guideImages": 9,
+    "realDeviceValidated": false,
+    "iosValidated": false
+  },
+  "schema": 28,
+  "newDatabaseMigrations": false,
+  "backupVerified": true,
+  "isolatedBackupRestoreVerified": true,
+  "candidateServiceAccount": "zqzt",
+  "restartHealthSeconds": 0.72,
+  "businessCountsUnchanged": true,
+  "originalMediaFilesUnchanged": 251,
+  "protectedConfigurationFilesUnchanged": 33,
+  "environmentChangedOnlyWebAndMapPaths": true,
+  "unrelatedServicesAndPidsUnchanged": true,
+  "certificateRenewalTimerActive": true,
+  "nginxConfigurationTest": true,
+  "legacyServiceStillDisabled": true,
+  "publicSmoke": {
+    "origin": "https://zqzhg.com",
+    "routes": [
+      {
+        "path": "/guide",
+        "status": 200
+      },
+      {
+        "path": "/join",
+        "status": 200
+      },
+      {
+        "path": "/merchant/login",
+        "status": 200
+      },
+      {
+        "path": "/services",
+        "status": 200
+      },
+      {
+        "path": "/service-requests",
+        "status": 200
+      },
+      {
+        "path": "/app",
+        "status": 200
+      },
+      {
+        "path": "/admin",
+        "status": 200
+      },
+      {
+        "path": "/sitemaps/pages.xml",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/health",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/public/config",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/public/app",
+        "status": 200
+      }
+    ],
+    "assets": [
+      {
+        "path": "/assets/index-D39sBdyi.js",
+        "status": 200,
+        "packageHashMatches": true
+      },
+      {
+        "path": "/assets/index-DG7gDU_O.css",
+        "status": 200,
+        "packageHashMatches": true
+      }
+    ],
+    "otherApplications": [
+      {
+        "host": "gosyncr.com",
+        "status": 200,
+        "trustedTLS": true,
+        "sha256": "e438a1fd3206fab807b74d03d27272d419205833da818bed58296e766c86ff84"
+      },
+      {
+        "host": "www.gosyncr.com",
+        "status": 200,
+        "trustedTLS": true,
+        "sha256": "e438a1fd3206fab807b74d03d27272d419205833da818bed58296e766c86ff84"
+      }
+    ],
+    "writes": 0,
+    "guideImagesVerified": 9,
+    "certificates": [
+      {
+        "host": "zqzhg.com",
+        "trusted": true,
+        "notAfter": "Jan 28 02:36:08 2027 GMT"
+      },
+      {
+        "host": "www.zqzhg.com",
+        "trusted": true,
+        "notAfter": "Jan 28 02:36:08 2027 GMT"
+      }
+    ],
+    "ipHTTP": 404,
+    "ipHTTPS": "handshake-rejected",
+    "adminWithoutLogin": 401,
+    "unknownGuideRoute": 404,
+    "passed": true
+  },
+  "ipTLS": {
+    "39.97.250.244": "TLS alert unrecognized_name",
+    "unmatched.invalid": "TLS alert unrecognized_name"
+  },
+  "ui": {
+    "layoutStates": 20,
+    "widths": [
+      1440,
+      768,
+      390,
+      360
+    ],
+    "languagePersistence": [
+      {
+        "width": 1440,
+        "language": "en",
+        "refresh": true
+      },
+      {
+        "width": 390,
+        "language": "zh",
+        "refresh": true
+      }
+    ],
+    "regressions": [
+      "current public footer retained",
+      "manufacturer search",
+      "free join entry",
+      "guide directory, direct anchor, collapsed FAQ, screenshot enlargement/Escape/focus at four widths",
+      "preparing hall zh/en/zh"
+    ],
+    "pageErrors": [],
+    "businessWrites": []
+  },
+  "map": {
+    "bundledSnapshotFiles": 77,
+    "usage": "development-demonstration",
+    "productionDevelopmentGeometryIdentical": true,
+    "levels": [
+      {
+        "code": "",
+        "name": "全国",
+        "total": 11,
+        "sha256": "352c09e7064756c7c6a505c30dd3e7560b13a4edf87883a65fc3d008a3152802",
+        "features": 35,
+        "missing_codes": []
+      },
+      {
+        "code": "13",
+        "name": "河北省",
+        "total": 10,
+        "sha256": "bd1daff0ea4d7253b6ce77784bf7f9669ad6e5a19d0815eb89d696e8db9b34ea",
+        "features": 11,
+        "missing_codes": []
+      },
+      {
+        "code": "1305",
+        "name": "邢台市",
+        "total": 8,
+        "sha256": "cd6acc3f9b1319610f28c83b88b8f79952b9b5242bfc34a47a10871e2247d8ba",
+        "features": 18,
+        "missing_codes": [
+          "130571"
+        ]
+      },
+      {
+        "code": "130528",
+        "name": "宁晋县",
+        "total": 8,
+        "sha256": "f09314a4d4a0bc4ee436e982f282ef6ea59572c742fc01b7d1833d0634f51251",
+        "features": 1,
+        "missing_codes": []
+      }
+    ],
+    "web": {
+      "layouts": [
+        {
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "width": 768,
+          "height": 1024
+        },
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 360,
+          "height": 640
+        },
+        {
+          "width": 844,
+          "height": 390
+        }
+      ],
+      "retry": true,
+      "showroomReturn": true,
+      "zoomAndFilter": true
+    },
+    "apkExtractedWeb": {
+      "layouts": [
+        {
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "width": 768,
+          "height": 1024
+        },
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 360,
+          "height": 640
+        },
+        {
+          "width": 844,
+          "height": 390
+        }
+      ],
+      "retry": true,
+      "showroomReturn": true,
+      "zoomAndFilter": true,
+      "realDeviceTest": false
+    },
+    "missingCodes": [
+      "130571"
+    ],
+    "formalMapApprovalClaimed": false
+  },
+  "initialAttempt": {
+    "automaticallyRolledBack": true,
+    "databaseRestored": false,
+    "cause": "release root directory access permissions",
+    "resolvedWith": "explicit directory permissions, service-account candidate and writable isolated map cache"
+  },
+  "priorDraftReleasesRetained": true,
+  "github": {
+    "url": "https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.6-r3",
+    "tag": "v1.10.6-r3",
+    "commit": "51bfa333eaf5d1e2d2724e8ffc389f42b50d2dae",
+    "draft": false,
+    "assets": [
+      {
+        "name": "dalunongji-1.10.6+44.apk",
+        "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.6-r3/dalunongji-1.10.6%2B44.apk",
+        "size": 85755491,
+        "digest": "sha256:fd7e469c0aab61964828089413b64ae57bd3ddf77b9ce7917df12ce36ca8eacf"
+      },
+      {
+        "name": "manifest-v1.10.6-r3.json",
+        "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.6-r3/manifest-v1.10.6-r3.json",
+        "size": 8749,
+        "digest": "sha256:82157ccc0927f00aa955f9d667f88c6cca2231aecf1f5ca7cdb1165c75fda641"
+      },
+      {
+        "name": "SHA256SUMS-v1.10.6-r3.txt",
+        "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.6-r3/SHA256SUMS-v1.10.6-r3.txt",
+        "size": 376,
+        "digest": "sha256:9d56a5b03438a9b8bf590983dd5e010d5d09adaf0b147be24322cd54b92bab04"
+      },
+      {
+        "name": "zqzg-v1.10.6-r3-linux-amd64.tar.gz",
+        "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.6-r3/zqzg-v1.10.6-r3-linux-amd64.tar.gz",
+        "size": 70388271,
+        "digest": "sha256:8aea11d771e0de0fc5cd3f5ca6c07eccf6e7ed48cf23e782fae43a21ed53c6ad"
+      },
+      {
+        "name": "zqzg-v1.10.6-r3-source.zip",
+        "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.6-r3/zqzg-v1.10.6-r3-source.zip",
+        "size": 14173046,
+        "digest": "sha256:d530e40d72938aea37cdb07b41d61eafc04ddeaa1b9b70eddf56653d8e1f6c19"
+      }
+    ]
+  },
+  "testLimitations": "Historical full-suite failures are recorded in validation.json and reproduced on unchanged source; release checks do not imply all legacy tests pass."
+}
