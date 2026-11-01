@@ -172,10 +172,14 @@ def stage(package):
     assert arch == 'x86_64', 'this_package_requires_linux_amd64'
     os.chmod(str(release / 'server/exhibition'), 0o755)
     subprocess.run(['chown', '-R', 'root:zqzt', str(release)], check=True)
+    os.chmod(str(release), 0o755)
     # The snapshot is public development-demo geometry, with unchanged source metadata.
     for p in release.rglob('*'): os.chmod(str(p), 0o755 if p.is_dir() or p == release / 'server/exhibition' else 0o644)
+    for p in [release, release / 'server/exhibition', release / 'web/dist/index.html', release / 'map-demo/national.mapping.json']:
+        subprocess.run(['runuser', '-u', 'zqzt', '--', 'test', '-r', str(p)], check=True)
+    subprocess.run(['runuser', '-u', 'zqzt', '--', 'test', '-x', str(release / 'server/exhibition')], check=True)
     assert inventory(release / 'map-demo') == manifest['mapFiles']
-    value.update(release=str(release), staged=True, gitCommit=manifest['gitCommit'], android=manifest['android'])
+    value.update(release=str(release), staged=True, candidateVerified=False, isolatedRestoreVerified=False, promoted=False, rolledBack=False, gitCommit=manifest['gitCommit'], android=manifest['android'])
     save(value)
     print(json.dumps({'staged': True, 'release': str(release), 'mapFiles': len(manifest['mapFiles']), 'android': manifest['android']['version']}))
 
@@ -185,6 +189,14 @@ def candidate():
     release = Path(value['release']); work = BASE / 'shared' / ('guide106-candidate-' + secrets.token_hex(6))
     work.mkdir(mode=0o700)
     for n in ['mysql', 'media', 'operations', 'temp', 'backups']: (work / n).mkdir(mode=0o700)
+    import pwd
+    service = pwd.getpwnam('zqzt')
+    os.chown(str(work), 0, service.pw_gid); os.chmod(str(work), 0o750)
+    for n in ['media', 'operations', 'temp', 'backups']:
+        os.chown(str(work / n), service.pw_uid, service.pw_gid)
+    def service_identity():
+        os.initgroups('zqzt', service.pw_gid)
+        os.setgid(service.pw_gid); os.setuid(service.pw_uid)
     secret = secrets.token_hex(24); db = 'guide106_candidate'
     common = ['/usr/sbin/mysqld', '--no-defaults', '--user=root', '--datadir=' + str(work / 'mysql'), '--innodb-buffer-pool-size=32M', '--innodb-log-buffer-size=4M', '--innodb-redo-log-capacity=32M', '--performance-schema=OFF', '--max-connections=12', '--table-open-cache=128', '--mysqlx=OFF', '--skip-log-bin', '--bind-address=127.0.0.1', '--port=13399', '--socket=' + str(work / 'mysql.sock'), '--pid-file=' + str(work / 'mysql.pid'), '--log-error=' + str(work / 'mysql.log')]
     isolated = app = proxy = None
@@ -208,7 +220,7 @@ def candidate():
         env = dict(os.environ, **cfg)
         env.update(APP_ENV='production', HTTP_ADDR='127.0.0.1:18099', DB_NAME=db, MEDIA_DIR=str(work / 'media'), OPERATIONS_DIR=str(work / 'operations'), MEDIA_TEMP_DIR=str(work / 'temp'), BACKUP_DIR=str(work / 'backups'), WEB_DIR=str(release / 'web/dist'), MAP_DEMO_ENABLED='true', MAP_DEMO_DIR=str(release / 'map-demo'), BACKGROUND_WORKERS_ENABLED='false', SMS_PROVIDER='disabled', SMS_ENABLED='false')
         with (work / 'candidate.log').open('wb') as log:
-            app = subprocess.Popen([str(release / 'server/exhibition')], cwd=str(work), env=env, stdout=log, stderr=log)
+            app = subprocess.Popen([str(release / 'server/exhibition')], cwd=str(work), env=env, stdout=log, stderr=log, preexec_fn=service_identity)
             for i in range(100):
                 assert app.poll() is None, 'candidate_start_failed'
                 try:
@@ -242,7 +254,7 @@ def candidate():
             assert counts(cfg, db) == value['counts']
             value.update(candidateVerified=True, candidateChecks=checks, candidateMap=maps, isolatedRestoreVerified=True)
             save(value)
-            print(json.dumps({'candidateVerified': True, 'productionConfiguration': True, 'separateNginxProxy': True, 'isolatedRestoreVerified': True, 'checks': checks, 'map': maps}))
+            print(json.dumps({'candidateVerified': True, 'productionConfiguration': True, 'serviceUser': 'zqzt', 'separateNginxProxy': True, 'isolatedRestoreVerified': True, 'checks': checks, 'map': maps}))
     finally:
         for p in [proxy, app, isolated]:
             if p is not None and p.poll() is None:
@@ -302,7 +314,7 @@ def apply():
         assert mysql(config(), 'SELECT MAX(version) FROM schema_migrations', name) == '28'
     except Exception:
         rollback(); raise
-    value.update(promoted=True, restartHealthSeconds=round(time.time() - started, 3))
+    value.update(promoted=True, rolledBack=False, restartHealthSeconds=round(time.time() - started, 3))
     save(value)
     print(json.dumps({'promoted': True, 'version': VERSION, 'android': value['android']['version'], 'schema': 28, 'protectedConfigurationsUnchanged': True, 'restartHealthSeconds': value['restartHealthSeconds']}))
 
