@@ -178,6 +178,13 @@ def stage(package):
     for p in [release, release / 'server/exhibition', release / 'web/dist/index.html', release / 'map-demo/national.mapping.json']:
         subprocess.run(['runuser', '-u', 'zqzt', '--', 'test', '-r', str(p)], check=True)
     subprocess.run(['runuser', '-u', 'zqzt', '--', 'test', '-x', str(release / 'server/exhibition')], check=True)
+    # The existing resolver atomically refreshes mapping JSON on every request.
+    # Keep this cache writable by the service, outside the public Web directory.
+    map_cache = release / 'map-demo'
+    subprocess.run(['chown', '-R', 'zqzt:zqzt', str(map_cache)], check=True)
+    for p in [map_cache] + list(map_cache.rglob('*')):
+        os.chmod(str(p), 0o700 if p.is_dir() else 0o600)
+    subprocess.run(['runuser', '-u', 'zqzt', '--', 'test', '-w', str(map_cache)], check=True)
     assert inventory(release / 'map-demo') == manifest['mapFiles']
     value.update(release=str(release), staged=True, candidateVerified=False, isolatedRestoreVerified=False, promoted=False, rolledBack=False, gitCommit=manifest['gitCommit'], android=manifest['android'])
     save(value)
