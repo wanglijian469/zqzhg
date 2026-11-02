@@ -1,0 +1,75 @@
+{
+  "web": {
+    "relatedTestsPassed": 33,
+    "files": 4,
+    "typeCheck": "passed"
+  },
+  "flutter": {
+    "relatedTestsPassed": 20,
+    "files": 4,
+    "analysis": "No issues"
+  },
+  "nativeJavaPolicy": {
+    "checksPassed": 23
+  },
+  "backend": {
+    "passed": 24,
+    "topLevel": 17,
+    "names": [
+      "TestAppFlowCreateIdempotencyAndDraftValidation",
+      "TestAppFlowConcurrentCreateRetries",
+      "TestAppFlowMissingAgreementRefsKeepAudit",
+      "TestAppFlowSchema30PreservesLegacyPublicationAndPendingApproval",
+      "TestAppFlowCreateFailureRollsBackKeyAndLegacyWithoutKey",
+      "TestAppFlowProductSubmissionNeedsImageAndLeafCategory",
+      "TestProductVideoAssociationAndPublication",
+      "TestVideoWorkerProcessingRetryAndRecovery",
+      "TestVideoNotesReturnSpecificErrorWithoutFetchingPage",
+      "TestVideoRightsCheckboxOptionalWithoutFabricatingConsent",
+      "TestPlatformVideoAgreementsRemainExplicitAndAccountScoped",
+      "TestVideoLinkValidation",
+      "TestVideoLinkShortRedirects",
+      "TestVideoLinksLifecycleV2",
+      "TestVideoLinkCacheCoalesces",
+      "TestVideoProviderFailureContracts/video_not_public0",
+      "TestVideoProviderFailureContracts/invalid_video_link1",
+      "TestVideoProviderFailureContracts/video_provider_unavailable2",
+      "TestVideoProviderFailureContracts/video_provider_unavailable3",
+      "TestVideoProviderFailureContracts/invalid_official_player4",
+      "TestVideoProviderFailureContracts/video_provider_unavailable5",
+      "TestVideoProviderFailureContracts/video_network_timeout6",
+      "TestVideoProviderFailureContracts",
+      "TestVideoUnresolvedShortLinkDraft"
+    ]
+  },
+  "productionUI": {
+    "checksPassed": 24,
+    "readOnly": true
+  },
+  "officialVideoChromeDiagnostic": {
+    "videoID": "7136314708138724640",
+    "actualJavaPolicyEvaluatedForEachRequest": true,
+    "userMouseClickPlayback": {
+      "time": 4.968478,
+      "paused": false,
+      "error": 0
+    },
+    "blockedTelemetryRemains403": true,
+    "androidDevicePlaybackVerified": false,
+    "douyinAutoplayImplemented": false
+  },
+  "apk": {
+    "signatureAndApplicationIdentityVerified": true,
+    "embeddedWebAssetHashesVerified": 237,
+    "newPolicyPresentInDEX": true,
+    "deviceValidation": false
+  },
+  "limitations": [
+    "Android 47 phone playback, fullscreen, return and background lifecycle require user retest.",
+    "Chrome policy-based playback is not Android device acceptance.",
+    "Official Douyin player requires user playback control; no autoplay guarantee.",
+    "Image/text posts are unsupported and now have a specific error.",
+    "Existing full-suite historical failures are recorded in the 1.10.8 receipt; only related tests are reported passed here.",
+    "Map snapshot retains prior missing code 130571 handling and development-data attribution; no square-map fallback."
+  ]
+}

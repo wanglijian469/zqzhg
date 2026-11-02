@@ -1,0 +1,26 @@
+{
+  "url": "https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.9",
+  "tag": "v1.10.9",
+  "commit": "1b6c04f0dc0a0c0ce1a092f91aff9c33d4271d9d",
+  "draft": false,
+  "assets": [
+    {
+      "name": "android-test-v1.10.9.json",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.9/android-test-v1.10.9.json",
+      "size": 699,
+      "digest": "sha256:83a7672080ae95de7c463ca53e7bb2887ff45f45230f4205466616761920e5b2"
+    },
+    {
+      "name": "manifest-v1.10.9.json",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.9/manifest-v1.10.9.json",
+      "size": 8811,
+      "digest": "sha256:0f0277d360e00a7759f41162f1ddb8a09ca0f2129835977a595a4316a0de12bd"
+    },
+    {
+      "name": "SHA256SUMS-v1.10.9.txt",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.9/SHA256SUMS-v1.10.9.txt",
+      "size": 372,
+      "digest": "sha256:6c1337872e4d2189796ea6c9c4cb6f5277ecf3888c529cdbb014f4ad9ed33bd5"
+    }
+  ]
+}

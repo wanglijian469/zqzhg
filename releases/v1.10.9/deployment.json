@@ -1,0 +1,154 @@
+{
+  "version": "1.10.9",
+  "sourceCommit": "1b6c04f0dc0a0c0ce1a092f91aff9c33d4271d9d",
+  "websiteAndBackendPromoted": true,
+  "databaseMigrationAdded": false,
+  "schemaVersion": 30,
+  "stableAndroid": "1.10.7+45",
+  "android47": {
+    "independentTestPackage": true,
+    "deviceValidation": false,
+    "stableDownloadUpdated": false,
+    "download": {
+      "url": "https://zqzhg.com/downloads/candidates/zqzhg-video-fix-1.10.9-47.apk",
+      "status": 200,
+      "bytes": 108291307,
+      "sha256": "0445f96972ac4f4537428725fbc95f7687f8c0065755acc83fe55349795e2928",
+      "matchesLocal": true,
+      "independentTestPackage": true,
+      "stableDownloadUpdated": false
+    }
+  },
+  "server": {
+    "passed": true,
+    "current": "/opt/zqzt/releases/v1.10.9-1b6c04f",
+    "protectedFilesUnchanged": 33,
+    "environmentChangedOnlyWebMapAndDouyinFlag": true,
+    "schema": "30",
+    "businessCountsBefore": "15\t59\t70\t224",
+    "businessCountsAfter": "15\t59\t70\t224",
+    "originalMediaFilesUnchanged": 251,
+    "services": {
+      "nginx": "MainPID=264371\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+      "mysqld": "MainPID=78971\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+      "zqzt-exhibition": "MainPID=734359\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+      "qiyuan-gosyncr": "MainPID=3309830\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+      "gosync-server": "MainPID=1098592\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+      "dalu-parts": "MainPID=0\nActiveState=inactive\nSubState=dead\nUnitFileState=disabled\n",
+      "zqzhg-cert-renew.timer": "ActiveState=active\nSubState=waiting\nUnitFileState=enabled\n"
+    },
+    "nginxTest": true,
+    "mapReadableByService": true,
+    "apkSHA256": "e162dba0077a19c564fd9710354cfe43b18719ccb7d7b942245e09c147f82254"
+  },
+  "publicSmoke": {
+    "origin": "https://zqzhg.com",
+    "routes": [
+      {
+        "path": "/guide",
+        "status": 200
+      },
+      {
+        "path": "/join",
+        "status": 200
+      },
+      {
+        "path": "/merchant/login",
+        "status": 200
+      },
+      {
+        "path": "/services",
+        "status": 200
+      },
+      {
+        "path": "/service-requests",
+        "status": 200
+      },
+      {
+        "path": "/app",
+        "status": 200
+      },
+      {
+        "path": "/admin",
+        "status": 200
+      },
+      {
+        "path": "/sitemaps/pages.xml",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/health",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/public/config",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/public/app",
+        "status": 200
+      }
+    ],
+    "assets": [
+      {
+        "path": "/assets/index-95gA0tZe.js",
+        "status": 200,
+        "packageHashMatches": true
+      },
+      {
+        "path": "/assets/index-C7p7HWw3.css",
+        "status": 200,
+        "packageHashMatches": true
+      }
+    ],
+    "otherApplications": [
+      {
+        "host": "gosyncr.com",
+        "status": 200,
+        "trustedTLS": true,
+        "sha256": "e438a1fd3206fab807b74d03d27272d419205833da818bed58296e766c86ff84"
+      },
+      {
+        "host": "www.gosyncr.com",
+        "status": 200,
+        "trustedTLS": true,
+        "sha256": "e438a1fd3206fab807b74d03d27272d419205833da818bed58296e766c86ff84"
+      }
+    ],
+    "writes": 0,
+    "guideImagesVerified": 9,
+    "certificates": [
+      {
+        "host": "zqzhg.com",
+        "trusted": true,
+        "notAfter": "Jan 28 02:36:08 2027 GMT"
+      },
+      {
+        "host": "www.zqzhg.com",
+        "trusted": true,
+        "notAfter": "Jan 28 02:36:08 2027 GMT"
+      }
+    ],
+    "ipHTTP": 404,
+    "ipHTTPS": "handshake-rejected",
+    "adminWithoutLogin": 401,
+    "unknownGuideRoute": 404,
+    "passed": true,
+    "fullAPKDownloadSHA256": "e162dba0077a19c564fd9710354cfe43b18719ccb7d7b942245e09c147f82254"
+  },
+  "finalHealth": {
+    "allServicesHealthy": true,
+    "temporaryCandidateListenersClosed": true,
+    "state": {
+      "zqzt-exhibition": "active",
+      "nginx": "active",
+      "mysqld": "active",
+      "qiyuan-gosyncr": "active",
+      "gosync-server": "active",
+      "zqzhg-cert-renew.timer": "active"
+    },
+    "sharedServiceProcessesUnchanged": true
+  },
+  "rollback": "python3 /opt/zqzt/shared/upgrade-video-1.10.9.py rollback",
+  "rollbackDoesNotRestoreOldDatabaseOrDowngradeSchema": true
+}
