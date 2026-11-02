@@ -242,7 +242,7 @@ func (a *App) serviceDocumentRoutes(pub, merchant, admin *gin.RouterGroup) {
 		}
 		c.JSON(200, gin.H{"items": docs})
 	})
-	merchant.POST("/service-acceptances", func(c *gin.Context) {
+	acceptCurrentAgreements := func(c *gin.Context) {
 		var req struct {
 			Agreements []AgreementRef `json:"agreements"`
 			Source     string         `json:"source"`
@@ -259,6 +259,22 @@ func (a *App) serviceDocumentRoutes(pub, merchant, admin *gin.RouterGroup) {
 			return
 		}
 		c.JSON(200, gin.H{"ok": true})
+	}
+	merchant.POST("/service-acceptances", acceptCurrentAgreements)
+	// Platform editors must also actively accept current agreements; no role bypass.
+	admin.POST("/service-acceptances", acceptCurrentAgreements)
+	admin.GET("/service-acceptances", func(c *gin.Context) {
+		docs, e := activeServiceDocuments(a.DB)
+		if e != nil {
+			dbFail(c, e)
+			return
+		}
+		acceptances := []ServiceAcceptance{}
+		if e := a.DB.Where("account_id=?", actor(c).ID).Find(&acceptances).Error; e != nil {
+			dbFail(c, e)
+			return
+		}
+		c.JSON(200, gin.H{"documents": docs, "acceptances": acceptances})
 	})
 	admin.GET("/service-documents", func(c *gin.Context) {
 		docs := []ServiceDocument{}

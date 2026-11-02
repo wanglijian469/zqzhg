@@ -1,0 +1,21 @@
+{
+  "version": "1.10.9+47",
+  "schemaVersion": 30,
+  "versionName": "1.10.9",
+  "apiBaseUrl": "https://zqzhg.com",
+  "versionCode": 47,
+  "debug": true,
+  "candidateDownloadURL": "https://zqzhg.com/downloads/candidates/zqzhg-video-fix-1.10.9-47.apk",
+  "appName": "中企展馆发布测试",
+  "stableDownloadUpdated": false,
+  "deviceValidation": false,
+  "asset": "zqzhg-video-fix-1.10.9-47.apk",
+  "applicationId": "com.zqzt.dalunongji.editdev",
+  "independentPackage": true,
+  "sha256": "0445f96972ac4f4537428725fbc95f7687f8c0065755acc83fe55349795e2928",
+  "bytes": 108291307,
+  "sourceTag": "v1.10.9",
+  "bundleHashesVerified": true,
+  "workspaceFiles": 237,
+  "formalPackageReplaced": false
+}

@@ -59,7 +59,7 @@ func dbFail(c *gin.Context, e error) {
 		fail(c, 409, code)
 	case "douyin_video_disabled", "video_provider_unavailable", "invalid_official_player", "video_link_unreachable", "video_network_timeout":
 		fail(c, 503, code)
-	case "invalid_video_link", "one_video_link_required", "video_id_not_found", "video_redirect_limit", "unsupported_video_source", "video_source_locked":
+	case "unsupported_video_content", "invalid_video_link", "one_video_link_required", "video_id_not_found", "video_redirect_limit", "unsupported_video_source", "video_source_locked":
 		fail(c, 400, code)
 	case "forbidden":
 		fail(c, 403, code)

@@ -199,6 +199,7 @@ func TestVideoWorkerProcessingRetryAndRecovery(t *testing.T) {
 	tc := testClient{t, a.router()}
 	vendor := tc.fixtureCall("POST", "/merchant/contents", token, gin.H{"kind": "vendor", "data": Payload{Name: "视频企业", MainProducts: "机械", RegionName: "河北", Phone: "13900009902"}}, 201)
 	_ = vendor
+	tc.call("POST", "/merchant/service-acceptances", token, gin.H{"agreements": serviceTestRefs(t, a, "terms", "privacy", "showroom-agreement")}, 200)
 	for _, size := range []string{"320x180", "180x320"} {
 		file := filepath.Join(t.TempDir(), "silent.mov")
 		out, e := exec.Command(ff, "-nostdin", "-y", "-v", "error", "-f", "lavfi", "-i", "color=c=green:s="+size+":d=1", "-c:v", "libx264", "-pix_fmt", "yuv420p", file).CombinedOutput()

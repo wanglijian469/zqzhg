@@ -32,7 +32,10 @@ func (a *App) prepareVideoPayload(c *gin.Context, p *ResourcePayload) error {
 		return fmt.Errorf("douyin_video_disabled")
 	}
 	if !p.RightsConfirmed {
-		return fmt.Errorf("video_rights_required")
+		// Reuse the actor's real, current agreement acceptance; never forge a per-video consent.
+		if e := a.DB.Transaction(func(tx *gorm.DB) error { return publicationCompliance(tx, actor(c).ID, 0, nil) }); e != nil {
+			return e
+		}
 	}
 	if !permit(fmt.Sprintf("video-save:%d", actor(c).ID), 30, time.Minute) {
 		return fmt.Errorf("rate_limited")
@@ -48,7 +51,9 @@ func (a *App) prepareVideoPayload(c *gin.Context, p *ResourcePayload) error {
 	p.FileMediaID = 0
 	p.PageMediaIDs = nil
 	p.videoCheck = &check
-	p.rightsActorID = actor(c).ID
+	if p.RightsConfirmed {
+		p.rightsActorID = actor(c).ID
+	}
 	if strings.TrimSpace(p.Title) == "" {
 		p.Title = check.Title
 	}
@@ -59,11 +64,16 @@ func (a *App) validateVideoResource(tx *gorm.DB, r Resource, p *ResourcePayload,
 	if source == videoLocal {
 		return nil
 	}
-	if source != videoDouyin || (p.ExternalVideoID != "" && !videoIDPattern.MatchString(p.ExternalVideoID)) || p.FileMediaID != 0 || !p.RightsConfirmed {
+	if source != videoDouyin || (p.ExternalVideoID != "" && !videoIDPattern.MatchString(p.ExternalVideoID)) || p.FileMediaID != 0 {
 		return fmt.Errorf("invalid_video_link")
 	}
 	if !douyinVideoEnabled() {
 		return fmt.Errorf("douyin_video_disabled")
+	}
+	if !p.RightsConfirmed {
+		if e := publicationCompliance(tx, r.OwnerID, r.VendorID, nil); e != nil {
+			return e
+		}
 	}
 	// All writers hold the same vendor row. Use a locking/current read, not a stale repeatable-read snapshot.
 	var duplicates []Resource
@@ -117,7 +127,9 @@ func (a *App) prepareStoredVideo(c *gin.Context, rid, revid uint64) (*VideoLinkC
 		return nil, fmt.Errorf("video_client_upgrade_required")
 	}
 	if rev.RightsActorID == 0 || !p.RightsConfirmed {
-		return nil, fmt.Errorf("video_rights_required")
+		if e := a.DB.Transaction(func(tx *gorm.DB) error { return publicationCompliance(tx, r.OwnerID, r.VendorID, nil) }); e != nil {
+			return nil, e
+		}
 	}
 	if p.ExternalVideoID == "" {
 		return nil, fmt.Errorf("video_check_required")

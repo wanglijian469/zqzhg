@@ -64,7 +64,7 @@ void main() {
     });
   }
   testWidgets(
-    'cursor and repeated paste do not invalidate a successful check or rights',
+    'cursor and repeated paste do not invalidate a successful check',
     (tester) async {
       tester.view.physicalSize = const Size(800, 2200);
       tester.view.devicePixelRatio = 1;
@@ -107,16 +107,10 @@ void main() {
       await tester.tap(find.text('检查链接'));
       await tester.pumpAndSettle();
       expect(checks, 1);
-      await tester.ensureVisible(find.byType(CheckboxListTile));
-      await tester.tap(find.byType(CheckboxListTile));
-      await tester.pumpAndSettle();
+      expect(find.text('我确认该视频由本人发布，或已取得合法展示授权。'), findsNothing);
       final controller = tester.widget<TextField>(input).controller!;
       controller.selection = const TextSelection.collapsed(offset: 5);
       await tester.pumpAndSettle();
-      expect(
-        tester.widget<CheckboxListTile>(find.byType(CheckboxListTile)).value,
-        isTrue,
-      );
       expect(
         tester
             .widget<OutlinedButton>(find.widgetWithText(OutlinedButton, '预览播放'))

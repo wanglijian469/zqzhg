@@ -25,6 +25,12 @@ Uri? trustedDouyinPlayer(String raw, String id) {
 String videoErrorText(Object e) {
   final code = e is ApiFailure ? e.code : e.toString();
   return const <String, String>{
+        'agreement_required': '请先在下方确认当前版本的企业服务协议，已确认后无需重复操作。',
+        'unsupported_video_content': '这是抖音图文链接，当前视频播放器暂不支持。请复制视频作品的分享链接。',
+        'video_id_not_found': '暂未识别视频，请使用完整的视频链接重新检查。',
+        'video_redirect_limit': '分享链接跳转次数过多，请使用完整视频链接。',
+        'video_provider_unavailable': '抖音服务暂时无法连接，请稍后重试。',
+        'invalid_official_player': '抖音未返回可用播放器，请换一个公开视频或稍后重试。',
         'video_check_required': '请先检查链接并确认能够预览，再提交审核。',
         'video_rights_required': '请确认您有权展示该视频。',
         'invalid_video_link': '请输入有效的抖音视频分享链接。',
@@ -229,7 +235,6 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
             'page_media_ids': <int>[],
             'video_source': 'DOUYIN',
             'original_share_url': '',
-            'rights_confirmed': false,
           }
         : asMap(widget.item!['data']);
     if (widget.productID != null) {
@@ -246,7 +251,6 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
       setState(() {
         generation++;
         check = null;
-        data['rights_confirmed'] = false;
         error = '';
       });
     });
@@ -308,9 +312,6 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
         data['purpose'] = 'product';
       }
       if (submit && check == null) throw ApiFailure('video_check_required');
-      if (data['rights_confirmed'] != true) {
-        throw ApiFailure('video_rights_required');
-      }
       if (submit && check!['status'] != 'READY') {
         throw ApiFailure(
           (check!['reason'] ?? 'video_check_required').toString(),
@@ -325,7 +326,7 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
         'title': title.text.trim(),
         'description': description.text,
         'original_share_url': share.text,
-      };
+      }..remove('rights_confirmed');
       final m = ModelScope.of(context);
       final result = asMap(
         await m.api(
@@ -476,14 +477,7 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
                 ),
               ],
             ),
-          CheckboxListTile(
-            contentPadding: EdgeInsets.zero,
-            value: data['rights_confirmed'] == true,
-            onChanged: disabled
-                ? null
-                : (v) => setState(() => data['rights_confirmed'] = v == true),
-            title: const Text('我确认该视频由本人发布，或已取得合法展示授权。'),
-          ),
+          const NativePublicationAgreements(hideAccepted: true),
           const Text('视频仍保存在抖音，不占展厅的视频文件空间。资料修改后需重新审核，已公开的旧版本继续展示。'),
           space(),
           if (error.isNotEmpty) message(context, error),

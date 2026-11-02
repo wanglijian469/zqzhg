@@ -50,6 +50,7 @@ type VideoLinkCheck struct {
 var videoURLPattern = regexp.MustCompile(`https?://[^\s<>"']+`)
 var videoIDPattern = regexp.MustCompile(`^[1-9][0-9]{8,23}$`)
 var shareVideoPath = regexp.MustCompile(`^/(?:share/)?video/([1-9][0-9]{8,23})/?$`)
+var noteVideoPath = regexp.MustCompile(`^/(?:share/)?note/[1-9][0-9]{8,23}/?$`)
 var shortVideoPath = regexp.MustCompile(`^/[A-Za-z0-9_-]{3,80}/?$`)
 var videoHTMLPattern = regexp.MustCompile(`(?i)<\s*(?:iframe|script|html|object|embed)\b`)
 
@@ -162,6 +163,9 @@ func (a *App) resolveVideoShare(ctx context.Context, text string) (string, strin
 		return "", "", e
 	}
 	u, _ := validateShareURL(original)
+	if noteVideoPath.MatchString(u.Path) {
+		return "", "", fmt.Errorf("unsupported_video_content")
+	}
 	if id := videoIDFromURL(u); id != "" {
 		return original, id, nil
 	}
@@ -176,6 +180,9 @@ func (a *App) resolveVideoShare(ctx context.Context, text string) (string, strin
 	for hops := 0; hops <= 3; hops++ {
 		if _, e = validateShareURL(u.String()); e != nil {
 			return "", "", e
+		}
+		if noteVideoPath.MatchString(u.Path) {
+			return "", "", fmt.Errorf("unsupported_video_content")
 		}
 		if id := videoIDFromURL(u); id != "" {
 			return original, id, nil

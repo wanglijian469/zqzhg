@@ -2,6 +2,9 @@ package com.zqzt.dalunongji
 
 import android.app.Activity
 import android.graphics.Color
+import android.content.Intent
+import android.net.Uri
+import android.widget.ProgressBar
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -22,20 +25,33 @@ class VideoPlayerActivity : Activity() {
             text = "关闭视频"
             setOnClickListener { finish() }
         })
-        layout.addView(TextView(this).apply {
-            text = "抖音官方播放器：请使用播放器内的官方播放控件，是否自动播放由官方决定。"
+        val status = TextView(this).apply {
+            text = "正在加载抖音视频…"
             setTextColor(Color.WHITE)
             setPadding(16, 8, 16, 8)
-        })
+        }
+        layout.addView(status)
+        val progress = ProgressBar(this)
+        layout.addView(progress)
         val retry = Button(this).apply {
-            text = "官方播放器暂时无法加载，点击重试"
-            visibility = View.GONE
+            text = "重新加载视频"
+            isEnabled = false
             setOnClickListener {
-                visibility = View.GONE
+                isEnabled = false
+                progress.visibility = View.VISIBLE
+                status.text = "正在加载抖音视频…"
                 player?.start()
             }
         }
         layout.addView(retry)
+        val original = OfficialVideoPolicy.originalVideoURL(intent.getStringExtra("url") ?: "")
+        if (original.isNotEmpty()) layout.addView(Button(this).apply {
+            text = "打开抖音原视频"
+            setOnClickListener {
+                try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(original))) }
+                catch (_: Exception) { status.text = "无法打开原视频，请稍后重试。" }
+            }
+        })
         val view = OfficialVideoView(
             this, null, -1,
             mapOf(
@@ -43,7 +59,20 @@ class VideoPlayerActivity : Activity() {
                 "width" to intent.getIntExtra("width", 0),
                 "height" to intent.getIntExtra("height", 0),
             ),
-            onEvent = { name, _ -> if (name == "error") retry.visibility = View.VISIBLE },
+            onEvent = { name, _ ->
+                when (name) {
+                    "loaded" -> {
+                        progress.visibility = View.GONE
+                        retry.isEnabled = true
+                        status.text = "请点击画面中的播放按钮。没有画面时，可重新加载或打开原视频。"
+                    }
+                    "error" -> {
+                        progress.visibility = View.GONE
+                        retry.isEnabled = true
+                        status.text = "视频暂时无法加载，请重新加载，或打开抖音原视频。"
+                    }
+                }
+            },
             onDisposed = null,
         )
         player = view

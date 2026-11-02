@@ -80,27 +80,8 @@ class OfficialVideoView(
 
     private fun dimension(value: Any?): Int = (value as? Number)?.toInt()?.coerceIn(0, 16384) ?: 0
 
-    private fun trustedPlayer(raw: String): Boolean = try {
-        val uri = Uri.parse(raw)
-        val id = uri.getQueryParameter("vid") ?: ""
-        uri.scheme == "https" && uri.host == "open.douyin.com" && uri.port == -1 &&
-            uri.userInfo == null && uri.path == "/player/video" && uri.fragment == null &&
-            id.matches(Regex("[1-9][0-9]{8,23}")) &&
-            uri.getQueryParameters("vid").size == 1 &&
-            uri.getQueryParameters("autoplay") == listOf("0") &&
-            uri.queryParameterNames.all { it in setOf("vid", "autoplay") }
-    } catch (_: Exception) { false }
-
-    /** The iframe and its official CDN resources must remain HTTPS, including redirects. */
-    private fun allowedResource(uri: Uri): Boolean {
-        if (uri.scheme != "https" || uri.port != -1 || uri.userInfo != null) return false
-        val host = uri.host ?: return false
-        return listOf(
-            "douyin.com", "douyincdn.com", "douyinpic.com", "douyinvod.com",
-            "byteimg.com", "ibyteimg.com", "pstatp.com", "bytedance.com",
-            "bytedance.net", "snssdk.com", "amemv.com", "bytegecko.com", "bytegoofy.com",
-        ).any { host == it || host.endsWith(".$it") }
-    }
+    private fun trustedPlayer(raw: String) = OfficialVideoPolicy.trustedPlayer(raw)
+    private fun allowedResource(uri: Uri) = OfficialVideoPolicy.allowedResource(uri.toString())
 
     private fun event(name: String, value: Any? = null) {
         if (!disposed) {
@@ -117,15 +98,18 @@ class OfficialVideoView(
     }
 
     private fun isPlayerRequest(request: WebResourceRequest): Boolean =
-        request.isForMainFrame || request.url.toString() == rawUrl
+        request.isForMainFrame || OfficialVideoPolicy.criticalResource(request.url.toString())
 
     private fun load() {
+        handler.removeCallbacksAndMessages(null)
         releaseWeb()
         failed = false
         lastUserTouch = Long.MIN_VALUE
         if (!trustedPlayer(rawUrl)) { fail(); return }
         val player = WebView(activity)
         web = player
+        val loadTimeout = Runnable { if (web === player && !disposed) fail() }
+        handler.postDelayed(loadTimeout, 20000)
         player.setBackgroundColor(Color.BLACK)
         player.settings.apply {
             javaScriptEnabled = true
@@ -149,7 +133,14 @@ class OfficialVideoView(
             override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
                 if (allowedResource(request.url)) return null
                 // The only app-owned document is supplied directly by loadDataWithBaseURL.
-                return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream(ByteArray(0)))
+                return WebResourceResponse("text/plain", "UTF-8", 403, "Blocked by player policy", mapOf("Cache-Control" to "no-store"), ByteArrayInputStream(ByteArray(0)))
+            }
+
+            override fun onPageFinished(view: WebView, url: String) {
+                if (web === view && !failed) {
+                    handler.removeCallbacks(loadTimeout)
+                    event("loaded")
+                }
             }
 
             override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
