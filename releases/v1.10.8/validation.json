@@ -1,0 +1,115 @@
+{
+  "webRelevant": {
+    "files": 4,
+    "passed": 39
+  },
+  "appRelevant": {
+    "files": 7,
+    "passed": 31
+  },
+  "backendCore": {
+    "passed": 20,
+    "names": [
+      "TestAppFlowCreateIdempotencyAndDraftValidation",
+      "TestAppFlowConcurrentCreateRetries",
+      "TestAppFlowMissingAgreementRefsKeepAudit",
+      "TestAppFlowSchema30PreservesLegacyPublicationAndPendingApproval",
+      "TestAppFlowCreateFailureRollsBackKeyAndLegacyWithoutKey",
+      "TestAppFlowProductSubmissionNeedsImageAndLeafCategory",
+      "TestProductVideoAssociationAndPublication",
+      "TestVideoLinkValidation",
+      "TestVideoLinkShortRedirects",
+      "TestVideoLinksLifecycleV2",
+      "TestVideoLinkCacheCoalesces",
+      "TestVideoProviderFailureContracts/video_not_public0",
+      "TestVideoProviderFailureContracts/invalid_video_link1",
+      "TestVideoProviderFailureContracts/video_provider_unavailable2",
+      "TestVideoProviderFailureContracts/video_provider_unavailable3",
+      "TestVideoProviderFailureContracts/invalid_official_player4",
+      "TestVideoProviderFailureContracts/video_provider_unavailable5",
+      "TestVideoProviderFailureContracts/video_network_timeout6",
+      "TestVideoProviderFailureContracts",
+      "TestVideoUnresolvedShortLinkDraft"
+    ]
+  },
+  "backendFull": {
+    "allPassed": false,
+    "terminatedAt": "TestV2RecommendationsStrictCapsDiversityAndVisibility",
+    "priorFormalFailuresReproduced": {
+      "current_failures_before_abort": [
+        "TestAdminOperationsOwnershipAuditAndFilters",
+        "TestMerchantRootCategoriesScopePublishAndNormalization",
+        "TestDisabledSMSDoesNotIssueOrConsumeCodes",
+        "TestCompanyOnboardingRegionAndReview",
+        "TestPortalReviewImagesIsolationAndOldClient",
+        "TestVisitorRegistrationAndFavoritePermissions",
+        "TestFavoriteResolutionNeverExposesDraftsOrWithdrawnParents",
+        "TestHallV2MigrationIsolationAndLegacyDefaults",
+        "TestHallV2ScalePaginationAndRecommendations",
+        "TestFeaturedVendorLimitConcurrentAndPublicSnapshots",
+        "TestIndustryMapPublishedSnapshotAndAuthorization",
+        "TestBusinessAndMediaIsolation",
+        "TestMerchantDashboardFiltersAndPublication",
+        "TestNamedMerchantLoginOwnershipAndEditing",
+        "TestMerchantRegistrationAndExistingLogin",
+        "TestMerchantRegistrationBoundariesRateAndRollback",
+        "TestConcurrentMerchantRegistrationUniqueName",
+        "TestCompanyCategorySuggestionsAndAliases",
+        "TestAdminBrandImagesOutsideGalleryQuota",
+        "TestPlatformOperatorIsolationAndRevocation",
+        "TestCompleteBackupRestoreAndCutover",
+        "TestV2RecommendationsStrictCapsDiversityAndVisibility"
+      ],
+      "baseline_failures": [
+        "TestAdminOperationsOwnershipAuditAndFilters",
+        "TestMerchantRootCategoriesScopePublishAndNormalization",
+        "TestDisabledSMSDoesNotIssueOrConsumeCodes",
+        "TestCompanyOnboardingRegionAndReview",
+        "TestPortalReviewImagesIsolationAndOldClient",
+        "TestVisitorRegistrationAndFavoritePermissions",
+        "TestFavoriteResolutionNeverExposesDraftsOrWithdrawnParents",
+        "TestHallV2MigrationIsolationAndLegacyDefaults",
+        "TestHallV2ScalePaginationAndRecommendations",
+        "TestFeaturedVendorLimitConcurrentAndPublicSnapshots",
+        "TestIndustryMapPublishedSnapshotAndAuthorization",
+        "TestBusinessAndMediaIsolation",
+        "TestMerchantDashboardFiltersAndPublication",
+        "TestNamedMerchantLoginOwnershipAndEditing",
+        "TestMerchantRegistrationAndExistingLogin",
+        "TestMerchantRegistrationBoundariesRateAndRollback",
+        "TestConcurrentMerchantRegistrationUniqueName",
+        "TestCompanyCategorySuggestionsAndAliases",
+        "TestAdminBrandImagesOutsideGalleryQuota",
+        "TestPlatformOperatorIsolationAndRevocation",
+        "TestCompleteBackupRestoreAndCutover",
+        "TestV2RecommendationsStrictCapsDiversityAndVisibility"
+      ],
+      "baseline_passes": [],
+      "new_or_not_reproduced": []
+    }
+  },
+  "websiteUIChecks": 24,
+  "androidCandidate": {
+    "version": "1.10.8+46",
+    "sha256": "bde62abde7962eac35f636ebbe2319113207f371304daa95bc5ccbcd9952e35b",
+    "bytes": 86091535,
+    "signatureMatchesPrevious": true,
+    "workspaceFiles": 237,
+    "guideImages": [
+      "guide-images/company-agreements.png",
+      "guide-images/company-apply.png",
+      "guide-images/company-basics.png",
+      "guide-images/company-submit.png",
+      "guide-images/product-basics.png",
+      "guide-images/product-submit.png",
+      "guide-images/register-account.png",
+      "guide-images/register-phone.png",
+      "guide-images/showroom-share.png"
+    ],
+    "bundleHashesVerified": true,
+    "deviceValidation": false
+  },
+  "deviceValidation": false,
+  "douyinAutoplayImplemented": false,
+  "douyinActualPlaybackAccepted": false
+}

@@ -1,0 +1,26 @@
+{
+  "url": "https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.8",
+  "tag": "v1.10.8",
+  "commit": "af6938663eacd320e285661b1e0a4935bb081c30",
+  "draft": false,
+  "assets": [
+    {
+      "name": "android-candidate-v1.10.8.json",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.8/android-candidate-v1.10.8.json",
+      "size": 970,
+      "digest": "sha256:9850644ecce421319e7d4cbb50498037b30d4411ada445c44d617f89c908aa77"
+    },
+    {
+      "name": "manifest-v1.10.8.json",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.8/manifest-v1.10.8.json",
+      "size": 8810,
+      "digest": "sha256:3c6d86a48336e73fa14e150527c40e1ed64fc1905c38b3b381ba786b1e0c5006"
+    },
+    {
+      "name": "SHA256SUMS-v1.10.8.txt",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.8/SHA256SUMS-v1.10.8.txt",
+      "size": 372,
+      "digest": "sha256:45619c4969c6677be963320c5fd13a914e42500d30e291fd5c683abc76845a98"
+    }
+  ]
+}

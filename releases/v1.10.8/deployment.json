@@ -1,0 +1,161 @@
+{
+  "apply": {
+    "promoted": true,
+    "version": "1.10.8",
+    "android": "1.10.7+45",
+    "schema": 30,
+    "protectedConfigurationsUnchanged": true,
+    "restartHealthSeconds": 0.982
+  },
+  "server": {
+    "passed": true,
+    "current": "/opt/zqzt/releases/v1.10.8-af69386",
+    "schema": "30",
+    "businessCountsBefore": "15\t59\t70\t224",
+    "businessCountsAfter": "15\t59\t70\t224",
+    "originalMediaFilesUnchanged": 251,
+    "protectedFilesUnchanged": 33,
+    "nginxTest": true,
+    "mapReadableByService": true,
+    "apkSHA256": "e162dba0077a19c564fd9710354cfe43b18719ccb7d7b942245e09c147f82254",
+    "sharedServicePIDsUnchanged": true,
+    "privateBackupVerified": true
+  },
+  "public": {
+    "origin": "https://zqzhg.com",
+    "routes": [
+      {
+        "path": "/guide",
+        "status": 200
+      },
+      {
+        "path": "/join",
+        "status": 200
+      },
+      {
+        "path": "/merchant/login",
+        "status": 200
+      },
+      {
+        "path": "/services",
+        "status": 200
+      },
+      {
+        "path": "/service-requests",
+        "status": 200
+      },
+      {
+        "path": "/app",
+        "status": 200
+      },
+      {
+        "path": "/admin",
+        "status": 200
+      },
+      {
+        "path": "/sitemaps/pages.xml",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/health",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/public/config",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/public/app",
+        "status": 200
+      }
+    ],
+    "assets": [
+      {
+        "path": "/assets/index-B8dHgwBE.js",
+        "status": 200,
+        "packageHashMatches": true
+      },
+      {
+        "path": "/assets/index-C7p7HWw3.css",
+        "status": 200,
+        "packageHashMatches": true
+      }
+    ],
+    "otherApplications": [
+      {
+        "host": "gosyncr.com",
+        "status": 200,
+        "trustedTLS": true,
+        "sha256": "e438a1fd3206fab807b74d03d27272d419205833da818bed58296e766c86ff84"
+      },
+      {
+        "host": "www.gosyncr.com",
+        "status": 200,
+        "trustedTLS": true,
+        "sha256": "e438a1fd3206fab807b74d03d27272d419205833da818bed58296e766c86ff84"
+      }
+    ],
+    "writes": 0,
+    "guideImagesVerified": 9,
+    "certificates": [
+      {
+        "host": "zqzhg.com",
+        "trusted": true,
+        "notAfter": "Jan 28 02:36:08 2027 GMT"
+      },
+      {
+        "host": "www.zqzhg.com",
+        "trusted": true,
+        "notAfter": "Jan 28 02:36:08 2027 GMT"
+      }
+    ],
+    "ipHTTP": 404,
+    "ipHTTPS": "handshake-rejected",
+    "adminWithoutLogin": 401,
+    "unknownGuideRoute": 404,
+    "passed": true,
+    "fullAPKDownloadSHA256": "e162dba0077a19c564fd9710354cfe43b18719ccb7d7b942245e09c147f82254"
+  },
+  "candidateDownload": {
+    "status": 200,
+    "bytes": 86091535,
+    "sha256": "bde62abde7962eac35f636ebbe2319113207f371304daa95bc5ccbcd9952e35b",
+    "matchesLocal": true,
+    "url": "https://zqzhg.com/downloads/candidates/zqzhg-1.10.8-46-candidate.apk",
+    "stableDownloadUpdated": false
+  },
+  "popupBrowser": [
+    {
+      "width": 1440,
+      "passed": true,
+      "audiblePlayRequested": true,
+      "actualTimeAdvanced": true,
+      "singlePopup": true,
+      "closedAndFocusRestored": true
+    },
+    {
+      "width": 390,
+      "passed": true,
+      "audiblePlayRequested": true,
+      "actualTimeAdvanced": true,
+      "singlePopup": true,
+      "closedAndFocusRestored": true
+    }
+  ],
+  "finalHealth": {
+    "allServicesHealthy": true,
+    "temporaryCandidateListenersClosed": true,
+    "state": {
+      "zqzt-exhibition": "active",
+      "nginx": "active",
+      "mysqld": "active",
+      "qiyuan-gosyncr": "active",
+      "gosync-server": "active",
+      "zqzhg-cert-renew.timer": "active"
+    }
+  },
+  "stableAndroidVersion": "1.10.7+45",
+  "candidateAndroidVersion": "1.10.8+46",
+  "androidDeviceAcceptance": "not-tested",
+  "stableDownloadUpdated": false
+}
