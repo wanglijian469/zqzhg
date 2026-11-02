@@ -409,10 +409,13 @@ class NativePublicResourceCard extends StatelessWidget {
                 if (id > 0)
                   Photo(id: id, aspectRatio: 16 / 9)
                 else
-                  const AspectRatio(
+                  AspectRatio(
                     aspectRatio: 16 / 9,
                     child: Center(
-                      child: Icon(Icons.menu_book_outlined, size: 44),
+                      child: Icon(
+                        isDouyinVideo(item) ? Icons.video_library : Icons.menu_book_outlined,
+                        size: 44,
+                      ),
                     ),
                   ),
                 Positioned(
@@ -431,6 +434,8 @@ class NativePublicResourceCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (video && d['video_source']=='DOUYIN')
+                    const Text('来源：抖音'),
                   Text(
                     resourceTitle(m, item),
                     style: Theme.of(context).textTheme.titleMedium,

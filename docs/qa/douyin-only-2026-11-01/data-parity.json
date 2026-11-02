@@ -1,0 +1,36 @@
+[
+  {
+    "table": "contents",
+    "identical": true,
+    "sha256": "edc3df2c8ede298ef1fbe3afc3e4d908f633e9e3d767270e89c2506fae07989f"
+  },
+  {
+    "table": "revisions",
+    "identical": true,
+    "sha256": "6611b661d65317964138ce6758bac5f812a206b9cdc5f19fc1d899e2e1dbed82"
+  },
+  {
+    "table": "home_display_settings",
+    "identical": true,
+    "sha256": "95472afd40aea29d958559a142bd9ee1dc198573bed96fafc36ade6155f86414"
+  },
+  {
+    "table": "home_display_media",
+    "identical": true,
+    "sha256": "d16dabf8d80bf724d811a23c526c32f156ae72ddcb494121c83267efe332716f"
+  },
+  {
+    "table": "resources",
+    "existingRowsIdentical": true,
+    "originalMaxID": 4
+  },
+  {
+    "table": "resource_revisions",
+    "existingRowsIdentical": true,
+    "originalMaxID": 4
+  },
+  {
+    "sourceExternalVideoCount": 0,
+    "sourceSchema": 29
+  }
+]

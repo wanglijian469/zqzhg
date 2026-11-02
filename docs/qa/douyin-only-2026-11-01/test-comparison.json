@@ -1,0 +1,10 @@
+{
+  "current_only": [
+    "src/company-editor.test.tsx > blocks incomplete region selection and retains all input after a failed cloud save"
+  ],
+  "baseline_only": [
+    "src/ciame-upgrade.test.tsx > opens the agriculture homepage directly and keeps the industry switcher available",
+    "src/password-reset.test.tsx > Manufacturer password reset > uses exact owner lookup on the manufacturer detail and generates a password in English"
+  ],
+  "shared_failure_count": 35
+}

@@ -28,6 +28,7 @@ part 'merchant_experience.dart';
 part 'merchant_workspace.dart';
 part 'merchant_products.dart';
 part 'resources_experience.dart';
+part 'video_links.dart';
 part 'app_sync.dart';
 part 'app_navigation.dart';
 part 'favorites.dart';
@@ -857,13 +858,19 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                   dataDetails(context, data, widget.kind),
                   if (widget.kind == 'product') ...[space(12)],
-                  if (widget.kind == 'product')
-                    ExpansionTile(
-                      title: Text(
-                        '${m.t('shortVideos')} / ${m.t('electronicCatalogs')}',
-                      ),
-                      children: [NativeResourceList(productID: widget.id)],
+                  if (widget.kind == 'product') ...[
+                    Text(
+                      m.t('shortVideos'),
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
+                    NativeResourceList(kind: 'video', productID: widget.id),
+                    space(20),
+                    Text(
+                      m.t('electronicCatalogs'),
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    NativeResourceList(kind: 'catalog', productID: widget.id),
+                  ],
                   space(24),
                   Contact(
                     data: widget.kind == 'vendor'
@@ -2548,6 +2555,51 @@ class _EditorScreenState extends State<EditorScreen> {
     );
   }
 
+  Widget productVideos() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              syncText(context, '产品视频（选填）', 'Product videos (optional)'),
+              style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+            ),
+            space(8),
+            Text(
+              syncText(
+                context,
+                '可粘贴抖音链接或上传本地视频。视频单独审核，企业和产品公开后才会展示。',
+                'Paste a Douyin link or upload a local video. Videos are reviewed separately and require a public company and product.',
+              ),
+            ),
+            if (current == null) ...[
+              space(8),
+              Text(
+                syncText(
+                  context,
+                  '先保存产品草稿，再添加视频。',
+                  'Save the product draft before adding videos.',
+                ),
+              ),
+              OutlinedButton(
+                onPressed: busy || creationUncertain ? null : () => save(),
+                child: Text(syncText(context, '先保存产品草稿', 'Save product draft')),
+              ),
+            ] else
+              NativeResourceList(
+                key: ValueKey('product-videos-${current!['id']}'),
+                kind: 'video',
+                productID: current!['id'],
+                management: true,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget previewBody() {
     final m = ModelScope.of(context);
     return Column(
@@ -2573,18 +2625,24 @@ class _EditorScreenState extends State<EditorScreen> {
         Text(fields['parameters']!.text),
         Text(m.t('submitNotice')),
         if (current != null)
-          group('resources', '视频与画册管理', 'Videos and catalogues', [
-            NativeResourceList(
-              kind: 'video',
-              productID: current!['id'],
-              management: true,
-            ),
-            NativeResourceList(
-              kind: 'catalog',
-              productID: current!['id'],
-              management: true,
-            ),
-          ]),
+          group(
+            'resources',
+            widget.kind == 'product' ? '画册管理' : '视频与画册管理',
+            widget.kind == 'product' ? 'Catalogues' : 'Videos and catalogues',
+            [
+              if (widget.kind != 'product')
+                NativeResourceList(
+                  kind: 'video',
+                  productID: current!['id'],
+                  management: true,
+                ),
+              NativeResourceList(
+                kind: 'catalog',
+                productID: current!['id'],
+                management: true,
+              ),
+            ],
+          ),
       ],
     );
   }
@@ -2751,7 +2809,10 @@ class _EditorScreenState extends State<EditorScreen> {
                       else if (productStep == 0)
                         productBasics()
                       else if (productStep == 1)
-                        gallery()
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [gallery(), space(16), productVideos()],
+                        )
                       else
                         previewBody(),
                       space(18),

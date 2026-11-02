@@ -1,0 +1,229 @@
+[
+  {
+    "name": "overview-same-row-1440",
+    "passed": true
+  },
+  {
+    "name": "vendor-list-fits-1440",
+    "passed": true
+  },
+  {
+    "name": "overview-same-row-1280",
+    "passed": true
+  },
+  {
+    "name": "vendor-list-fits-1280",
+    "passed": true
+  },
+  {
+    "name": "overview-same-row-1200",
+    "passed": true
+  },
+  {
+    "name": "vendor-list-fits-1200",
+    "passed": true
+  },
+  {
+    "name": "overview-hidden-without-column-1199",
+    "passed": true
+  },
+  {
+    "name": "vendor-list-fits-1199",
+    "passed": true
+  },
+  {
+    "name": "overview-hidden-without-column-1152",
+    "passed": true
+  },
+  {
+    "name": "vendor-list-fits-1152",
+    "passed": true
+  },
+  {
+    "name": "overview-hidden-without-column-1024",
+    "passed": true
+  },
+  {
+    "name": "vendor-list-fits-1024",
+    "passed": true
+  },
+  {
+    "name": "overview-hidden-without-column-960",
+    "passed": true
+  },
+  {
+    "name": "vendor-list-fits-960",
+    "passed": true
+  },
+  {
+    "name": "overview-hidden-without-column-768",
+    "passed": true
+  },
+  {
+    "name": "vendor-list-fits-768",
+    "passed": true
+  },
+  {
+    "name": "overview-hidden-without-column-720",
+    "passed": true
+  },
+  {
+    "name": "vendor-list-fits-720",
+    "passed": true
+  },
+  {
+    "name": "overview-hidden-without-column-390",
+    "passed": true
+  },
+  {
+    "name": "vendor-list-fits-390",
+    "passed": true
+  },
+  {
+    "name": "overview-hidden-without-column-360",
+    "passed": true
+  },
+  {
+    "name": "vendor-list-fits-360",
+    "passed": true
+  },
+  {
+    "name": "no-find-manufacturer-return-row",
+    "passed": true
+  },
+  {
+    "name": "platform-home-preserved",
+    "passed": true
+  },
+  {
+    "name": "product-list-return-preserved",
+    "passed": true
+  },
+  {
+    "name": "six-domestic-channels-1440",
+    "passed": true
+  },
+  {
+    "name": "canonical-copied-1440",
+    "passed": true
+  },
+  {
+    "name": "manual-copy-fallback-1440",
+    "passed": true
+  },
+  {
+    "name": "qr-preview-1440",
+    "passed": true
+  },
+  {
+    "name": "poster-preview-1440",
+    "passed": true
+  },
+  {
+    "name": "no-system-share-1440",
+    "passed": true
+  },
+  {
+    "name": "share-fits-1440",
+    "passed": true
+  },
+  {
+    "name": "six-domestic-channels-390",
+    "passed": true
+  },
+  {
+    "name": "canonical-copied-390",
+    "passed": true
+  },
+  {
+    "name": "manual-copy-fallback-390",
+    "passed": true
+  },
+  {
+    "name": "qr-preview-390",
+    "passed": true
+  },
+  {
+    "name": "poster-preview-390",
+    "passed": true
+  },
+  {
+    "name": "no-system-share-390",
+    "passed": true
+  },
+  {
+    "name": "share-fits-390",
+    "passed": true
+  },
+  {
+    "name": "separate-product-video-and-catalog",
+    "passed": true
+  },
+  {
+    "name": "product-douyin-no-autoplay",
+    "passed": true
+  },
+  {
+    "name": "product-douyin-play",
+    "passed": true,
+    "paused": false,
+    "time": 1.622482
+  },
+  {
+    "name": "product-douyin-pause",
+    "passed": true
+  },
+  {
+    "name": "product-douyin-close",
+    "passed": true
+  },
+  {
+    "name": "product-local-play",
+    "passed": true
+  },
+  {
+    "name": "product-local-close",
+    "passed": true
+  },
+  {
+    "name": "product-pdf-available",
+    "passed": true
+  },
+  {
+    "name": "visible-product-video-management-1440",
+    "passed": true
+  },
+  {
+    "name": "product-source-not-preselected-1440",
+    "passed": true
+  },
+  {
+    "name": "fixed-product-association-1440",
+    "passed": true
+  },
+  {
+    "name": "product-editor-fits-1440",
+    "passed": true
+  },
+  {
+    "name": "visible-product-video-management-390",
+    "passed": true
+  },
+  {
+    "name": "product-source-not-preselected-390",
+    "passed": true
+  },
+  {
+    "name": "fixed-product-association-390",
+    "passed": true
+  },
+  {
+    "name": "product-editor-fits-390",
+    "passed": true
+  },
+  {
+    "name": "no-page-errors",
+    "passed": true,
+    "errors": []
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "name": "old-public-version-before-review-5",
+    "passed": true
+  },
+  {
+    "name": "product-association-reviewed-5",
+    "passed": true
+  },
+  {
+    "name": "old-public-version-before-review-6",
+    "passed": true
+  },
+  {
+    "name": "product-association-reviewed-6",
+    "passed": true
+  },
+  {
+    "name": "old-public-version-before-review-7",
+    "passed": true
+  },
+  {
+    "name": "product-association-reviewed-7",
+    "passed": true
+  },
+  {
+    "name": "local-and-douyin-visible-on-product",
+    "passed": true
+  },
+  {
+    "name": "not-visible-on-other-product",
+    "passed": true,
+    "otherProduct": 26
+  },
+  {
+    "name": "duplicate-video-rejected",
+    "passed": true
+  }
+]

@@ -1,0 +1,140 @@
+{
+  "generatedAt": "2026-11-01T12:08:04.959084+00:00",
+  "baseline": "ac68f37",
+  "frontendBaseline": "e8acf89",
+  "localOnly": true,
+  "deployed": false,
+  "pushed": false,
+  "browserPassed": 75,
+  "browserFailed": 0,
+  "webRelatedTests": {
+    "passed": 41,
+    "failed": 0
+  },
+  "androidRelatedTests": {
+    "passed": 7,
+    "failed": 0
+  },
+  "goVideoTests": "passed",
+  "fullWebSuite": {
+    "passed": 274,
+    "failed": 36,
+    "unhandledErrors": 7
+  },
+  "baselineFullWebSuite": {
+    "passed": 267,
+    "failed": 37,
+    "unhandledErrors": 7
+  },
+  "historicalBackendFailures": [
+    "TestResourcesIndependentReviewAndVisibility: agreement_required",
+    "TestVideoWorkerProcessingRetryAndRecovery: agreement_required"
+  ],
+  "androidDevicePlaybackValidated": false,
+  "douyinPortraitActualPlaybackValidated": false,
+  "actualDouyinShortLinkValidated": false,
+  "platforms": {
+    "LOCAL": "verified in Chrome and original upload/review; Android component regression passed",
+    "DOUYIN": "official API and desktop/mobile-emulation playback verified; Android device playback unverified",
+    "KUAISHOU": "not implemented",
+    "BILIBILI": "not implemented"
+  },
+  "protectedFiles": [
+    {
+      "path": "web/src/main.tsx",
+      "baselineIdentical": true,
+      "comparison": "LF-normalized source",
+      "sha256": "7189ad23f852606c87463f5d9e72b050a13044ac6952f1c96d4d1f6d8dd5630b"
+    },
+    {
+      "path": "web/src/site-common.tsx",
+      "baselineIdentical": true,
+      "comparison": "LF-normalized source",
+      "sha256": "0e2e7644d4d927e4f69ced648f3fec8934bc61f1b8a4416a83cce09a1e1764a6"
+    },
+    {
+      "path": "web/src/public-footer.tsx",
+      "baselineIdentical": true,
+      "comparison": "LF-normalized source",
+      "sha256": "53b0f734317b479700372c3430325d7baabe20e8fc048dbf37a12ebcac68883a"
+    },
+    {
+      "path": "web/src/industry-map.tsx",
+      "baselineIdentical": true,
+      "comparison": "LF-normalized source",
+      "sha256": "6407e45182b568e5a8431095c762ff3322d9572bd6f5c6e4939068c5562f063f"
+    },
+    {
+      "path": "web/src/industry-map-chart.tsx",
+      "baselineIdentical": true,
+      "comparison": "LF-normalized source",
+      "sha256": "2dbc7024d5161dc68ca395f92c06073a3878186dfd663288c65be309b1fde27c"
+    },
+    {
+      "path": "web/src/industry-map-outline.ts",
+      "baselineIdentical": true,
+      "comparison": "LF-normalized source",
+      "sha256": "e59f8391fcf3796832917f10b14d3f3babd2ac43ceb35124f0fc30df2a76d8dc"
+    },
+    {
+      "path": "web/src/industry-map.css",
+      "baselineIdentical": true,
+      "comparison": "LF-normalized source",
+      "sha256": "7790d053f0a0066beaa2b5381f7b76d94619db11365412e019c5788ec2f26456"
+    },
+    {
+      "path": "web/src/resources.css",
+      "baselineIdentical": true,
+      "comparison": "LF-normalized source",
+      "sha256": "6835d524ecd7966bece69319dab1dfd50516872937b1cf7da06c10aae9005a45"
+    },
+    {
+      "path": "server/public.go",
+      "baselineIdentical": true,
+      "comparison": "LF-normalized source",
+      "sha256": "1428cb8919abb98c764a786cd8c97464ea720a22d435c5b6cad563a64902924b"
+    },
+    {
+      "path": "server/resource_media.go",
+      "baselineIdentical": true,
+      "comparison": "LF-normalized source",
+      "sha256": "0b6170a931b1a855533ff7196babf35493d4d7abd86eadd3359615daf808fb65"
+    }
+  ],
+  "changedFiles": [
+    "docs/openapi.json",
+    "mobile/android/app/build.gradle.kts",
+    "mobile/android/app/src/debug/res/values/strings.xml",
+    "mobile/android/app/src/main/AndroidManifest.xml",
+    "mobile/android/app/src/main/kotlin/com/zqzt/dalunongji/MainActivity.kt",
+    "mobile/android/app/src/main/kotlin/com/zqzt/dalunongji/VideoPlayerActivity.kt",
+    "mobile/lib/app_sync.dart",
+    "mobile/lib/app_upgrade.dart",
+    "mobile/lib/main.dart",
+    "mobile/lib/resources_experience.dart",
+    "mobile/lib/video_links.dart",
+    "mobile/test/video_links_test.dart",
+    "scripts/build-video-test-apk.ps1",
+    "scripts/start-video-dev.ps1",
+    "server/.env.example",
+    "server/content.go",
+    "server/main.go",
+    "server/migrations/029_external_video_resources.sql",
+    "server/permissions.go",
+    "server/procurement_demo.go",
+    "server/resources.go",
+    "server/showroom.go",
+    "server/video_links.go",
+    "server/video_links_test.go",
+    "server/video_provider_test.go",
+    "server/video_resources.go",
+    "server/video_short_draft_test.go",
+    "web/src/douyin-video.css",
+    "web/src/resource-messages.ts",
+    "web/src/resources.tsx",
+    "web/src/runtime-config.ts",
+    "web/src/showroom.tsx",
+    "web/src/video-playback.test.tsx",
+    "web/src/video-playback.tsx"
+  ]
+}

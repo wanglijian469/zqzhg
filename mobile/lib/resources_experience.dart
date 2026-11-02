@@ -60,8 +60,9 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
       appBar: appBar(context, m.t('brand')),
       body: AsyncPane(
         identity: '${m.baseUrl}:showroom:${widget.slug}',
-        load: () =>
-            m.api('/public/showrooms/${Uri.encodeComponent(widget.slug)}'),
+        load: () => m.api(
+          videoV2('/public/showrooms/${Uri.encodeComponent(widget.slug)}'),
+        ),
         builder: (result) {
           final item = asMap(result['item']),
               data = asMap(item['data']),
@@ -602,6 +603,7 @@ class _NativeResourceListState extends State<NativeResourceList> {
     final q = {
       'page': '$page',
       'page_size': '12',
+      if (widget.kind != 'catalog') 'video_api_version': '2',
       if (widget.vendorID != null) 'vendor_id': '${widget.vendorID}',
       if (widget.productID != null) 'product_id': '${widget.productID}',
       if (widget.kind != null) 'kind': widget.kind!,
@@ -618,16 +620,24 @@ class _NativeResourceListState extends State<NativeResourceList> {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => NativeResourceEditor(
-                    kind: widget.kind!,
-                    productID: widget.productID,
-                  ),
+                  builder: (_) => widget.kind == 'video'
+                      ? NativeVideoAddScreen(productID: widget.productID)
+                      : NativeResourceEditor(
+                          kind: widget.kind!,
+                          productID: widget.productID,
+                        ),
                 ),
               );
               refresh();
             },
             icon: const Icon(Icons.add),
-            label: Text(m.t('newResource')),
+            label: Text(
+              widget.kind == 'video'
+                  ? (widget.productID != null
+                        ? syncText(context, '添加产品视频', 'Add product video')
+                        : syncText(context, '添加企业宣传视频', 'Add company video'))
+                  : m.t('newResource'),
+            ),
           ),
           space(),
           NativeFieldLabel(
@@ -659,7 +669,9 @@ class _NativeResourceListState extends State<NativeResourceList> {
             ),
           ),
         ],
-        if (!widget.management && widget.kind == 'video')
+        if (!widget.management &&
+            widget.kind == 'video' &&
+            widget.productID == null)
           NativeFieldLabel(
             label: m.t('purpose'),
             child: DropdownButtonFormField<String>(
@@ -817,11 +829,16 @@ class _NativeResourceListState extends State<NativeResourceList> {
                                     await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => NativeResourceEditor(
-                                          kind: item['kind'],
-                                          item: item,
-                                          productID: widget.productID,
-                                        ),
+                                        builder: (_) => isDouyinVideo(item)
+                                            ? NativeDouyinEditor(
+                                                item: item,
+                                                productID: widget.productID,
+                                              )
+                                            : NativeResourceEditor(
+                                                kind: item['kind'],
+                                                item: item,
+                                                productID: widget.productID,
+                                              ),
                                       ),
                                     );
                                     refresh();
@@ -837,7 +854,11 @@ class _NativeResourceListState extends State<NativeResourceList> {
                                         : () async {
                                             try {
                                               await m.api(
-                                                '/merchant/resources/${item['id']}/submit',
+                                                isDouyinVideo(item)
+                                                    ? videoV2(
+                                                        '/merchant/resources/${item['id']}/submit',
+                                                      )
+                                                    : '/merchant/resources/${item['id']}/submit',
                                                 method: 'POST',
                                                 data: {
                                                   'revision_id':
@@ -877,7 +898,11 @@ class _NativeResourceListState extends State<NativeResourceList> {
                                       if (ok != true) return;
                                       try {
                                         await m.api(
-                                          '/merchant/resources/${item['id']}/offline',
+                                          isDouyinVideo(item)
+                                              ? videoV2(
+                                                  '/merchant/resources/${item['id']}/offline',
+                                                )
+                                              : '/merchant/resources/${item['id']}/offline',
                                           method: 'POST',
                                           data: {},
                                         );
@@ -996,6 +1021,29 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
 
   bool videoStarting = false;
   Future<void> startVideo() async {
+    if (isDouyinVideo(widget.item)) {
+      if (videoStarting) return;
+      setState(() {
+        videoStarting = true;
+        error = '';
+      });
+      try {
+        final m = ModelScope.of(context);
+        final result = asMap(
+          await m.api(
+            videoV2(
+              '/${widget.private ? 'merchant' : 'public'}/resources/${widget.item['id']}/playback',
+            ),
+          ),
+        );
+        await openOfficialVideo(result);
+      } catch (e) {
+        if (mounted) setState(() => error = videoErrorText(e));
+      } finally {
+        if (mounted) setState(() => videoStarting = false);
+      }
+      return;
+    }
     if (videoStarting) return;
     setState(() {
       videoStarting = true;
@@ -1051,7 +1099,8 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
       appBar: appBar(context, resourceTitle(m, widget.item)),
       body: Column(
         children: [
-          if (error.isNotEmpty) message(context, m.t(error)),
+          if (error.isNotEmpty)
+            message(context, isDouyinVideo(widget.item) ? error : m.t(error)),
           Expanded(
             child:
                 widget.item['file']?['state'] != null &&
@@ -1373,6 +1422,10 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
         uploads = rows(saved['uploads']);
       }
     } catch (_) {}
+    if (widget.kind == 'video' && widget.productID != null) {
+      data['product_id'] = widget.productID;
+      data['purpose'] = 'product';
+    }
     for (final k in ['title', 'title_en', 'description', 'description_en']) {
       fields[k] = TextEditingController(text: data[k]);
       fields[k]!.addListener(() {
@@ -1566,6 +1619,10 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
     }
     final m = ModelScope.of(context);
     setState(() => busy = true);
+    if (widget.kind == 'video' && widget.productID != null) {
+      data['product_id'] = widget.productID;
+      data['purpose'] = 'product';
+    }
     try {
       final r = asMap(
         await m.api(
@@ -1674,7 +1731,7 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
                     ])
                       DropdownMenuItem(value: p[0], child: Text(m.t(p[1]))),
                   ],
-                  onChanged: disabled
+                  onChanged: disabled || widget.productID != null
                       ? null
                       : (v) {
                           setState(() => data['purpose'] = v);
@@ -1714,19 +1771,20 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
             Text(
               '${m.t('associatedProduct')}: ${data['product_id'] == 0 ? m.t('noAssociation') : '#${data['product_id']}'}',
             ),
-            ExpansionTile(
-              title: Text(m.t('searchProducts')),
-              children: [
-                NativeProductPicker(
-                  selected: data['product_id'],
-                  enabled: !disabled,
-                  onSelected: (id) {
-                    setState(() => data['product_id'] = id);
-                    persist();
-                  },
-                ),
-              ],
-            ),
+            if (!(widget.kind == 'video' && widget.productID != null))
+              ExpansionTile(
+                title: Text(m.t('searchProducts')),
+                children: [
+                  NativeProductPicker(
+                    selected: data['product_id'],
+                    enabled: !disabled,
+                    onSelected: (id) {
+                      setState(() => data['product_id'] = id);
+                      persist();
+                    },
+                  ),
+                ],
+              ),
             space(),
             OutlinedButton(
               onPressed: disabled

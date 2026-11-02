@@ -1,0 +1,315 @@
+[
+  {
+    "name": "home-8080-1440-fits",
+    "passed": true
+  },
+  {
+    "name": "home-18086-1440-fits",
+    "passed": true
+  },
+  {
+    "name": "footer-and-home-cases-parity-1440",
+    "passed": true
+  },
+  {
+    "name": "home-8080-768-fits",
+    "passed": true
+  },
+  {
+    "name": "home-18086-768-fits",
+    "passed": true
+  },
+  {
+    "name": "footer-and-home-cases-parity-768",
+    "passed": true
+  },
+  {
+    "name": "home-8080-390-fits",
+    "passed": true
+  },
+  {
+    "name": "home-18086-390-fits",
+    "passed": true
+  },
+  {
+    "name": "footer-and-home-cases-parity-390",
+    "passed": true
+  },
+  {
+    "name": "home-8080-360-fits",
+    "passed": true
+  },
+  {
+    "name": "home-18086-360-fits",
+    "passed": true
+  },
+  {
+    "name": "footer-and-home-cases-parity-360",
+    "passed": true
+  },
+  {
+    "name": "map-data-and-boundary-parity-national",
+    "passed": true,
+    "sha": "352c09e7064756c7c6a505c30dd3e7560b13a4edf87883a65fc3d008a3152802"
+  },
+  {
+    "name": "map-data-and-boundary-parity-13",
+    "passed": true,
+    "sha": "bd1daff0ea4d7253b6ce77784bf7f9669ad6e5a19d0815eb89d696e8db9b34ea"
+  },
+  {
+    "name": "map-data-and-boundary-parity-1305",
+    "passed": true,
+    "sha": "cd6acc3f9b1319610f28c83b88b8f79952b9b5242bfc34a47a10871e2247d8ba"
+  },
+  {
+    "name": "map-data-and-boundary-parity-130528",
+    "passed": true,
+    "sha": "f09314a4d4a0bc4ee436e982f282ef6ea59572c742fc01b7d1833d0634f51251"
+  },
+  {
+    "name": "map-actual-drilldown-1440",
+    "passed": true
+  },
+  {
+    "name": "map-fits-1440",
+    "passed": true
+  },
+  {
+    "name": "map-actual-drilldown-768",
+    "passed": true
+  },
+  {
+    "name": "map-fits-768",
+    "passed": true
+  },
+  {
+    "name": "map-actual-drilldown-390",
+    "passed": true
+  },
+  {
+    "name": "map-fits-390",
+    "passed": true
+  },
+  {
+    "name": "map-actual-drilldown-360",
+    "passed": true
+  },
+  {
+    "name": "map-fits-360",
+    "passed": true
+  },
+  {
+    "name": "desktop-no-autoplay",
+    "passed": true
+  },
+  {
+    "name": "desktop-click-play",
+    "passed": true,
+    "paused": false,
+    "time": 2.012302,
+    "ready": 4
+  },
+  {
+    "name": "desktop-click-pause",
+    "passed": true
+  },
+  {
+    "name": "desktop-fullscreen",
+    "passed": true
+  },
+  {
+    "name": "desktop-exit-fullscreen",
+    "passed": true
+  },
+  {
+    "name": "desktop-close-unloads",
+    "passed": true
+  },
+  {
+    "name": "mobile-emulation-no-autoplay",
+    "passed": true
+  },
+  {
+    "name": "mobile-emulation-click-play",
+    "passed": true,
+    "paused": false,
+    "time": 2.251652,
+    "ready": 4
+  },
+  {
+    "name": "mobile-emulation-click-pause",
+    "passed": true
+  },
+  {
+    "name": "mobile-emulation-fullscreen",
+    "passed": true
+  },
+  {
+    "name": "mobile-emulation-exit-fullscreen",
+    "passed": true
+  },
+  {
+    "name": "mobile-emulation-close-unloads",
+    "passed": true
+  },
+  {
+    "name": "historical-local-no-autoplay",
+    "passed": true
+  },
+  {
+    "name": "historical-local-play",
+    "passed": true
+  },
+  {
+    "name": "historical-local-pause",
+    "passed": true
+  },
+  {
+    "name": "historical-local-close",
+    "passed": true
+  },
+  {
+    "name": "historical-catalog-open",
+    "passed": true
+  },
+  {
+    "name": "unselected-choice-1440",
+    "passed": true
+  },
+  {
+    "name": "link-check-ui-1440",
+    "passed": true
+  },
+  {
+    "name": "editor-fits-1440",
+    "passed": true
+  },
+  {
+    "name": "unselected-choice-768",
+    "passed": true
+  },
+  {
+    "name": "link-check-ui-768",
+    "passed": true
+  },
+  {
+    "name": "editor-fits-768",
+    "passed": true
+  },
+  {
+    "name": "unselected-choice-390",
+    "passed": true
+  },
+  {
+    "name": "link-check-ui-390",
+    "passed": true
+  },
+  {
+    "name": "editor-fits-390",
+    "passed": true
+  },
+  {
+    "name": "unselected-choice-360",
+    "passed": true
+  },
+  {
+    "name": "link-check-ui-360",
+    "passed": true
+  },
+  {
+    "name": "editor-fits-360",
+    "passed": true
+  },
+  {
+    "name": "no-first-party-javascript-errors",
+    "passed": true,
+    "errors": []
+  },
+  {
+    "name": "local-original-form-1440",
+    "passed": true
+  },
+  {
+    "name": "douyin-video-name-field-1440",
+    "passed": true
+  },
+  {
+    "name": "local-original-form-768",
+    "passed": true
+  },
+  {
+    "name": "douyin-video-name-field-768",
+    "passed": true
+  },
+  {
+    "name": "local-original-form-390",
+    "passed": true
+  },
+  {
+    "name": "douyin-video-name-field-390",
+    "passed": true
+  },
+  {
+    "name": "local-original-form-360",
+    "passed": true
+  },
+  {
+    "name": "douyin-video-name-field-360",
+    "passed": true
+  },
+  {
+    "name": "new-local-portrait-play",
+    "passed": true
+  },
+  {
+    "name": "route-/browse",
+    "passed": true
+  },
+  {
+    "name": "content-/browse",
+    "passed": true
+  },
+  {
+    "name": "route-/browse/products",
+    "passed": true
+  },
+  {
+    "name": "content-/browse/products",
+    "passed": true
+  },
+  {
+    "name": "route-/guide",
+    "passed": true
+  },
+  {
+    "name": "route-/merchant/login",
+    "passed": true
+  },
+  {
+    "name": "route-/join",
+    "passed": true
+  },
+  {
+    "name": "product-detail",
+    "passed": true
+  },
+  {
+    "name": "unchanged-public-company-count",
+    "passed": true,
+    "count": 11
+  },
+  {
+    "name": "unchanged-public-product-count",
+    "passed": true,
+    "count": 46
+  },
+  {
+    "name": "pdf-real-render-1440",
+    "passed": true
+  },
+  {
+    "name": "pdf-real-render-390",
+    "passed": true
+  }
+]

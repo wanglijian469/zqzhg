@@ -248,7 +248,7 @@ func (a *App) publicShowroom(c *gin.Context) {
 	resourceCounts := map[string]int64{}
 	for _, kind := range []string{"video", "catalog"} {
 		var n int64
-		if e = a.resourceQuery().Where("resources.vendor_id=? AND resources.kind=?", item.ID, kind).Count(&n).Error; e != nil {
+		if e = resourceClientFilter(a.resourceQuery(), c, "pr").Where("resources.vendor_id=? AND resources.kind=?", item.ID, kind).Count(&n).Error; e != nil {
 			dbFail(c, e)
 			return
 		}

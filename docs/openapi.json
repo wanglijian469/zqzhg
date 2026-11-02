@@ -3,7 +3,7 @@
   "info": {
     "title": "中企展馆 · ZQZG",
     "version": "2.0.0",
-    "description": "Published snapshots only. Draft and pending content and media require ownership or administrator access. Error messages are localized by clients using error.code. Resource snapshots have independent review and processing states; anonymous media access also requires a public parent showroom and linked product. Platform operators use effective feature permissions. Administrator-only storage, persistent jobs and encrypted isolated recovery are provided. Anonymous analytics do not identify people.\nPublic data reads use shared per-IP page/API limits, bounded pagination and distinct content budgets; 429 includes Retry-After. Schema14 preserves historical showroom addresses. Schema18 compacts the official product taxonomy to 10 roots and 35 children; existing IDs resolve through aliases. Search UI removes industrial belt and business nature while APIs preserve legacy filter compatibility. Schema19 adds globally unique verified account phones and purpose-scoped verification; legacy username and SMS endpoints remain compatible. Native App removes map functionality; website maps remain available.\nSchema20 stores immutable upload-time watermark config, server-resolved manufacturer label and separate source/display media references. Only new company gallery, showroom cover and product images are rendered. Legacy media, logos, credentials, banners, category images and resource media are unchanged. Public media IDs always serve the authorized display variant; original=1 cannot expose protected clean sources. Legacy upload IDs may resolve to their public watermarked variant. New clients must use normalized media IDs returned after draft saving.\nSchema21 introduces procurement with additive buyer identity, reviewed publication/expansion, immutable demand and quotation versions, private attachments and conversations, deterministic supplier matching, scoped notifications and restored-object validation. Prices and quantities are decimal strings. Native App APIs remain compatible. Procurement may be disabled with PROCUREMENT_ENABLED=false.\nSupplier opportunities use /merchant/opportunities; legacy /buyer/opportunities pages redirect with query and fragment preserved. Procurement notifications support optional buyer/supplier scope for lists, unread counts and marking read. Phone SMS login uses purpose=login and the existing verification lifecycle. Runtime capabilities include phone_sms_auth, development_sms and procurement_demo; demo_accounts is only populated in explicit isolated demo mode. Production never exposes development codes."
+    "description": "Published snapshots only. Draft and pending content and media require ownership or administrator access. Error messages are localized by clients using error.code. Resource snapshots have independent review and processing states; anonymous media access also requires a public parent showroom and linked product. Platform operators use effective feature permissions. Administrator-only storage, persistent jobs and encrypted isolated recovery are provided. Anonymous analytics do not identify people.\nPublic data reads use shared per-IP page/API limits, bounded pagination and distinct content budgets; 429 includes Retry-After. Schema14 preserves historical showroom addresses. Schema18 compacts the official product taxonomy to 10 roots and 35 children; existing IDs resolve through aliases. Search UI removes industrial belt and business nature while APIs preserve legacy filter compatibility. Schema19 adds globally unique verified account phones and purpose-scoped verification; legacy username and SMS endpoints remain compatible. Native App removes map functionality; website maps remain available.\nSchema20 stores immutable upload-time watermark config, server-resolved manufacturer label and separate source/display media references. Only new company gallery, showroom cover and product images are rendered. Legacy media, logos, credentials, banners, category images and resource media are unchanged. Public media IDs always serve the authorized display variant; original=1 cannot expose protected clean sources. Legacy upload IDs may resolve to their public watermarked variant. New clients must use normalized media IDs returned after draft saving.\nSchema21 introduces procurement with additive buyer identity, reviewed publication/expansion, immutable demand and quotation versions, private attachments and conversations, deterministic supplier matching, scoped notifications and restored-object validation. Prices and quantities are decimal strings. Native App APIs remain compatible. Procurement may be disabled with PROCUREMENT_ENABLED=false.\nSupplier opportunities use /merchant/opportunities; legacy /buyer/opportunities pages redirect with query and fragment preserved. Procurement notifications support optional buyer/supplier scope for lists, unread counts and marking read. Phone SMS login uses purpose=login and the existing verification lifecycle. Runtime capabilities include phone_sms_auth, development_sms and procurement_demo; demo_accounts is only populated in explicit isolated demo mode. Production never exposes development codes.\nSchema29 adds version-scoped Douyin identities, authorization declarations and five-minute official playback checks. video_api_version=2 opts into external video lists and counts; older clients receive local video only. DOUYIN_VIDEO_ENABLED defaults false. Existing local storage quotas, media processing and review remain unchanged. The previously executed migration retains unused removal/order/cleanup structures; no deletion, sorting or cleanup business routes are enabled."
   },
   "servers": [
     {
@@ -14444,6 +14444,269 @@
           }
         }
       }
+    },
+    "/merchant/video-links/check": {
+      "post": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Validate a Douyin share link using the official iframe API",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "video_api_version",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                2
+              ]
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "maxLength": 8000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Legal links return a server-generated READY, UNAVAILABLE or TEMPORARY_ERROR check. Only READY can submit for review."
+          },
+          "400": {
+            "description": "Invalid, multiple, blocked or unsupported share link"
+          },
+          "403": {
+            "description": "Not an enterprise owner or lacks resource.write permission"
+          },
+          "429": {
+            "description": "Account rate limit"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/admin/video-links/check": {
+      "post": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Validate a Douyin share link using the official iframe API",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "video_api_version",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                2
+              ]
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "maxLength": 8000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Legal links return a server-generated READY, UNAVAILABLE or TEMPORARY_ERROR check. Only READY can submit for review."
+          },
+          "400": {
+            "description": "Invalid, multiple, blocked or unsupported share link"
+          },
+          "403": {
+            "description": "Not an enterprise owner or lacks resource.write permission"
+          },
+          "429": {
+            "description": "Account rate limit"
+          },
+          "503": {
+            "description": "Feature disabled"
+          }
+        }
+      }
+    },
+    "/public/resources/{id}/playback": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Resolve reviewed public playback or an owned private resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "video_api_version",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                2
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Server-validated playback check; local resources return source LOCAL and media_id"
+          },
+          "403": {
+            "description": "Ownership or resource.read permission required"
+          },
+          "404": {
+            "description": "No accessible published resource"
+          },
+          "503": {
+            "description": "External playback disabled"
+          }
+        }
+      }
+    },
+    "/merchant/resources/{id}/playback": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Resolve reviewed public playback or an owned private resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "video_api_version",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                2
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Server-validated playback check; local resources return source LOCAL and media_id"
+          },
+          "403": {
+            "description": "Ownership or resource.read permission required"
+          },
+          "404": {
+            "description": "No accessible published resource"
+          },
+          "503": {
+            "description": "External playback disabled"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/admin/resources/{id}/playback": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Resolve reviewed public playback or an owned private resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "video_api_version",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                2
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Server-validated playback check; local resources return source LOCAL and media_id"
+          },
+          "403": {
+            "description": "Ownership or resource.read permission required"
+          },
+          "404": {
+            "description": "No accessible published resource"
+          },
+          "503": {
+            "description": "External playback disabled"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -15696,6 +15959,32 @@
               "minimum": 0
             },
             "maxItems": 30
+          },
+          "video_source": {
+            "type": "string",
+            "enum": [
+              "LOCAL",
+              "DOUYIN"
+            ],
+            "default": "LOCAL",
+            "description": "Missing source preserves historical local videos. Existing resources cannot change source."
+          },
+          "original_share_url": {
+            "type": "string",
+            "maxLength": 8000,
+            "description": "Douyin share content or HTTPS share link. The server validates and normalizes it."
+          },
+          "canonical_video_url": {
+            "type": "string",
+            "readOnly": true
+          },
+          "external_video_id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "rights_confirmed": {
+            "type": "boolean",
+            "description": "Required for external video saves. The server records actor, time and declaration version."
           }
         },
         "required": [
@@ -17233,6 +17522,41 @@
             "type": "boolean"
           },
           "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "VideoLinkCheck": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "video_id": {
+            "type": "string"
+          },
+          "canonical_url": {
+            "type": "string"
+          },
+          "player_url": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "width": {
+            "type": "integer"
+          },
+          "height": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "expires_at": {
             "type": "string"
           }
         }

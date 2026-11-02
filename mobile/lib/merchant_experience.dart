@@ -239,6 +239,55 @@ const domesticShareKeys = [
 ];
 const overseasShareKeys = ['whatsapp', 'telegram', 'email'];
 
+String domesticNativeSharePage(String channel, String name, String url) {
+  final query = {'url': url, 'title': name, 'summary': name};
+  if (channel == 'qq') {
+    return Uri.https(
+      'connect.qq.com',
+      '/widget/shareqq/index.html',
+      query,
+    ).toString();
+  }
+  if (channel == 'qzone') {
+    return Uri.https(
+      'sns.qzone.qq.com',
+      '/cgi-bin/qzshare/cgi_qzshare_onekey',
+      query,
+    ).toString();
+  }
+  return '';
+}
+
+String domesticNativeShareGuide(String channel, bool zh) {
+  const guides = {
+    'wechatFriend': [
+      '复制展厅地址，打开微信，找到客户或群聊，粘贴后发送；也可以发送保存的二维码或海报。',
+      'Copy the link, open WeChat, select a contact or group, and paste to send. You can also send a saved QR code or poster.',
+    ],
+    'wechatMoments': [
+      '生成并保存海报，打开微信朋友圈，选择海报并粘贴宣传文案后自行发布。不会自动发布朋友圈。',
+      'Generate and save a poster, then select it in WeChat Moments and paste the promotional text. Posting is manual.',
+    ],
+    'qq': [
+      '在QQ官方分享页完成发送。打不开时，请复制展厅地址，再打开QQ粘贴给客户。',
+      'Use the official QQ share page. If it does not open, copy the link and paste it into QQ.',
+    ],
+    'qzone': [
+      '在QQ空间官方分享页完成发布。打不开时，可以保存海报并复制文案，到QQ空间自行发布。',
+      'Use the official Qzone page. If it does not open, save a poster and copy the text to post manually.',
+    ],
+    'wecom': [
+      '复制展厅地址，打开企业微信，选择客户或群聊，粘贴后发送；也可以发送保存的海报。',
+      'Copy the link, open WeCom, choose a contact or group, then paste and send. You can also send a saved poster.',
+    ],
+    'dingtalk': [
+      '复制展厅地址，打开钉钉，选择联系人或群聊，粘贴后发送；也可以发送保存的二维码。',
+      'Copy the link, open DingTalk, choose a contact or group, then paste and send. You can also send a saved QR code.',
+    ],
+  };
+  return guides[channel]?[zh ? 0 : 1] ?? guides['wechatFriend']![zh ? 0 : 1];
+}
+
 class ShowroomPromotion extends StatefulWidget {
   final String slug;
   const ShowroomPromotion({super.key, required this.slug});
@@ -264,23 +313,30 @@ class _ShowroomPromotionState extends State<ShowroomPromotion> {
     }
   }
 
-  Future<void> image(
-    AppModel m,
-    Json item,
-    String url,
-    bool poster,
-    bool save,
-  ) async {
+  Future<void> image(AppModel m, Json item, String url, bool poster) async {
     setState(() => busy = true);
     try {
       final bytes = await showroomPNG(m, item, url, poster: poster);
       if (!mounted) return;
       setState(() => preview = bytes);
-      await sharingBridge.invokeMethod(save ? 'saveImage' : 'shareImage', {
+      final saved = await sharingBridge.invokeMethod<bool>('saveImage', {
         'bytes': bytes,
         'name': 'showroom-${item['id']}-${poster ? 'poster' : 'qr'}.png',
         'title': m.content(asMap(item['data']), 'name'),
       });
+      if (saved == true && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              syncText(
+                context,
+                '海报已保存，请按分享说明到微信等应用发送。',
+                'Poster saved. Follow the instructions to send it in your chosen app.',
+              ),
+            ),
+          ),
+        );
+      }
     } catch (e) {
       if (mounted) showError(context, ApiFailure('posterFailed'));
     } finally {
@@ -386,23 +442,63 @@ class _ShowroomPromotionState extends State<ShowroomPromotion> {
                           style: const TextStyle(fontSize: 13),
                         ),
                       ),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          for (final key in domesticShareKeys)
+                            OutlinedButton(
+                              onPressed: busy
+                                  ? null
+                                  : () async {
+                                      setState(() => channel = key);
+                                      final target = domesticNativeSharePage(
+                                        key,
+                                        title,
+                                        url,
+                                      );
+                                      if (target.isNotEmpty) {
+                                        try {
+                                          if (!await launchUrl(
+                                            Uri.parse(target),
+                                            mode:
+                                                LaunchMode.externalApplication,
+                                          )) {
+                                            await copy(url);
+                                          }
+                                        } catch (_) {
+                                          await copy(url);
+                                        }
+                                      }
+                                    },
+                              style: OutlinedButton.styleFrom(
+                                minimumSize: const Size(72, 48),
+                                backgroundColor: channel == key
+                                    ? const Color(0xffeaf2ff)
+                                    : null,
+                              ),
+                              child: Text(m.t(key)),
+                            ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Text(
+                          domesticNativeShareGuide(channel, m.language == 'zh'),
+                        ),
+                      ),
                       FilledButton.icon(
-                        onPressed: busy
-                            ? null
-                            : () => sharePublicText(context, text, title, url),
-                        icon: const Icon(Icons.share_outlined),
-                        label: Text(m.t('shareShowroom')),
+                        onPressed: busy ? null : () => copy(url),
+                        icon: const Icon(Icons.link),
+                        label: Text(
+                          syncText(context, '复制展厅地址', 'Copy showroom link'),
+                        ),
                       ),
                       space(8),
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
                         children: [
-                          OutlinedButton.icon(
-                            onPressed: () => copy(url),
-                            icon: const Icon(Icons.link, size: 18),
-                            label: Text(m.t('copyLink')),
-                          ),
                           OutlinedButton.icon(
                             onPressed: busy
                                 ? null
@@ -473,7 +569,7 @@ class _ShowroomPromotionState extends State<ShowroomPromotion> {
                           OutlinedButton.icon(
                             onPressed: busy
                                 ? null
-                                : () => image(m, item, url, true, true),
+                                : () => image(m, item, url, true),
                             icon: const Icon(Icons.download_outlined, size: 18),
                             label: Text(m.t('downloadPoster')),
                           ),
@@ -503,11 +599,11 @@ class _ShowroomPromotionState extends State<ShowroomPromotion> {
                             onPressed: () => copy(text),
                             child: Text(m.t('copyPromotion')),
                           ),
-                          TextButton(
-                            onPressed: busy
-                                ? null
-                                : () => image(m, item, url, true, false),
-                            child: Text(m.t('sharePoster')),
+                          Text(
+                            domesticNativeShareGuide(
+                              channel,
+                              m.language == 'zh',
+                            ),
                           ),
                         ],
                       ),

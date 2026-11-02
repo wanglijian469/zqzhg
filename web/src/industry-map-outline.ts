@@ -49,7 +49,7 @@ export function renderOutlineMap(element:HTMLDivElement,resource:Pick<PreviewBou
  try{draw(true);chart.on('click',params=>{if(mapped.has(params.name)&&current.items.some(item=>item.code===params.name))onSelect(params.name)})}catch(error){chart.dispose();throw error}
  return {
   dispose:()=>{disposed=true;chart.dispose()},
-  resize:()=>{if(!disposed&&(width!==element.clientWidth||height!==element.clientHeight)){width=element.clientWidth;height=element.clientHeight;chart.resize()}},
+  resize:()=>{if(!disposed&&element.clientWidth>0&&element.clientHeight>0&&(width!==element.clientWidth||height!==element.clientHeight)){width=element.clientWidth;height=element.clientHeight;chart.resize()}},
   update:(value:RegionStatistics)=>{current=value;draw(false)},
   zoom:(factor:number)=>chart.dispatchAction({type:'geoRoam',seriesIndex:0,zoom:factor,originX:element.clientWidth/2,originY:element.clientHeight/2}),
   reset:()=>draw(true)

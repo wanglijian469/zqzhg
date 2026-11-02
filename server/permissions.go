@@ -172,6 +172,8 @@ func (a *App) permissionForRequest(c *gin.Context) string {
 		}
 	}
 	switch {
+	case path == "video-links/check":
+		return "resource.write"
 	case strings.HasPrefix(path, "seo/"):
 		if method == "GET" || method == "HEAD" {
 			return "seo.read"

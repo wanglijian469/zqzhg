@@ -50,6 +50,10 @@ type App struct {
 	imageCacheOnce       sync.Once
 	imageCache           *imageVariantCache
 	searchHTTP           *http.Client
+	videoHTTP            *http.Client
+	videoClientOnce      sync.Once
+	videoFlights         sync.Map
+	videoFlightMu        sync.Mutex
 }
 
 func env(key, fallback string) string {

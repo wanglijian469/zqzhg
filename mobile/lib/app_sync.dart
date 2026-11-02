@@ -267,7 +267,7 @@ class PortalResourceSummary extends StatelessWidget {
     return AsyncPane(
       identity: '${m.baseUrl}:portal-resources:$vendorID:$kind',
       load: () => m.api(
-        '/public/resources?vendor_id=$vendorID&kind=$kind&page_size=3&page=1',
+        '/public/resources?vendor_id=$vendorID&kind=$kind&page_size=3&page=1&video_api_version=2',
       ),
       builder: (r) => Column(
         children: rows(r['items'])

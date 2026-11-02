@@ -52,6 +52,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".videodev"
+        }
         release {
             signingConfig = signingConfigs.getByName("release")
         }

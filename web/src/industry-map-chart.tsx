@@ -4,6 +4,7 @@ import {loadBoundary} from './industry-map-resources';
 import {loadMapPreview,mapPreviewAvailable,mapDemoActive} from './industry-map-preview';
 import {useLanguage} from './ui';
 import {MapPin,Minus,Plus,RotateCcw} from 'lucide-react';
+import {waitForMapSize} from './map-size';
 
 type MapControls={dispose:()=>void;resize:()=>void;zoom:(factor:number)=>void;reset:()=>void;update?:(statistics:RegionStatistics)=>void};
 export default function IndustryMapChart({statistics,onSelect,onMissing}:{statistics:RegionStatistics;onSelect:(code:string)=>void;onMissing?:()=>void}){
@@ -30,6 +31,8 @@ export default function IndustryMapChart({statistics,onSelect,onMissing}:{statis
     if(controller.signal.aborted)return;
     let renderOutlineMap:typeof import('./industry-map-outline').renderOutlineMap;
     try{({renderOutlineMap}=await import('./industry-map-outline'))}catch(error){moduleFailed=true;throw error}
+    if(controller.signal.aborted||!container.current)return;
+    await waitForMapSize(container.current,controller.signal);
     if(controller.signal.aborted||!container.current)return;
     instance=renderOutlineMap(container.current,boundary,latest.current,onSelect,t);setResource(boundary);
    }else{

@@ -1,0 +1,52 @@
+[
+  {
+    "table": "contents",
+    "originalRows": 57,
+    "cloneRows": 57,
+    "changes": [
+      {
+        "id": 57,
+        "changedColumns": [
+          "draft_revision_id",
+          "updated_at"
+        ]
+      }
+    ],
+    "originalHash": "5e516ceb7d5031dfa2f8e942158a2b18387abb1d309e03f22e0a83a88954b5f6"
+  },
+  {
+    "table": "revisions",
+    "originalRows": 69,
+    "cloneRows": 70,
+    "changes": [],
+    "originalHash": "4e13a38989fd52f9554678e573a7a2fd02bc828b9896046501d966f58e9b5a76"
+  },
+  {
+    "table": "home_display_settings",
+    "originalRows": 2,
+    "cloneRows": 2,
+    "changes": [],
+    "originalHash": "46268d7a6988f293461f6104021ffc0d1c1c9242b35071ef406f9a9875509734"
+  },
+  {
+    "table": "home_display_media",
+    "originalRows": 3,
+    "cloneRows": 3,
+    "changes": [],
+    "originalHash": "164fd1e14ff72cd5848364479775a3e3d05a0955e664393237fc795dda1037ba"
+  },
+  {
+    "table": "resources",
+    "originalRows": 4,
+    "cloneRows": 8,
+    "changes": [],
+    "originalHash": "5b3c1f635db07b9a68c0a6105b9f32c9553f701e30a22a2c937197bf9855c3f5"
+  },
+  {
+    "table": "resource_revisions",
+    "originalRows": 4,
+    "cloneRows": 14,
+    "changes": [],
+    "originalHash": "e04edc09c5a5c2b10da5e50620f4e27e1a785064d678f1a16c0d0e168b592af2"
+  }
+]

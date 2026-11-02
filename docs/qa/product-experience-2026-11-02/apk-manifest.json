@@ -1,0 +1,12 @@
+{
+  "label": "中企展馆视频测试",
+  "builtAt": "2026-11-01T15:57:37.5265977Z",
+  "sha256": "9e0ec65524f2ecd340b0dd844910aa468ea7f345d49ee8b4acdf0ad74b246d2f",
+  "officialArtifactsUnchanged": true,
+  "devicePlaybackValidated": false,
+  "debug": true,
+  "deployed": false,
+  "apiBaseUrl": "http://10.0.2.2:18086",
+  "package": "com.zqzt.dalunongji.videodev",
+  "bytes": 239909257
+}

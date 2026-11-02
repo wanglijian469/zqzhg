@@ -1,0 +1,515 @@
+{
+  "websiteTests": 44,
+  "androidRelatedTests": 12,
+  "androidAnalyze": "passed",
+  "chrome": [
+    {
+      "name": "overview-same-row-1440",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-1440",
+      "passed": true
+    },
+    {
+      "name": "overview-same-row-1280",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-1280",
+      "passed": true
+    },
+    {
+      "name": "overview-same-row-1200",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-1200",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-1199",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-1199",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-1152",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-1152",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-1024",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-1024",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-960",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-960",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-768",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-768",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-720",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-720",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-390",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-390",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-360",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-360",
+      "passed": true
+    },
+    {
+      "name": "no-find-manufacturer-return-row",
+      "passed": true
+    },
+    {
+      "name": "platform-home-preserved",
+      "passed": true
+    },
+    {
+      "name": "product-list-return-preserved",
+      "passed": true
+    },
+    {
+      "name": "six-domestic-channels-1440",
+      "passed": true
+    },
+    {
+      "name": "canonical-copied-1440",
+      "passed": true
+    },
+    {
+      "name": "manual-copy-fallback-1440",
+      "passed": true
+    },
+    {
+      "name": "qr-preview-1440",
+      "passed": true
+    },
+    {
+      "name": "poster-preview-1440",
+      "passed": true
+    },
+    {
+      "name": "no-system-share-1440",
+      "passed": true
+    },
+    {
+      "name": "share-fits-1440",
+      "passed": true
+    },
+    {
+      "name": "six-domestic-channels-390",
+      "passed": true
+    },
+    {
+      "name": "canonical-copied-390",
+      "passed": true
+    },
+    {
+      "name": "manual-copy-fallback-390",
+      "passed": true
+    },
+    {
+      "name": "qr-preview-390",
+      "passed": true
+    },
+    {
+      "name": "poster-preview-390",
+      "passed": true
+    },
+    {
+      "name": "no-system-share-390",
+      "passed": true
+    },
+    {
+      "name": "share-fits-390",
+      "passed": true
+    },
+    {
+      "name": "separate-product-video-and-catalog",
+      "passed": true
+    },
+    {
+      "name": "product-douyin-no-autoplay",
+      "passed": true
+    },
+    {
+      "name": "product-douyin-play",
+      "passed": true,
+      "paused": false,
+      "time": 1.622482
+    },
+    {
+      "name": "product-douyin-pause",
+      "passed": true
+    },
+    {
+      "name": "product-douyin-close",
+      "passed": true
+    },
+    {
+      "name": "product-local-play",
+      "passed": true
+    },
+    {
+      "name": "product-local-close",
+      "passed": true
+    },
+    {
+      "name": "product-pdf-available",
+      "passed": true
+    },
+    {
+      "name": "visible-product-video-management-1440",
+      "passed": true
+    },
+    {
+      "name": "product-source-not-preselected-1440",
+      "passed": true
+    },
+    {
+      "name": "fixed-product-association-1440",
+      "passed": true
+    },
+    {
+      "name": "product-editor-fits-1440",
+      "passed": true
+    },
+    {
+      "name": "visible-product-video-management-390",
+      "passed": true
+    },
+    {
+      "name": "product-source-not-preselected-390",
+      "passed": true
+    },
+    {
+      "name": "fixed-product-association-390",
+      "passed": true
+    },
+    {
+      "name": "product-editor-fits-390",
+      "passed": true
+    },
+    {
+      "name": "no-page-errors",
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "browser360": [
+    {
+      "name": "overview-same-row-1440",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-1440",
+      "passed": true
+    },
+    {
+      "name": "overview-same-row-1280",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-1280",
+      "passed": true
+    },
+    {
+      "name": "overview-same-row-1200",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-1200",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-1199",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-1199",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-1152",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-1152",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-1024",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-1024",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-960",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-960",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-768",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-768",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-720",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-720",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-390",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-390",
+      "passed": true
+    },
+    {
+      "name": "overview-hidden-without-column-360",
+      "passed": true
+    },
+    {
+      "name": "vendor-list-fits-360",
+      "passed": true
+    },
+    {
+      "name": "no-find-manufacturer-return-row",
+      "passed": true
+    },
+    {
+      "name": "platform-home-preserved",
+      "passed": true
+    },
+    {
+      "name": "product-list-return-preserved",
+      "passed": true
+    },
+    {
+      "name": "six-domestic-channels-1440",
+      "passed": true
+    },
+    {
+      "name": "canonical-copied-1440",
+      "passed": true
+    },
+    {
+      "name": "manual-copy-fallback-1440",
+      "passed": true
+    },
+    {
+      "name": "qr-preview-1440",
+      "passed": true
+    },
+    {
+      "name": "poster-preview-1440",
+      "passed": true
+    },
+    {
+      "name": "no-system-share-1440",
+      "passed": true
+    },
+    {
+      "name": "share-fits-1440",
+      "passed": true
+    },
+    {
+      "name": "six-domestic-channels-390",
+      "passed": true
+    },
+    {
+      "name": "canonical-copied-390",
+      "passed": true
+    },
+    {
+      "name": "manual-copy-fallback-390",
+      "passed": true
+    },
+    {
+      "name": "qr-preview-390",
+      "passed": true
+    },
+    {
+      "name": "poster-preview-390",
+      "passed": true
+    },
+    {
+      "name": "no-system-share-390",
+      "passed": true
+    },
+    {
+      "name": "share-fits-390",
+      "passed": true
+    },
+    {
+      "name": "separate-product-video-and-catalog",
+      "passed": true
+    },
+    {
+      "name": "product-douyin-no-autoplay",
+      "passed": true
+    },
+    {
+      "name": "product-douyin-play",
+      "passed": true,
+      "paused": false,
+      "time": 1.690923
+    },
+    {
+      "name": "product-douyin-pause",
+      "passed": true
+    },
+    {
+      "name": "product-douyin-close",
+      "passed": true
+    },
+    {
+      "name": "product-local-play",
+      "passed": true
+    },
+    {
+      "name": "product-local-close",
+      "passed": true
+    },
+    {
+      "name": "product-pdf-available",
+      "passed": true
+    },
+    {
+      "name": "visible-product-video-management-1440",
+      "passed": true
+    },
+    {
+      "name": "product-source-not-preselected-1440",
+      "passed": true
+    },
+    {
+      "name": "fixed-product-association-1440",
+      "passed": true
+    },
+    {
+      "name": "product-editor-fits-1440",
+      "passed": true
+    },
+    {
+      "name": "visible-product-video-management-390",
+      "passed": true
+    },
+    {
+      "name": "product-source-not-preselected-390",
+      "passed": true
+    },
+    {
+      "name": "fixed-product-association-390",
+      "passed": true
+    },
+    {
+      "name": "product-editor-fits-390",
+      "passed": true
+    },
+    {
+      "name": "no-page-errors",
+      "passed": false,
+      "errors": [
+        {
+          "message": "notice.avoidance is not a function",
+          "stack": "TypeError: notice.avoidance is not a function\n    at judegIsFullScreen (chrome-extension://apiogbndjcdfccgecgbaljjlhdjpkbho/dist/contentScripts/index.global.js:90:1205859)",
+          "url": "http://localhost:18086/v/v-21"
+        },
+        {
+          "message": "A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received",
+          "stack": "",
+          "url": "http://localhost:18086/v/v-21"
+        },
+        {
+          "message": "notice.avoidance is not a function",
+          "stack": "TypeError: notice.avoidance is not a function\n    at judegIsFullScreen (chrome-extension://apiogbndjcdfccgecgbaljjlhdjpkbho/dist/contentScripts/index.global.js:90:1205859)",
+          "url": "http://localhost:18086/v/v-21"
+        },
+        {
+          "message": "notice.avoidance is not a function",
+          "stack": "TypeError: notice.avoidance is not a function\n    at judegIsFullScreen (chrome-extension://apiogbndjcdfccgecgbaljjlhdjpkbho/dist/contentScripts/index.global.js:90:1205859)",
+          "url": "http://localhost:18086/merchant/products/23/edit"
+        }
+      ]
+    }
+  ],
+  "unchangedScope": {
+    "web/src/industry-map.tsx": {
+      "unchanged": true,
+      "sha256": "6407e45182b568e5a8431095c762ff3322d9572bd6f5c6e4939068c5562f063f"
+    },
+    "web/src/industry-map-chart.tsx": {
+      "unchanged": true,
+      "sha256": "734e399372be2b0ce3079be51e7cb79767cbeef76770105c40e3c50b45a9d9d9"
+    },
+    "web/src/industry-map-outline.ts": {
+      "unchanged": true,
+      "sha256": "bf34c1e175ceded95fa7eab95e7b840e8f6b6ed65cf883e71ce80e789a017ef4"
+    },
+    "web/src/site-common.tsx": {
+      "unchanged": true,
+      "sha256": "0e2e7644d4d927e4f69ced648f3fec8934bc61f1b8a4416a83cce09a1e1764a6"
+    },
+    "web/src/public-footer.tsx": {
+      "unchanged": true,
+      "sha256": "53b0f734317b479700372c3430325d7baabe20e8fc048dbf37a12ebcac68883a"
+    },
+    "web/src/product-page.css": {
+      "unchanged": true,
+      "sha256": "8452c7159502f7d2b992d92658572e48e60c8ecf318879e0a2b1dd87f9bd5229"
+    }
+  },
+  "devicePlaybackValidated": false,
+  "deployed": false,
+  "githubPushed": false,
+  "schemaChangedThisTask": false,
+  "mapReturnRequiresRetry": true
+}

@@ -133,7 +133,7 @@ class _AppAboutCardState extends State<AppAboutCard> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
           ),
           const Text('中企展馆-农业机械厅'),
-          const Text('1.10.6 (44)'),
+          const Text('1.10.7 (45)'),
           FutureBuilder<dynamic>(
             future: config,
             builder: (context, snapshot) {

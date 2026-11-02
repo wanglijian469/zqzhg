@@ -1,0 +1,20 @@
+[
+  "mobile/lib/main.dart",
+  "mobile/lib/merchant_experience.dart",
+  "mobile/lib/resources_experience.dart",
+  "mobile/lib/video_links.dart",
+  "mobile/test/product_experience_test.dart",
+  "server/product_video_test.go",
+  "web/src/company-profile.tsx",
+  "web/src/domestic-share.tsx",
+  "web/src/main.tsx",
+  "web/src/product-editor.tsx",
+  "web/src/product-experience.css",
+  "web/src/product-experience.test.tsx",
+  "web/src/resources.tsx",
+  "web/src/share-channels.ts",
+  "web/src/showroom.test.tsx",
+  "web/src/showroom.tsx",
+  "web/src/vendor-list.test.tsx",
+  "web/src/video-playback.tsx"
+]

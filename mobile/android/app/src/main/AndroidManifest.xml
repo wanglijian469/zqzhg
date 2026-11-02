@@ -10,6 +10,7 @@
         <provider android:name="androidx.core.content.FileProvider" android:authorities="${applicationId}.sharefiles" android:exported="false" android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/share_paths" />
         </provider>
+        <activity android:name=".VideoPlayerActivity" android:exported="false" android:hardwareAccelerated="true" android:enableOnBackInvokedCallback="false" android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".WorkspaceActivity"
             android:exported="false"

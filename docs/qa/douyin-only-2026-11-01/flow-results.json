@@ -1,0 +1,37 @@
+[
+  {
+    "name": "real-official-link-check",
+    "check": {
+      "source": "DOUYIN",
+      "video_id": "7690195495465012480",
+      "title": "芯片简史 惊艳，用Opus5.5制作的《芯片简史》，从爱迪生的灯丝到极紫外光刻EUV... 什么也不说了，自己看吧",
+      "canonical_url": "https://www.douyin.com/video/7690195495465012480",
+      "player_url": "https://open.douyin.com/player/video?autoplay=0&vid=7690195495465012480",
+      "width": 1920,
+      "height": 1080,
+      "status": "READY",
+      "reason": "",
+      "checked_at": "2026-11-01T11:41:54.086Z",
+      "expires_at": "2026-11-01T11:46:54.086Z"
+    },
+    "passed": true
+  },
+  {
+    "name": "existing-vendor-save-submit-approve",
+    "passed": true,
+    "resource": 5
+  },
+  {
+    "name": "public-playback-resolution",
+    "passed": true
+  },
+  {
+    "name": "legacy-client-local-only",
+    "passed": true,
+    "total": 1
+  },
+  {
+    "name": "malicious-and-unsupported-links-rejected",
+    "passed": true
+  }
+]

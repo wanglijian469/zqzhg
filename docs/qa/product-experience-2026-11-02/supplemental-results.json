@@ -1,0 +1,134 @@
+[
+  {
+    "name": "qr-file-saved",
+    "passed": true
+  },
+  {
+    "name": "poster-file-saved",
+    "passed": true
+  },
+  {
+    "name": "manual-domestic-guide-微信好友",
+    "passed": true
+  },
+  {
+    "name": "manual-domestic-guide-朋友圈",
+    "passed": true
+  },
+  {
+    "name": "manual-domestic-guide-企业微信",
+    "passed": true
+  },
+  {
+    "name": "manual-domestic-guide-钉钉",
+    "passed": true
+  },
+  {
+    "name": "official-share-link-QQ",
+    "passed": true
+  },
+  {
+    "name": "official-share-link-QQ空间",
+    "passed": true
+  },
+  {
+    "name": "mobile-douyin-no-autoplay",
+    "passed": true
+  },
+  {
+    "name": "mobile-douyin-play",
+    "passed": true
+  },
+  {
+    "name": "mobile-douyin-pause",
+    "passed": true
+  },
+  {
+    "name": "mobile-douyin-unloaded",
+    "passed": true
+  },
+  {
+    "name": "map-drilldown-13",
+    "passed": true
+  },
+  {
+    "name": "map-drilldown-1305",
+    "passed": true
+  },
+  {
+    "name": "map-drilldown-130528",
+    "passed": true
+  },
+  {
+    "name": "mobile-map-fits",
+    "passed": true
+  },
+  {
+    "name": "map-boundary-national",
+    "passed": true,
+    "sha256": "352c09e7064756c7c6a505c30dd3e7560b13a4edf87883a65fc3d008a3152802",
+    "expectedVendorCount": 11,
+    "statKeys": [
+      "coverage",
+      "historical",
+      "items",
+      "region",
+      "total",
+      "trail",
+      "unassigned_count",
+      "version"
+    ]
+  },
+  {
+    "name": "map-boundary-13",
+    "passed": true,
+    "sha256": "bd1daff0ea4d7253b6ce77784bf7f9669ad6e5a19d0815eb89d696e8db9b34ea",
+    "expectedVendorCount": 10,
+    "statKeys": [
+      "coverage",
+      "historical",
+      "items",
+      "region",
+      "total",
+      "trail",
+      "unassigned_count",
+      "version"
+    ]
+  },
+  {
+    "name": "map-boundary-1305",
+    "passed": true,
+    "sha256": "cd6acc3f9b1319610f28c83b88b8f79952b9b5242bfc34a47a10871e2247d8ba",
+    "expectedVendorCount": 8,
+    "statKeys": [
+      "coverage",
+      "historical",
+      "items",
+      "region",
+      "total",
+      "trail",
+      "unassigned_count",
+      "version"
+    ]
+  },
+  {
+    "name": "map-boundary-130528",
+    "passed": true,
+    "sha256": "f09314a4d4a0bc4ee436e982f282ef6ea59572c742fc01b7d1833d0634f51251",
+    "expectedVendorCount": 8,
+    "statKeys": [
+      "coverage",
+      "historical",
+      "items",
+      "region",
+      "total",
+      "trail",
+      "unassigned_count",
+      "version"
+    ]
+  },
+  {
+    "name": "supplemental-complete",
+    "passed": true
+  }
+]

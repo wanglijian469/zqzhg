@@ -1,0 +1,20 @@
+{
+  "version": "1.10.7+45",
+  "sha256": "e162dba0077a19c564fd9710354cfe43b18719ccb7d7b942245e09c147f82254",
+  "bytes": 85811203,
+  "signatureMatchesPrevious": true,
+  "workspaceFiles": 237,
+  "guideImages": [
+    "guide-images/company-agreements.png",
+    "guide-images/company-apply.png",
+    "guide-images/company-basics.png",
+    "guide-images/company-submit.png",
+    "guide-images/product-basics.png",
+    "guide-images/product-submit.png",
+    "guide-images/register-account.png",
+    "guide-images/register-phone.png",
+    "guide-images/showroom-share.png"
+  ],
+  "bundleHashesVerified": true,
+  "deviceValidation": false
+}

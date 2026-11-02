@@ -1,0 +1,16 @@
+[
+  {
+    "name": "original-local-upload-transcode",
+    "passed": true,
+    "width": 180,
+    "height": 320,
+    "duration": 3,
+    "bytes": 68059
+  },
+  {
+    "name": "original-local-review-and-publication",
+    "passed": true,
+    "media": 183,
+    "cover": 0
+  }
+]

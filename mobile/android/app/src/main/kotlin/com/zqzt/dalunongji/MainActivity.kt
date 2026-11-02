@@ -10,11 +10,15 @@ import androidx.core.content.FileProvider
 import java.io.File
 
 class MainActivity : FlutterActivity() {
+ private var videoResult: MethodChannel.Result? = null
  private var workspaceResult: MethodChannel.Result? = null
  private var saveResult: MethodChannel.Result? = null
  private var saveBytes: ByteArray? = null
  override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
   super.configureFlutterEngine(flutterEngine)
+  MethodChannel(flutterEngine.dartExecutor.binaryMessenger,"com.zqzt.dalunongji/video").setMethodCallHandler { call,result ->
+   if(call.method!="open"){result.notImplemented()}else if(videoResult!=null){result.error("busy","A video is already open",null)}else{try{videoResult=result;startActivityForResult(Intent(this,VideoPlayerActivity::class.java).putExtra("url",call.argument<String>("url")).putExtra("width",call.argument<Number>("width")?.toInt()?:0).putExtra("height",call.argument<Number>("height")?.toInt()?:0),4023)}catch(_:Exception){videoResult=null;result.error("video_failed","Cannot open player",null)}}
+  }
   MethodChannel(flutterEngine.dartExecutor.binaryMessenger,"com.zqzt.dalunongji/workspace").setMethodCallHandler { call,result ->
    if(call.method!="open") { result.notImplemented();return@setMethodCallHandler }
    if(workspaceResult!=null) { result.error("busy","Workspace is already open",null);return@setMethodCallHandler }
@@ -56,11 +60,12 @@ class MainActivity : FlutterActivity() {
  }
  override fun onActivityResult(requestCode:Int,resultCode:Int,data:Intent?){
   super.onActivityResult(requestCode,resultCode,data)
+  if(requestCode==4023){videoResult?.success(null);videoResult=null;return}
   if(requestCode==4022){val result=workspaceResult;workspaceResult=null;if(resultCode==Activity.RESULT_OK&&data!=null)result?.success(mapOf("token" to data.getStringExtra("token"),"language" to data.getStringExtra("language")))else result?.success(null);return}
   if(requestCode!=4021)return
   val result=saveResult;val bytes=saveBytes;saveResult=null;saveBytes=null
   if(resultCode!=Activity.RESULT_OK||data?.data==null){result?.success(false);return}
   try{val stream=contentResolver.openOutputStream(data.data!!,"w") ?: error("Cannot save image");stream.use{it.write(bytes ?: error("Missing image"))};result?.success(true)}catch(e:Exception){result?.error("save_failed",e.message,null)}
  }
- override fun onDestroy(){workspaceResult?.success(null);workspaceResult=null;saveResult?.success(false);saveResult=null;saveBytes=null;super.onDestroy()}
+ override fun onDestroy(){videoResult?.success(null);videoResult=null;workspaceResult?.success(null);workspaceResult=null;saveResult?.success(false);saveResult=null;saveBytes=null;super.onDestroy()}
 }

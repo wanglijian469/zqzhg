@@ -1,0 +1,12 @@
+{
+  "apiBaseUrl": "http://10.0.2.2:18086",
+  "package": "com.zqzt.dalunongji.videodev",
+  "devicePlaybackValidated": false,
+  "deployed": false,
+  "debug": true,
+  "builtAt": "2026-11-01T11:56:37.1282417Z",
+  "bytes": 239903108,
+  "sha256": "465852613930bb099f8f559339da73c73a83f1644acd4286174ddeb361f07e98",
+  "label": "中企展馆视频测试",
+  "officialArtifactsUnchanged": true
+}

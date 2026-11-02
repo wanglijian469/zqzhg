@@ -1,0 +1,18 @@
+/* The product shell owns the viewport height, including its real header/footer.
+   Keep vh first for browsers that do not understand dynamic viewport units. */
+.public-web.public-product-shell{
+ display:flex;
+ flex-direction:column;
+ min-height:100vh;
+ min-height:100dvh;
+}
+.public-web.public-product-shell>.header,
+.public-web.public-product-shell>.public-footer{
+ flex:0 0 auto;
+}
+/* Override the general loading placeholder's 100svh - 72px calculation.
+   Content remains in normal flow and can grow beyond the first viewport. */
+.public-web.public-product-shell:not(.factory-map-shell):not(.merchant-entry-shell)>main{
+ flex:1 0 auto;
+ min-height:0;
+}

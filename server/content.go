@@ -53,6 +53,14 @@ func dbFail(c *gin.Context, e error) {
 	}
 	code := e.Error()
 	switch code {
+	case "rate_limited":
+		fail(c, 429, code)
+	case "duplicate_video", "video_rights_required", "video_check_required", "video_not_public", "video_client_upgrade_required":
+		fail(c, 409, code)
+	case "douyin_video_disabled", "video_provider_unavailable", "invalid_official_player", "video_link_unreachable", "video_network_timeout":
+		fail(c, 503, code)
+	case "invalid_video_link", "one_video_link_required", "video_id_not_found", "video_redirect_limit", "unsupported_video_source", "video_source_locked":
+		fail(c, 400, code)
 	case "forbidden":
 		fail(c, 403, code)
 	case "watermark_not_ready", "watermark_vendor_required", "storage_quota_exceeded", "disk_space_insufficient", "media_in_use", "pending_review", "stale_revision", "already_reviewed", "vendor_required", "product_limit_reached", "login_name_exists", "showroom_slug_exists", "showroom_slug_locked", "resource_limit_reached", "media_not_ready", "featured_limit_reached", "representative_limit_reached":

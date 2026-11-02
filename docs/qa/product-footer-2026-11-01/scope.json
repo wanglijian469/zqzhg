@@ -1,0 +1,51 @@
+{
+  "modifiedCode": [
+    "web/src/main.tsx",
+    "web/src/product-page.css",
+    "scripts/verify-product-footer.cjs"
+  ],
+  "deployed": false,
+  "originalIntermittentStateReproduced": false,
+  "protectedFiles": [
+    {
+      "path": "web/src/public-footer.tsx",
+      "baselineUnchanged": true,
+      "sha256": "53b0f734317b479700372c3430325d7baabe20e8fc048dbf37a12ebcac68883a"
+    },
+    {
+      "path": "web/src/public-footer.css",
+      "baselineUnchanged": true,
+      "sha256": "cf2d5915b1c1a9a83c61efbf215fe9de9ceec45da37abf584f7240c4d950d990"
+    },
+    {
+      "path": "web/src/site-common.tsx",
+      "baselineUnchanged": true,
+      "sha256": "0e2e7644d4d927e4f69ced648f3fec8934bc61f1b8a4416a83cce09a1e1764a6"
+    },
+    {
+      "path": "web/src/industry-map.tsx",
+      "baselineUnchanged": true,
+      "sha256": "6407e45182b568e5a8431095c762ff3322d9572bd6f5c6e4939068c5562f063f"
+    },
+    {
+      "path": "web/src/industry-map.css",
+      "baselineUnchanged": true,
+      "sha256": "7790d053f0a0066beaa2b5381f7b76d94619db11365412e019c5788ec2f26456"
+    },
+    {
+      "path": "web/src/industry-map-chart.tsx",
+      "baselineUnchanged": true,
+      "sha256": "2dbc7024d5161dc68ca395f92c06073a3878186dfd663288c65be309b1fde27c"
+    },
+    {
+      "path": "web/src/showroom.css",
+      "baselineUnchanged": true,
+      "sha256": "c5ced8d7f9def1155b41aec4768c2fca11d1be2135bdefd240a1cb5ea937f719"
+    },
+    {
+      "path": "web/src/showroom-v2.css",
+      "baselineUnchanged": true,
+      "sha256": "373a22f67f974596fdc2d51183eb88ef31af1c945da3e7238051ff74c3d647f0"
+    }
+  ]
+}

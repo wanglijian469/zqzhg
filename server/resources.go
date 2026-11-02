@@ -25,30 +25,42 @@ type Resource struct {
 	UpdatedAt           time.Time `json:"updated_at"`
 }
 type ResourcePayload struct {
-	Title         string   `json:"title"`
-	TitleEN       string   `json:"title_en"`
-	Description   string   `json:"description"`
-	DescriptionEN string   `json:"description_en"`
-	Purpose       string   `json:"purpose"`
-	Format        string   `json:"format"`
-	ProductID     uint64   `json:"product_id"`
-	FileMediaID   uint64   `json:"file_media_id"`
-	CoverMediaID  uint64   `json:"cover_media_id"`
-	PageMediaIDs  []uint64 `json:"page_media_ids"`
+	VideoSource       string `json:"video_source,omitempty"`
+	OriginalShareURL  string `json:"original_share_url,omitempty"`
+	CanonicalVideoURL string `json:"canonical_video_url,omitempty"`
+	ExternalVideoID   string `json:"external_video_id,omitempty"`
+	RightsConfirmed   bool   `json:"rights_confirmed,omitempty"`
+	videoCheck        *VideoLinkCheck
+	rightsActorID     uint64
+	Title             string   `json:"title"`
+	TitleEN           string   `json:"title_en"`
+	Description       string   `json:"description"`
+	DescriptionEN     string   `json:"description_en"`
+	Purpose           string   `json:"purpose"`
+	Format            string   `json:"format"`
+	ProductID         uint64   `json:"product_id"`
+	FileMediaID       uint64   `json:"file_media_id"`
+	CoverMediaID      uint64   `json:"cover_media_id"`
+	PageMediaIDs      []uint64 `json:"page_media_ids"`
 }
 type ResourceRevision struct {
-	ID         uint64
-	ResourceID uint64
-	BaseEpoch  uint64
-	ProductID  uint64
-	Title      string
-	TitleEN    string
-	Purpose    string
-	Payload    string
-	Status     string
-	ReviewNote string
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	VideoSource       string
+	ExternalVideoID   string
+	RightsActorID     uint64
+	RightsConfirmedAt *time.Time
+	RightsVersion     string
+	ID                uint64
+	ResourceID        uint64
+	BaseEpoch         uint64
+	ProductID         uint64
+	Title             string
+	TitleEN           string
+	Purpose           string
+	Payload           string
+	Status            string
+	ReviewNote        string
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
 }
 type ResourceMediaReference struct {
 	RevisionID uint64
@@ -115,6 +127,9 @@ func resourceMedia(p ResourcePayload) []uint64 {
 func (a *App) resourceView(r Resource, rev ResourceRevision) ResourceView {
 	var p ResourcePayload
 	json.Unmarshal([]byte(rev.Payload), &p)
+	if r.Kind == "video" {
+		p.VideoSource = videoSource(p)
+	}
 	v := ResourceView{Resource: r, Data: p, RevisionID: rev.ID, Status: rev.Status, ReviewNote: rev.ReviewNote}
 	var n int64
 	if r.PublishedRevisionID > 0 && a.resourceQuery().Where("resources.id=?", r.ID).Count(&n).Error == nil {
@@ -165,8 +180,11 @@ func (a *App) validateResource(tx *gorm.DB, r Resource, p *ResourcePayload, read
 	if r.Kind == "video" {
 		expected = "video"
 		p.Format = "video"
-		if p.FileMediaID == 0 || len(p.PageMediaIDs) > 0 || (p.Purpose != "company" && p.Purpose != "production" && p.Purpose != "product") || (p.Purpose == "product" && p.ProductID == 0) {
+		if (videoSource(*p) == videoLocal && p.FileMediaID == 0) || len(p.PageMediaIDs) > 0 || (p.Purpose != "company" && p.Purpose != "production" && p.Purpose != "product") || (p.Purpose == "product" && p.ProductID == 0) {
 			return fmt.Errorf("invalid_request")
+		}
+		if e := a.validateVideoResource(tx, r, p, ready); e != nil {
+			return e
 		}
 		if p.ProductID > 0 {
 			var n int64
@@ -229,7 +247,13 @@ func saveResourceRevision(tx *gorm.DB, r *Resource, p ResourcePayload) error {
 	if e != nil {
 		return e
 	}
-	rev := ResourceRevision{ResourceID: r.ID, BaseEpoch: r.Epoch, ProductID: p.ProductID, Title: p.Title, TitleEN: p.TitleEN, Purpose: p.Purpose, Payload: string(data), Status: "draft"}
+	rev := ResourceRevision{ResourceID: r.ID, BaseEpoch: r.Epoch, ProductID: p.ProductID, Title: p.Title, TitleEN: p.TitleEN, Purpose: p.Purpose, Payload: string(data), Status: "draft", VideoSource: videoSource(p), ExternalVideoID: p.ExternalVideoID}
+	if p.RightsConfirmed && p.rightsActorID > 0 {
+		now := time.Now().UTC()
+		rev.RightsActorID = p.rightsActorID
+		rev.RightsConfirmedAt = &now
+		rev.RightsVersion = videoRightsVersion
+	}
 	if e = tx.Create(&rev).Error; e != nil {
 		return e
 	}
@@ -249,6 +273,12 @@ func (a *App) createResource(c *gin.Context) {
 	if c.ShouldBindJSON(&req) != nil || (req.Kind != "video" && req.Kind != "catalog") {
 		fail(c, 400, "invalid_request")
 		return
+	}
+	if req.Kind == "video" {
+		if e := a.prepareVideoPayload(c, &req.Data); e != nil {
+			dbFail(c, e)
+			return
+		}
 	}
 	who := actor(c)
 	var r Resource
@@ -296,6 +326,10 @@ func (a *App) resourceDetail(c *gin.Context) {
 		fail(c, 500, "internal_error")
 		return
 	}
+	if rev.VideoSource == videoDouyin && !videoV2(c) {
+		fail(c, 409, "video_client_upgrade_required")
+		return
+	}
 	c.JSON(200, a.resourceView(r, rev))
 }
 func (a *App) saveResourceDraft(c *gin.Context) {
@@ -307,12 +341,30 @@ func (a *App) saveResourceDraft(c *gin.Context) {
 		fail(c, 400, "invalid_request")
 		return
 	}
+	if req.Data.Format == "video" || req.Data.VideoSource != "" {
+		if e := a.prepareVideoPayload(c, &req.Data); e != nil {
+			dbFail(c, e)
+			return
+		}
+	}
 	var r Resource
 	e := a.DB.Transaction(func(tx *gorm.DB) error {
 		var e error
 		r, e = loadResource(tx, id(c), actor(c), true)
 		if e != nil {
 			return e
+		}
+		if e = guardVideoMutationClient(c, tx, r); e != nil {
+			return e
+		}
+		var prior ResourceRevision
+		if e = tx.First(&prior, r.DraftRevisionID).Error; e != nil {
+			return e
+		}
+		var old ResourcePayload
+		json.Unmarshal([]byte(prior.Payload), &old)
+		if r.Kind == "video" && videoSource(old) != videoSource(req.Data) {
+			return fmt.Errorf("video_source_locked")
 		}
 		var vendor Content
 		if e = tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&vendor, r.VendorID).Error; e != nil {
@@ -352,9 +404,17 @@ func (a *App) submitResource(c *gin.Context) {
 		fail(c, 400, "invalid_request")
 		return
 	}
+	prepared, prepareErr := a.prepareStoredVideo(c, id(c), req.RevisionID)
+	if prepareErr != nil {
+		dbFail(c, prepareErr)
+		return
+	}
 	e := a.DB.Transaction(func(tx *gorm.DB) error {
 		r, e := loadResource(tx, id(c), actor(c), true)
 		if e != nil {
+			return e
+		}
+		if e = guardVideoMutationClient(c, tx, r); e != nil {
 			return e
 		}
 		if r.DraftRevisionID != req.RevisionID {
@@ -377,6 +437,7 @@ func (a *App) submitResource(c *gin.Context) {
 		if e = publicationCompliance(tx, r.OwnerID, r.VendorID, nil); e != nil {
 			return e
 		}
+		p.videoCheck = prepared
 		if e = a.validateResource(tx, r, &p, true); e != nil {
 			return e
 		}
@@ -404,6 +465,20 @@ func (a *App) reviewResource(c *gin.Context) {
 		fail(c, 400, "rejection_reason_required")
 		return
 	}
+	var prepared *VideoLinkCheck
+	if req.Decision == "approve" {
+		var candidate ResourceRevision
+		if e := a.DB.First(&candidate, id(c)).Error; e != nil {
+			dbFail(c, e)
+			return
+		}
+		var e error
+		prepared, e = a.prepareStoredVideo(c, candidate.ResourceID, candidate.ID)
+		if e != nil {
+			dbFail(c, e)
+			return
+		}
+	}
 	e := a.DB.Transaction(func(tx *gorm.DB) error {
 		var rev ResourceRevision
 		if e := tx.First(&rev, id(c)).Error; e != nil {
@@ -411,6 +486,9 @@ func (a *App) reviewResource(c *gin.Context) {
 		}
 		r, e := loadResource(tx, rev.ResourceID, actor(c), true)
 		if e != nil {
+			return e
+		}
+		if e = guardVideoMutationClient(c, tx, r); e != nil {
 			return e
 		}
 		if e = tx.First(&rev, id(c)).Error; e != nil {
@@ -426,6 +504,7 @@ func (a *App) reviewResource(c *gin.Context) {
 		if req.Decision == "approve" {
 			var p ResourcePayload
 			json.Unmarshal([]byte(rev.Payload), &p)
+			p.videoCheck = prepared
 			if e = a.validateResource(tx, r, &p, true); e != nil {
 				return e
 			}
@@ -449,6 +528,9 @@ func (a *App) offlineResource(c *gin.Context) {
 	e := a.DB.Transaction(func(tx *gorm.DB) error {
 		r, e := loadResource(tx, id(c), actor(c), true)
 		if e != nil {
+			return e
+		}
+		if e = guardVideoMutationClient(c, tx, r); e != nil {
 			return e
 		}
 		if e = tx.Model(&r).Updates(map[string]any{"visible": false, "epoch": r.Epoch + 1}).Error; e != nil {
@@ -487,6 +569,7 @@ func (a *App) listResources(admin, public bool) gin.HandlerFunc {
 			q = a.resourceQuery()
 			alias = "pr"
 		}
+		q = resourceClientFilter(q, c, alias)
 		if !admin && !public {
 			q = q.Where("resources.owner_id=?", actor(c).ID)
 		}
@@ -545,7 +628,7 @@ func (a *App) listResources(admin, public bool) gin.HandlerFunc {
 }
 func (a *App) publicResource(c *gin.Context) {
 	var r Resource
-	if a.resourceQuery().Where("resources.id=?", id(c)).Select("resources.*").First(&r).Error != nil {
+	if resourceClientFilter(a.resourceQuery(), c, "pr").Where("resources.id=?", id(c)).Select("resources.*").First(&r).Error != nil {
 		fail(c, 404, "not_found")
 		return
 	}
@@ -560,9 +643,12 @@ func (a *App) resourceRoutes(pub, merchant, admin *gin.RouterGroup) {
 	pub.GET("/showrooms/:slug/resources", a.listResources(false, true))
 	pub.GET("/resources", a.listResources(false, true))
 	pub.GET("/resources/:id", a.publicResource)
+	pub.GET("/resources/:id/playback", func(c *gin.Context) { a.videoPlayback(c, true) })
 	for _, g := range []*gin.RouterGroup{merchant, admin} {
 		g.GET("/resources", a.listResources(g == admin, false))
 		g.GET("/resources/:id", a.resourceDetail)
+		g.GET("/resources/:id/playback", func(c *gin.Context) { a.videoPlayback(c, false) })
+		g.POST("/video-links/check", a.checkVideoLink)
 		g.PUT("/resources/:id/draft", a.saveResourceDraft)
 		g.POST("/resources/:id/submit", a.submitResource)
 		g.POST("/resources/:id/offline", a.offlineResource)

@@ -1,0 +1,15 @@
+.product-video-section{border:1px solid #dce5ef;border-radius:12px;padding:20px;margin-top:20px;min-width:0}
+.product-video-section>h2{font-size:20px;margin:0 0 12px}
+.product-video-section>.muted{font-size:14px;line-height:1.7}
+.product-video-section .resource-management{min-width:0}
+.domestic-share .share-channel-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.domestic-share .share-channel-grid>a,.domestic-share .share-channel-grid>button{display:flex;align-items:center;justify-content:center;min-height:44px;padding:10px;border:1px solid #dce5ef;border-radius:8px;background:#f5f8fd;color:#244b75;font-size:14px;white-space:normal}
+.domestic-share .share-channel-grid [aria-pressed=true],.domestic-share .share-channel-grid [aria-current=true]{border-color:#1769e0;background:#eaf2ff;color:#1459ac}
+.domestic-share .domestic-share-guide{font-size:14px;line-height:1.8;color:#506880;background:#f5f8fc;border-radius:8px;padding:12px}
+.domestic-share .share-company-preview strong{font-size:18px}
+.domestic-share .share-company-preview p{font-size:14px;line-height:1.6}
+.domestic-share .share-more p{white-space:pre-wrap;overflow-wrap:anywhere}
+.domestic-share textarea{min-height:100px}
+@media(max-width:1199.98px){.public-web .vendor-brand-list .vendor-brand-products{display:none}}
+@media(min-width:601px) and (max-width:1199.98px){.public-web .vendor-brand-list>.vendor-brand-card{grid-template-columns:200px minmax(0,1fr)}}
+@media(max-width:600px){.product-video-section{padding:14px}.domestic-share .share-channel-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
