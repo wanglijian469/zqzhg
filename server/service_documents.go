@@ -176,6 +176,13 @@ func acceptServiceDocuments(tx *gorm.DB, owner uint64, refs []AgreementRef, sour
 				wanted = d
 			}
 		}
+		var accepted int64
+		if e = tx.Model(&ServiceAcceptance{}).Where("account_id=? AND document_id=? AND digest=?", owner, wanted.ID, wanted.Digest).Count(&accepted).Error; e != nil {
+			return e
+		}
+		if accepted > 0 {
+			continue
+		}
 		found := false
 		for _, ref := range refs {
 			if ref.Key == key && ref.Version == wanted.Version && ref.Digest == wanted.Digest {

@@ -338,7 +338,7 @@ class _AppShellState extends State<AppShell>
                                 ),
                                 decoration: BoxDecoration(
                                   color: selected == i
-                                      ? const Color(0xffeaf2ff)
+                                      ? industrialBlueSoft
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(20),
                                 ),

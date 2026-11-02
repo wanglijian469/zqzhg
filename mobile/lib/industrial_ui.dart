@@ -1,10 +1,14 @@
 part of 'main.dart';
 
 const industrialNavy = Color(0xff071b36);
-const industrialBlue = Color(0xff1769d2);
-const industrialSurface = Color(0xfff5f7fa);
+const industrialBlue = Color(0xff1769e0);
+const industrialBlueSoft = Color(0xffeaf2ff);
+const industrialMuted = Color(0xff67758a);
+const industrialActionHeight = 44.0;
+const industrialControlRadius = 10.0;
+const industrialSurface = Color(0xfff4f7fb);
 const industrialLine = Color(0xffe5eaf1);
-const industrialInk = Color(0xff172b42);
+const industrialInk = Color(0xff172b45);
 
 ThemeData industrialTheme() => ThemeData(
   useMaterial3: true,
@@ -41,7 +45,7 @@ ThemeData industrialTheme() => ThemeData(
     ),
     bodyLarge: TextStyle(fontSize: 16, height: 1.6, color: industrialInk),
     bodyMedium: TextStyle(fontSize: 14, height: 1.6, color: industrialInk),
-    bodySmall: TextStyle(fontSize: 12, height: 1.5, color: Color(0xff67758a)),
+    bodySmall: TextStyle(fontSize: 12, height: 1.5, color: industrialMuted),
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.white,
@@ -95,13 +99,13 @@ ThemeData industrialTheme() => ThemeData(
   ),
   navigationBarTheme: const NavigationBarThemeData(
     backgroundColor: Colors.white,
-    indicatorColor: Color(0xffeaf2ff),
+    indicatorColor: industrialBlueSoft,
     surfaceTintColor: Colors.transparent,
   ),
   dividerTheme: const DividerThemeData(color: industrialLine, space: 24),
   chipTheme: ChipThemeData(
     backgroundColor: Colors.white,
-    selectedColor: const Color(0xffeaf2ff),
+    selectedColor: industrialBlueSoft,
     side: const BorderSide(color: industrialLine),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
   ),

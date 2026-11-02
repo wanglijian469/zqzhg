@@ -8,6 +8,7 @@ import {nativeWorkspace} from './mobile-workspace';
 import './procurement-mobile.css';
 import {ProcurementNav,InquiryButton} from './procurement-links';
 import {ResourceList} from './resources';
+import {VideoNavigation} from './video-playback';
 // Register POP protection before BrowserRouter mounts, including when editors are lazy.
 import './use-unsaved-changes';
 import {lazyRoute} from './lazy-route';
@@ -48,6 +49,7 @@ import './showroom-v2.css';
 import './mobile-web.css';
 import './product-page.css';
 import './product-experience.css';
+import './vendor-visual.css';
 import {PublicFooter} from './public-footer';
 import {BrowsePage} from './browse-page';
 import {IndustryMapPage} from './industry-map';
@@ -97,4 +99,4 @@ function Application(){
 function Detail({kind}:{kind:'vendor'|'product'}){const {t,lang}=useLanguage();const {href,hall}=useHall();const location=useLocation();const origin=location.state?.returnTo;const returnTo=typeof origin==='string'&&/^\/(?:browse(?:\/products)?|vendors\/\d+|v\/[a-z0-9-]+)(?:\?|#|$)/.test(origin)?origin:kind==='product'?'/browse/products':'/browse';const returnLabel=returnTo.startsWith('/browse/products')?'navProducts':(returnTo.startsWith('/vendors/')||returnTo.startsWith('/v/'))?'backVendor':'navBrowse';const [pageNum,setPage]=useState(1);const {data,error,reload}=useLoad<{item:Item;vendor?:Item;products?:Page}>('/public'+location.pathname+'?page='+pageNum);useContentHall(data?.item);const detailSEO=data?productSEO(data.item.data,data.vendor?.data,lang,t('brand'),(lang==='en'?hall?.name_en:hall?.name)||''):undefined;usePageMetadata(detailSEO?.title||t(error||'loading')+' | '+t('brand'),detailSEO?.description||'',location.pathname,!!error||!data,data?.item.data.media_ids?.[0]||0,detailSEO?.keywords);useEffect(()=>setPage(1),[location.pathname]);return <div className="container section public-product-detail"><Link className="text-link back" to={href(returnTo)}><ChevronLeft size={16}/>{t(returnLabel)}</Link>{error?<ErrorState code={error} retry={reload}/>:!data?<Loading/>:<><div className="detail-layout"><div><ContentInfo item={data.item}/>{data.vendor&&<Link className="vendor-reference" to={href(vendorPath(data.vendor))} state={{returnTo}}><Building2/><div><small>{t('vendor')}</small><h3>{display(data.vendor.data,lang,'name')}</h3></div><ArrowRight/></Link>}</div><aside><Contact data={kind==='vendor'?data.item.data:data.vendor!.data}/>{kind==='product'&&<InquiryButton productID={data.item.id}/>}</aside></div>{kind==='product'&&<><section className="section product-public-videos"><h2>{t('shortVideos')}</h2><ResourceList kind="video" productID={data.item.id}/></section><section className="section product-public-catalogs"><h2>{t('electronicCatalogs')}</h2><ResourceList kind="catalog" productID={data.item.id}/></section></>}{data.products&&<section className="section"><SectionTitle title="products"/>{data.products.items.length?<div className="cards">{data.products.items.map(p=><ItemCard key={p.id} item={p} returnTo={location.pathname+location.search}/>)}</div>:<p className="muted">{t('emptyProducts')}</p>}<Pager page={data.products.page} size={data.products.page_size} total={data.products.total} onPage={setPage}/></section>}</>}</div>}
 
 const rootElement=document.getElementById('root');
-if(rootElement)createRoot(rootElement).render(<React.StrictMode><BrowserRouter><App/></BrowserRouter></React.StrictMode>);
+if(rootElement)createRoot(rootElement).render(<React.StrictMode><BrowserRouter><VideoNavigation/><App/></BrowserRouter></React.StrictMode>);

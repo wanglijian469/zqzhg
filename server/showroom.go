@@ -116,7 +116,8 @@ func payloadMedia(p Payload) []uint64 {
 	}
 	return result
 }
-func validateCompanyProfile(p *CompanyProfile) error {
+func validateCompanyProfile(p *CompanyProfile, draftMode ...bool) error {
+	draft := len(draftMode) > 0 && draftMode[0]
 	if p == nil {
 		return nil
 	}
@@ -148,7 +149,7 @@ func validateCompanyProfile(p *CompanyProfile) error {
 		}
 	}
 	for _, c := range p.Contacts {
-		if utf8.RuneCountInString(c.Area) > 500 || utf8.RuneCountInString(c.AreaEN) > 500 || utf8.RuneCountInString(c.Name) > 200 || utf8.RuneCountInString(c.NameEN) > 200 || len(c.Phone) > 32 || len(c.Wechat) > 100 || (strings.TrimSpace(c.Phone) == "" && strings.TrimSpace(c.Wechat) == "") {
+		if utf8.RuneCountInString(c.Area) > 500 || utf8.RuneCountInString(c.AreaEN) > 500 || utf8.RuneCountInString(c.Name) > 200 || utf8.RuneCountInString(c.NameEN) > 200 || len(c.Phone) > 32 || len(c.Wechat) > 100 || (!draft && strings.TrimSpace(c.Phone) == "" && strings.TrimSpace(c.Wechat) == "") {
 			return fmt.Errorf("invalid_request")
 		}
 	}

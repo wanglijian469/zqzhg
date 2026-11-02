@@ -40,12 +40,12 @@ void main() {
       );
       await t.tap(find.text('choose'));
       await t.pumpAndSettle();
-      await t.tap(find.byType(DropdownButtonFormField<int>));
+      await t.enterText(find.byType(TextField), '收获');
       await t.pumpAndSettle();
       await t.tap(find.text('收获机械及零部件').last);
       await t.pumpAndSettle();
       expect(find.text('耕整地机械及零部件 / 耕地机械'), findsNothing);
-      expect(find.text('收获机械及零部件 / 谷物收获机械'), findsOneWidget);
+      expect(find.text('谷物收获机械'), findsOneWidget);
       await t.enterText(find.byType(TextField), '玉米');
       await t.pumpAndSettle();
       await t.tap(find.text('收获机械及零部件 / 玉米收获机械'));

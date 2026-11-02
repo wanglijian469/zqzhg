@@ -33,7 +33,8 @@ func (e *FieldValidationError) Error() string { return e.Code }
 func fieldFailure(code, field, reason string) error {
 	return &FieldValidationError{code, []FieldIssue{{Field: field, Code: reason}}}
 }
-func payloadFieldIssues(kind string, p Payload) []FieldIssue {
+func payloadFieldIssues(kind string, p Payload, draftMode ...bool) []FieldIssue {
+	draft := len(draftMode) > 0 && draftMode[0]
 	var rules map[string]FormRule
 	json.Unmarshal(formRulesJSON, &rules)
 	raw, _ := json.Marshal(p)
@@ -59,7 +60,7 @@ func payloadFieldIssues(kind string, p Payload) []FieldIssue {
 					continue
 				}
 				for _, k := range r.Required {
-					if k == kind && strings.TrimSpace(v) == "" {
+					if k == kind && (!draft || path == "name") && strings.TrimSpace(v) == "" {
 						issues = append(issues, FieldIssue{Field: path, Code: "required"})
 					}
 				}
@@ -88,7 +89,7 @@ func payloadFieldIssues(kind string, p Payload) []FieldIssue {
 		}
 	}
 	visit(values, "")
-	if kind == "vendor" && strings.TrimSpace(p.Phone) == "" && strings.TrimSpace(p.Wechat) == "" {
+	if !draft && kind == "vendor" && strings.TrimSpace(p.Phone) == "" && strings.TrimSpace(p.Wechat) == "" {
 		for _, key := range []string{"phone", "wechat"} {
 			issues = append(issues, FieldIssue{Field: key, Code: "contact_required"})
 		}
@@ -142,7 +143,7 @@ func payloadFieldIssues(kind string, p Payload) []FieldIssue {
 			issues = append(issues, FieldIssue{"company_profile.contacts", "too_many", 20, "items"})
 		}
 		for i, c := range p.CompanyProfile.Contacts {
-			if strings.TrimSpace(c.Phone) == "" && strings.TrimSpace(c.Wechat) == "" {
+			if !draft && strings.TrimSpace(c.Phone) == "" && strings.TrimSpace(c.Wechat) == "" {
 				for _, key := range []string{"phone", "wechat"} {
 					issues = append(issues, FieldIssue{Field: fmt.Sprintf("company_profile.contacts.%d.%s", i, key), Code: "contact_required"})
 				}

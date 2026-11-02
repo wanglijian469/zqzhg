@@ -74,8 +74,10 @@ func TestResourcesIndependentReviewAndVisibility(t *testing.T) {
 	merchant := resourceTestSession(t, a, "merchant")
 	other := resourceTestSession(t, a, "merchant")
 	admin := resourceTestSession(t, a, "admin")
+	tc.call("POST", "/merchant/service-acceptances", merchant, gin.H{"agreements": serviceTestRefs(t, a, "terms", "privacy", "showroom-agreement")}, 200)
 	vendor := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "资源测试企业", MainProducts: "测试机械", RegionName: "河北", Phone: "13900009901"}}, 201)
-	product := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "资源关联产品", CategoryID: 1}}, 201)
+	imageID := appFlowProductImage(t, a, merchant)
+	product := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "资源关联产品", CategoryID: 1, MediaIDs: []uint64{imageID}}}, 201)
 	approveContent := func(item map[string]any) {
 		tc.call("POST", "/merchant/contents/"+number(item["id"])+"/submit", merchant, gin.H{"revision_id": item["revision_id"]}, 200)
 		tc.call("POST", "/admin/revisions/"+number(item["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)

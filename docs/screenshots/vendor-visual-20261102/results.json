@@ -1,0 +1,141 @@
+[
+  {
+    "name": "compact-1440",
+    "passed": true,
+    "before": 215.53125,
+    "after": 205.03125
+  },
+  {
+    "name": "brand-and-contact-1440",
+    "passed": true
+  },
+  {
+    "name": "overview-breakpoint-1440",
+    "passed": true
+  },
+  {
+    "name": "fits-1440",
+    "passed": true
+  },
+  {
+    "name": "compact-1280",
+    "passed": true,
+    "before": 215.53125,
+    "after": 205.03125
+  },
+  {
+    "name": "brand-and-contact-1280",
+    "passed": true
+  },
+  {
+    "name": "overview-breakpoint-1280",
+    "passed": true
+  },
+  {
+    "name": "fits-1280",
+    "passed": true
+  },
+  {
+    "name": "compact-1200",
+    "passed": true,
+    "before": 215.53125,
+    "after": 205.03125
+  },
+  {
+    "name": "brand-and-contact-1200",
+    "passed": true
+  },
+  {
+    "name": "overview-breakpoint-1200",
+    "passed": true
+  },
+  {
+    "name": "fits-1200",
+    "passed": true
+  },
+  {
+    "name": "compact-1199",
+    "passed": true,
+    "before": 215.53125,
+    "after": 205.03125
+  },
+  {
+    "name": "brand-and-contact-1199",
+    "passed": true
+  },
+  {
+    "name": "overview-breakpoint-1199",
+    "passed": true
+  },
+  {
+    "name": "fits-1199",
+    "passed": true
+  },
+  {
+    "name": "compact-768",
+    "passed": true,
+    "before": 212.625,
+    "after": 205.03125
+  },
+  {
+    "name": "brand-and-contact-768",
+    "passed": true
+  },
+  {
+    "name": "overview-breakpoint-768",
+    "passed": true
+  },
+  {
+    "name": "fits-768",
+    "passed": true
+  },
+  {
+    "name": "compact-390",
+    "passed": true,
+    "before": 194.984375,
+    "after": 167.59375
+  },
+  {
+    "name": "brand-and-contact-390",
+    "passed": true
+  },
+  {
+    "name": "overview-breakpoint-390",
+    "passed": true
+  },
+  {
+    "name": "fits-390",
+    "passed": true
+  },
+  {
+    "name": "compact-360",
+    "passed": true,
+    "before": 194.984375,
+    "after": 187.59375
+  },
+  {
+    "name": "brand-and-contact-360",
+    "passed": true
+  },
+  {
+    "name": "overview-breakpoint-360",
+    "passed": true
+  },
+  {
+    "name": "fits-360",
+    "passed": true
+  },
+  {
+    "name": "enter-showroom-route",
+    "passed": true
+  },
+  {
+    "name": "contact-route",
+    "passed": true
+  },
+  {
+    "name": "no-page-errors",
+    "passed": true,
+    "errors": []
+  }
+]

@@ -211,6 +211,7 @@ void main() {
     final m = await upgradeModel(signed: true);
     await t.pumpWidget(upgradeApp(m, const EditorScreen(kind: 'product')));
     await t.pumpAndSettle();
+    await tapReachable(t, find.text('2 完善详情'));
     await tapReachable(t, find.text('关键词、说明和参数（选填）'));
     final input = nativeField('关键词（含英文，选填）');
     await t.ensureVisible(input);
@@ -317,10 +318,13 @@ void main() {
         ),
       );
       await t.pumpAndSettle();
-      final menu = t.widget<DropdownButton<int>>(
-        find.byWidgetPredicate((widget) => widget is DropdownButton<int>),
-      );
-      expect(menu.items!.map((item) => item.value), [0, 2]);
+      final picker = t.widget<NativeCategoryPicker>(find.byType(NativeCategoryPicker));
+      expect(picker.hallID, 2);
+      await tapReachable(t, find.text('电缆分类'));
+      expect(find.text('农业分类'), findsNothing);
+      expect(find.text('电缆分类'), findsWidgets);
+      await t.tap(find.byIcon(Icons.close).last);
+      await t.pumpAndSettle();
       await t.pumpWidget(const SizedBox());
     },
   );
@@ -365,8 +369,8 @@ void main() {
       ),
     );
     await t.pumpAndSettle();
-    await tapReachable(t, find.textContaining('2. 图片'));
-    await tapReachable(t, find.text('设为封面').last);
+    await tapReachable(t, find.descendant(of:find.byType(GridView),matching:find.byType(InkWell)).last);
+    await tapReachable(t, find.text('设为封面'));
     await tapReachable(t, find.widgetWithText(OutlinedButton, '保存云端草稿'));
     expect(saved!['data']['media_ids'], [3, 1, 2]);
     expect(calls.any((call) => call.startsWith('DELETE')), isFalse);

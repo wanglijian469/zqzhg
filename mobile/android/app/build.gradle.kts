@@ -55,6 +55,11 @@ android {
         debug {
             applicationIdSuffix = ".videodev"
         }
+        create("editdev") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".editdev"
+            matchingFallbacks += listOf("debug")
+        }
         release {
             signingConfig = signingConfigs.getByName("release")
         }

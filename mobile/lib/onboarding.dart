@@ -510,60 +510,41 @@ class _NativeCategoryPickerState extends State<NativeCategoryPicker> {
           children: [
             NativeFieldLabel(
               label: widget.label ?? m.t('category'),
-              child: DropdownButtonFormField<int>(
-                key: ValueKey('${widget.value}:${cats.length}'),
-                initialValue: selected,
-                isExpanded: true,
-                decoration: InputDecoration(
-                  errorText: widget.issue == null
-                      ? null
-                      : fieldIssueText(m, widget.issue!),
-                ),
-                items: [
-                  DropdownMenuItem(value: 0, child: Text(m.t('optional'))),
-                  ...cats.map(
-                    (c) => DropdownMenuItem<int>(
-                      value: c['id'],
-                      enabled:
-                          c['id'] == widget.value ||
-                          (c['enabled'] == true &&
-                              c['selectable'] != false &&
-                              !widget.excludeIDs.contains(c['id']) &&
-                              (widget.kind != 'product' ||
-                                  !cats.any((v) => v['parent_id'] == c['id']))),
-                      child: Text(
-                        '${nativeCategoryPath(cats, c['id'], m)}${c['suggestion_status'] == 'pending' ? (m.language == 'zh' ? '（待管理员规范）' : ' (pending)') : ''}',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                  if (selected > 0 && !cats.any((c) => c['id'] == selected))
-                    DropdownMenuItem(
-                      value: selected,
-                      child: Text('#$selected'),
-                    ),
-                ],
-                onChanged: widget.enabled
-                    ? (v) => widget.onChanged(v ?? 0)
-                    : null,
-              ),
-            ),
-            OutlinedButton.icon(
-              onPressed: widget.enabled
-                  ? () async {
-                      final id = await searchNativeCategories(
-                        context,
-                        cats,
-                        widget.kind,
-                        widget.excludeIDs,
-                      );
-                      if (id != null && mounted && widget.enabled) {
-                        widget.onChanged(id);
+              child: InkWell(
+                onTap: widget.enabled
+                    ? () async {
+                        final id = await searchNativeCategories(
+                          context,
+                          cats,
+                          widget.kind,
+                          widget.excludeIDs,
+                          hallID: widget.hallID,
+                        );
+                        if (id != null && mounted && widget.enabled) {
+                          widget.onChanged(id);
+                        }
                       }
-                    }
-                  : null,
-              icon: const Icon(Icons.search),
-              label: Text(m.language == 'zh' ? '搜索分类' : 'Search categories'),
+                    : null,
+                child: InputDecorator(
+                  decoration: InputDecoration(
+                    errorText: widget.issue == null
+                        ? null
+                        : fieldIssueText(m, widget.issue!),
+                    suffixIcon: const Icon(Icons.search),
+                  ),
+                  child: Text(
+                    selected > 0
+                        ? (nativeCategoryPath(cats, selected, m).isEmpty
+                              ? '#$selected'
+                              : nativeCategoryPath(cats, selected, m))
+                        : syncText(
+                            context,
+                            '搜索或按层级选择',
+                            'Search or browse categories',
+                          ),
+                  ),
+                ),
+              ),
             ),
             if (widget.allowSuggest)
               TextButton(

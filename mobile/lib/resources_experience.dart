@@ -31,6 +31,7 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
   void choose(int value) {
     FocusScope.of(context).unfocus();
     if (value == tab) return;
+    unawaited(NativeVideoSessions.stopAll());
     setState(() {
       tab = value;
       visited.add(value);
@@ -806,12 +807,10 @@ class _NativeResourceListState extends State<NativeResourceList> {
                             runSpacing: 8,
                             children: [
                               OutlinedButton(
-                                onPressed: () => push(
+                                onPressed: () => openNativeResource(
                                   context,
-                                  NativeResourceViewer(
-                                    item: item,
-                                    private: widget.management,
-                                  ),
+                                  item,
+                                  private: widget.management,
                                 ),
                                 child: Text(
                                   m.t(
@@ -981,10 +980,14 @@ class ResourceHistoryScreen extends StatelessWidget {
 class NativeResourceViewer extends StatefulWidget {
   final Json item;
   final bool private;
+  final bool autoStart;
+  final VoidCallback? onClosed;
   const NativeResourceViewer({
     super.key,
     required this.item,
     this.private = false,
+    this.autoStart = false,
+    this.onClosed,
   });
   @override
   State<NativeResourceViewer> createState() => _NativeResourceViewerState();
@@ -999,6 +1002,11 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
   final pdfController = PdfViewerController();
   int pdfPage = 1, pdfCount = 0, readerVersion = 0;
   bool loading = false;
+  bool autoStarted = false, fullscreen = false;
+  int videoGeneration = 0;
+  String? playbackScope;
+  ModalRoute<dynamic>? playbackRoute;
+  Future<void>? videoDisposing;
   @override
   void initState() {
     super.initState();
@@ -1008,6 +1016,28 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final nextScope = ModelScope.of(context).scope;
+    final route = ModalRoute.of(context);
+    if (playbackScope != null &&
+        (playbackScope != nextScope || route != null && !route.isCurrent)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(stopVideo());
+      });
+    }
+    playbackScope = nextScope;
+    playbackRoute = route;
+    if (widget.autoStart &&
+        !autoStarted &&
+        widget.item['kind'] == 'video' &&
+        (widget.item['file']?['state'] == null ||
+            widget.item['file']['state'] == 'ready')) {
+      autoStarted = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && ModalRoute.of(context)?.isCurrent == true) {
+          unawaited(startVideo());
+        }
+      });
+    }
     if (!reportedView && !widget.private) {
       reportedView = true;
       final id = (widget.item['id'] as num?)?.toInt() ?? 0;
@@ -1020,6 +1050,30 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
   }
 
   bool videoStarting = false;
+  Future<void> stopVideo() {
+    videoGeneration++;
+    final old = video;
+    video = null;
+    if (mounted) {
+      setState(() {
+        videoStarting = false;
+        fullscreen = false;
+      });
+    }
+    final previous = videoDisposing;
+    final stopping = Future<void>.sync(() async {
+      if (previous != null) await previous;
+      try {
+        await old?.pause();
+      } finally {
+        await old?.dispose();
+        NativeVideoSessions.release(this);
+      }
+    });
+    videoDisposing = stopping;
+    return stopping;
+  }
+
   Future<void> startVideo() async {
     if (isDouyinVideo(widget.item)) {
       if (videoStarting) return;
@@ -1036,6 +1090,13 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
             ),
           ),
         );
+        if (!mounted ||
+            ModalRoute.of(context)?.isCurrent != true ||
+            (WidgetsBinding.instance.lifecycleState != null &&
+                WidgetsBinding.instance.lifecycleState !=
+                    AppLifecycleState.resumed)) {
+          return;
+        }
         await openOfficialVideo(result);
       } catch (e) {
         if (mounted) setState(() => error = videoErrorText(e));
@@ -1045,11 +1106,29 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
       return;
     }
     if (videoStarting) return;
+    final generation = ++videoGeneration;
     setState(() {
       videoStarting = true;
       error = '';
     });
     final m = ModelScope.of(context);
+    final scope = m.scope, token = m.token, endpoint = m.baseUrl;
+    final route = playbackRoute;
+    bool active() =>
+        mounted &&
+        generation == videoGeneration &&
+        m.scope == scope &&
+        m.token == token &&
+        m.baseUrl == endpoint &&
+        (route == null || route.isCurrent) &&
+        (WidgetsBinding.instance.lifecycleState == null ||
+            WidgetsBinding.instance.lifecycleState ==
+                AppLifecycleState.resumed);
+    if (videoDisposing != null) await videoDisposing;
+    if (!active()) return;
+    if (!await NativeVideoSessions.activate(this, stopVideo) || !active()) {
+      return;
+    }
     final next = VideoPlayerController.networkUrl(
       Uri.parse(
         '${m.baseUrl}/api/v1/media/${widget.item['data']['file_media_id']}',
@@ -1057,37 +1136,61 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
       httpHeaders: widget.private ? {'Authorization': 'Bearer ${m.token}'} : {},
     );
     await video?.dispose();
-    if (!mounted) {
+    if (!active()) {
       await next.dispose();
       return;
     }
     video = next;
     try {
       await next.initialize();
-      if (!mounted) return;
-      if (WidgetsBinding.instance.lifecycleState == null ||
-          WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
-        await next.play();
+      if (!active() || !identical(video, next)) {
+        if (identical(video, next)) await stopVideo();
+        return;
       }
+      await next.setVolume(1);
+      if (!active() || !identical(video, next)) {
+        if (identical(video, next)) await stopVideo();
+        return;
+      }
+      await next.play();
       if (mounted) setState(() {});
     } catch (_) {
-      if (mounted) setState(() => error = 'network_error');
+      if (mounted && generation == videoGeneration) {
+        await stopVideo();
+        if (mounted) setState(() => error = 'network_error');
+      }
     } finally {
-      if (mounted) setState(() => videoStarting = false);
+      if (mounted && generation == videoGeneration) {
+        setState(() => videoStarting = false);
+      }
     }
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state != AppLifecycleState.resumed) {
-      video?.pause();
+      unawaited(stopVideo());
     }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    video?.dispose();
+    videoGeneration++;
+    final old = video;
+    video = null;
+    final previous = videoDisposing;
+    videoDisposing = Future<void>.sync(() async {
+      if (previous != null) await previous;
+      try {
+        await old?.pause();
+      } finally {
+        await old?.dispose();
+        NativeVideoSessions.release(this);
+      }
+    });
+    unawaited(videoDisposing);
+    widget.onClosed?.call();
     super.dispose();
   }
 
@@ -1095,6 +1198,35 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
   Widget build(BuildContext context) {
     final m = ModelScope.of(context);
     final d = asMap(widget.item['data']);
+    if (fullscreen && video?.value.isInitialized == true) {
+      return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) setState(() => fullscreen = false);
+        },
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            child: Column(
+              children: [
+                TextButton(
+                  onPressed: () => setState(() => fullscreen = false),
+                  child: const Text('退出全屏'),
+                ),
+                Expanded(
+                  child: Center(
+                    child: AspectRatio(
+                      aspectRatio: video!.value.aspectRatio,
+                      child: VideoPlayer(video!),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: appBar(context, resourceTitle(m, widget.item)),
       body: Column(
@@ -1123,6 +1255,12 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
                                 allowScrubbing: true,
                                 padding: const EdgeInsets.all(12),
                               ),
+                              TextButton.icon(
+                                onPressed: () =>
+                                    setState(() => fullscreen = true),
+                                icon: const Icon(Icons.fullscreen),
+                                label: const Text('全屏'),
+                              ),
                               FilledButton.icon(
                                 onPressed: () {
                                   setState(() {
@@ -1144,8 +1282,6 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
                               ),
                             ],
                           )
-                        : videoStarting
-                        ? const CircularProgressIndicator()
                         : Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -1154,14 +1290,17 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
                                   id: d['cover_media_id'],
                                   aspectRatio: 16 / 9,
                                 ),
-                              FilledButton.icon(
-                                key: const ValueKey('video-start'),
-                                onPressed: startVideo,
-                                icon: const Icon(Icons.play_arrow),
-                                label: Text(
-                                  m.t(error.isEmpty ? 'play' : 'retry'),
+                              if (videoStarting)
+                                const CircularProgressIndicator()
+                              else
+                                FilledButton.icon(
+                                  key: const ValueKey('video-start'),
+                                  onPressed: startVideo,
+                                  icon: const Icon(Icons.play_arrow),
+                                  label: Text(
+                                    m.t(error.isEmpty ? 'play' : 'retry'),
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                   )
@@ -1937,17 +2076,11 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
               onPressed:
                   (data['file_media_id'] != 0 ||
                       (data['page_media_ids'] as List).isNotEmpty)
-                  ? () => push(
-                      context,
-                      NativeResourceViewer(
-                        item: {
-                          'kind': widget.kind,
-                          'data': data,
-                          'file': metadata,
-                        },
-                        private: true,
-                      ),
-                    )
+                  ? () => openNativeResource(context, {
+                      'kind': widget.kind,
+                      'data': data,
+                      'file': metadata,
+                    }, private: true)
                   : null,
               child: Text(m.t('resourcePreview')),
             ),

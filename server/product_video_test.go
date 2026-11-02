@@ -22,8 +22,9 @@ func TestProductVideoAssociationAndPublication(t *testing.T) {
 		tc.call("POST", "/admin/revisions/"+number(item["revision_id"])+"/review", admin, gin.H{"decision": "approve"}, 200)
 	}
 	approve(vendor)
-	first := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "产品甲", CategoryID: 1}}, 201)
-	second := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "产品乙", CategoryID: 1}}, 201)
+	imageID := appFlowProductImage(t, a, merchant)
+	first := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "产品甲", CategoryID: 1, MediaIDs: []uint64{imageID}}}, 201)
+	second := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "data": Payload{Name: "产品乙", CategoryID: 1, MediaIDs: []uint64{imageID}}}, 201)
 	p := ResourcePayload{Title: "产品抖音视频", Format: "video", Purpose: "product", ProductID: uint64(first["id"].(float64)), VideoSource: videoDouyin, OriginalShareURL: "https://www.douyin.com/video/7690195495465012480", RightsConfirmed: true}
 	resource := tc.call("POST", "/merchant/resources?video_api_version=2", merchant, gin.H{"kind": "video", "data": p}, 201)
 	rid := number(resource["id"])

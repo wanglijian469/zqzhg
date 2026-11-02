@@ -59,6 +59,21 @@ class _MerchantProductsScreenState extends State<MerchantProductsScreen> {
 
   Future<void> action(String action, Json item) async {
     final m = ModelScope.of(context), identity = m.scope;
+    if (action == 'clone') {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => EditorScreen(
+            kind: 'product',
+            initialData: cloneProductDraft(asMap(item['data'])),
+            localDraftID:
+                'product-copy-${DateTime.now().microsecondsSinceEpoch}',
+          ),
+        ),
+      );
+      if (mounted) setState(() => version++);
+      return;
+    }
     if (action == 'history') {
       push(context, HistoryScreen(id: item['id']));
       return;
@@ -190,7 +205,11 @@ class _MerchantProductsScreenState extends State<MerchantProductsScreen> {
                     children: [
                       TextButton(
                         onPressed: () => edit(item),
-                        child: Text(m.t('edit')),
+                        child: Text(
+                          item['status'] == 'pending'
+                              ? m.t('view')
+                              : m.t('edit'),
+                        ),
                       ),
                       PopupMenuButton<String>(
                         tooltip: m.t('more'),
@@ -199,6 +218,16 @@ class _MerchantProductsScreenState extends State<MerchantProductsScreen> {
                           PopupMenuItem(
                             value: 'preview',
                             child: Text(m.t('draftPreview')),
+                          ),
+                          PopupMenuItem(
+                            value: 'clone',
+                            child: Text(
+                              syncText(
+                                context,
+                                '复制为新产品',
+                                'Copy as new product',
+                              ),
+                            ),
                           ),
                           PopupMenuItem(
                             value: 'history',

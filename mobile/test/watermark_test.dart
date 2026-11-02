@@ -51,8 +51,8 @@ void main() {
         ),
       );
       await t.pumpAndSettle();
-      await f.tapReachable(t, find.textContaining('2. 图片'));
-      await f.tapReachable(t, find.text('设为封面').last);
+      await f.tapReachable(t, find.descendant(of:find.byType(GridView),matching:find.byType(InkWell)).last);
+      await f.tapReachable(t, find.text('设为封面'));
       await f.tapReachable(t, find.widgetWithText(OutlinedButton, '保存云端草稿'));
       expect(writes.first['media_ids'], [3, 1, 2]);
       await f.tapReachable(t, find.widgetWithText(OutlinedButton, '保存云端草稿'));

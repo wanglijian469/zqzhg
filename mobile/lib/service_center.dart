@@ -444,7 +444,8 @@ class NativeVerificationScreen extends StatelessWidget {
 }
 
 class NativePublicationAgreements extends StatefulWidget {
-  const NativePublicationAgreements({super.key});
+  final bool hideAccepted;
+  const NativePublicationAgreements({super.key, this.hideAccepted = false});
   @override
   State<NativePublicationAgreements> createState() =>
       _NativePublicationAgreementsState();
@@ -494,7 +495,7 @@ class _NativePublicationAgreementsState
   }
 
   Future<void> accept() async {
-    if (busy || !agreed || documents.length != 3) return;
+    if (busy || !agreed || documents.isEmpty) return;
     final m = ModelScope.of(context), expected = source;
     setState(() => busy = true);
     try {
@@ -502,7 +503,17 @@ class _NativePublicationAgreementsState
         '/merchant/service-acceptances',
         method: 'POST',
         data: {
-          'agreements': serviceAgreementRefs(documents),
+          'agreements': serviceAgreementRefs(
+            documents
+                .where(
+                  (d) => !acceptances.any(
+                    (a) =>
+                        a['document_id'] == d['id'] &&
+                        a['digest'] == d['digest'],
+                  ),
+                )
+                .toList(),
+          ),
           'source': Platform.isIOS ? 'ios' : 'android',
         },
       );
@@ -538,6 +549,14 @@ class _NativePublicationAgreementsState
         child: Center(child: CircularProgressIndicator()),
       );
     }
+    if (accepted && widget.hideAccepted) return const SizedBox.shrink();
+    final visibleDocuments = documents
+        .where(
+          (d) => !acceptances.any(
+            (a) => a['document_id'] == d['id'] && a['digest'] == d['digest'],
+          ),
+        )
+        .toList();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -555,7 +574,7 @@ class _NativePublicationAgreementsState
                 child: Text(m.t('retry')),
               ),
             ],
-            for (final d in documents)
+            for (final d in visibleDocuments)
               ExpansionTile(
                 title: Text(
                   '${d[zh ? 'title' : 'title_en']} · v${d['version']}',

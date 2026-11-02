@@ -10,12 +10,16 @@ import androidx.core.content.FileProvider
 import java.io.File
 
 class MainActivity : FlutterActivity() {
+ private var officialVideos: OfficialVideoFactory? = null
  private var videoResult: MethodChannel.Result? = null
  private var workspaceResult: MethodChannel.Result? = null
  private var saveResult: MethodChannel.Result? = null
  private var saveBytes: ByteArray? = null
  override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
   super.configureFlutterEngine(flutterEngine)
+  officialVideos = OfficialVideoFactory(this, flutterEngine.dartExecutor.binaryMessenger).also {
+   flutterEngine.platformViewsController.registry.registerViewFactory("zqzg/official-video", it)
+  }
   MethodChannel(flutterEngine.dartExecutor.binaryMessenger,"com.zqzt.dalunongji/video").setMethodCallHandler { call,result ->
    if(call.method!="open"){result.notImplemented()}else if(videoResult!=null){result.error("busy","A video is already open",null)}else{try{videoResult=result;startActivityForResult(Intent(this,VideoPlayerActivity::class.java).putExtra("url",call.argument<String>("url")).putExtra("width",call.argument<Number>("width")?.toInt()?:0).putExtra("height",call.argument<Number>("height")?.toInt()?:0),4023)}catch(_:Exception){videoResult=null;result.error("video_failed","Cannot open player",null)}}
   }
@@ -67,5 +71,7 @@ class MainActivity : FlutterActivity() {
   if(resultCode!=Activity.RESULT_OK||data?.data==null){result?.success(false);return}
   try{val stream=contentResolver.openOutputStream(data.data!!,"w") ?: error("Cannot save image");stream.use{it.write(bytes ?: error("Missing image"))};result?.success(true)}catch(e:Exception){result?.error("save_failed",e.message,null)}
  }
- override fun onDestroy(){videoResult?.success(null);videoResult=null;workspaceResult?.success(null);workspaceResult=null;saveResult?.success(false);saveResult=null;saveBytes=null;super.onDestroy()}
+ @Deprecated("Android back compatibility") override fun onBackPressed(){if(officialVideos?.exitFullscreen()!=true)super.onBackPressed()}
+ override fun onPause(){officialVideos?.pauseAll();super.onPause()}
+ override fun onDestroy(){officialVideos?.disposeAll();officialVideos=null;videoResult?.success(null);videoResult=null;workspaceResult?.success(null);workspaceResult=null;saveResult?.success(false);saveResult=null;saveBytes=null;super.onDestroy()}
 }

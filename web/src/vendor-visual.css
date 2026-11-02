@@ -1,0 +1,23 @@
+/* Directory-only spacing; retain existing grids, overview breakpoint and routes. */
+.public-web .vendor-brand-list{gap:16px}
+.public-web .vendor-brand-list>.vendor-brand-card{padding:18px;gap:20px;border-color:var(--line);border-radius:14px;box-shadow:none}
+.public-web .vendor-brand-list .vendor-brand-heading{gap:12px}
+.public-web .vendor-brand-list .vendor-brand-heading h2{font-size:20px;margin-top:4px;color:inherit}
+.public-web .vendor-brand-list .vendor-brand-logo{width:44px;height:44px;border-color:var(--line);background:var(--pale)}
+.public-web .vendor-brand-list .vendor-brand-main-products{margin:8px 0;line-height:1.65}
+.public-web .vendor-brand-list .vendor-brand-region{margin-bottom:10px;color:var(--muted)}
+.public-web .vendor-brand-list .vendor-brand-actions{gap:16px}
+.public-web .vendor-brand-list .vendor-brand-actions .button{min-height:44px;padding:8px 14px;box-shadow:none}
+.public-web .vendor-brand-list .vendor-brand-actions .text-link{min-height:44px;display:inline-flex;align-items:center;gap:6px;padding:6px 0;background:transparent;color:var(--blue)}
+.public-web .vendor-brand-list .vendor-brand-products{padding-left:16px;border-color:var(--line)}
+.public-web .vendor-brand-list .vendor-brand-products h3{margin-bottom:10px}
+@media(max-width:600px){
+ .public-web .vendor-brand-list{gap:12px}
+ .public-web .vendor-brand-list>.vendor-brand-card{padding:12px;gap:10px}
+ .public-web .vendor-brand-list .vendor-brand-heading{gap:6px}
+ .public-web .vendor-brand-list .vendor-brand-heading h2{font-size:16px;margin:0}
+ .public-web .vendor-brand-list .vendor-brand-logo{width:28px;height:28px}
+ .public-web .vendor-brand-list .vendor-brand-main-products{margin:6px 0}
+ .public-web .vendor-brand-list .vendor-brand-region{margin-bottom:8px}
+ .public-web .vendor-brand-list .vendor-brand-actions{gap:8px}
+}

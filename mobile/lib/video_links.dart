@@ -15,7 +15,9 @@ Uri? trustedDouyinPlayer(String raw, String id) {
           RegExp(r'^[1-9][0-9]{8,23}$').hasMatch(id) &&
           u.path == '/player/video' &&
           u.queryParameters['vid'] == id &&
-          u.queryParameters['autoplay'] == '0'
+          u.queryParameters['autoplay'] == '0' &&
+          u.queryParametersAll.length == 2 &&
+          u.queryParametersAll.values.every((values) => values.length == 1)
       ? u
       : null;
 }
@@ -38,18 +40,91 @@ String videoErrorText(Object e) {
       '暂时无法播放或保存，请重新检查链接后重试。';
 }
 
-Future<void> openOfficialVideo(Json check) async {
+bool _officialVideoOpening = false;
+Future<void> openOfficialVideo(Json check, {bool Function()? canOpen}) async {
   final id = (check['video_id'] ?? '').toString();
   final url = trustedDouyinPlayer((check['player_url'] ?? '').toString(), id);
   if (check['status'] != 'READY' || url == null) {
     throw ApiFailure((check['reason'] ?? 'video_check_required').toString());
   }
-  // Only the validated public player URL and dimensions cross into WebView. No login token.
-  await const MethodChannel('com.zqzt.dalunongji/video').invokeMethod('open', {
-    'url': url.toString(),
-    'width': check['width'] ?? 0,
-    'height': check['height'] ?? 0,
-  });
+  if (_officialVideoOpening) return;
+  _officialVideoOpening = true;
+  try {
+    await NativeVideoSessions.stopAll();
+    if (canOpen != null && !canOpen()) return;
+    // Only the validated public player URL and dimensions cross into WebView.
+    await const MethodChannel(
+      'com.zqzt.dalunongji/video',
+    ).invokeMethod('open', {
+      'url': url.toString(),
+      'width': check['width'] ?? 0,
+      'height': check['height'] ?? 0,
+    });
+  } finally {
+    _officialVideoOpening = false;
+  }
+}
+
+Object? _nativeResourceOpening;
+Future<void> openNativeResource(
+  BuildContext context,
+  Json item, {
+  bool private = false,
+  Json? check,
+}) async {
+  if (_nativeResourceOpening != null) return;
+  final opening = Object();
+  _nativeResourceOpening = opening;
+  void releaseOpening() {
+    if (identical(_nativeResourceOpening, opening)) {
+      _nativeResourceOpening = null;
+    }
+  }
+
+  final origin = ModalRoute.of(context);
+  final model = ModelScope.of(context);
+  final scope = model.scope, token = model.token, endpoint = model.baseUrl;
+  bool active() =>
+      context.mounted &&
+      model.scope == scope &&
+      model.token == token &&
+      model.baseUrl == endpoint &&
+      (origin == null || origin.isCurrent) &&
+      (WidgetsBinding.instance.lifecycleState == null ||
+          WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed);
+  try {
+    if (isDouyinVideo(item)) {
+      final m = ModelScope.of(context);
+      final result =
+          check ??
+          asMap(
+            await m.api(
+              videoV2(
+                '/${private ? 'merchant' : 'public'}/resources/${item['id']}/playback',
+              ),
+            ),
+          );
+      if (!active()) return;
+      await openOfficialVideo(result, canOpen: active);
+    } else {
+      await NativeVideoSessions.stopAll();
+      if (!context.mounted || !active()) return;
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => NativeResourceViewer(
+            item: item,
+            private: private,
+            autoStart: item['kind'] == 'video',
+            onClosed: releaseOpening,
+          ),
+        ),
+      );
+    }
+  } catch (e) {
+    if (context.mounted && active()) showError(context, e);
+  } finally {
+    releaseOpening();
+  }
 }
 
 class NativeVideoAddScreen extends StatelessWidget {
@@ -129,6 +204,8 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
   int generation = 0, ownerID = 0;
   String endpoint = '', error = '', notice = '', errorCode = '';
   bool initialized = false, busy = false, checking = false;
+  bool checkLock = false, saveLock = false;
+  String lastShareText = '';
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -161,21 +238,28 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
     }
     title.text = (data['title'] ?? '').toString();
     share.text = (data['original_share_url'] ?? '').toString();
+    lastShareText = share.text;
     description.text = (data['description'] ?? '').toString();
-    share.addListener(
-      () => setState(() {
+    share.addListener(() {
+      if (share.text == lastShareText) return;
+      lastShareText = share.text;
+      setState(() {
         generation++;
-        checking = false;
         check = null;
         data['rights_confirmed'] = false;
         error = '';
-      }),
-    );
+      });
+    });
   }
 
   Future<bool> sessionReady() => nativeSessionReady(context, ownerID, endpoint);
   Future<void> inspect() async {
-    if (!await sessionReady() || !mounted) return;
+    if (checkLock) return;
+    checkLock = true;
+    if (!await sessionReady() || !mounted) {
+      checkLock = false;
+      return;
+    }
     final g = ++generation;
     setState(() {
       checking = true;
@@ -200,12 +284,18 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
     } catch (e) {
       if (mounted && g == generation) setState(() => error = videoErrorText(e));
     } finally {
-      if (mounted && g == generation) setState(() => checking = false);
+      checkLock = false;
+      if (mounted) setState(() => checking = false);
     }
   }
 
   Future<void> save(bool submit) async {
-    if (!await sessionReady() || !mounted) return;
+    if (saveLock) return;
+    saveLock = true;
+    if (!await sessionReady() || !mounted) {
+      saveLock = false;
+      return;
+    }
     setState(() {
       busy = true;
       error = '';
@@ -217,7 +307,7 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
         data['product_id'] = widget.productID;
         data['purpose'] = 'product';
       }
-      if (check == null) throw ApiFailure('video_check_required');
+      if (submit && check == null) throw ApiFailure('video_check_required');
       if (data['rights_confirmed'] != true) {
         throw ApiFailure('video_rights_required');
       }
@@ -272,6 +362,7 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
         });
       }
     } finally {
+      saveLock = false;
       if (mounted) setState(() => busy = false);
     }
   }
@@ -316,15 +407,16 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
               OutlinedButton(
                 onPressed: disabled || check?['status'] != 'READY'
                     ? null
-                    : () async {
-                        try {
-                          await openOfficialVideo(check!);
-                        } catch (e) {
-                          if (mounted) {
-                            setState(() => error = videoErrorText(e));
-                          }
-                        }
-                      },
+                    : () => openNativeResource(
+                        context,
+                        {
+                          'id': current?['id'] ?? 0,
+                          'kind': 'video',
+                          'data': {...data, 'video_source': 'DOUYIN'},
+                        },
+                        private: true,
+                        check: check,
+                      ),
                 child: const Text('预览播放'),
               ),
             ],

@@ -86,6 +86,12 @@ func loadOwned(tx *gorm.DB, contentID uint64, who Account, lock bool) (Content, 
 	return content, e
 }
 func (a *App) validatePayload(tx *gorm.DB, who Account, kind string, p *Payload, retained ...Payload) error {
+	return a.validatePayloadMode(tx, who, kind, p, false, retained...)
+}
+func (a *App) validateDraftPayload(tx *gorm.DB, who Account, kind string, p *Payload, retained ...Payload) error {
+	return a.validatePayloadMode(tx, who, kind, p, true, retained...)
+}
+func (a *App) validatePayloadMode(tx *gorm.DB, who Account, kind string, p *Payload, draft bool, retained ...Payload) error {
 	if kind == "vendor" && p.RegionCode != "" {
 		if e := resolveAdministrativeRegion(tx, p); e != nil {
 			return e
@@ -93,7 +99,7 @@ func (a *App) validatePayload(tx *gorm.DB, who Account, kind string, p *Payload,
 	}
 	p.Name = strings.TrimSpace(p.Name)
 	p.RegionName = strings.TrimSpace(p.RegionName)
-	if issues := payloadFieldIssues(kind, *p); len(issues) > 0 {
+	if issues := payloadFieldIssues(kind, *p, draft); len(issues) > 0 {
 		code := "invalid_request"
 		return &FieldValidationError{Code: code, Fields: issues}
 	}
@@ -118,7 +124,7 @@ func (a *App) validatePayload(tx *gorm.DB, who Account, kind string, p *Payload,
 	if kind != "vendor" && p.CompanyProfile != nil {
 		return fmt.Errorf("invalid_request")
 	}
-	if e := validateCompanyProfile(p.CompanyProfile); e != nil {
+	if e := validateCompanyProfile(p.CompanyProfile, draft); e != nil {
 		return e
 	}
 	seen := map[uint64]bool{}
@@ -214,18 +220,47 @@ func productSlot(tx *gorm.DB, ownerID uint64) (uint64, error) {
 }
 func (a *App) createContent(c *gin.Context) {
 	var req struct {
-		HallID uint64  `json:"hall_id"`
-		Kind   string  `json:"kind"`
-		Data   Payload `json:"data"`
+		ClientRequestID string  `json:"client_request_id"`
+		HallID          uint64  `json:"hall_id"`
+		Kind            string  `json:"kind"`
+		Data            Payload `json:"data"`
 	}
 	if c.ShouldBindJSON(&req) != nil || (req.Kind != "vendor" && req.Kind != "product") {
 		fail(c, 400, "invalid_request")
 		return
 	}
+	req.ClientRequestID = strings.TrimSpace(req.ClientRequestID)
+	if req.ClientRequestID != "" && !validContentRequestID(req.ClientRequestID) {
+		fail(c, 400, "invalid_client_request_id")
+		return
+	}
 	who := actor(c)
+	created := true
+	fingerprint := contentCreateFingerprint(req.Kind, req.HallID, req.Data)
 	content := Content{Kind: req.Kind, OwnerID: who.ID, HallID: req.HallID}
 	e := a.watermarkTransaction(func(tx *gorm.DB) error {
-		if e := a.validatePayload(tx, who, req.Kind, &req.Data); e != nil {
+		var request ContentCreateRequest
+		if req.ClientRequestID != "" {
+			request = ContentCreateRequest{OwnerID: who.ID, RequestID: req.ClientRequestID, Fingerprint: fingerprint}
+			// The unique insert waits for a concurrent same-key transaction. The
+			// mapping and content commit together, including after a client timeout.
+			if e := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&request).Error; e != nil {
+				return e
+			}
+			if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&request, "owner_id=? AND request_id=?", who.ID, req.ClientRequestID).Error; e != nil {
+				return e
+			}
+			if request.Fingerprint != fingerprint {
+				return serviceFailure{"client_request_conflict", 409}
+			}
+			if request.ContentID != 0 {
+				var e error
+				content, e = loadOwned(tx, request.ContentID, who, true)
+				created = false
+				return e
+			}
+		}
+		if e := a.validateDraftPayload(tx, who, req.Kind, &req.Data); e != nil {
 			return e
 		}
 		if req.Kind == "vendor" {
@@ -253,7 +288,13 @@ func (a *App) createContent(c *gin.Context) {
 		if e := tx.Create(&content).Error; e != nil {
 			return e
 		}
-		return a.makeDraft(tx, &content, req.Data)
+		if e := a.makeDraft(tx, &content, req.Data); e != nil {
+			return e
+		}
+		if req.ClientRequestID != "" {
+			return tx.Model(&ContentCreateRequest{}).Where("owner_id=? AND request_id=?", who.ID, req.ClientRequestID).Update("content_id", content.ID).Error
+		}
+		return nil
 	})
 	if e != nil {
 		dbFail(c, e)
@@ -261,7 +302,11 @@ func (a *App) createContent(c *gin.Context) {
 	}
 	var rev Revision
 	a.DB.First(&rev, content.DraftRevisionID)
-	c.JSON(201, a.privateView(content, rev))
+	status := 201
+	if !created {
+		status = 200
+	}
+	c.JSON(status, a.privateView(content, rev))
 }
 func (a *App) saveDraft(c *gin.Context) {
 	var req struct {
@@ -324,7 +369,7 @@ func (a *App) saveDraft(c *gin.Context) {
 			}
 			mergePortalProfile(&req.Data, previous)
 		}
-		if e = a.validatePayload(tx, Account{ID: content.OwnerID}, content.Kind, &req.Data, previousTaxonomy); e != nil {
+		if e = a.validateDraftPayload(tx, Account{ID: content.OwnerID}, content.Kind, &req.Data, previousTaxonomy); e != nil {
 			return e
 		}
 		if e = a.makeDraft(tx, &content, req.Data); e != nil {
@@ -380,6 +425,12 @@ func (a *App) submit(c *gin.Context) {
 		}
 		if e = publicationCompliance(tx, content.OwnerID, content.VendorID, vendorData); e != nil {
 			return e
+		}
+		if e = a.validatePayload(tx, Account{ID: content.OwnerID}, content.Kind, &publicationData, publicationData); e != nil {
+			return e
+		}
+		if content.Kind == "product" && len(publicationData.MediaIDs) == 0 {
+			return fieldFailure("invalid_request", "media_ids", "required")
 		}
 		if e = submitTaxonomy(tx, content, rev); e != nil {
 			return e

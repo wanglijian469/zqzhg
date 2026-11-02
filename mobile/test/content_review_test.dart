@@ -80,7 +80,8 @@ void main() {
       );
       await t.pumpWidget(f.harness(m, home: const NativeVerificationScreen()));
       await t.pumpAndSettle();
-      expect(find.widgetWithText(ChoiceChip, '3. 协议与提交'), findsOneWidget);
+      expect(find.byType(ChoiceChip), findsNothing);
+      expect(find.byType(EditorScreen), findsOneWidget);
       expect(find.byType(NativePublicationAgreements), findsOneWidget);
       expect(find.text('提交核验'), findsNothing);
       expect(find.text('营业执照'), findsNothing);

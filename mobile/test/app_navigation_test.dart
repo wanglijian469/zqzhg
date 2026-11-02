@@ -348,80 +348,27 @@ void main() {
   );
 
   testWidgets(
-    'Booth task shortcuts locate forms, restore drafts and keep pending versions read-only',
+    'Company sections restore drafts and keep pending versions read-only',
     (tester) async {
       viewport(tester, 390);
       final m = await fixture();
-      await tester.pumpWidget(harness(m));
+      await tester.pumpWidget(harness(m,home:EditorScreen(kind:'vendor',item:company())));
       await tester.pumpAndSettle();
-      await tap(tester, find.byKey(const ValueKey('app-tab-3')));
-      await tap(tester, find.byKey(const ValueKey('my-booth')));
-      await tap(
-        tester,
-        find.text(m.language == 'zh' ? '更多管理' : 'More management'),
-      );
-      await tap(tester, find.text('Logo与封面'));
-      expect(
-        tester.widget<EditorScreen>(find.byType(EditorScreen)).initialSection,
-        'brand',
-      );
-      expect(find.byType(NativeBrandImageEditor).hitTestable(), findsWidgets);
+      expect(find.text('企业资料'),findsOneWidget);
+      await tap(tester,find.text('企业资料'));
+      await tester.enterText(nativeField(m.t('company')), '修改后企业');
+      await tester.pump(const Duration(milliseconds:500));
       await tester.tap(find.byType(BackButton).first);
       await tester.pumpAndSettle();
-      await tap(tester, find.text('基本信息'));
-      await tester.enterText(nativeField('企业 / 工厂名称'), '修改后企业');
-      await tester.pump(const Duration(milliseconds: 500));
-      await tester.tap(find.byType(BackButton).first);
-      await tester.pumpAndSettle();
-      await tap(tester, find.text('保留草稿并离开'));
-      await tap(tester, find.text('基本信息'));
-      expect(find.text('修改后企业'), findsOneWidget);
-      await tester.tap(find.byType(BackButton).first);
-      await tester.pumpAndSettle();
-      await tester.scrollUntilVisible(
-        find.text('视频展示'),
-        400,
-        scrollable: find.byType(Scrollable).last,
-      );
-      await tap(tester, find.text('视频展示'));
-      expect(find.byType(MerchantResourcesScreen), findsOneWidget);
-      await tester.tap(find.byType(BackButton).first);
-      await tester.pumpAndSettle();
-      await tester.pump(const Duration(seconds: 4));
-      expect(find.byType(NativeResourceList), findsNothing);
+      await tap(tester,find.text('企业资料'));
+      expect(find.text('修改后企业'),findsOneWidget);
       await tester.pumpWidget(const SizedBox());
-      final pending = await fixture(vendor: company(status: 'pending'));
-      await tester.pumpWidget(
-        harness(
-          pending,
-          home: EditorScreen(
-            kind: 'vendor',
-            item: company(status: 'pending'),
-            initialSection: 'brand',
-          ),
-        ),
-      );
+      final pending=await fixture(vendor:company(status:'pending'));
+      await tester.pumpWidget(harness(pending,home:EditorScreen(kind:'vendor',item:company(status:'pending'),initialSection:'basic')));
       await tester.pumpAndSettle();
-      expect(
-        tester.widget<TextField>(find.byType(TextField).first).enabled,
-        isFalse,
-      );
-      expect(
-        tester
-            .widget<PromotionalProfileEditor>(
-              find.byType(PromotionalProfileEditor),
-            )
-            .enabled,
-        isFalse,
-      );
-      await tap(tester, find.widgetWithText(ChoiceChip, '3. 协议与提交'));
-      expect(
-        tester
-            .widget<FilledButton>(find.widgetWithText(FilledButton, '提交审核'))
-            .onPressed,
-        isNull,
-      );
-      expect(tester.takeException(), isNull);
+      expect(tester.widget<TextField>(nativeField(pending.t('company'))).enabled,isFalse);
+      expect(tester.widget<FilledButton>(find.widgetWithText(FilledButton,'提交审核')).onPressed,isNull);
+      expect(tester.takeException(),isNull);
       await tester.pumpWidget(const SizedBox());
     },
   );

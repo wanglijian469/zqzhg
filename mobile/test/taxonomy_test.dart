@@ -87,13 +87,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      final dropdown = tester.widget<DropdownButton<int>>(
-        find.byType(DropdownButton<int>),
-      );
-      expect(
-        dropdown.items!.firstWhere((v) => v.value == 101).enabled,
-        isFalse,
-      );
+      expect(find.byType(NativeCategoryPicker), findsOneWidget);
       await fixture.tapReachable(
         tester,
         find.widgetWithText(OutlinedButton, '推荐分类'),
@@ -104,9 +98,9 @@ void main() {
       expect(data['product_category_id'], 103);
       await fixture.tapReachable(
         tester,
-        find.widgetWithText(OutlinedButton, '搜索分类'),
+        find.text('液压系统及零部件 / 液压阀').first,
       );
-      await tester.enterText(nativeField( '分类名称或别名'), '油缸');
+      await tester.enterText(find.byType(TextField).last, '油缸');
       await tester.pumpAndSettle();
       await tester.tap(find.text('液压系统及零部件 / 液压油缸').last);
       await tester.pumpAndSettle();

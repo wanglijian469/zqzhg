@@ -392,6 +392,10 @@ func main() {
 		a.startHomeRotation(context.Background())
 		a.startOperations(context.Background())
 		a.startSearchWorker(context.Background())
+	} else if env("MEDIA_WORKER_ENABLED", "false") == "true" {
+		// Isolated device tests can transcode uploads without running SMS,
+		// scheduled publishing, backup or other unrelated background jobs.
+		a.startMediaWorker(context.Background())
 	}
 	srv := &http.Server{Addr: cfg.Addr, Handler: a.router(), ReadHeaderTimeout: 10 * time.Second, ReadTimeout: 15 * time.Minute, WriteTimeout: 15 * time.Minute, IdleTimeout: 60 * time.Second}
 	log.Printf("中企展馆 API listening on %s (%s)", cfg.Addr, cfg.Env)

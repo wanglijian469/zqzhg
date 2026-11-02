@@ -23,118 +23,208 @@ Future<int?> searchNativeCategories(
   BuildContext context,
   List<Json> cats,
   String kind,
-  List<int> exclude,
-) async {
-  final m = ModelScope.of(context);
-  var query = '';
-  var rootCategory = 0;
-  return Navigator.push<int>(
-    context,
-    MaterialPageRoute(
-      builder: (screen) => StatefulBuilder(
-        builder: (screen, change) => Scaffold(
-          appBar: AppBar(
-            title: Text(m.language == 'zh' ? '搜索选择分类' : 'Search categories'),
+  List<int> exclude, {
+  int? hallID,
+}) async {
+  final m = ModelScope.of(context), owner = m.scope;
+  final key = 'category-recent.${m.scope}.${hallID ?? m.activeHall.id}.$kind';
+  final recent = (m.prefs.getStringList(key) ?? [])
+      .map(int.tryParse)
+      .whereType<int>()
+      .toList();
+  var query = '', parent = 0;
+  bool selectable(Json cat) =>
+      cat['enabled'] == true &&
+      cat['selectable'] != false &&
+      !exclude.contains(cat['id']) &&
+      (kind != 'product' || !cats.any((c) => c['parent_id'] == cat['id']));
+  final result = await showModalBottomSheet<int>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    builder: (sheet) => StatefulBuilder(
+      builder: (sheet, change) {
+        Widget tile(Json cat, {bool full = false}) => ListTile(
+          title: Text(
+            full
+                ? nativeCategoryPath(cats, cat['id'], m)
+                : m.content(cat, 'name'),
           ),
-          body: SafeArea(
+          subtitle: cat['suggestion_status'] == 'pending'
+              ? Text(syncText(sheet, '待管理员规范', 'Awaiting standardization'))
+              : null,
+          trailing: cats.any((c) => c['parent_id'] == cat['id'])
+              ? const Icon(Icons.chevron_right)
+              : (selectable(cat)
+                    ? const Icon(Icons.check_circle_outline)
+                    : null),
+          onTap: () {
+            if (cats.any((c) => c['parent_id'] == cat['id'])) {
+              change(() {
+                parent = cat['id'];
+                query = '';
+              });
+            } else if (selectable(cat)) {
+              Navigator.pop(sheet, cat['id']);
+            }
+          },
+        );
+        final children = cats
+            .where((c) => (c['parent_id'] ?? 0) == parent)
+            .toList();
+        final results = cats
+            .where(
+              (c) =>
+                  (nativeCategoryPath(
+                    cats,
+                    c['id'],
+                    m,
+                  ).toLowerCase().contains(query) ||
+                  (c['search_aliases'] ?? '').toString().toLowerCase().contains(
+                    query,
+                  )),
+            )
+            .toList();
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(sheet).bottom,
+          ),
+          child: SizedBox(
+            height: MediaQuery.sizeOf(sheet).height * .8,
             child: Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16),
-                  child: NativeFieldLabel(
-                    label: m.language == 'zh'
-                        ? '分类名称或别名'
-                        : 'Category name or alias',
-                    child: TextField(
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.search),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          syncText(sheet, '选择分类', 'Choose category'),
+                          style: Theme.of(sheet).textTheme.titleLarge,
+                        ),
                       ),
-                      onChanged: (v) => change(() => query = v.toLowerCase()),
-                    ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(sheet),
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 4,
-                  ),
-                  child: NativeFieldLabel(
-                    label: m.language == 'zh' ? '一级类别' : 'Primary category',
-                    child: DropdownButtonFormField<int>(
-                      initialValue: rootCategory,
-                      isExpanded: true,
-                      items: [
-                        DropdownMenuItem(
-                          value: 0,
-                          child: Text(m.t('allCategories')),
-                        ),
-                        for (final root in cats.where(
-                          (c) =>
-                              (c['parent_id'] ?? 0) == 0 &&
-                              c['enabled'] == true,
-                        ))
-                          DropdownMenuItem(
-                            value: root['id'] as int,
-                            child: Text(
-                              m.content(root, 'name'),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                      ],
-                      onChanged: (value) =>
-                          change(() => rootCategory = value ?? 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search),
+                      hintText: syncText(
+                        sheet,
+                        '搜索名称或别名',
+                        'Search name or alias',
+                      ),
                     ),
+                    onChanged: (v) =>
+                        change(() => query = v.trim().toLowerCase()),
                   ),
                 ),
+                if (parent > 0 && query.isEmpty)
+                  ListTile(
+                    leading: const Icon(Icons.arrow_back),
+                    title: Text(nativeCategoryPath(cats, parent, m)),
+                    onTap: () => change(
+                      () => parent =
+                          cats
+                              .where((c) => c['id'] == parent)
+                              .firstOrNull?['parent_id'] ??
+                          0,
+                    ),
+                  ),
                 Expanded(
                   child: ListView(
                     children: [
-                      for (final cat in cats.where(
-                        (c) =>
-                            (rootCategory == 0 ||
-                                c['id'] == rootCategory ||
-                                c['parent_id'] == rootCategory) &&
-                            (nativeCategoryPath(
-                                  cats,
-                                  c['id'],
-                                  m,
-                                ).toLowerCase().contains(query) ||
-                                (c['search_aliases'] ?? '')
-                                    .toString()
-                                    .toLowerCase()
-                                    .contains(query)),
-                      ))
-                        ListTile(
-                          minVerticalPadding: 12,
-                          enabled:
-                              cat['enabled'] == true &&
-                              cat['selectable'] != false &&
-                              !exclude.contains(cat['id']) &&
-                              (kind != 'product' ||
-                                  !cats.any(
-                                    (c) => c['parent_id'] == cat['id'],
-                                  )),
-                          title: Text(nativeCategoryPath(cats, cat['id'], m)),
-                          onTap: () => Navigator.pop(screen, cat['id']),
-                        ),
+                      if (query.isNotEmpty)
+                        ...results.map((c) => tile(c, full: true))
+                      else ...[
+                        if (parent == 0) ...[
+                          if (recent.any(
+                            (id) =>
+                                cats.any((c) => c['id'] == id && selectable(c)),
+                          )) ...[
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Text(syncText(sheet, '最近使用', 'Recent')),
+                            ),
+                            for (final id in recent)
+                              for (final cat in cats.where(
+                                (c) => c['id'] == id && selectable(c),
+                              ))
+                                tile(cat, full: true),
+                          ],
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              syncText(sheet, '常用分类', 'Common categories'),
+                            ),
+                          ),
+                          for (final cat
+                              in cats
+                                  .where(
+                                    (c) =>
+                                        selectable(c) &&
+                                        (c['popular'] == true ||
+                                            c['is_common'] == true),
+                                  )
+                                  .take(6))
+                            tile(cat, full: true),
+                          if (!cats.any(
+                            (c) =>
+                                selectable(c) &&
+                                (c['popular'] == true ||
+                                    c['is_common'] == true),
+                          ))
+                            for (final cat in cats.where(selectable).take(4))
+                              tile(cat, full: true),
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              syncText(sheet, '按层级选择', 'Browse categories'),
+                            ),
+                          ),
+                        ],
+                        ...children.map(tile),
+                        finalClearCategoryTile(sheet),
+                      ],
                     ],
                   ),
                 ),
               ],
             ),
           ),
-        ),
-      ),
+        );
+      },
     ),
   );
+  if (result != null && result > 0 && m.scope == owner) {
+    await m.prefs.setStringList(
+      key,
+      [
+        result,
+        ...recent.where((n) => n != result),
+      ].take(8).map((n) => '$n').toList(),
+    );
+  }
+  return m.scope == owner ? result : null;
 }
+
+Widget finalClearCategoryTile(BuildContext context) => TextButton(
+  onPressed: () => Navigator.pop(context, 0),
+  child: Text(syncText(context, '暂不选择', 'Choose later')),
+);
 
 class NativeTaxonomyFields extends StatefulWidget {
   final Json data;
   final String kind;
   final int hallID;
   final bool enabled;
+  final bool detailsOnly;
   final ValueChanged<Json> onChanged;
   final Json issues;
   const NativeTaxonomyFields({
@@ -145,6 +235,7 @@ class NativeTaxonomyFields extends StatefulWidget {
     required this.enabled,
     required this.onChanged,
     this.issues = const {},
+    this.detailsOnly = false,
   });
   @override
   State<NativeTaxonomyFields> createState() => _NativeTaxonomyFieldsState();
@@ -368,13 +459,14 @@ class _NativeTaxonomyFieldsState extends State<NativeTaxonomyFields> {
             ],
           ),
         ] else ...[
-          picker(
-            'product_category_id',
-            d['product_category_id'] ?? 0,
-            zh ? '产品分类' : 'Product category',
-            (v) => set('product_category_id', v),
-            [],
-          ),
+          if (!widget.detailsOnly)
+            picker(
+              'product_category_id',
+              d['product_category_id'] ?? 0,
+              zh ? '产品分类' : 'Product category',
+              (v) => set('product_category_id', v),
+              [],
+            ),
           OutlinedButton(
             onPressed:
                 widget.enabled &&

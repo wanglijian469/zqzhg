@@ -29,6 +29,9 @@ part 'merchant_workspace.dart';
 part 'merchant_products.dart';
 part 'resources_experience.dart';
 part 'video_links.dart';
+part 'inline_video.dart';
+part 'inline_resource.dart';
+part 'merchant_form_flow.dart';
 part 'app_sync.dart';
 part 'app_navigation.dart';
 part 'favorites.dart';
@@ -1101,11 +1104,15 @@ class EditorScreen extends StatefulWidget {
   final String kind;
   final Json? item;
   final String? initialSection;
+  final Json? initialData;
+  final String? localDraftID;
   const EditorScreen({
     super.key,
     required this.kind,
     this.item,
     this.initialSection,
+    this.initialData,
+    this.localDraftID,
   });
   @override
   State<EditorScreen> createState() => _EditorScreenState();
@@ -1120,7 +1127,15 @@ class _EditorScreenState extends State<EditorScreen> {
   Timer? timer;
   String? draftKey;
   int editorHallID = 1;
+  void updateForm(VoidCallback action) => setState(action);
+  bool get safeCreationRetry =>
+      idempotencySupported &&
+      creationPayload?['client_request_id'] == clientRequestID;
   int productStep = 0;
+  String clientRequestID = '';
+  Json? creationPayload;
+  bool idempotencySupported = false;
+  final nestedFields = <String, TextEditingController>{};
   bool guestAdoptionApproved = false;
   bool operationLock = false,
       dirty = false,
@@ -1174,7 +1189,19 @@ class _EditorScreenState extends State<EditorScreen> {
     sourceEndpoint = m.baseUrl;
     current = widget.item;
     editorHallID = (current?['hall_id'] as num?)?.toInt() ?? m.activeHall.id;
-    draftKey = 'draft.${m.scope}.${widget.item?['id'] ?? widget.kind}';
+    draftKey =
+        'draft.${m.scope}.${widget.item?['id'] ?? widget.localDraftID ?? widget.kind}';
+    clientRequestID =
+        'app-${DateTime.now().microsecondsSinceEpoch}-${Random.secure().nextInt(1 << 30)}';
+    unawaited(
+      m.clientCapabilities().then((caps) {
+        if (!mounted) return;
+        setState(
+          () =>
+              idempotencySupported = caps['content_create_idempotency'] == true,
+        );
+      }, onError: (Object _, StackTrace _) {}),
+    );
     data = widget.item == null
         ? {
             'name': '',
@@ -1193,6 +1220,9 @@ class _EditorScreenState extends State<EditorScreen> {
             'media_ids': <int>[],
           }
         : asMap(widget.item!['data']);
+    if (widget.initialData != null) {
+      data = asMap(jsonDecode(jsonEncode(widget.initialData)));
+    }
     var raw = m.prefs.getString(draftKey!);
     if (widget.kind == 'vendor' && widget.item == null && m.newlyRegistered) {
       final guest = 'draft.${Uri.encodeComponent(m.baseUrl)}.guest.vendor';
@@ -1230,6 +1260,11 @@ class _EditorScreenState extends State<EditorScreen> {
           }
           productStep = (local['step'] as int? ?? 0).clamp(0, 2);
           creationUncertain = local['creation_uncertain'] == true;
+          clientRequestID =
+              local['client_request_id'] as String? ?? clientRequestID;
+          creationPayload = local['creation_payload'] is Map
+              ? asMap(local['creation_payload'])
+              : null;
           galleryOrder = List<String>.from(local['gallery_order'] ?? []);
           data = asMap(local['data']);
           photos = rows(local['photos']);
@@ -1348,6 +1383,10 @@ class _EditorScreenState extends State<EditorScreen> {
           'current': current,
           'gallery_order': galleryOrder,
           'creation_uncertain': creationUncertain,
+          'client_request_id': clientRequestID,
+          'creation_payload': creationPayload,
+          'kind': widget.kind,
+          'local_draft_id': widget.localDraftID,
         }),
       );
       await m.prefs.remove(previous);
@@ -1362,6 +1401,10 @@ class _EditorScreenState extends State<EditorScreen> {
         'current': current,
         'gallery_order': galleryOrder,
         'creation_uncertain': creationUncertain,
+        'client_request_id': clientRequestID,
+        'creation_payload': creationPayload,
+        'kind': widget.kind,
+        'local_draft_id': widget.localDraftID,
       }),
     );
     if (widget.item == null && current != null) {
@@ -1375,6 +1418,10 @@ class _EditorScreenState extends State<EditorScreen> {
           'current': current,
           'gallery_order': galleryOrder,
           'creation_uncertain': creationUncertain,
+          'client_request_id': clientRequestID,
+          'creation_payload': creationPayload,
+          'kind': widget.kind,
+          'local_draft_id': widget.localDraftID,
         }),
       );
     }
@@ -1388,6 +1435,9 @@ class _EditorScreenState extends State<EditorScreen> {
     }
     for (final node in fieldFocus.values) {
       node.dispose();
+    }
+    for (final field in nestedFields.values) {
+      field.dispose();
     }
     for (final field in fields.values) {
       field.dispose();
@@ -1557,7 +1607,9 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   Future<void> save({bool submit = false}) async {
-    if (operationLock || busy || creationUncertain) return;
+    if (operationLock || busy || (creationUncertain && !safeCreationRetry)) {
+      return;
+    }
     operationLock = true;
     try {
       await saveInternal(submit: submit);
@@ -1594,6 +1646,23 @@ class _EditorScreenState extends State<EditorScreen> {
           .map((p) => p['slot'].toString())
           .toSet(),
     );
+    if (widget.kind == 'product' && !submit) {
+      errors.removeWhere(
+        (key, issue) => key != 'name' && issue['code'] == 'required',
+      );
+    }
+    if (widget.kind == 'product' && submit) {
+      final categoryField = editorHallID == 1 ? 'product_category_id' : 'category_id';
+      if ((data[categoryField] ?? 0) == 0) {
+        errors[categoryField] = {
+          'field': categoryField,
+          'code': 'required',
+        };
+      }
+      if (galleryEntries().isEmpty) {
+        errors['media_ids'] = {'field': 'media_ids', 'code': 'required'};
+      }
+    }
     setState(() => issues = errors);
     if (errors.isNotEmpty) {
       revealIssues();
@@ -1689,8 +1758,36 @@ class _EditorScreenState extends State<EditorScreen> {
           return;
         }
       }
+      if (creationUncertain &&
+          creationPayload != null &&
+          idempotencySupported) {
+        final recovered = asMap(
+          await m.api(
+            '/merchant/contents',
+            method: 'POST',
+            data: creationPayload,
+          ),
+        );
+        current = recovered;
+        creationUncertain = false;
+        creationPayload = null;
+        await persist();
+      }
       await uploadPendingPhotos();
       if (!mounted || retired) return;
+      if (current == null) {
+        creationPayload = asMap(
+          jsonDecode(
+            jsonEncode({
+              'kind': widget.kind,
+              'hall_id': editorHallID,
+              'data': data,
+              if (idempotencySupported) 'client_request_id': clientRequestID,
+            }),
+          ),
+        );
+        await persist();
+      }
       final saved = asMap(
         await m.api(
           current == null
@@ -1698,7 +1795,7 @@ class _EditorScreenState extends State<EditorScreen> {
               : '/merchant/contents/${current!['id']}/draft',
           method: current == null ? 'POST' : 'PUT',
           data: current == null
-              ? {'kind': widget.kind, 'hall_id': editorHallID, 'data': data}
+              ? creationPayload
               : {'revision_id': current!['revision_id'], 'data': data},
         ),
       );
@@ -1710,6 +1807,8 @@ class _EditorScreenState extends State<EditorScreen> {
         if (position >= 0) galleryOrder[position] = 'm:${nextIDs[i]}';
       }
       current = saved;
+      creationUncertain = false;
+      creationPayload = null;
       data = normalized;
       final oldKey = draftKey;
       draftKey = 'draft.${m.scope}.${saved['id']}';
@@ -1741,7 +1840,7 @@ class _EditorScreenState extends State<EditorScreen> {
         if (submit && widget.kind == 'vendor') {
           returnToMerchant(context);
         } else if (submit) {
-          Navigator.pop(context, true);
+          await productSubmitted();
         }
       }
     } catch (e) {
@@ -1895,9 +1994,16 @@ class _EditorScreenState extends State<EditorScreen> {
       ].contains(key)) {
         expandedSections.add('more');
       }
-      productStep = key == 'media_ids' || key.startsWith('company_profile')
-          ? 1
-          : 0;
+      productStep = widget.kind == 'product'
+          ? ([
+                  'name',
+                  'product_category_id',
+                  'category_id',
+                  'media_ids',
+                ].contains(key)
+                ? 0
+                : 1)
+          : (key.startsWith('company_profile') ? 1 : 0);
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -1947,9 +2053,8 @@ class _EditorScreenState extends State<EditorScreen> {
               color: Color(0xff9aa8b8),
               fontStyle: FontStyle.italic,
             ),
-            helperText: node.hasFocus || limit != null && count > limit * .85
-                ? '$count / ${limit ?? '—'} ${rule['unit'] == 'bytes' ? (m.language == 'zh' ? '字节' : 'bytes') : (m.language == 'zh' ? '字' : 'characters')}'
-                : null,
+            helperText:
+                '${value.runes.length} ${m.language == 'zh' ? '字' : 'characters'}${rule['unit'] == 'bytes' ? ' · $count / ${limit ?? '—'} ${m.language == 'zh' ? '字节' : 'bytes'}' : ' / ${limit ?? '—'}'}',
             errorText: issues[key] == null
                 ? null
                 : fieldIssueText(m, issues[key]!),
@@ -2079,132 +2184,7 @@ class _EditorScreenState extends State<EditorScreen> {
     }
   }
 
-  Widget gallery() {
-    final m = ModelScope.of(context),
-        enabled = !busy && current?['status'] != 'pending',
-        entries = galleryEntries();
-    return Column(
-      key: sectionKeys['gallery'],
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          syncText(context, '产品／企业图片', 'Product / company images'),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        Text(
-          syncText(
-            context,
-            '最多12张，首张为封面；保存时上传，失败保留并可重试。',
-            'Up to 12 images. First is the cover. Save uploads pending images; failures remain available to retry.',
-          ),
-        ),
-        space(),
-        for (var i = 0; i < entries.length; i++)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (entries[i]['id'] != null)
-                    Photo(
-                      id: entries[i]['id'],
-                      height: 150,
-                      fit: BoxFit.contain,
-                    )
-                  else
-                    Image.file(
-                      File(entries[i]['path']),
-                      height: 150,
-                      fit: BoxFit.contain,
-                      errorBuilder: (_, _, _) => Text(m.t('photoRetry')),
-                    ),
-                  Text(i == 0 ? syncText(context, '封面', 'Cover') : '${i + 1}'),
-                  if (entries[i]['id'] == null)
-                    Text(
-                      entries[i]['error'] != null
-                          ? syncText(
-                              context,
-                              '上传失败，文件已保留',
-                              'Upload failed; file retained',
-                            )
-                          : syncText(context, '待上传', 'Pending upload'),
-                    ),
-                  Wrap(
-                    spacing: 4,
-                    children: [
-                      IconButton(
-                        tooltip: syncText(context, '前移', 'Move earlier'),
-                        onPressed: enabled && i > 0
-                            ? () => moveImage(entries[i], -1)
-                            : null,
-                        icon: const Icon(Icons.arrow_upward),
-                      ),
-                      IconButton(
-                        tooltip: syncText(context, '后移', 'Move later'),
-                        onPressed: enabled && i < entries.length - 1
-                            ? () => moveImage(entries[i], 1)
-                            : null,
-                        icon: const Icon(Icons.arrow_downward),
-                      ),
-                      TextButton(
-                        onPressed: enabled && i > 0
-                            ? () {
-                                setState(() {
-                                  galleryOrder.remove(entries[i]['key']);
-                                  galleryOrder.insert(0, entries[i]['key']);
-                                  galleryChanged();
-                                });
-                              }
-                            : null,
-                        child: Text(syncText(context, '设为封面', 'Set cover')),
-                      ),
-                      TextButton(
-                        onPressed: enabled
-                            ? () => replaceImage(entries[i])
-                            : null,
-                        child: Text(syncText(context, '替换', 'Replace')),
-                      ),
-                      IconButton(
-                        tooltip: m.t('remove'),
-                        onPressed: enabled
-                            ? () => removeImage(entries[i])
-                            : null,
-                        icon: const Icon(Icons.close),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        if (busy)
-          LinearProgressIndicator(
-            value: brandProgress > 0 ? brandProgress / 100 : null,
-          ),
-        Wrap(
-          spacing: 8,
-          children: [
-            OutlinedButton.icon(
-              onPressed: enabled ? () => pick(ImageSource.camera) : null,
-              icon: const Icon(Icons.camera_alt_outlined),
-              label: Text(m.t('camera')),
-            ),
-            OutlinedButton.icon(
-              onPressed: enabled ? () => pick(ImageSource.gallery) : null,
-              icon: const Icon(Icons.photo_library_outlined),
-              label: Text(m.t('album')),
-            ),
-            if (photos.any((p) => p['id'] == null && p['slot'] == null))
-              TextButton(
-                onPressed: enabled ? retryGallery : null,
-                child: Text(m.t('retry')),
-              ),
-          ],
-        ),
-      ],
-    );
-  }
+  Widget gallery() => compactGallery();
 
   Widget companyExtras() {
     final pending = current?['status'] == 'pending';
@@ -2293,33 +2273,45 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   Widget productBasics() {
-    final m = ModelScope.of(context), pending = current?['status'] == 'pending';
+    final categoryField = editorHallID == 1 ? 'product_category_id' : 'category_id';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         field(context, 'name', 'productName'),
-        NativeProductQuality(data: data),
-        Text(
-          syncText(
-            context,
-            '草稿可先填名称；新产品提交审核时须选择产品分类。',
-            'Drafts may start with a name. New products require a category when submitted.',
-          ),
+        NativeCategoryPicker(
+          value: data[categoryField] ?? 0,
+          kind: 'product',
+          hallID: editorHallID,
+          enabled: !busy && current?['status'] != 'pending',
+          issue: issues[categoryField],
+          onChanged: (id) {
+            setState(() {
+              data[categoryField] = id;
+              issues.remove(categoryField);
+            });
+            scheduleSave();
+          },
         ),
         space(),
+        gallery(),
+      ],
+    );
+  }
+
+  Widget productDetails() {
+    final m = ModelScope.of(context), pending = current?['status'] == 'pending';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
         NativeTaxonomyFields(
           kind: 'product',
           hallID: editorHallID,
           data: data,
+          detailsOnly: true,
           enabled: !busy && !pending,
           issues: issues,
           onChanged: (patch) {
-            setState(() {
-              data = {...data, ...patch};
-              for (final key in patch.keys) {
-                issues.remove(key);
-              }
-            });
+            setState(() => data = {...data, ...patch});
             scheduleSave();
           },
         ),
@@ -2431,6 +2423,8 @@ class _EditorScreenState extends State<EditorScreen> {
             multiline: true,
           ),
         ]),
+        space(12),
+        productVideos(),
       ],
     );
   }
@@ -2478,9 +2472,11 @@ class _EditorScreenState extends State<EditorScreen> {
             scheduleSave();
           },
         ),
-        field(context, 'phone', 'phone'),
-        field(context, 'wechat', 'wechat'),
-        Text(m.t('contactRequired')),
+        if (widget.item == null) ...[
+          field(context, 'phone', 'phone'),
+          field(context, 'wechat', 'wechat'),
+          Text(m.t('contactRequired')),
+        ],
         space(),
         field(context, 'description', 'about', multiline: true),
         group('reference', '介绍参考与建议', 'Introduction references and suggestions', [
@@ -2601,303 +2597,30 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   Widget previewBody() {
-    final m = ModelScope.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          fields['name']!.text,
-          style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-        ),
-        if (m.merchantVendorName.isNotEmpty)
-          Text('${m.t('vendor')}: ${m.merchantVendorName}'),
-        for (final item in galleryEntries().take(1))
-          if (item['id'] != null)
-            Photo(id: item['id'], height: 180, fit: BoxFit.contain)
-          else
-            Image.file(
-              File(item['path']),
-              height: 180,
-              fit: BoxFit.contain,
-              errorBuilder: (_, _, _) => const SizedBox(),
-            ),
-        Text(fields['description']!.text),
-        Text(fields['parameters']!.text),
-        Text(m.t('submitNotice')),
-        if (current != null)
-          group(
-            'resources',
-            widget.kind == 'product' ? '画册管理' : '视频与画册管理',
-            widget.kind == 'product' ? 'Catalogues' : 'Videos and catalogues',
-            [
-              if (widget.kind != 'product')
-                NativeResourceList(
-                  kind: 'video',
-                  productID: current!['id'],
-                  management: true,
-                ),
-              NativeResourceList(
-                kind: 'catalog',
-                productID: current!['id'],
-                management: true,
-              ),
-            ],
+        if (widget.kind == 'product') ...[
+          if (ModelScope.of(context).merchantVendorName.isNotEmpty)
+            Text(ModelScope.of(context).merchantVendorName),
+          dataDetails(
+            context,
+            data,
+            'product',
+            localPhotos: photos
+                .where((p) => p['slot'] == null && p['id'] == null)
+                .toList(),
           ),
+          NativeProductQuality(data: data),
+        ] else
+          CompanyPortalBody(data: data, localPhotos: photos),
+        Text(ModelScope.of(context).t('submitNotice')),
       ],
     );
   }
 
   @override
-  Widget build(BuildContext context) {
-    final m = ModelScope.of(context),
-        product = widget.kind == 'product',
-        pending = current?['status'] == 'pending';
-    return PopScope(
-      canPop: !dirty || leaving,
-      onPopInvokedWithResult: (didPop, _) async {
-        if (didPop) return;
-        final leave = await showDialog<bool>(
-          context: context,
-          builder: (c) => AlertDialog(
-            title: Text(syncText(c, '离开编辑？', 'Leave the editor?')),
-            content: Text(
-              syncText(
-                c,
-                '未同步的文字和图片会保留为本机草稿。',
-                'Unsynced text and images are retained in the local draft.',
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(c, false),
-                child: Text(m.t('cancel')),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.pop(c, true),
-                child: Text(syncText(c, '保留草稿并离开', 'Keep draft and leave')),
-              ),
-            ],
-          ),
-        );
-        if (leave == true && mounted) {
-          await persist();
-          if (!mounted) return;
-          setState(() => leaving = true);
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) Navigator.pop(context);
-          });
-        }
-      },
-      child: Theme(
-        data: merchantTheme(context),
-        child: Scaffold(
-          appBar: appBar(
-            context,
-            product
-                ? syncText(
-                    context,
-                    current == null ? '发布产品' : '编辑产品',
-                    current == null ? 'Publish product' : 'Edit product',
-                  )
-                : m.t('myBooth'),
-          ),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 840),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (!product) const NativeJoinGuide(),
-                      Wrap(
-                        spacing: 8,
-                        children: [
-                          for (var i = 0; i < 3; i++)
-                            ChoiceChip(
-                              label: Text(
-                                '${i + 1}. ${m.language == 'zh' ? (product ? ['基础信息', '图片与展示资料', '预览并提交'] : ['基本资料', '展示资料', '协议与提交'])[i] : (product ? ['Basics', 'Images', 'Preview & submit'] : ['Basics', 'Presentation', 'Agreements & submit'])[i]}',
-                              ),
-                              selected: productStep == i,
-                              onSelected: busy
-                                  ? null
-                                  : (_) {
-                                      setState(() => productStep = i);
-                                      scheduleSave();
-                                    },
-                            ),
-                        ],
-                      ),
-                      space(),
-                      if (current != null)
-                        Text(
-                          '${m.t(current!['status'])}${(current!['review_note'] ?? '').toString().isEmpty ? '' : ' · ${current!['review_note']}'}',
-                        ),
-                      if (issues.isNotEmpty)
-                        UpgradeNotice(
-                          syncText(
-                            context,
-                            '请修改以下项目，填写内容已保留',
-                            'Correct these fields; input retained.',
-                          ),
-                        ),
-                      if (issues.isNotEmpty)
-                        Wrap(
-                          children: [
-                            for (final issue in issues.entries)
-                              TextButton(
-                                onPressed: () {
-                                  setState(
-                                    () => issues = {
-                                      issue.key: issue.value,
-                                      ...issues,
-                                    },
-                                  );
-                                  revealIssues();
-                                },
-                                child: Text(
-                                  '${formRules[issue.key]?[m.language] ?? issue.key}: ${fieldIssueText(m, issue.value)}',
-                                ),
-                              ),
-                          ],
-                        ),
-                      if (!product &&
-                          current == null &&
-                          !m.newlyRegistered &&
-                          m.prefs.containsKey(
-                            'draft.${Uri.encodeComponent(m.baseUrl)}.guest.vendor',
-                          ) &&
-                          guestDraftKey == null)
-                        TextButton(
-                          onPressed: busy ? null : useGuestDraft,
-                          child: Text(
-                            syncText(
-                              context,
-                              '使用本机访客草稿',
-                              'Use a guest draft from this device',
-                            ),
-                          ),
-                        ),
-                      if (creationUncertain)
-                        UpgradeNotice(
-                          syncText(
-                            context,
-                            '上次首次保存结果不明确。请先到工作台核对，未自动重复创建。',
-                            'The initial save could not be confirmed. Check the workspace before creating again; no automatic retry was sent.',
-                          ),
-                        ),
-                      if (!product)
-                        (productStep == 0
-                            ? companyBasics()
-                            : productStep == 1
-                            ? Column(children: [companyExtras(), gallery()])
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  previewBody(),
-                                  const NativePublicationAgreements(),
-                                  Text(
-                                    syncText(
-                                      context,
-                                      '确认协议并提交资料，审核通过后公开；保存草稿不会公开。',
-                                      'Accept the agreements and submit for review. Drafts stay private.',
-                                    ),
-                                  ),
-                                ],
-                              ))
-                      else if (productStep == 0)
-                        productBasics()
-                      else if (productStep == 1)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [gallery(), space(16), productVideos()],
-                        )
-                      else
-                        previewBody(),
-                      space(18),
-                      Text(
-                        m.t('localSavedHint'),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      Text(
-                        m.t('submitNotice'),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      space(),
-                      Wrap(
-                        spacing: 12,
-                        children: [
-                          if (productStep > 0)
-                            OutlinedButton(
-                              onPressed: busy
-                                  ? null
-                                  : () {
-                                      setState(() => productStep--);
-                                      scheduleSave();
-                                    },
-                              child: Text(m.t('previous')),
-                            ),
-                          if (productStep < 2)
-                            FilledButton(
-                              onPressed: busy
-                                  ? null
-                                  : () {
-                                      setState(() => productStep++);
-                                      scheduleSave();
-                                    },
-                              child: Text(m.t('next')),
-                            ),
-                        ],
-                      ),
-                      if (!product)
-                        OutlinedButton(
-                          onPressed: () {
-                            unawaited(persist());
-                            push(
-                              context,
-                              PreviewScreen(
-                                data: Map<String, dynamic>.from(data),
-                                kind: widget.kind,
-                                photos: List<Json>.from(photos),
-                              ),
-                            );
-                          },
-                          child: Text(m.t('preview')),
-                        ),
-                      space(),
-                      OutlinedButton(
-                        onPressed: busy || pending || creationUncertain
-                            ? null
-                            : () => save(),
-                        child: Text(m.t(busy ? 'loading' : 'saveCloud')),
-                      ),
-                      space(),
-                      if (productStep == 2)
-                        FilledButton(
-                          onPressed: busy || pending || creationUncertain
-                              ? null
-                              : () => save(submit: true),
-                          child: Text(m.t(busy ? 'loading' : 'submit')),
-                        ),
-                      if (creationUncertain)
-                        TextButton(
-                          onPressed: () => returnToMerchant(context),
-                          child: Text(
-                            syncText(context, '到工作台核对', 'Check the workspace'),
-                          ),
-                        ),
-                      space(24),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => buildFormFlow();
 }
 
 class PreviewScreen extends StatelessWidget {

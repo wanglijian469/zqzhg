@@ -379,7 +379,7 @@ class FavoriteButton extends StatelessWidget {
         key: ValueKey('favorite-$kind-${item['id']}'),
         tooltip: m.t(selected ? 'favorited' : 'favorite'),
         isSelected: selected,
-        color: selected ? industrialBlue : const Color(0xff66768a),
+        color: selected ? industrialBlue : industrialMuted,
         icon: Icon(selected ? Icons.star_rounded : Icons.star_border_rounded),
         onPressed: () async {
           try {

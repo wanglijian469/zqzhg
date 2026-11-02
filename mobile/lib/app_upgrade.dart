@@ -400,7 +400,7 @@ class NativePublicResourceCard extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => push(context, NativeResourceViewer(item: item)),
+        onTap: () => openNativeResource(context, item),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -413,7 +413,9 @@ class NativePublicResourceCard extends StatelessWidget {
                     aspectRatio: 16 / 9,
                     child: Center(
                       child: Icon(
-                        isDouyinVideo(item) ? Icons.video_library : Icons.menu_book_outlined,
+                        isDouyinVideo(item)
+                            ? Icons.video_library
+                            : Icons.menu_book_outlined,
                         size: 44,
                       ),
                     ),
@@ -434,7 +436,7 @@ class NativePublicResourceCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (video && d['video_source']=='DOUYIN')
+                  if (video && d['video_source'] == 'DOUYIN')
                     const Text('来源：抖音'),
                   Text(
                     resourceTitle(m, item),

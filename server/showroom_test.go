@@ -18,6 +18,7 @@ func TestShowroomProfileAndPublication(t *testing.T) {
 	admin := tc.call("POST", "/auth/admin", "", gin.H{"username": "admin", "password": "Import-Test-Admin-2026!"}, 200)["token"].(string)
 	merchant := tc.login("13900009101")
 	other := tc.login("13900009102")
+	tc.call("POST", "/merchant/service-acceptances", merchant, gin.H{"agreements": serviceTestRefs(t, a, "terms", "privacy", "showroom-agreement")}, 200)
 	d := Payload{Name: "展台测试厂家（仅测试）", MainProducts: "型号 TEST", Phone: "13900009101", RegionName: "测试地区", CompanyProfile: &CompanyProfile{ShortName: "展台测试", Summary: "旧公开简介", Website: "https://example.com", Contacts: []CompanyContact{{Area: "测试区域", Name: "业务员", Phone: "13900009101"}}}}
 	vendor := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": d}, 201)
 	vid := number(vendor["id"])

@@ -331,29 +331,47 @@ class NativeVendorCard extends StatelessWidget {
             OutlinedButton(
               key: ValueKey('contact-vendor-${item['id']}'),
               onPressed: () => open(4),
-              child: Text(m.t('contact'), maxLines: 1),
+              style: OutlinedButton.styleFrom(
+                backgroundColor: industrialBlueSoft,
+                foregroundColor: industrialBlue,
+                side: BorderSide.none,
+              ),
+              child: Text(
+                syncText(context, '联系厂家', 'Contact manufacturer'),
+                maxLines: 1,
+              ),
             ),
         ];
         final style = ButtonStyle(
-          minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
+          minimumSize: const WidgetStatePropertyAll(
+            Size(44, industrialActionHeight),
+          ),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: VisualDensity.standard,
+          shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(industrialControlRadius),
+            ),
+          ),
           padding: const WidgetStatePropertyAll(
-            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           ),
           textStyle: WidgetStatePropertyAll(
             TextStyle(
               fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
               fontSize: 13,
+              height: 1.2,
               fontWeight: FontWeight.w600,
             ),
           ),
         );
         return FilledButtonTheme(
           data: FilledButtonThemeData(
-            style: Theme.of(context).filledButtonTheme.style?.merge(style),
+            style: style.merge(Theme.of(context).filledButtonTheme.style),
           ),
           child: OutlinedButtonTheme(
             data: OutlinedButtonThemeData(
-              style: Theme.of(context).outlinedButtonTheme.style?.merge(style),
+              style: style.merge(Theme.of(context).outlinedButtonTheme.style),
             ),
             child: vertical
                 ? Column(
@@ -376,7 +394,7 @@ class NativeVendorCard extends StatelessWidget {
       },
     );
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -386,8 +404,8 @@ class NativeVendorCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 88,
-                  height: 88,
+                  width: 80,
+                  height: 80,
                   child: InkWell(
                     onTap: open,
                     borderRadius: BorderRadius.circular(10),
@@ -432,8 +450,8 @@ class NativeVendorCard extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: 48,
-                            height: 48,
+                            width: industrialActionHeight,
+                            height: industrialActionHeight,
                             child: FavoriteButton(
                               item: {...item, 'kind': 'vendor'},
                               iconOnly: true,
@@ -452,7 +470,7 @@ class NativeVendorCard extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 13,
                             height: 1.4,
-                            color: Color(0xff66768a),
+                            color: industrialMuted,
                           ),
                         ),
                       if ((data['region_name'] ?? '')
@@ -472,7 +490,7 @@ class NativeVendorCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             actions(),
           ],
         ),

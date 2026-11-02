@@ -177,7 +177,7 @@ func TestFreeDisplayVerificationAgreementsAndPublication(t *testing.T) {
 	tc := testClient{t, a.router()}
 	company := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "vendor", "data": Payload{Name: "简化入驻验收企业", MainProducts: "耕整地机械", RegionName: "河北省 邢台市 宁晋县", Phone: "0319-1234567"}}, 201)
 	vid, rid := number(company["id"]), company["revision_id"]
-	product := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "vendor_id": company["id"], "data": Payload{Name: "简化入驻验收产品"}}, 201)
+	product := tc.fixtureCall("POST", "/merchant/contents", merchant, gin.H{"kind": "product", "vendor_id": company["id"], "data": Payload{Name: "简化入驻验收产品", MediaIDs: []uint64{appFlowProductImage(t, a, merchant)}}}, 201)
 	pid, prid := number(product["id"]), product["revision_id"]
 	for _, prefix := range []string{"merchant", "admin"} {
 		tok := merchant
