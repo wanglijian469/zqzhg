@@ -1,0 +1,21 @@
+{
+  "url": "https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.7",
+  "tag": "v1.10.7",
+  "commit": "57d551ece7c02bf983f98be230e36a824023170b",
+  "draft": false,
+  "assets": [
+    {
+      "name": "manifest-v1.10.7.json",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.7/manifest-v1.10.7.json",
+      "size": 8773,
+      "digest": "sha256:11e1cf1bb9f813c42eb200004a41bbd89fdd877f5746884879acb031a12c86e7"
+    },
+    {
+      "name": "SHA256SUMS-v1.10.7.txt",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.7/SHA256SUMS-v1.10.7.txt",
+      "size": 367,
+      "digest": "sha256:9f12885b424c32010ffc33972b50648c345e76fb88622c3bcaad2f20e0e6f355"
+    }
+  ],
+  "largeBinaryAssetsUploaded": false
+}

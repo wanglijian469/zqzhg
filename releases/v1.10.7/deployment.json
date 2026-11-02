@@ -1,0 +1,265 @@
+{
+  "apply": {
+    "promoted": true,
+    "version": "1.10.7",
+    "android": "1.10.7+45",
+    "schema": 29,
+    "protectedConfigurationsUnchanged": true,
+    "restartHealthSeconds": 1.197
+  },
+  "server": {
+    "passed": true,
+    "current": "/opt/zqzt/releases/v1.10.7-57d551e",
+    "backup": "/opt/zqzt/shared/upgrade-backups/guide-1.10.7-20261102-092418",
+    "protectedFilesUnchanged": 33,
+    "environmentChangedOnlyWebMapAndDouyinFlag": true,
+    "schema": "29",
+    "businessCountsBefore": "15\t57\t66\t180",
+    "businessCountsAfter": "15\t57\t66\t180",
+    "originalMediaFilesUnchanged": 251,
+    "services": {
+      "nginx": "MainPID=264371\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+      "mysqld": "MainPID=78971\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+      "zqzt-exhibition": "MainPID=729497\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+      "qiyuan-gosyncr": "MainPID=3309830\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+      "gosync-server": "MainPID=1098592\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+      "dalu-parts": "MainPID=0\nActiveState=inactive\nSubState=dead\nUnitFileState=disabled\n",
+      "zqzhg-cert-renew.timer": "ActiveState=active\nSubState=waiting\nUnitFileState=enabled\n"
+    },
+    "nginxTest": true,
+    "mapReadableByService": true,
+    "apkSHA256": "e162dba0077a19c564fd9710354cfe43b18719ccb7d7b942245e09c147f82254"
+  },
+  "public": {
+    "origin": "https://zqzhg.com",
+    "routes": [
+      {
+        "path": "/guide",
+        "status": 200
+      },
+      {
+        "path": "/join",
+        "status": 200
+      },
+      {
+        "path": "/merchant/login",
+        "status": 200
+      },
+      {
+        "path": "/services",
+        "status": 200
+      },
+      {
+        "path": "/service-requests",
+        "status": 200
+      },
+      {
+        "path": "/app",
+        "status": 200
+      },
+      {
+        "path": "/admin",
+        "status": 200
+      },
+      {
+        "path": "/sitemaps/pages.xml",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/health",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/public/config",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/public/app",
+        "status": 200
+      }
+    ],
+    "assets": [
+      {
+        "path": "/assets/index-BEp0LHrr.js",
+        "status": 200,
+        "packageHashMatches": true
+      },
+      {
+        "path": "/assets/index-CEF3dbQE.css",
+        "status": 200,
+        "packageHashMatches": true
+      }
+    ],
+    "otherApplications": [
+      {
+        "host": "gosyncr.com",
+        "status": 200,
+        "trustedTLS": true,
+        "sha256": "e438a1fd3206fab807b74d03d27272d419205833da818bed58296e766c86ff84"
+      },
+      {
+        "host": "www.gosyncr.com",
+        "status": 200,
+        "trustedTLS": true,
+        "sha256": "e438a1fd3206fab807b74d03d27272d419205833da818bed58296e766c86ff84"
+      }
+    ],
+    "writes": 0,
+    "guideImagesVerified": 9,
+    "certificates": [
+      {
+        "host": "zqzhg.com",
+        "trusted": true,
+        "notAfter": "Jan 28 02:36:08 2027 GMT"
+      },
+      {
+        "host": "www.zqzhg.com",
+        "trusted": true,
+        "notAfter": "Jan 28 02:36:08 2027 GMT"
+      }
+    ],
+    "ipHTTP": 404,
+    "ipHTTPS": "handshake-rejected",
+    "adminWithoutLogin": 401,
+    "unknownGuideRoute": 404,
+    "passed": true,
+    "fullAPKDownloadSHA256": "e162dba0077a19c564fd9710354cfe43b18719ccb7d7b942245e09c147f82254"
+  },
+  "ui": [
+    {
+      "name": "overview-1440",
+      "passed": true
+    },
+    {
+      "name": "list-fits-1440",
+      "passed": true
+    },
+    {
+      "name": "overview-1199",
+      "passed": true
+    },
+    {
+      "name": "list-fits-1199",
+      "passed": true
+    },
+    {
+      "name": "overview-768",
+      "passed": true
+    },
+    {
+      "name": "list-fits-768",
+      "passed": true
+    },
+    {
+      "name": "overview-390",
+      "passed": true
+    },
+    {
+      "name": "list-fits-390",
+      "passed": true
+    },
+    {
+      "name": "overview-360",
+      "passed": true
+    },
+    {
+      "name": "list-fits-360",
+      "passed": true
+    },
+    {
+      "name": "no-vendor-return-row",
+      "passed": true
+    },
+    {
+      "name": "independent-footer",
+      "passed": true
+    },
+    {
+      "name": "domestic-six-1440",
+      "passed": true
+    },
+    {
+      "name": "canonical-copy-1440",
+      "passed": true
+    },
+    {
+      "name": "no-system-share-1440",
+      "passed": true
+    },
+    {
+      "name": "qr-and-poster-1440",
+      "passed": true
+    },
+    {
+      "name": "domestic-six-390",
+      "passed": true
+    },
+    {
+      "name": "canonical-copy-390",
+      "passed": true
+    },
+    {
+      "name": "no-system-share-390",
+      "passed": true
+    },
+    {
+      "name": "qr-and-poster-390",
+      "passed": true
+    },
+    {
+      "name": "separate-product-sections",
+      "passed": true
+    },
+    {
+      "name": "footer-preserved",
+      "passed": true
+    },
+    {
+      "name": "no-footer-gap",
+      "passed": true
+    },
+    {
+      "name": "no-page-errors",
+      "passed": true
+    }
+  ],
+  "candidate": {
+    "candidateVerified": true,
+    "productionConfiguration": true,
+    "serviceUser": "zqzt",
+    "separateNginxProxy": true,
+    "isolatedRestoreVerified": true,
+    "checks": [
+      "/guide",
+      "/join",
+      "/merchant/login",
+      "/service-requests",
+      "/api/v1/health",
+      "/api/v1/public/home",
+      "/sitemaps/pages.xml",
+      "/guide-images/company-agreements.png"
+    ],
+    "map": [
+      {
+        "code": "",
+        "total": 11,
+        "sha256": "352c09e7064756c7c6a505c30dd3e7560b13a4edf87883a65fc3d008a3152802"
+      },
+      {
+        "code": "13",
+        "total": 10,
+        "sha256": "bd1daff0ea4d7253b6ce77784bf7f9669ad6e5a19d0815eb89d696e8db9b34ea"
+      },
+      {
+        "code": "1305",
+        "total": 8,
+        "sha256": "cd6acc3f9b1319610f28c83b88b8f79952b9b5242bfc34a47a10871e2247d8ba"
+      },
+      {
+        "code": "130528",
+        "total": 8,
+        "sha256": "f09314a4d4a0bc4ee436e982f282ef6ea59572c742fc01b7d1833d0634f51251"
+      }
+    ]
+  }
+}

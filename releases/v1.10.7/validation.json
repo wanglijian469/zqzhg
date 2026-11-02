@@ -3,8 +3,14 @@
   "androidRelatedTests": 12,
   "androidAnalyze": "passed",
   "backendVideoRegression": "passed",
-  "mapReturnRegression": "passed",
+  "mapReturnRegression": "passed on production",
   "androidDevicePlayback": false,
   "previousKnownFailures": "See docs/PRODUCT_VIDEO_DOMESTIC_SHARE_2026-11-02.md; historical test failures are not claimed fixed",
-  "deployed": false
+  "deployed": true,
+  "websiteMapVerified": true,
+  "apkEmbeddedMapVerified": true,
+  "publicDownloadHashVerified": true,
+  "githubPublished": true,
+  "githubLargeBinaryAttachments": false,
+  "productionUIChecks": 24
 }
