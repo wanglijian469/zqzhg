@@ -54,6 +54,12 @@ def main():
     downloads = STAGE / 'web/dist/downloads'; downloads.mkdir()
     shutil.copy2(apk, downloads / 'dalunongji.apk')
     (downloads / 'manifest.json').write_text(json.dumps(android, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    candidate = json.loads((ROOT / 'releases/v1.10.8/android-candidate.json').read_text(encoding='utf-8'))
+    candidate_apk = ROOT / 'delivery' / candidate['asset']
+    assert sha(candidate_apk) == candidate['sha256']
+    candidate_dir = downloads / 'candidates'; candidate_dir.mkdir()
+    shutil.copy2(candidate_apk, candidate_dir / candidate['asset'])
+    (candidate_dir / 'manifest.json').write_text(json.dumps(candidate, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     shutil.copytree(ROOT / '.local/map-preview', STAGE / 'map-demo')
     maps = inventory(STAGE / 'map-demo')
     assert len(maps) == 77
@@ -90,7 +96,7 @@ def main():
         forbidden = [n for n in archive.namelist() if '/.local/' in n or n.endswith(('.jks', '.keystore', '/key.properties', '/local.properties', '/.env', '/39.97.250.244.txt'))]
         assert not forbidden, 'private file in source archive'
     public_manifest = OUT / 'manifest-v1.10.8.json'; shutil.copy2(STAGE / 'manifest.json', public_manifest)
-    assets = [linux, source, apk, public_manifest]
+    assets = [linux, source, candidate_apk, public_manifest]
     sums = OUT / 'SHA256SUMS-v1.10.8.txt'
     sums.write_bytes(''.join(sha(p) + '  ' + p.name + '\n' for p in assets).encode())
     assets.append(sums)

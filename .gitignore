@@ -60,3 +60,6 @@ __pycache__/
 /docs/SEARCH_ENGINES_20261031.md
 /docs/screenshots/search-engines-20261031/
 /docs/test-output/search-*-20261031.json
+
+# Kotlin compiler session cache is generated during APK builds.
+/mobile/android/.kotlin/
