@@ -1,0 +1,98 @@
+{
+  "origin": "https://zqzhg.com",
+  "routes": [
+    {
+      "path": "/guide",
+      "status": 200
+    },
+    {
+      "path": "/join",
+      "status": 200
+    },
+    {
+      "path": "/merchant/login",
+      "status": 200
+    },
+    {
+      "path": "/services",
+      "status": 200
+    },
+    {
+      "path": "/service-requests",
+      "status": 200
+    },
+    {
+      "path": "/app",
+      "status": 200
+    },
+    {
+      "path": "/admin",
+      "status": 200
+    },
+    {
+      "path": "/sitemaps/pages.xml",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/health",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/public/config",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/public/app",
+      "status": 200
+    }
+  ],
+  "assets": [
+    {
+      "path": "/assets/index-95gA0tZe.js",
+      "status": 200,
+      "packageHashMatches": true
+    },
+    {
+      "path": "/assets/index-C7p7HWw3.css",
+      "status": 200,
+      "packageHashMatches": true
+    }
+  ],
+  "otherApplications": [
+    {
+      "host": "gosyncr.com",
+      "status": 200,
+      "trustedTLS": true,
+      "sha256": "e438a1fd3206fab807b74d03d27272d419205833da818bed58296e766c86ff84"
+    },
+    {
+      "host": "www.gosyncr.com",
+      "status": 200,
+      "trustedTLS": true,
+      "sha256": "e438a1fd3206fab807b74d03d27272d419205833da818bed58296e766c86ff84"
+    }
+  ],
+  "writes": 0,
+  "guideImagesVerified": 9,
+  "certificates": [
+    {
+      "host": "zqzhg.com",
+      "trusted": true,
+      "notAfter": "Jan 28 02:36:08 2027 GMT"
+    },
+    {
+      "host": "www.zqzhg.com",
+      "trusted": true,
+      "notAfter": "Jan 28 02:36:08 2027 GMT"
+    }
+  ],
+  "ipHTTP": 404,
+  "ipHTTPS": "handshake-rejected",
+  "adminWithoutLogin": 401,
+  "unknownGuideRoute": 404,
+  "passed": true,
+  "fullAPKDownloadSHA256": "613ef1cab6b2aa834003273b77779213ebfdb7737ee9cfc8e5dd7b9ba2d9ec48",
+  "officialManifestMatches": true,
+  "officialVersion": "1.10.9+50",
+  "manifestCacheControl": "no-cache"
+}

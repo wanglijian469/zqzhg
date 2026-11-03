@@ -1,0 +1,27 @@
+{
+  "promoted": true,
+  "version": "1.10.9+50",
+  "bytes": 86095615,
+  "sha256": "613ef1cab6b2aa834003273b77779213ebfdb7737ee9cfc8e5dd7b9ba2d9ec48",
+  "officialDownloadURL": "https://zqzhg.com/downloads/dalunongji.apk",
+  "websiteProgramUnchanged": true,
+  "websiteRestarted": false,
+  "sharedServiceProcessesUnchanged": true,
+  "protectedConfigurationsUnchanged": true,
+  "originalMediaFilesUnchanged": 251,
+  "schema": 30,
+  "countsBefore": "15\t59\t70\t224",
+  "countsAfter": "15\t59\t70\t224",
+  "backupVerified": true,
+  "baselineDeviceAcceptance": {
+    "baselineVersion": "1.10.9+49",
+    "device": "Xiaomi MIX4 / Android 12",
+    "reportedBy": "user",
+    "playback": true,
+    "fullscreenAndReturn": true,
+    "backgroundStopsPlayback": true,
+    "current50NativeLayoutDirectlyVerified": false
+  },
+  "current50NativeLayoutDirectlyVerified": false,
+  "rollbackCommand": "python3 /opt/zqzt/shared/android50/rollback.py"
+}

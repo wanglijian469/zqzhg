@@ -1,0 +1,287 @@
+{
+  "nativeChecks": 97,
+  "flutterRelatedFiles": 4,
+  "flutterPassed": 19,
+  "geometry": {
+    "passed": true,
+    "checks": 16,
+    "results": [
+      {
+        "wide": true,
+        "width": 360,
+        "height": 600,
+        "fit": {
+          "left": 0,
+          "top": 190.875,
+          "right": 360,
+          "bottom": 409.125,
+          "width": 360,
+          "height": 218.25,
+          "scroll": 360,
+          "viewport": 360
+        }
+      },
+      {
+        "wide": true,
+        "width": 390,
+        "height": 700,
+        "fit": {
+          "left": 0,
+          "top": 231.78125,
+          "right": 390,
+          "bottom": 468.21875,
+          "width": 390,
+          "height": 236.4375,
+          "scroll": 390,
+          "viewport": 390
+        }
+      },
+      {
+        "wide": true,
+        "width": 412,
+        "height": 720,
+        "fit": {
+          "left": 0,
+          "top": 235.1171875,
+          "right": 412,
+          "bottom": 484.8921813964844,
+          "width": 412,
+          "height": 249.77499389648438,
+          "scroll": 412,
+          "viewport": 412
+        }
+      },
+      {
+        "wide": true,
+        "width": 768,
+        "height": 900,
+        "fit": {
+          "left": 0,
+          "top": 217.203125,
+          "right": 768,
+          "bottom": 682.8031005859375,
+          "width": 768,
+          "height": 465.5999755859375,
+          "scroll": 768,
+          "viewport": 768
+        }
+      },
+      {
+        "wide": true,
+        "width": 1440,
+        "height": 900,
+        "fit": {
+          "left": 320,
+          "top": 207.5,
+          "right": 1120,
+          "bottom": 692.5,
+          "width": 800,
+          "height": 485,
+          "scroll": 1440,
+          "viewport": 1440
+        }
+      },
+      {
+        "wide": true,
+        "width": 844,
+        "height": 338,
+        "fit": {
+          "left": 143.2421875,
+          "top": 0,
+          "right": 700.7679443359375,
+          "bottom": 338,
+          "width": 557.5257568359375,
+          "height": 338,
+          "scroll": 844,
+          "viewport": 844
+        }
+      },
+      {
+        "wide": true,
+        "width": 320,
+        "height": 500,
+        "fit": {
+          "left": 0,
+          "top": 153,
+          "right": 320,
+          "bottom": 347,
+          "width": 320,
+          "height": 194,
+          "scroll": 320,
+          "viewport": 320
+        }
+      },
+      {
+        "wide": true,
+        "inflatedInnerWidthFixture": true,
+        "right": 360
+      },
+      {
+        "wide": false,
+        "width": 360,
+        "height": 600,
+        "fit": {
+          "left": 35.359375,
+          "top": 0,
+          "right": 324.64508056640625,
+          "bottom": 600,
+          "width": 289.28570556640625,
+          "height": 600,
+          "scroll": 360,
+          "viewport": 360
+        }
+      },
+      {
+        "wide": false,
+        "width": 390,
+        "height": 700,
+        "fit": {
+          "left": 33,
+          "top": 14,
+          "right": 357,
+          "bottom": 686,
+          "width": 324,
+          "height": 672,
+          "scroll": 390,
+          "viewport": 390
+        }
+      },
+      {
+        "wide": false,
+        "width": 412,
+        "height": 720,
+        "fit": {
+          "left": 44,
+          "top": 24,
+          "right": 368,
+          "bottom": 696,
+          "width": 324,
+          "height": 672,
+          "scroll": 412,
+          "viewport": 412
+        }
+      },
+      {
+        "wide": false,
+        "width": 768,
+        "height": 900,
+        "fit": {
+          "left": 222,
+          "top": 114,
+          "right": 546,
+          "bottom": 786,
+          "width": 324,
+          "height": 672,
+          "scroll": 768,
+          "viewport": 768
+        }
+      },
+      {
+        "wide": false,
+        "width": 1440,
+        "height": 900,
+        "fit": {
+          "left": 558,
+          "top": 114,
+          "right": 882,
+          "bottom": 786,
+          "width": 324,
+          "height": 672,
+          "scroll": 1440,
+          "viewport": 1440
+        }
+      },
+      {
+        "wide": false,
+        "width": 844,
+        "height": 338,
+        "fit": {
+          "left": 340.5234375,
+          "top": 0,
+          "right": 503.48773193359375,
+          "bottom": 338,
+          "width": 162.96429443359375,
+          "height": 338,
+          "scroll": 844,
+          "viewport": 844
+        }
+      },
+      {
+        "wide": false,
+        "width": 320,
+        "height": 500,
+        "fit": {
+          "left": 39.46875,
+          "top": 0,
+          "right": 280.5401916503906,
+          "bottom": 500,
+          "width": 241.07144165039062,
+          "height": 500,
+          "scroll": 320,
+          "viewport": 320
+        }
+      },
+      {
+        "wide": false,
+        "inflatedInnerWidthFixture": true,
+        "right": 324.64508056640625
+      }
+    ],
+    "androidDeviceLayoutVerified": false
+  },
+  "browserPlayback": {
+    "wide": {
+      "source": "actual-production-Java-document-and-router",
+      "androidDevicePlaybackVerified": false,
+      "ownedDocumentServedLocally": true,
+      "touchPoint": {
+        "x": 196.5,
+        "y": 341.40625283152787
+      },
+      "playback": {
+        "time": 4.306034,
+        "paused": false,
+        "error": 0,
+        "muted": false
+      },
+      "iframeCount": 1,
+      "mainDocumentStatus": 200,
+      "remoteOwnedOriginRequests": 0,
+      "passed": true
+    },
+    "portrait": {
+      "source": "actual-production-Java-document-and-router",
+      "androidDevicePlaybackVerified": false,
+      "ownedDocumentServedLocally": true,
+      "playback": {
+        "time": 4.248541,
+        "paused": false,
+        "error": 0,
+        "muted": false
+      },
+      "iframeCount": 1,
+      "mainDocumentStatus": 200,
+      "remoteOwnedOriginRequests": 0,
+      "passed": true
+    }
+  },
+  "baseline49UserConfirmed": {
+    "baselineVersion": "1.10.9+49",
+    "device": "Xiaomi MIX4 / Android 12",
+    "reportedBy": "user",
+    "playback": true,
+    "fullscreenAndReturn": true,
+    "backgroundStopsPlayback": true,
+    "current50NativeLayoutDirectlyVerified": false
+  },
+  "current50NativeLayoutDirectlyVerified": false,
+  "buildAndSigningPassed": true,
+  "embeddedWebAssets": 237,
+  "websiteChecksPassed": 24,
+  "limits": [
+    "49 core playback, fullscreen return and background stop were confirmed by the user on MIX4.",
+    "50 compact native UI and width fitting have automated/browser validation but no direct phone capture.",
+    "Browser document playback and geometry are not native-device execution.",
+    "Existing full-suite historical failures are not claimed resolved."
+  ]
+}
