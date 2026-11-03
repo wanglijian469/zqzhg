@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/videoRoot" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@android:color/black">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="52dp"
+        android:orientation="horizontal" android:gravity="center_vertical"
+        android:paddingStart="4dp" android:paddingEnd="4dp" android:background="@color/video_player_bar">
+        <ImageButton android:id="@+id/videoClose" android:layout_width="44dp" android:layout_height="44dp"
+            android:padding="10dp" android:src="@drawable/ic_player_close" android:contentDescription="关闭视频"
+            android:background="?android:attr/selectableItemBackgroundBorderless" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+            android:layout_marginStart="8dp" android:text="视频播放" android:textColor="@color/video_player_text"
+            android:textSize="16sp" android:fontFamily="sans-serif-medium" android:singleLine="true" android:ellipsize="end" />
+        <ImageButton android:id="@+id/videoMore" android:layout_width="44dp" android:layout_height="44dp"
+            android:padding="10dp" android:src="@drawable/ic_player_more" android:contentDescription="更多视频操作"
+            android:background="?android:attr/selectableItemBackgroundBorderless" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/videoStatusRow" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:minHeight="40dp" android:orientation="horizontal" android:gravity="center_vertical"
+        android:paddingStart="16dp" android:paddingEnd="8dp" android:paddingTop="4dp" android:paddingBottom="4dp">
+        <ProgressBar android:id="@+id/videoProgress" style="?android:attr/progressBarStyleSmall"
+            android:layout_width="18dp" android:layout_height="18dp" android:layout_marginEnd="10dp" />
+        <TextView android:id="@+id/videoStatus" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:text="正在加载视频…" android:textColor="@color/video_player_text"
+            android:textSize="14sp" android:accessibilityLiveRegion="polite" />
+        <Button android:id="@+id/videoRetry" style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="56dp"
+            android:minHeight="44dp" android:paddingStart="12dp" android:paddingEnd="12dp"
+            android:text="重试" android:textSize="14sp" android:textColor="@color/video_player_text" android:visibility="gone" />
+    </LinearLayout>
+    <FrameLayout android:id="@+id/videoContainer" android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:background="@android:color/black" />
+</LinearLayout>

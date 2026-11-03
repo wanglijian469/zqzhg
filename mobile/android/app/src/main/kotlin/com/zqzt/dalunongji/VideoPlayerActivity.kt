@@ -1,82 +1,61 @@
 package com.zqzt.dalunongji
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.graphics.Color
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
-import android.widget.ProgressBar
-import android.os.Bundle
 import android.os.Build
+import android.os.Bundle
+import android.view.Gravity
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.webkit.WebView
+import android.view.WindowInsets
 import android.webkit.WebSettings
+import android.webkit.WebView
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.PopupMenu
+import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
 
-/** Dedicated token-free window using the same trusted WebView backend as platform views. */
+/** Compact token-free player window. The verified player backend is unchanged. */
 class VideoPlayerActivity : Activity() {
     private var player: OfficialVideoView? = null
+    private val ui = OfficialVideoUiState()
+    private var diagnosticInfo: Map<*, *> = mapOf("reason" to "loading")
+    private var original = ""
+    private lateinit var statusRow: View
+    private lateinit var progress: View
+    private lateinit var status: TextView
+    private lateinit var retry: Button
 
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
-        val layout = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setBackgroundColor(Color.BLACK)
-        }
-        layout.addView(Button(this).apply {
-            text = "关闭视频"
-            setOnClickListener { finish() }
-        })
-        val status = TextView(this).apply {
-            text = "正在加载抖音视频…"
-            setTextColor(Color.WHITE)
-            setPadding(16, 8, 16, 8)
-        }
-        layout.addView(status)
-        val progress = ProgressBar(this)
-        layout.addView(progress)
-        val retry = Button(this).apply {
-            text = "重新加载视频"
-            isEnabled = false
-            setOnClickListener {
-                isEnabled = false
-                progress.visibility = View.VISIBLE
-                status.text = "正在加载抖音视频…"
-                player?.start()
+        setContentView(R.layout.activity_official_video)
+        val root = findViewById<View>(R.id.videoRoot)
+        if (Build.VERSION.SDK_INT >= 30) {
+            window.setDecorFitsSystemWindows(false)
+            root.setOnApplyWindowInsetsListener { view, insets ->
+                val safe = insets.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
+                view.setPadding(safe.left, safe.top, safe.right, safe.bottom)
+                insets
             }
+            root.requestApplyInsets()
+        } else {
+            root.fitsSystemWindows = true
         }
-        layout.addView(retry)
-        val diagnostic = TextView(this).apply {
-            visibility = View.GONE
-            setTextColor(Color.LTGRAY)
-            textSize = 12f
-            setPadding(16, 8, 16, 12)
-        }
-        val details = Button(this).apply {
-            text = "查看播放诊断"
-            visibility = View.GONE
-            setOnClickListener {
-                diagnostic.visibility = if (diagnostic.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-            }
-        }
-        layout.addView(details)
-        layout.addView(diagnostic)
-        diagnostic.setOnClickListener {
-            val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-            clipboard.setPrimaryClip(ClipData.newPlainText("播放诊断", diagnostic.text))
-            details.text = "诊断已复制"
-        }
-        val original = OfficialVideoPolicy.originalVideoURL(intent.getStringExtra("url") ?: "")
-        if (original.isNotEmpty()) layout.addView(Button(this).apply {
-            text = "打开抖音原视频"
-            setOnClickListener {
-                try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(original))) }
-                catch (_: Exception) { status.text = "无法打开原视频，请稍后重试。" }
-            }
-        })
+        statusRow = findViewById(R.id.videoStatusRow)
+        progress = findViewById(R.id.videoProgress)
+        status = findViewById(R.id.videoStatus)
+        retry = findViewById(R.id.videoRetry)
+        retry.setOnClickListener { if (ui.canRetry()) player?.start() }
+        findViewById<ImageButton>(R.id.videoClose).setOnClickListener { finish() }
+        findViewById<ImageButton>(R.id.videoMore).setOnClickListener { showMore(it) }
+        original = OfficialVideoPolicy.originalVideoURL(intent.getStringExtra("url") ?: "")
         val view = OfficialVideoView(
             this, null, -1,
             mapOf(
@@ -84,62 +63,98 @@ class VideoPlayerActivity : Activity() {
                 "width" to intent.getIntExtra("width", 0),
                 "height" to intent.getIntExtra("height", 0),
             ),
-            onEvent = { name, value ->
-                when (name) {
-                    "loading" -> {
-                        progress.visibility = View.VISIBLE
-                        retry.isEnabled = false
-                        status.text = "正在加载抖音视频…"
-                        details.visibility = View.GONE
-                        details.text = "查看播放诊断"
-                        diagnostic.visibility = View.GONE
-                        diagnostic.text = ""
-                    }
-                    "loaded" -> {
-                        progress.visibility = View.GONE
-                        retry.isEnabled = true
-                        status.text = "请点击画面中的播放按钮。没有画面时，可重新加载或打开原视频。"
-                        if (diagnostic.text.isEmpty()) diagnostic.text = playbackDiagnostic(mapOf("reason" to "document_loaded"))
-                        details.visibility = View.VISIBLE
-                    }
-                    "error" -> {
-                        progress.visibility = View.GONE
-                        retry.isEnabled = true
-                        val info = value as? Map<*, *> ?: emptyMap<Any, Any>()
-                        val reason = info["reason"] as? String ?: "unknown"
-                        val code = (info["code"] as? Number)?.toInt() ?: 0
-                        status.text = when {
-                            reason == "tls" || reason == "network" && code == -11 -> "手机与抖音的安全连接失败。请检查手机时间和系统浏览组件更新，或打开原视频。"
-                            reason == "network" && code == -2 -> "手机暂时找不到抖音的播放服务，请切换网络后重试。"
-                            reason == "network" && code == -8 -> "连接抖音超时，请切换网络后重试。"
-                            reason == "app_policy" -> "App拦截了播放器页面，请复制下方诊断反馈给平台。"
-                            reason == "http" -> "视频请求未能通过，请查看播放诊断，或打开原视频。"
-                            reason == "renderer" -> "手机的网页播放组件已停止，请关闭后重新打开，或更新系统浏览组件。"
-                            reason == "invalid_player" -> "播放器地址无效，请返回重新检查视频链接。"
-                            else -> "视频暂时无法加载，请重新加载，或打开抖音原视频。"
-                        }
-                        diagnostic.text = playbackDiagnostic(info)
-                        details.visibility = View.VISIBLE
-                    }
-                    "slow" -> {
-                        progress.visibility = View.GONE
-                        retry.isEnabled = true
-                        status.text = "抖音加载较慢，仍在等待。可以继续等待、重新加载或打开原视频。"
-                        diagnostic.text = playbackDiagnostic(value as? Map<*, *> ?: emptyMap<Any, Any>())
-                        details.visibility = View.VISIBLE
-                    }
-                    "resource-warning" -> {
-                        diagnostic.text = playbackDiagnostic(value as? Map<*, *> ?: emptyMap<Any, Any>())
-                        details.visibility = View.VISIBLE
-                    }
-                }
-            },
+            onEvent = ::handlePlayerEvent,
             onDisposed = null,
         )
         player = view
-        layout.addView(view.getView(), LinearLayout.LayoutParams(-1, 0, 1f))
-        setContentView(layout)
+        findViewById<FrameLayout>(R.id.videoContainer).addView(view.getView(), FrameLayout.LayoutParams(-1, -1))
         view.start()
+    }
+
+    private fun handlePlayerEvent(name: String, value: Any?) {
+        ui.event(name)
+        val info = value as? Map<*, *> ?: emptyMap<Any, Any>()
+        when (name) {
+            "loading" -> {
+                diagnosticInfo = mapOf("reason" to "loading")
+                status.text = "正在加载视频…"
+            }
+            "loaded" -> if (diagnosticInfo["reason"] == "loading") {
+                diagnosticInfo = mapOf("reason" to "document_loaded")
+            }
+            "error" -> {
+                diagnosticInfo = info
+                status.text = errorMessage(info)
+            }
+            "slow" -> {
+                diagnosticInfo = info
+                status.text = "加载较慢，可以继续等待或重试。"
+            }
+            "resource-warning" -> diagnosticInfo = info
+        }
+        statusRow.visibility = if (ui.statusVisible()) View.VISIBLE else View.GONE
+        progress.visibility = if (ui.busy()) View.VISIBLE else View.GONE
+        retry.visibility = if (ui.retryVisible()) View.VISIBLE else View.GONE
+        retry.isEnabled = ui.canRetry()
+    }
+
+    private fun showMore(anchor: View) {
+        PopupMenu(this, anchor, Gravity.END).apply {
+            menu.add(0, 1, 0, "重新加载").isEnabled = ui.canRetry()
+            if (original.isNotEmpty()) menu.add(0, 2, 1, "打开抖音原视频")
+            menu.add(0, 3, 2, "播放诊断")
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    1 -> if (ui.canRetry()) player?.start()
+                    2 -> try {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(original)))
+                    } catch (_: Exception) {
+                        status.text = "暂时无法打开原视频，请稍后重试。"
+                        statusRow.visibility = View.VISIBLE
+                    }
+                    3 -> showDiagnostic()
+                }
+                true
+            }
+            show()
+        }
+    }
+
+    private fun showDiagnostic() {
+        val text = playbackDiagnostic(diagnosticInfo)
+        val contents = TextView(this).apply {
+            this.text = text
+            setTextColor(Color.LTGRAY)
+            textSize = 13f
+            val pad = (20 * resources.displayMetrics.density).toInt()
+            setPadding(pad, pad / 2, pad, pad / 2)
+            setTextIsSelectable(true)
+        }
+        AlertDialog.Builder(this)
+            .setTitle("播放诊断")
+            .setView(ScrollView(this).apply { addView(contents) })
+            .setPositiveButton("复制") { _, _ ->
+                (getSystemService(CLIPBOARD_SERVICE) as ClipboardManager)
+                    .setPrimaryClip(ClipData.newPlainText("播放诊断", text))
+                Toast.makeText(this, "诊断已复制", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("关闭", null)
+            .show()
+    }
+
+    private fun errorMessage(info: Map<*, *>): String {
+        val reason = info["reason"] as? String ?: "unknown"
+        val code = (info["code"] as? Number)?.toInt() ?: 0
+        return when {
+            reason == "tls" || reason == "network" && code == -11 -> "安全连接失败，请检查手机时间或更新系统浏览组件。"
+            reason == "network" && code == -2 -> "暂时找不到播放服务，请切换网络后重试。"
+            reason == "network" && code == -8 -> "连接超时，请重试。"
+            reason == "app_policy" -> "播放器页面被拦截，可在更多中复制诊断。"
+            reason == "http" -> "视频请求未能通过，请重试或在更多中打开原视频。"
+            reason == "renderer" -> "网页播放组件已停止，请关闭后重新打开。"
+            reason == "invalid_player" -> "播放器地址无效，请返回重新检查链接。"
+            else -> "视频暂时无法加载，请重试或在更多中打开原视频。"
+        }
     }
 
     private fun playbackDiagnostic(info: Map<*, *>): String {
@@ -152,7 +167,7 @@ class VideoPlayerActivity : Activity() {
         val app = packageManager.getPackageInfo(packageName, 0)
         @Suppress("DEPRECATION")
         val code = if (Build.VERSION.SDK_INT >= 28) app.longVersionCode else app.versionCode.toLong()
-        return "手机：${Build.MANUFACTURER} ${Build.MODEL}\nAndroid：${Build.VERSION.RELEASE}\nApp：${app.versionName ?: "unknown"}（$code）\n网页播放组件：$version\n原因：${info["reason"] ?: "unknown"}\n服务：${info["host"] ?: ""}\n类型：${info["scheme"] ?: ""}\n请求：${info["scope"] ?: ""}\n编号：${info["code"] ?: 0}\n点击此处复制诊断"
+        return "手机：${Build.MANUFACTURER} ${Build.MODEL}\nAndroid：${Build.VERSION.RELEASE}\nApp：${app.versionName ?: "unknown"}（$code）\n网页播放组件：$version\n原因：${info["reason"] ?: "unknown"}\n服务：${info["host"] ?: ""}\n类型：${info["scheme"] ?: ""}\n请求：${info["scope"] ?: ""}\n编号：${info["code"] ?: 0}"
     }
 
     @Deprecated("Android back compatibility")
@@ -160,19 +175,11 @@ class VideoPlayerActivity : Activity() {
         if (player?.exitFullscreen() != true) finish()
     }
 
-    private fun release() {
-        player?.dispose()
-        player = null
-    }
-
+    private fun release() { player?.dispose(); player = null }
     override fun onPause() {
         release()
         if (!isFinishing) finish()
         super.onPause()
     }
-
-    override fun onDestroy() {
-        release()
-        super.onDestroy()
-    }
+    override fun onDestroy() { release(); super.onDestroy() }
 }

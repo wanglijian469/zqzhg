@@ -45,6 +45,14 @@ public final class OfficialVideoPolicyCheck {
   check(OfficialVideoPolicy.diagnosticScheme("data:text/html,SECRET").equals("data"));
   check(OfficialVideoPolicy.diagnosticScheme("https://open.douyin.com/?token=SECRET").equals("https"));
   check(OfficialVideoPolicy.diagnosticScheme("not a scheme:SECRET").isEmpty());
+  OfficialVideoUiState ui=new OfficialVideoUiState();check(ui.busy());check(!ui.canRetry());
+  ui.event("loaded");check(!ui.statusVisible());check(!ui.retryVisible());check(ui.canRetry());
+  ui.event("resource-warning");check(!ui.statusVisible());
+  ui.event("slow");check(!ui.statusVisible());
+  ui.event("loading");check(ui.statusVisible());check(ui.busy());
+  ui.event("slow");check(ui.statusVisible());check(ui.retryVisible());check(ui.canRetry());
+  ui.event("loaded");check(!ui.statusVisible());check(!ui.retryVisible());
+  ui.event("error");check(ui.statusVisible());check(ui.retryVisible());check(!ui.busy());
   System.out.println(checks+" official player policy checks passed");
  }
 }

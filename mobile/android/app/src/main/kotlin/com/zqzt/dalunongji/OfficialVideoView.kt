@@ -125,6 +125,8 @@ class OfficialVideoView(
         player.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
+            useWideViewPort = true
+            loadWithOverviewMode = false
             allowFileAccess = false
             allowContentAccess = false
             mediaPlaybackRequiresUserGesture = true

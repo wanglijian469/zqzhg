@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="video_player_bar">#081A31</color>
+    <color name="video_player_accent">#1769E0</color>
+    <color name="video_player_text">#EAF2FA</color>
+    <style name="VideoPlayerTheme" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:colorAccent">@color/video_player_accent</item>
+    </style>
+</resources>
