@@ -1,0 +1,48 @@
+{
+  "nativeChecks": 44,
+  "flutterRelatedFiles": 4,
+  "flutterPassed": 19,
+  "releaseBuildPassed": true,
+  "devicePlaybackVerified": false,
+  "rootCauseOnMIX4Confirmed": false,
+  "browserUAComparisons": [
+    {
+      "mode": "mobile",
+      "videos": 1,
+      "playback": {
+        "time": 4.966226,
+        "paused": false,
+        "error": 0,
+        "readyState": 4
+      }
+    },
+    {
+      "mode": "webview",
+      "videos": 1,
+      "playback": {
+        "time": 5.008534,
+        "paused": false,
+        "error": 0,
+        "readyState": 4
+      }
+    }
+  ],
+  "cookieRestrictionComparison": {
+    "thirdPartyCookiesRestricted": true,
+    "videos": 1,
+    "playback": {
+      "time": 4.46814,
+      "paused": false,
+      "error": 0
+    }
+  },
+  "softwareEmulator": "ADB offline; no completed interaction; temporary instance stopped",
+  "productionWebsiteCodeChanged": false,
+  "schemaChanged": false,
+  "stableAndroidReplaced": false,
+  "limitations": [
+    "MIX4 native cause remains unconfirmed; Android 48 requires device retest.",
+    "Chrome UA comparisons are not Android device acceptance.",
+    "No automatic Douyin playback guarantee."
+  ]
+}

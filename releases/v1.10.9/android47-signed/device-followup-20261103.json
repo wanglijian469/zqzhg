@@ -1,0 +1,11 @@
+{
+  "reportedOn": "2026-11-03",
+  "device": "Xiaomi MIX4",
+  "candidateVersion": "1.10.9+47",
+  "userReportedAcceptance": "failed",
+  "reportedScope": "all Douyin videos fail in embedded player",
+  "originalVideoCanPlay": true,
+  "nativeRootCauseConfirmed": false,
+  "formalPromotionBlocked": true,
+  "nextCandidate": "1.10.9+48; diagnostic candidate; unverified on device"
+}
