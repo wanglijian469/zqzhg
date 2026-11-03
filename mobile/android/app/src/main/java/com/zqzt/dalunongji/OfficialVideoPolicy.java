@@ -49,6 +49,11 @@ public final class OfficialVideoPolicy {
  public static String diagnosticHost(String raw) {
   try{return https(raw).getHost().toLowerCase(Locale.ROOT);}catch(Exception ignored){return "";}
  }
+ public static String diagnosticScheme(String raw) {
+  if(raw==null)return "";int end=raw.indexOf(':');
+  if(end<1||end>20)return "";String scheme=raw.substring(0,end).toLowerCase(Locale.ROOT);
+  return scheme.matches("[a-z][a-z0-9+.-]*")?scheme:"";
+ }
  public static String originalVideoURL(String raw) {
   if(!trustedPlayer(raw))return "";
   try{for(String pair:new URI(raw).getRawQuery().split("&")){String[] kv=pair.split("=",2);if("vid".equals(URLDecoder.decode(kv[0],"UTF-8")))return "https://www.douyin.com/video/"+URLDecoder.decode(kv[1],"UTF-8");}}catch(Exception ignored){}

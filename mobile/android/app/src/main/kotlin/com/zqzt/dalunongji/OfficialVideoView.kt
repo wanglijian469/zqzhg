@@ -82,8 +82,6 @@ class OfficialVideoView(
     private fun dimension(value: Any?): Int = (value as? Number)?.toInt()?.coerceIn(0, 16384) ?: 0
 
     private fun trustedPlayer(raw: String) = OfficialVideoPolicy.trustedPlayer(raw)
-    private fun allowedResource(uri: Uri) = OfficialVideoPolicy.allowedResource(uri.toString())
-
     private fun event(name: String, value: Any? = null) {
         if (!disposed) {
             channel?.invokeMethod(name, value)
@@ -91,16 +89,16 @@ class OfficialVideoView(
         }
     }
 
-    private fun detail(reason: String, raw: String = "", code: Int = 0): Map<String, Any> =
-        mapOf("reason" to reason, "host" to OfficialVideoPolicy.diagnosticHost(raw), "code" to code)
+    private fun detail(reason: String, raw: String = "", code: Int = 0, mainFrame: Boolean = false): Map<String, Any> =
+        mapOf("reason" to reason, "host" to OfficialVideoPolicy.diagnosticHost(raw), "scheme" to OfficialVideoPolicy.diagnosticScheme(raw), "scope" to if (mainFrame) "main" else "resource", "code" to code)
 
-    private fun fail(reason: String, raw: String = "", code: Int = 0) {
+    private fun fail(reason: String, raw: String = "", code: Int = 0, mainFrame: Boolean = false) {
         if (disposed || failed) return
         failed = true
         loadState.stop()
         handler.removeCallbacksAndMessages(null)
         releaseWeb()
-        event("error", detail(reason, raw, code))
+        event("error", detail(reason, raw, code, mainFrame))
     }
 
     private fun isPlayerRequest(request: WebResourceRequest): Boolean =
@@ -113,6 +111,7 @@ class OfficialVideoView(
         lastUserTouch = Long.MIN_VALUE
         event("loading")
         if (!trustedPlayer(rawUrl)) { fail("invalid_player"); return }
+        val document = OfficialVideoDocument(rawUrl, wide, UUID.randomUUID().toString())
         val attempt = loadState.begin()
         val player = WebView(activity)
         web = player
@@ -140,12 +139,18 @@ class OfficialVideoView(
         }
         player.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean =
-                request.isForMainFrame || !allowedResource(request.url)
+                document.route(request.url.toString(), request.isForMainFrame) == OfficialVideoDocument.BLOCK
 
             override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
-                if (allowedResource(request.url)) return null
-                // The only app-owned document is supplied directly by loadDataWithBaseURL.
-                return WebResourceResponse("text/plain", "UTF-8", 403, "Blocked by player policy", mapOf("Cache-Control" to "no-store"), ByteArrayInputStream(ByteArray(0)))
+                return when (document.route(request.url.toString(), request.isForMainFrame)) {
+                    OfficialVideoDocument.DOCUMENT -> WebResourceResponse(
+                        "text/html", "UTF-8", 200, "OK",
+                        mapOf("Cache-Control" to "no-store", "X-Content-Type-Options" to "nosniff"),
+                        ByteArrayInputStream(document.html.toByteArray(Charsets.UTF_8)),
+                    )
+                    OfficialVideoDocument.NETWORK -> null
+                    else -> WebResourceResponse("text/plain", "UTF-8", 403, "Blocked by player policy", mapOf("Cache-Control" to "no-store", "X-ZQZG-Player-Policy" to "blocked"), ByteArrayInputStream(ByteArray(0)))
+                }
             }
 
             override fun onPageFinished(view: WebView, url: String) {
@@ -157,13 +162,16 @@ class OfficialVideoView(
 
             override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
                 if (isPlayerRequest(request)) handler.post {
-                    if (web === view) fail("network", request.url.toString(), error.errorCode)
+                    if (web === view) fail("network", request.url.toString(), error.errorCode, request.isForMainFrame)
                 }
             }
 
             override fun onReceivedHttpError(view: WebView, request: WebResourceRequest, response: WebResourceResponse) {
                 if (isPlayerRequest(request) && response.statusCode >= 400) handler.post {
-                    if (web === view) fail("http", request.url.toString(), response.statusCode)
+                    if (web === view) {
+                        val policyBlocked = response.responseHeaders?.get("X-ZQZG-Player-Policy") == "blocked" || response.reasonPhrase == "Blocked by player policy"
+                        fail(if (policyBlocked) "app_policy" else "http", request.url.toString(), response.statusCode, request.isForMainFrame)
+                    }
                 }
             }
 
@@ -240,15 +248,9 @@ class OfficialVideoView(
             }
         }
         frame.addView(player, FrameLayout.LayoutParams(-1, -1))
-        val logicalWidth = if (wide) 800 else 324
-        val logicalHeight = if (wide) 485 else 672
-        val nonce = UUID.randomUUID().toString()
-        val safe = rawUrl.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;")
-        player.loadDataWithBaseURL(
-            "https://zqzhg.com/",
-            """<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-$nonce'; frame-src https://open.douyin.com; object-src 'none'; base-uri 'none'; form-action 'none'"><style>html,body{margin:0;height:100%;overflow:hidden;background:#000}#box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}iframe{border:0;transform-origin:0 0}iframe:fullscreen{transform:none!important;width:100vw!important;height:100vh!important}</style></head><body><div id="box"><iframe id="f" width="$logicalWidth" height="$logicalHeight" title="抖音官方播放器" src="$safe" sandbox="allow-scripts allow-same-origin allow-presentation" referrerpolicy="origin" allow="fullscreen; encrypted-media" allowfullscreen></iframe></div><script nonce="$nonce">function fit(){const w=$logicalWidth,h=$logicalHeight,s=Math.min(1,innerWidth/w,innerHeight/h),b=document.getElementById('box'),f=document.getElementById('f');b.style.width=w*s+'px';b.style.height=h*s+'px';f.style.width=w+'px';f.style.height=h+'px';f.style.transform='scale('+s+')'}fit();addEventListener('resize',fit);</script></body></html>""",
-            "text/html", "UTF-8", null,
-        )
+        // Serve exactly this app-generated main document locally. Do not feed a data:
+        // navigation into the remote-resource filter or request this route from ECS.
+        player.loadUrl(document.url)
     }
 
     fun start() { if (!disposed) load() }

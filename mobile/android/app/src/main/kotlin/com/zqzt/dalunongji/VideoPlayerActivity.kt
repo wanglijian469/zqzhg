@@ -112,7 +112,8 @@ class VideoPlayerActivity : Activity() {
                             reason == "tls" || reason == "network" && code == -11 -> "手机与抖音的安全连接失败。请检查手机时间和系统浏览组件更新，或打开原视频。"
                             reason == "network" && code == -2 -> "手机暂时找不到抖音的播放服务，请切换网络后重试。"
                             reason == "network" && code == -8 -> "连接抖音超时，请切换网络后重试。"
-                            reason == "http" -> "抖音播放服务暂时未能响应，请稍后重试，或打开原视频。"
+                            reason == "app_policy" -> "App拦截了播放器页面，请复制下方诊断反馈给平台。"
+                            reason == "http" -> "视频请求未能通过，请查看播放诊断，或打开原视频。"
                             reason == "renderer" -> "手机的网页播放组件已停止，请关闭后重新打开，或更新系统浏览组件。"
                             reason == "invalid_player" -> "播放器地址无效，请返回重新检查视频链接。"
                             else -> "视频暂时无法加载，请重新加载，或打开抖音原视频。"
@@ -151,7 +152,7 @@ class VideoPlayerActivity : Activity() {
         val app = packageManager.getPackageInfo(packageName, 0)
         @Suppress("DEPRECATION")
         val code = if (Build.VERSION.SDK_INT >= 28) app.longVersionCode else app.versionCode.toLong()
-        return "手机：${Build.MANUFACTURER} ${Build.MODEL}\nAndroid：${Build.VERSION.RELEASE}\nApp：${app.versionName ?: "unknown"}（$code）\n网页播放组件：$version\n原因：${info["reason"] ?: "unknown"}\n服务：${info["host"] ?: ""}\n编号：${info["code"] ?: 0}\n点击此处复制诊断"
+        return "手机：${Build.MANUFACTURER} ${Build.MODEL}\nAndroid：${Build.VERSION.RELEASE}\nApp：${app.versionName ?: "unknown"}（$code）\n网页播放组件：$version\n原因：${info["reason"] ?: "unknown"}\n服务：${info["host"] ?: ""}\n类型：${info["scheme"] ?: ""}\n请求：${info["scope"] ?: ""}\n编号：${info["code"] ?: 0}\n点击此处复制诊断"
     }
 
     @Deprecated("Android back compatibility")

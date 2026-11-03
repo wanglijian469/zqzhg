@@ -25,6 +25,26 @@ public final class OfficialVideoPolicyCheck {
   check(state.ready(old));check(!state.ready(old));check(!state.slow(old));
   int next=state.begin();check(!state.ready(old));check(!state.slow(old));check(state.current(next));
   state.stop();check(!state.current(next));check(!state.ready(next));check(!state.slow(next));
+  OfficialVideoDocument doc=new OfficialVideoDocument(player,false,"c90aa3a0-f4c6-4a41-8b09-00891214789b");
+  check(!OfficialVideoPolicy.allowedResource(doc.url)); // This is exactly why the old remote-only filter rejected an owned page.
+  check(doc.route(doc.url,true)==OfficialVideoDocument.DOCUMENT);
+  check(doc.route(doc.url,false)==OfficialVideoDocument.BLOCK);
+  check(doc.route(player,false)==OfficialVideoDocument.NETWORK);
+  check(doc.route(player,true)==OfficialVideoDocument.BLOCK);
+  check(doc.route(cdn,false)==OfficialVideoDocument.NETWORK);
+  for(String bad:new String[]{doc.url+"?x=1",doc.url+"#x",doc.url.replace("zqzhg.com","evil.test"),doc.url.replace("c90aa3a0","d90aa3a0"),"https://zqzhg.com/","https://zqzhg.com/merchant","data:text/html,<script>SECRET</script>","about:blank","file:///private/file","https://unknown.test/script.js"}){
+   check(doc.route(bad,true)==OfficialVideoDocument.BLOCK);check(doc.route(bad,false)==OfficialVideoDocument.BLOCK);
+  }
+  OfficialVideoDocument replacement=new OfficialVideoDocument(player,true,"d90aa3a0-f4c6-4a41-8b09-00891214789b");
+  check(replacement.route(doc.url,true)==OfficialVideoDocument.BLOCK);
+  check(doc.html.contains("sandbox=\"allow-scripts allow-same-origin allow-presentation\""));
+  check(doc.html.contains("&amp;autoplay=0"));check(doc.html.contains("const w=324,h=672"));
+  check(replacement.html.contains("const w=800,h=485"));
+  boolean refused=false;try{new OfficialVideoDocument(player,false,"\"><script>SECRET</script>");}catch(IllegalArgumentException expected){refused=true;}check(refused);
+  refused=false;try{new OfficialVideoDocument("https://evil.test/",false,"c90aa3a0-f4c6-4a41-8b09-00891214789b");}catch(IllegalArgumentException expected){refused=true;}check(refused);
+  check(OfficialVideoPolicy.diagnosticScheme("data:text/html,SECRET").equals("data"));
+  check(OfficialVideoPolicy.diagnosticScheme("https://open.douyin.com/?token=SECRET").equals("https"));
+  check(OfficialVideoPolicy.diagnosticScheme("not a scheme:SECRET").isEmpty());
   System.out.println(checks+" official player policy checks passed");
  }
 }
