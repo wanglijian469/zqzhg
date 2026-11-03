@@ -1,0 +1,98 @@
+[
+  {
+    "name": "overview-1440",
+    "passed": true
+  },
+  {
+    "name": "list-fits-1440",
+    "passed": true
+  },
+  {
+    "name": "overview-1199",
+    "passed": true
+  },
+  {
+    "name": "list-fits-1199",
+    "passed": true
+  },
+  {
+    "name": "overview-768",
+    "passed": true
+  },
+  {
+    "name": "list-fits-768",
+    "passed": true
+  },
+  {
+    "name": "overview-390",
+    "passed": true
+  },
+  {
+    "name": "list-fits-390",
+    "passed": true
+  },
+  {
+    "name": "overview-360",
+    "passed": true
+  },
+  {
+    "name": "list-fits-360",
+    "passed": true
+  },
+  {
+    "name": "no-vendor-return-row",
+    "passed": true
+  },
+  {
+    "name": "independent-footer",
+    "passed": true
+  },
+  {
+    "name": "domestic-six-1440",
+    "passed": true
+  },
+  {
+    "name": "canonical-copy-1440",
+    "passed": true
+  },
+  {
+    "name": "no-system-share-1440",
+    "passed": true
+  },
+  {
+    "name": "qr-and-poster-1440",
+    "passed": true
+  },
+  {
+    "name": "domestic-six-390",
+    "passed": true
+  },
+  {
+    "name": "canonical-copy-390",
+    "passed": true
+  },
+  {
+    "name": "no-system-share-390",
+    "passed": true
+  },
+  {
+    "name": "qr-and-poster-390",
+    "passed": true
+  },
+  {
+    "name": "separate-product-sections",
+    "passed": true
+  },
+  {
+    "name": "footer-preserved",
+    "passed": true
+  },
+  {
+    "name": "no-footer-gap",
+    "passed": true
+  },
+  {
+    "name": "no-page-errors",
+    "passed": true
+  }
+]

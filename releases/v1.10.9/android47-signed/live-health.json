@@ -1,0 +1,92 @@
+{
+  "health": {
+    "allServicesHealthy": true,
+    "temporaryCandidateListenersClosed": true,
+    "state": {
+      "zqzt-exhibition": "active",
+      "nginx": "active",
+      "mysqld": "active",
+      "qiyuan-gosyncr": "active",
+      "gosync-server": "active",
+      "zqzhg-cert-renew.timer": "active"
+    }
+  },
+  "release": {
+    "current": "/opt/zqzt/releases/v1.10.9-1b6c04f"
+  },
+  "httpsRoutes": [
+    {
+      "host": "zqzhg.com",
+      "path": "/",
+      "status": 200
+    },
+    {
+      "host": "zqzhg.com",
+      "path": "/guide",
+      "status": 200
+    },
+    {
+      "host": "zqzhg.com",
+      "path": "/regions",
+      "status": 200
+    },
+    {
+      "host": "zqzhg.com",
+      "path": "/api/v1/health",
+      "status": 200
+    },
+    {
+      "host": "zqzhg.com",
+      "path": "/app",
+      "status": 200
+    },
+    {
+      "host": "www.zqzhg.com",
+      "path": "/",
+      "status": 200
+    },
+    {
+      "host": "www.zqzhg.com",
+      "path": "/guide",
+      "status": 200
+    },
+    {
+      "host": "www.zqzhg.com",
+      "path": "/regions",
+      "status": 200
+    },
+    {
+      "host": "www.zqzhg.com",
+      "path": "/api/v1/health",
+      "status": 200
+    },
+    {
+      "host": "www.zqzhg.com",
+      "path": "/app",
+      "status": 200
+    }
+  ],
+  "currentOfficialAndroid": {
+    "sha256": "e162dba0077a19c564fd9710354cfe43b18719ccb7d7b942245e09c147f82254",
+    "applicationId": "com.zqzt.dalunongji",
+    "apiBaseUrl": "https://zqzhg.com",
+    "productionDeployed": false,
+    "certificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+    "appName": "大陆农机",
+    "signingMatchesPrevious": true,
+    "deviceValidation": false,
+    "version": "1.10.7+45",
+    "versionName": "1.10.7",
+    "versionCode": 45,
+    "asset": "dalunongji-1.10.7+45.apk",
+    "bytes": 85811203,
+    "sourceTag": "v1.10.7",
+    "releaseURL": "https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.7",
+    "officialDownloadURL": "https://zqzhg.com/downloads/dalunongji.apk",
+    "endpointEditable": false,
+    "companyVerificationMode": "content_review",
+    "schemaVersion": 29,
+    "iosValidation": false
+  },
+  "checkedAt": "2026-11-03T11:43:51.815984+00:00"
+}

@@ -1,0 +1,8 @@
+{
+  "apk_sha256": "89378945c565afb631f4325aded8cca604a3f314dea7a94774b44580ddbb24ac",
+  "apk_bytes": 86091587,
+  "embedded_manifest_files_verified": 237,
+  "public_files_extracted": 240,
+  "bundle_manifest_sha256": "e55c711723e95611e594f208dd32105f77c549d0ea1ba4dc9478e5e68e10bd41",
+  "passed": true
+}
