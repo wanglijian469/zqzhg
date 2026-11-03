@@ -1,0 +1,15 @@
+{
+  "reportedOn": "2026-11-03",
+  "device": "Xiaomi 2106118C (MIX4)",
+  "android": "12",
+  "webview": "156.0.8078.47",
+  "candidateVersion": "1.10.9+48",
+  "userReportedAcceptance": "failed",
+  "reason": "http",
+  "host": "",
+  "code": 403,
+  "exactRequestSchemeAndURLNotCaptured": true,
+  "formalPromotionBlocked": true,
+  "codeRegressionFound": "app-owned document has no distinct route in remote resource filter",
+  "nextCandidate": "1.10.9+49; device unverified"
+}

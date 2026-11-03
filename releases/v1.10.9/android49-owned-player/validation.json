@@ -1,0 +1,215 @@
+{
+  "nativeChecks": 80,
+  "flutterRelatedFiles": 4,
+  "flutterPassed": 19,
+  "releaseBuildPassed": true,
+  "devicePlaybackVerified": false,
+  "exactMIX4RejectedURLCaptured": false,
+  "browserProductionJavaDocumentAndRouter": {
+    "source": "actual-production-Java-document-and-router",
+    "androidDevicePlaybackVerified": false,
+    "ownedDocumentServedLocally": true,
+    "playback": {
+      "time": 3.369387,
+      "paused": false,
+      "error": 0,
+      "muted": false
+    },
+    "iframeCount": 1,
+    "mainDocumentStatus": 200,
+    "remoteOwnedOriginRequests": 0,
+    "events": [
+      {
+        "main": true,
+        "scheme": "https:",
+        "host": "zqzhg.com",
+        "decision": 1
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "open.douyin.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "lf-c-flwb.bytetos.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "lf-developer-cdn.open-douyin.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "lf-developer-cdn.open-douyin.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "lf-developer-cdn.open-douyin.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "lf-developer-cdn.open-douyin.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "lf-developer-cdn.open-douyin.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "mcs.zijieapi.com",
+        "decision": 3
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "mon.zijieapi.com",
+        "decision": 3
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "open.douyin.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "lf3-short.ibytedapm.com",
+        "decision": 3
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "lf3-short.ibytedapm.com",
+        "decision": 3
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "mon.zijieapi.com",
+        "decision": 3
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "www.douyin.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "p3-pc-sign.douyinpic.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "www.douyin.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "www.douyin.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "www.douyin.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "p3-pc.douyinpic.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "lf-developer-cdn.open-douyin.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "v26-web.douyinvod.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "mon.zijieapi.com",
+        "decision": 3
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "p3-pc.douyinpic.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "p3-sign.douyinpic.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "mon.zijieapi.com",
+        "decision": 3
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "p3-sign.douyinpic.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "p26-sign.douyinpic.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "p9-sign.douyinpic.com",
+        "decision": 2
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "mon.zijieapi.com",
+        "decision": 3
+      },
+      {
+        "main": false,
+        "scheme": "https:",
+        "host": "mssdk.bytedance.com",
+        "decision": 2
+      }
+    ],
+    "passed": true
+  },
+  "nativeNetworkAllowlistExpanded": false,
+  "productionWebsiteChanged": false,
+  "databaseChanged": false,
+  "formalAndroidReplaced": false
+}
