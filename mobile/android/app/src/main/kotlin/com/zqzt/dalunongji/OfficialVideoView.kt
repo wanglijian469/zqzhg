@@ -58,6 +58,7 @@ class OfficialVideoView(
     private var web: WebView? = null
     private var disposed = false
     private var failed = false
+    private val loadState = OfficialVideoLoadState()
     private var overlay: FrameLayout? = null
     private var custom: View? = null
     private var customCallback: WebChromeClient.CustomViewCallback? = null
@@ -90,11 +91,16 @@ class OfficialVideoView(
         }
     }
 
-    private fun fail() {
+    private fun detail(reason: String, raw: String = "", code: Int = 0): Map<String, Any> =
+        mapOf("reason" to reason, "host" to OfficialVideoPolicy.diagnosticHost(raw), "code" to code)
+
+    private fun fail(reason: String, raw: String = "", code: Int = 0) {
         if (disposed || failed) return
         failed = true
+        loadState.stop()
+        handler.removeCallbacksAndMessages(null)
         releaseWeb()
-        event("error")
+        event("error", detail(reason, raw, code))
     }
 
     private fun isPlayerRequest(request: WebResourceRequest): Boolean =
@@ -105,10 +111,16 @@ class OfficialVideoView(
         releaseWeb()
         failed = false
         lastUserTouch = Long.MIN_VALUE
-        if (!trustedPlayer(rawUrl)) { fail(); return }
+        event("loading")
+        if (!trustedPlayer(rawUrl)) { fail("invalid_player"); return }
+        val attempt = loadState.begin()
         val player = WebView(activity)
         web = player
-        val loadTimeout = Runnable { if (web === player && !disposed) fail() }
+        // A slow network must not destroy a still-loading official iframe.
+        // No automatic reload: the user can keep waiting, retry, or close it.
+        val loadTimeout = Runnable {
+            if (web === player && !disposed && loadState.slow(attempt)) event("slow", detail("slow_load"))
+        }
         handler.postDelayed(loadTimeout, 20000)
         player.setBackgroundColor(Color.BLACK)
         player.settings.apply {
@@ -137,27 +149,41 @@ class OfficialVideoView(
             }
 
             override fun onPageFinished(view: WebView, url: String) {
-                if (web === view && !failed) {
+                if (web === view && !failed && loadState.ready(attempt)) {
                     handler.removeCallbacks(loadTimeout)
                     event("loaded")
                 }
             }
 
             override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
-                if (isPlayerRequest(request)) handler.post { if (web === view) fail() }
+                if (isPlayerRequest(request)) handler.post {
+                    if (web === view) fail("network", request.url.toString(), error.errorCode)
+                }
             }
 
             override fun onReceivedHttpError(view: WebView, request: WebResourceRequest, response: WebResourceResponse) {
-                if (isPlayerRequest(request) && response.statusCode >= 400) handler.post { if (web === view) fail() }
+                if (isPlayerRequest(request) && response.statusCode >= 400) handler.post {
+                    if (web === view) fail("http", request.url.toString(), response.statusCode)
+                }
             }
 
             override fun onReceivedSslError(view: WebView, ssl: SslErrorHandler, error: android.net.http.SslError) {
                 ssl.cancel()
-                handler.post { if (web === view) fail() }
+                // Reject every bad certificate. A failed optional image/telemetry request
+                // is not evidence that the player document or its scripts cannot load.
+                handler.post {
+                    if (web === view) {
+                        if (OfficialVideoPolicy.failureIsFatal("tls", false, error.url)) {
+                            fail("tls", error.url, error.primaryError)
+                        } else {
+                            event("resource-warning", detail("optional_tls", error.url, error.primaryError))
+                        }
+                    }
+                }
             }
 
             override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
-                handler.post { if (web === view) fail() }
+                handler.post { if (web === view) fail("renderer") }
                 return true
             }
         }
@@ -261,6 +287,7 @@ class OfficialVideoView(
     }
 
     fun stop(notify: Boolean = false) {
+        loadState.stop()
         handler.removeCallbacksAndMessages(null)
         releaseWeb()
         if (notify) event("stopped")

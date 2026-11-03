@@ -11,6 +11,20 @@ public final class OfficialVideoPolicyCheck {
   check(OfficialVideoPolicy.allowedResource("https://lf-c-flwb.bytetos.com/obj/rc-client-security/c-webmssdk/1.0.0.22/webmssdk.js"));
   for(String bad:new String[]{cdn.replace("https:","http:"),cdn.replace("open-douyin.com","open-douyin.com.evil.test"),cdn.replace("/obj/open-platform-scm/","/arbitrary/"),"https://unknown.bytetos.com/script.js","file:///etc/passwd","javascript:alert(1)","https://127.0.0.1/a.js","https://mcs.zijieapi.com/webid"})check(!OfficialVideoPolicy.allowedResource(bad));
   check(OfficialVideoPolicy.allowedResource("https://v26-web.douyinvod.com/video/test"));check(OfficialVideoPolicy.criticalResource("https://open.douyin.com/api/douyin/v1/open/auth/embed_video/"));
+  check(!OfficialVideoPolicy.failureIsFatal("slow_load",true,player));
+  check(!OfficialVideoPolicy.failureIsFatal("tls",false,"https://mon.zijieapi.com/monitor"));
+  check(!OfficialVideoPolicy.failureIsFatal("tls",false,"https://p3-pc.douyinpic.com/image"));
+  check(OfficialVideoPolicy.failureIsFatal("tls",false,player));
+  check(OfficialVideoPolicy.failureIsFatal("tls",false,cdn));
+  check(OfficialVideoPolicy.failureIsFatal("network",true,"https://zqzhg.com/"));
+  check(OfficialVideoPolicy.diagnosticHost("https://open.douyin.com/player/video?token=SECRET#x").equals("open.douyin.com"));
+  check(OfficialVideoPolicy.diagnosticHost("https://user:SECRET@open.douyin.com/private").isEmpty());
+  check(OfficialVideoPolicy.diagnosticHost("file:///private/SECRET").isEmpty());
+  OfficialVideoLoadState state=new OfficialVideoLoadState();int old=state.begin();
+  check(state.slow(old));check(state.current(old));check(!state.slow(old));
+  check(state.ready(old));check(!state.ready(old));check(!state.slow(old));
+  int next=state.begin();check(!state.ready(old));check(!state.slow(old));check(state.current(next));
+  state.stop();check(!state.current(next));check(!state.ready(next));check(!state.slow(next));
   System.out.println(checks+" official player policy checks passed");
  }
 }

@@ -40,6 +40,15 @@ public final class OfficialVideoPolicy {
     ||host.equals("lf-c-flwb.bytetos.com")&&path.startsWith("/obj/rc-client-security/")&&path.endsWith(".js");
   }catch(Exception ignored){return false;}
  }
+ /** Certificate failures are always rejected, but unrelated resources must not tear down playback. */
+ public static boolean failureIsFatal(String kind, boolean mainFrame, String raw) {
+  if("slow_load".equals(kind))return false;
+  return mainFrame||criticalResource(raw);
+ }
+ /** Only an origin host may leave the native networking layer; never cookies, queries or signed paths. */
+ public static String diagnosticHost(String raw) {
+  try{return https(raw).getHost().toLowerCase(Locale.ROOT);}catch(Exception ignored){return "";}
+ }
  public static String originalVideoURL(String raw) {
   if(!trustedPlayer(raw))return "";
   try{for(String pair:new URI(raw).getRawQuery().split("&")){String[] kv=pair.split("=",2);if("vid".equals(URLDecoder.decode(kv[0],"UTF-8")))return "https://www.douyin.com/video/"+URLDecoder.decode(kv[1],"UTF-8");}}catch(Exception ignored){}
