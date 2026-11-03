@@ -1,0 +1,20 @@
+{
+  "url": "https://github.com/wanglijian469/zqzhg/releases/tag/v1.10.9-android50",
+  "tag": "v1.10.9-android50",
+  "commit": "719cdc850ffbb386927435e983a94eae2cc9f999",
+  "draft": false,
+  "assets": [
+    {
+      "name": "manifest.json",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.9-android50/manifest.json",
+      "size": 1441,
+      "digest": "sha256:364a81ad5a0f228bc1e47d3adc59f0ba98fa14007707645e300bd61684f47eca"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.10.9-android50/SHA256SUMS.txt",
+      "size": 87,
+      "digest": "sha256:605d69d9cffa59b0e097c48cba684bd644fa2ac80c7e6d628080c3fcf3f283dc"
+    }
+  ]
+}
