@@ -12,6 +12,7 @@ import (
 	"regexp"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -76,11 +77,27 @@ func TestIndependentSEOHTMLAndPublication(t *testing.T) {
 			t.Fatal("canonical/image missing", raw)
 		}
 		match := regexp.MustCompile(`<script type="application/ld\+json">(.*?)</script>`).FindStringSubmatch(raw)
-		var structured map[string]any
-		if len(match) != 2 || json.Unmarshal([]byte(match[1]), &structured) != nil || structured["@type"] != spec.kind || structured["url"] != spec.canonical {
+		var structured map[string]json.RawMessage
+		if len(match) != 2 || json.Unmarshal([]byte(match[1]), &structured) != nil {
 			t.Fatal("invalid structured data", match)
 		}
-		if _, exists := structured["offers"]; exists {
+		entity := structured
+		if spec.kind == "Product" {
+			var graph []map[string]json.RawMessage
+			if json.Unmarshal(structured["@graph"], &graph) != nil || len(graph) != 2 || string(graph[1]["@type"]) != `"BreadcrumbList"` ||
+				!strings.Contains(raw, `aria-label="面包屑导航"`) {
+				t.Fatal("product breadcrumb missing", match)
+			}
+			entity = graph[0]
+		} else if strings.Contains(raw, `aria-label="面包屑导航"`) || strings.Contains(raw, `"BreadcrumbList"`) {
+			t.Fatal("showroom should not contain breadcrumbs")
+		}
+		var kind, canonical string
+		if json.Unmarshal(entity["@type"], &kind) != nil || json.Unmarshal(entity["url"], &canonical) != nil ||
+			kind != spec.kind || canonical != spec.canonical {
+			t.Fatal("invalid structured data", match)
+		}
+		if _, exists := entity["offers"]; exists {
 			t.Fatal("invented offers")
 		}
 		body := strings.SplitN(raw, "</head>", 2)[1]
@@ -133,6 +150,7 @@ func TestIndependentSEOHistoryRedirects(t *testing.T) {
 
 func TestIndependentSEOSitemapVisibilityAndBoundaries(t *testing.T) {
 	a := importTestApp(t)
+	seoTestIndex(t, a)
 	a.Config.PublicBaseURL = "https://seo.example"
 	v := v2Published(t, a, "vendor", 0, 1, 1, 1, false, 0, "地图公开厂商")
 	a.DB.Model(&v).Update("showroom_slug", "map-brand")
@@ -155,9 +173,10 @@ func TestIndependentSEOSitemapVisibilityAndBoundaries(t *testing.T) {
 	}
 	router := a.router()
 	w := seoGet(router, "/sitemap.xml")
-	var index sitemapIndex
-	if w.Code != 200 || xml.Unmarshal(w.Body.Bytes(), &index) != nil || len(index.Entries) != 4 || index.XMLNS != sitemapNamespace {
-		t.Fatal("invalid index", w.Code, w.Body.String())
+	var root sitemapURLs
+	if w.Code != 200 || xml.Unmarshal(w.Body.Bytes(), &root) != nil || root.XMLNS != sitemapNamespace ||
+		!strings.Contains(w.Body.String(), "https://seo.example/v/map-brand</loc><lastmod>") {
+		t.Fatal("invalid root sitemap", w.Code, w.Body.String())
 	}
 	for page, expected := range map[int]int{1: 1000, 2: 1} {
 		w = seoGet(router, fmt.Sprintf("/sitemaps/products-%d.xml", page))
@@ -166,7 +185,7 @@ func TestIndependentSEOSitemapVisibilityAndBoundaries(t *testing.T) {
 			t.Fatal("invalid product shard", page, w.Code, w.Body.String())
 		}
 	}
-	w = seoGet(router, "/sitemaps/vendors-1.xml")
+	w = seoGet(router, "/sitemap-vendors-1.xml")
 	var vendors sitemapURLs
 	if w.Code != 200 || xml.Unmarshal(w.Body.Bytes(), &vendors) != nil || len(vendors.Entries) != 1 || vendors.Entries[0].Loc != "https://seo.example/v/map-brand" {
 		t.Fatal("private vendor exposed", w.Body.String())
@@ -195,6 +214,115 @@ func TestIndependentSEOSitemapVisibilityAndBoundaries(t *testing.T) {
 	}
 	if robots = seoGet(router, "/robots.txt").Body.String(); !strings.Contains(robots, "https://configured.example/sitemap.xml") {
 		t.Fatal("saved origin ignored", robots)
+	}
+}
+
+func TestIndependentSEODirectoryDiscoveryAndLastMod(t *testing.T) {
+	a := importTestApp(t)
+	seoTestIndex(t, a)
+	a.Config.PublicBaseURL = "https://zqzhg.com"
+	var category Category
+	if err := a.DB.Where("hall_id=1 AND category_kind='vendor' AND enabled=1 AND parent_id=0").
+		First(&category).Error; err != nil {
+		t.Fatal(err)
+	}
+	const company = "河北丹顿液压科技有限公司"
+	vendor := Content{ID: 21, Kind: "vendor", HallID: 1, Visible: true, Featured: true}
+	if err := a.DB.Create(&vendor).Error; err != nil {
+		t.Fatal(err)
+	}
+	approved := Revision{ContentID: vendor.ID, Status: "approved", CategoryID: category.ID, Payload: "{}"}
+	if err := a.DB.Create(&approved).Error; err != nil {
+		t.Fatal(err)
+	}
+	vendor.PublishedRevisionID = approved.ID
+	if err := a.DB.Save(&vendor).Error; err != nil {
+		t.Fatal(err)
+	}
+	if err := a.DB.Create(&HomeRotationPool{VendorID: vendor.ID, HallID: 1, State: "approved"}).Error; err != nil {
+		t.Fatal(err)
+	}
+	seoSetPayload(t, a, vendor, Payload{Name: company, MainProducts: "液压油缸", Description: "主营液压技术研发、技术咨询与推广及液压油缸、液压阀等配件生产销售"})
+	if err := a.DB.Model(&approved).
+		Updates(map[string]any{"province_code": "13", "city_code": "1305", "district_code": "130528"}).Error; err != nil {
+		t.Fatal(err)
+	}
+	if err := a.DB.Exec("INSERT IGNORE INTO revision_categories(revision_id, category_id, role) VALUES(?, ?, 'primary')", vendor.PublishedRevisionID, category.ID).Error; err != nil {
+		t.Fatal(err)
+	}
+	router := a.router()
+	cat := fmt.Sprintf("/browse?category_id=%d", category.ID)
+	public := []string{"/", "/browse", cat, "/regions", "/regions?region_code=13",
+		"/regions?region_code=1305", "/regions?region_code=130528"}
+	for _, path := range public {
+		w := seoGet(router, path)
+		if w.Code != 200 || w.Header().Get("X-Robots-Tag") != "" ||
+			!strings.Contains(w.Body.String(), `href="/v/v-21"`) {
+			t.Fatalf("directory discovery %s: %d %s", path, w.Code, w.Body.String())
+		}
+	}
+	for _, path := range []string{cat + "&q=无", cat + "&page=2", "/regions?region_code=000000",
+		"/browse?category_id=999999999", "/account", "/admin"} {
+		w := seoGet(router, path)
+		if !strings.Contains(w.Header().Get("X-Robots-Tag"), "noindex") {
+			t.Fatalf("indexable private or filtered page: %s", path)
+		}
+	}
+	w := seoGet(router, "/v/v-21")
+	for _, expected := range []string{company + " - 企业展厅 - 中企展馆", "主营液压技术研发", "液压油缸",
+		"href='https://zqzhg.com/v/v-21'", "Organization"} {
+		if w.Code != 200 || !strings.Contains(w.Body.String(), expected) {
+			t.Fatalf("showroom metadata missing %q (%d)", expected, w.Code)
+		}
+	}
+	sitemap := func() map[string]string {
+		t.Helper()
+		w := seoGet(router, "/sitemap.xml")
+		var root sitemapURLs
+		if err := xml.Unmarshal(w.Body.Bytes(), &root); w.Code != 200 || err != nil {
+			t.Fatalf("invalid sitemap: %d %v %s", w.Code, err, w.Body.String())
+		}
+		result := map[string]string{}
+		for _, entry := range root.Entries {
+			result[strings.TrimPrefix(entry.Loc, "https://zqzhg.com")] = entry.LastMod
+		}
+		return result
+	}
+	initial := sitemap()
+	for _, path := range public {
+		if _, found := initial[path]; !found {
+			t.Fatal("missing public directory in sitemap", path)
+		}
+	}
+	if _, err := time.Parse(time.RFC3339, initial["/v/v-21"]); err != nil {
+		t.Fatal("invalid showroom lastmod", initial["/v/v-21"], err)
+	}
+	draft := Revision{ContentID: vendor.ID, Status: "pending", Name: "待审名称", Payload: "{}"}
+	if err := a.DB.Create(&draft).Error; err != nil {
+		t.Fatal(err)
+	}
+	if err := a.DB.Model(&vendor).Update("draft_revision_id", draft.ID).Error; err != nil {
+		t.Fatal(err)
+	}
+	if after := sitemap()["/v/v-21"]; after != initial["/v/v-21"] {
+		t.Fatal("draft changed the public date", after)
+	}
+	if err := a.DB.Model(&vendor).Update("visible", false).Error; err != nil {
+		t.Fatal(err)
+	}
+	if _, found := sitemap()["/v/v-21"]; found || seoGet(router, "/v/v-21").Code != 404 {
+		t.Fatal("offline showroom remained public")
+	}
+	nextDate := time.Now().UTC().Add(time.Minute).Truncate(time.Second)
+	if err := a.DB.Model(&Revision{}).Where("id=?", vendor.PublishedRevisionID).
+		Update("reviewed_at", nextDate).Error; err != nil {
+		t.Fatal(err)
+	}
+	if err := a.DB.Model(&vendor).Update("visible", true).Error; err != nil {
+		t.Fatal(err)
+	}
+	if after := sitemap()["/v/v-21"]; after != nextDate.Format(time.RFC3339) {
+		t.Fatal("republished date missing", after)
 	}
 }
 

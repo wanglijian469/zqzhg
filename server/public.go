@@ -175,16 +175,21 @@ func (a *App) filterVendors(c *gin.Context, q *gorm.DB) *gorm.DB {
 	}
 	return filterBelt(c, q, "contents.id")
 }
+func (a *App) filterDirectoryVendors(c *gin.Context, q *gorm.DB) *gorm.DB {
+	q = a.filterVendors(c, q)
+	if region := c.Query("region_id"); region != "" {
+		q = q.Where("r.region_id = ?", positiveFilterID(region))
+	}
+	return q
+}
+
 func (a *App) searchVendors(c *gin.Context) {
 	p, n := publicPage(c, 20)
 	q, ok := a.hallQuery(c, a.publicQuery("vendor"))
 	if !ok {
 		return
 	}
-	q = a.filterVendors(c, q)
-	if region := c.Query("region_id"); region != "" {
-		q = q.Where("r.region_id = ?", positiveFilterID(region))
-	}
+	q = a.filterDirectoryVendors(c, q)
 	var total int64
 	if e := q.Count(&total).Error; e != nil {
 		dbFail(c, e)

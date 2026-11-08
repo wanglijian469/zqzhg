@@ -32,9 +32,8 @@ export function Showroom(){
  const requested=params.get('tab')||(params.has('q')||params.has('category_id')||params.has('page')?'products':'home');const activeTab=tabs.some(([key])=>key===requested)?requested:'home';
  const tabStrip=useHorizontalTabs(activeTab+':'+lang+':'+(item?.id??''));
  const quickContact=useQuickContact(item?.id,lang);
- const label=tabs.find(([key])=>key===activeTab)![1];
- const metadata=item?companySEO(item.data,lang,activeTab,t(label),t('brand')):undefined;
- usePageMetadata(metadata?.title||t(r.error||'loading')+' | '+t('brand'),metadata?.description||'',r.data?.canonical_url,!!r.error||!item,item?.data.company_profile?.cover_media_id||item?.data.media_ids?.[0]||0,metadata?.keywords);
+ const metadata=item?companySEO(item.data,lang,t('brand')):undefined;
+ usePageMetadata(metadata?.title||(r.error?t(r.error)+' | '+t('brand'):''),metadata?.description||'',r.data?.canonical_url,!!r.error||!item,item?.data.company_profile?.cover_media_id||item?.data.media_ids?.[0]||0,metadata?.keywords);
  const tax=useLoad<Taxonomy>(href('/public/taxonomy?category_kind=all'));
  const page=Math.max(1,Math.floor(Number(params.get('page'))||1));const search=new URLSearchParams({vendor_id:String(item?.id||0),page_size:'24',page:String(page)});
  for(const key of ['q','category_id','sort'])if(params.get(key))search.set(key,params.get(key)!);

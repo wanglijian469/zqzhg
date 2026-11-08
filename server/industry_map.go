@@ -136,11 +136,7 @@ func (a *App) industryMapVendors(c *gin.Context) {
 			return
 		}
 		if value == "1" {
-			if column := industryNextColumn(node); column != "" {
-				q = q.Where(column + " IS NULL")
-			} else {
-				q = q.Where("1=0")
-			}
+			q = industryUnassigned(q, node)
 		}
 	}
 	p, n := publicPage(c, 20)
@@ -156,4 +152,11 @@ func (a *App) industryMapVendors(c *gin.Context) {
 	}
 	c.Header("Cache-Control", "no-store")
 	c.JSON(200, gin.H{"items": items, "total": total, "page": p, "page_size": n})
+}
+
+func industryUnassigned(q *gorm.DB, node *AdministrativeRegion) *gorm.DB {
+	if column := industryNextColumn(node); column != "" {
+		return q.Where(column + " IS NULL")
+	}
+	return q.Where("1=0")
 }

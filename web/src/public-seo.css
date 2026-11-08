@@ -1,0 +1,43 @@
+.seo-content nav,
+.public-detail-breadcrumb {
+  position: static;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: baseline;
+  gap: .5rem;
+  padding: 0;
+  margin-bottom: 1rem;
+  border: 0;
+  background: transparent;
+}
+
+.seo-content nav > a {
+  padding: 0;
+}
+
+.seo-content:not([data-seo-showroom]) a,
+.public-detail-breadcrumb a {
+  text-decoration: underline;
+  text-underline-offset: .15em;
+}
+
+.seo-content:not([data-seo-showroom]),
+.public-detail-breadcrumb {
+  overflow-wrap: anywhere;
+}
+
+.seo-content nav > ol,
+.public-detail-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem .5rem;
+  padding: 0;
+  margin: .75rem 0 0;
+  list-style: none;
+}
+
+.seo-content nav > ol li + li::before,
+.public-detail-breadcrumb li + li::before {
+  content: "/";
+  margin-inline-end: .5rem;
+}

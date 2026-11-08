@@ -70,11 +70,6 @@ func productSEOKeywords(data, vendor Payload) string {
 	return seoKeywords(values...)
 }
 
-func showroomSEOTitle(name, tab, brand string) string {
-	labels := map[string]string{"about": "企业介绍", "products": "产品中心", "videos": "视频展示", "catalogs": "电子画册", "contact": "联系企业"}
-	title := name + " · " + publicSEOCopy.ZH.Showroom
-	if label := labels[tab]; label != "" {
-		title += " · " + label
-	}
-	return title + " | " + brand
+func showroomSEOTitle(name, brand string) string {
+	return name + " - " + publicSEOCopy.ZH.Showroom + " - " + brand
 }

@@ -2,7 +2,8 @@ import {lazy,Suspense,useCallback,useEffect,useLayoutEffect,useRef,useState} fro
 import {Link,useLocation,useSearchParams} from 'react-router-dom';
 import {ArrowUpRight,ChevronLeft,ChevronRight,Home,Info,MapPin,Search,SlidersHorizontal,X} from 'lucide-react';
 import {display,ErrorState,Loading,Pager,useLanguage,useLoad} from './ui';
-import {useHall} from './halls';
+import {useHall,usePageMetadata} from './halls';
+import {indexableDirectory} from './seo';
 import {VendorLogo} from './vendor-brand';
 import {vendorPath} from './showroom-share';
 import {useDebouncedSearch} from './search-debounce';
@@ -22,7 +23,7 @@ function useCompactMap(){
 }
 
 export function IndustryMapPage(){
- const {lang,t}=useLanguage();const {href,slug}=useHall();const location=useLocation();const [params,setParams]=useSearchParams();const compact=useCompactMap();
+ const {lang,t}=useLanguage();const {hall,href,slug}=useHall();const location=useLocation();const [params,setParams]=useSearchParams();const compact=useCompactMap();
  const [query,setQuery]=useState(params.get('q')||'');const [regionSearch,setRegionSearch]=useState('');
  const [pickerOpen,setPickerOpen]=useState(false);const [filtersOpen,setFiltersOpen]=useState(false);const [infoOpen,setInfoOpen]=useState(false);
  const picker=useRef<HTMLDivElement>(null);const pickerTrigger=useRef<HTMLButtonElement>(null);const listViewport=useRef<HTMLDivElement>(null);
@@ -33,6 +34,10 @@ export function IndustryMapPage(){
  const previousStatistics=useRef<RegionStatistics|undefined>(undefined);if(stats.data)previousStatistics.current=stats.data;const chartStatistics=stats.data||previousStatistics.current;
  const listQuery=new URLSearchParams(filter);for(const key of ['page','unassigned'])if(params.get(key))listQuery.set(key,params.get(key)!);listQuery.set('page_size',String(pageSize||1));
  const results=useLoad<Page>(href('/public/industry-map/vendors?'+listQuery),undefined,!!stats.data&&pageSize!==undefined);
+ const regionName=results.data?.total?stats.data?.region?.full_name:'';
+ const seoTitle=[regionName,t('imTitle'),t('brand')+'-'+(lang==='zh'?hall?.name:hall?.name_en)].filter(Boolean).join(' | ');
+ const seoDesc=regionName?(lang==='zh'?'浏览'+regionName+'的公开企业展厅。':'Browse public showrooms in '+regionName+'.'):(lang==='zh'?'按行政区划浏览'+hall?.name+'的公开厂商。行政目录覆盖大陆31个省级行政区，版本2023-06-30。':'Browse public manufacturers by administrative region.');
+ usePageMetadata(results.data||results.error||stats.error?seoTitle:'',seoDesc,href('/regions'),!!(results.error||stats.error),0,'',indexableDirectory(location.search,'region_code',stats.data?.region?.code===region,results.data?.total||0));
  const taxonomy=useLoad<Taxonomy>(href('/public/taxonomy?category_kind=vendor'));
  const navigation=useRef({params,setParams});navigation.current={params,setParams};
  const update=(key:string,value:string,replace=false)=>{const next=new URLSearchParams(params);value?next.set(key,value):next.delete(key);if(!['page','view'].includes(key))next.delete('page');setParams(next,{replace})};

@@ -451,6 +451,8 @@ func (a *App) router() *gin.Engine {
 	r.HEAD("/robots.txt", a.publicRobots)
 	r.GET("/sitemap.xml", a.sitemapIndex)
 	r.HEAD("/sitemap.xml", a.sitemapIndex)
+	r.GET("/sitemap-:file", a.sitemapPage)
+	r.HEAD("/sitemap-:file", a.sitemapPage)
 	r.GET("/sitemaps/:file", a.sitemapPage)
 	r.HEAD("/sitemaps/:file", a.sitemapPage)
 	r.GET("/indexnow.txt", a.searchVerificationFile)
@@ -608,8 +610,9 @@ func (a *App) router() *gin.Engine {
 			return
 		}
 		index := filepath.Join(a.Config.WebDir, "index.html")
-		if _, e := os.Stat(index); e != nil {
-			c.JSON(200, gin.H{"service": "中企展馆", "website": "Build web first. API: /api/v1/health"})
+		if info, e := os.Stat(index); e != nil || info.IsDir() {
+			c.Header("X-Robots-Tag", "noindex")
+			fail(c, 503, "website_unavailable")
 			return
 		}
 		if normalized := normalizedSPAPath(c.Request.URL.Path); normalized != c.Request.URL.Path {

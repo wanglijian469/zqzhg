@@ -252,6 +252,10 @@ func categoryGraphIDs(db *gorm.DB, roots []uint64) []uint64 {
 	var aliases []CategoryAlias
 	db.Find(&cats)
 	db.Find(&aliases)
+	return categoryGraphMembers(cats, aliases, roots)
+}
+
+func categoryGraphMembers(cats []Category, aliases []CategoryAlias, roots []uint64) []uint64 {
 	next := map[uint64]uint64{}
 	for _, a := range aliases {
 		next[a.SourceID] = a.TargetID

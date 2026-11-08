@@ -328,32 +328,10 @@ func (a *App) showroomHTML(c *gin.Context, index string) bool {
 	if err != nil {
 		return unavailable(500)
 	}
-	data := item.Data
-	desc := data.MainProducts
-	if data.Description != "" {
-		desc = data.Description
-	}
-	if data.CompanyProfile != nil && data.CompanyProfile.Summary != "" {
-		desc = data.CompanyProfile.Summary
-	}
-	desc = data.Name + "企业展厅。" + desc
-	runes := []rune(strings.TrimSpace(desc))
-	if len(runes) > 160 {
-		desc = string(runes[:160])
-	}
-	tab := c.Query("tab")
-	if tab == "" {
-		for _, key := range []string{"q", "category_id", "page"} {
-			if c.Request.URL.Query().Has(key) {
-				tab = "products"
-				break
-			}
-		}
-	}
-	title := showroomSEOTitle(data.Name, tab, a.brandName())
+	title := showroomSEOTitle(item.Data.Name, a.brandName())
 	robots := "index,follow"
 	if showroomSearchVariant(c.Request.URL.Query()) {
 		robots = "noindex,follow"
 	}
-	return a.sendPublicHTML(c, index, 200, title, desc, canonical, robots, detail)
+	return a.sendPublicHTML(c, index, 200, title, showroomSEODescription(item.Data), canonical, robots, detail)
 }

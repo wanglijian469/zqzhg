@@ -17,11 +17,11 @@ it('targets search phrases only on platform landing pages, without declaring bra
 });
 it('builds company and product metadata from actual names, with English fallback and bounded keywords',()=>{
  const vendor={...emptyData,name:'河北冀农农机具有限公司',main_products:'耕地机械',region_name:'河北省',keywords:'耕地机械，农机',company_profile:{short_name:'冀农',summary:'真实企业简介'}};
- const zh=companySEO(vendor,'zh','about','企业介绍','中企展馆');
- expect(zh.title).toBe(vendor.name+' · 企业展厅 · 企业介绍 | 中企展馆');
- expect(zh.description).toBe(vendor.name+'企业展厅。真实企业简介');
+ const zh=companySEO(vendor,'zh','中企展馆');
+ expect(zh.title).toBe(vendor.name+' - 企业展厅 - 中企展馆');
+ expect(zh.description).toBe(vendor.name+'企业展厅。真实企业简介 主营产品：耕地机械');
  expect(zh.keywords).toContain('冀农');expect(zh.keywords).not.toContain('内卷网');
- expect(companySEO({...vendor,name_en:'Jinong',company_profile:{short_name_en:'JN',summary_en:'Company profile'}},'en','home','Home','Exhibition').title).toBe('Jinong · Company showroom | Exhibition');
+ expect(companySEO({...vendor,name_en:'Jinong',company_profile:{short_name_en:'JN',summary_en:'Company profile'}},'en','Exhibition').title).toBe('Jinong - Company showroom - Exhibition');
  const p=productSEO({...emptyData,name:'旋耕机',parameters:'型号：NJ-800\n功率：80千瓦'},vendor,'zh','中企展馆',hall.name);
  expect(p.keywords).toContain('NJ-800');expect(p.description).toContain('型号 NJ-800');
  expect(seoKeywords(' 企业名单，企业展厅;企业名单|Tractor\ntractor',' 河北  农机 ', '长'.repeat(81))).toBe('企业名单,企业展厅,Tractor,河北 农机');

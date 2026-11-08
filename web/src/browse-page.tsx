@@ -1,4 +1,4 @@
-import {seoText} from './seo';
+import {indexableDirectory,publicPageSEO,seoText} from './seo';
 import './compact-search.css';
 import {useDebouncedSearch} from './search-debounce';
 import {ActiveFilters,selectedFilters} from './public-mobile';
@@ -7,12 +7,12 @@ import {useLocation,useSearchParams} from 'react-router-dom';
 import {Search,X} from 'lucide-react';
 import {useLanguage,useLoad,ErrorState,Pager,ProductCard} from './ui';
 import {VendorBrandCard} from './vendor-list';
-import {useHall} from './halls';
+import {useHall,usePageMetadata} from './halls';
 import {categoryPath} from './taxonomy-utils';
 import type {Page,Taxonomy} from './types';
 export function ListSkeleton({kind='vendor'}:{kind?:'vendor'|'product'}){const {t}=useLanguage();return <div role="status" aria-label={t('loadingResults')} className={'list-skeleton '+kind}>{Array.from({length:kind==='vendor'?3:8},(_,i)=><div key={i}><span/><i/><i/></div>)}</div>}
 export function BrowsePage({kind='vendor'}:{kind?:'vendor'|'product'}){
- const {lang,t}=useLanguage();const {href}=useHall();const location=useLocation();const [params,setParams]=useSearchParams();const [q,setQ]=useState(params.get('q')||'');
+ const {lang,t}=useLanguage();const {hall,href}=useHall();const location=useLocation();const [params,setParams]=useSearchParams();const [q,setQ]=useState(params.get('q')||'');
  const paramsClean=new URLSearchParams(params);const obsolete=paramsClean.has('industrial_belt_id')||paramsClean.has('business_nature');paramsClean.delete('industrial_belt_id');paramsClean.delete('business_nature');if(obsolete)paramsClean.delete('page');
  useEffect(()=>{if(obsolete)setParams(paramsClean,{replace:true})},[params.toString()]);
  const [categoryNotice,setCategoryNotice]=useState(false);
@@ -20,6 +20,12 @@ export function BrowsePage({kind='vendor'}:{kind?:'vendor'|'product'}){
  const rawCategory=params.get('category_id');const aliasedCategory=taxonomy.data?.aliases?.find(a=>String(a.source_id)===rawCategory)?.target_id;const selectedCategory=aliasedCategory||Number(rawCategory);const validCategory=!rawCategory||!taxonomy.data||taxonomy.data.categories.some(c=>c.id===selectedCategory);if(!validCategory)request.delete('category_id');
  useEffect(()=>{if(!taxonomy.data||!rawCategory)return;const next=new URLSearchParams(params);if(!validCategory){next.delete('category_id');next.delete('page');setCategoryNotice(true);setParams(next,{replace:true})}else if(aliasedCategory&&String(aliasedCategory)!==rawCategory){next.set('category_id',String(aliasedCategory));setParams(next,{replace:true})}},[taxonomy.data,rawCategory]);
  const results=useLoad<Page>(href('/public/'+(kind==='product'?'products':'vendors')+'?'+request),undefined,!rawCategory||!!taxonomy.data||!!taxonomy.error);const returnTo=location.pathname+location.search;
+ const category=taxonomy.data?.categories.find(item=>String(item.id)===rawCategory);
+ const baseSEO=publicPageSEO(location.pathname,t('brand'),hall,lang);
+ const facetName=results.data?.total&&category?(lang==='en'?category.name_en||category.name:category.name):'';
+ const title=baseSEO&&(results.data||results.error)?[facetName,baseSEO.title].filter(Boolean).join(' | '):'';
+ const description=facetName?(lang==='zh'?'浏览'+facetName+'的公开'+(kind==='product'?'产品':'企业展厅')+'。':'Browse public '+(kind==='product'?'products':'showrooms')+' in '+facetName+'.'):baseSEO?.description||'';
+ usePageMetadata(title,description,href(location.pathname),!!results.error,0,baseSEO?.keywords,indexableDirectory(location.search,'category_id',!!category,results.data?.total||0));
  useEffect(()=>setQ(params.get('q')||''),[params.get('q')]);
  const update=(key:string,value:string,replace=false)=>{const next=new URLSearchParams(params);if(value)next.set(key,value);else next.delete(key);next.delete('page');setParams(next,{replace})};
  const search=useDebouncedSearch(q,params.get('q')||'',(value,replace)=>update('q',value,replace),location.pathname+':'+(params.get('hall')||'agriculture'));

@@ -25,12 +25,15 @@ export function publicPageSEO(path:string,brand:string,hall:Hall|undefined,lang:
  const terms=path==='/browse/products'?text.productTerms:[...text.directoryTerms,...copy.targetTerms];
  return {title:path==='/'?brand+'-'+hallName:prefix+' | '+brand+'-'+hallName,description:limitSEODescription(hallName+(lang==='zh'?'：':': ')+description),keywords:seoKeywords(brand,hallName,...terms)};
 }
-export function companySEO(data:Data,lang:Lang,tab:string,label:string,brand:string){
+export function companySEO(data:Data,lang:Lang,brand:string){
  const text=seoText(lang),company=name(data,lang),profile=data.company_profile;
- const summary=(lang==='en'?(profile?.summary_en||profile?.summary):profile?.summary)||(lang==='en'&&data.description_en?data.description_en:data.description)||data.main_products||'';
+ const clean=(value:string|undefined)=>(value||'').trim().replace(/\s+/gu,' ');
+ const summary=clean(lang==='en'?profile?.summary_en:undefined)||clean(profile?.summary)||clean(lang==='en'?data.description_en:undefined)||clean(data.description);
+ const main=clean(data.main_products);
+ const products=main&&!summary.toLowerCase().includes(main.toLowerCase())?(lang==='zh'?'主营产品：':'Main products: ')+main:'';
  return {
-  title:company+' · '+text.showroom+(tab==='home'?'':' · '+label)+' | '+brand,
-  description:limitSEODescription(company+(lang==='zh'?'企业展厅。':' company showroom. ')+summary),
+  title:company+' - '+text.showroom+' - '+brand,
+  description:limitSEODescription(clean(company)+(lang==='zh'?'企业展厅。':' company showroom. ')+[summary,products].filter(Boolean).join(' ')),
   keywords:seoKeywords(company,lang==='en'?(profile?.short_name_en||profile?.short_name):profile?.short_name,data.main_products,data.region_name,...text.directoryTerms,data.keywords)
  };
 }
@@ -45,11 +48,16 @@ export function productSEO(data:Data,vendor:Data|undefined,lang:Lang,brand:strin
 
 export function canonicalPublicURL(path:string,search:string,base:string,explicit?:string){
  const url=new URL(explicit||path,base);url.hash='';const source=new URLSearchParams(search);const q=new URLSearchParams();
- const keys=['hall','q','category_id','region_id','region_code','unassigned','vendor_id','sort','page'];
+ const keys=url.pathname==='/regions'?['hall','q','category_id','region_code','unassigned','page']:['hall','q','category_id','region_id','industrial_belt_id','business_nature','vendor_id','sort','page'];
  if(['/','/browse','/browse/products','/regions'].includes(url.pathname)){for(const key of keys){let v=source.get(key)?.trim();if(!v||(key==='hall'&&v==='agriculture')||(key==='page'&&(!/^\d+$/.test(v)||Number(v)<=1)))continue;if(key==='page')v=String(Number(v));q.set(key,v)}}q.sort();url.search=q.toString();return url.href;
 }
 export function showroomSearchVariant(path:string,search:string){const q=new URLSearchParams(search);return /^\/(?:v|vendors)\//.test(path)&&Number(q.get('page'))>1}
-export function filteredSearch(search:string){const q=new URLSearchParams(search);return Number(q.get('page'))>1||['q','category_id','region_id','region_code','unassigned','vendor_id','sort'].some(k=>!!q.get(k)?.trim())}
+const filterKeys=['q','category_id','region_id','region_code','unassigned','vendor_id','sort','business_nature','industrial_belt_id'];
+export function filteredSearch(search:string){const q=new URLSearchParams(search);return Number(q.get('page'))>1||filterKeys.some(k=>!!q.get(k))}
+export function indexableDirectory(search:string,facet:'category_id'|'region_code',validFacet:boolean,total:number){
+ const params=new URLSearchParams(search),page=params.get('page');
+ return total>0&&(!page||page==='1')&&(!params.get(facet)||validFacet)&&!filterKeys.some(key=>key!==facet&&!!params.get(key));
+}
 
 // Unknown client routes must not overwrite the server 404 with indexable metadata.
 export function indexablePublicPath(path:string){return ["/guide","/","/browse","/browse/products","/regions","/app","/services","/services/service-info","/services/showroom-agreement","/services/terms","/services/privacy","/service-requests"].includes(path)||/^\/(?:products|vendors)\/[1-9][0-9]*\/?$/.test(path)||/^\/v\/[a-z0-9-]+\/?$/.test(path)}

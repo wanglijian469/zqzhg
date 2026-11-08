@@ -107,6 +107,15 @@ def verify_package(package):
     # Android promotion is blocked until phone acceptance; keep the signed stable APK.
     assert manifest['android']['versionCode'] == 45
     assert manifest['androidDownloadUnchanged'] is True
+    verify_inventory(package, manifest)
+    apk = package / 'web/dist/downloads/dalunongji.apk'
+    assert sha(apk) == manifest['android']['sha256']
+    assert json.loads((apk.parent / 'manifest.json').read_text()) == manifest['android']
+    assert sorted(int(p.name.split('_')[0]) for p in (package / 'server/migrations').glob('*.sql')) == list(range(1, 31))
+    return manifest
+
+
+def verify_inventory(package, manifest):
     sums = (package / 'SHA256SUMS').read_bytes()
     assert b'\r' not in sums and sums.endswith(b'\n')
     seen = set()
@@ -118,11 +127,6 @@ def verify_package(package):
         seen.add(rel)
     assert seen == set(inventory(package)) - {'SHA256SUMS'}, 'unlisted_package_file'
     assert inventory(package / 'map-demo') == manifest['mapFiles']
-    apk = package / 'web/dist/downloads/dalunongji.apk'
-    assert sha(apk) == manifest['android']['sha256']
-    assert json.loads((apk.parent / 'manifest.json').read_text()) == manifest['android']
-    assert sorted(int(p.name.split('_')[0]) for p in (package / 'server/migrations').glob('*.sql')) == list(range(1, 31))
-    return manifest
 
 
 def backup():
@@ -162,14 +166,16 @@ def backup():
     print(json.dumps({'backupVerified': True, 'backup': str(dest), 'schema': value['schema'], 'mediaFiles': len(media_before), 'counts': value['counts']}))
 
 
-def stage(package):
+def stage(package, prepare_web=None):
     value = state(); assert value['backupVerified']
     manifest = verify_package(package)
-    release = BASE / 'releases' / ('v1.10.9-' + manifest['gitCommit'][:7])
+    release = BASE / 'releases' / ('v' + VERSION + '-' + manifest['gitCommit'][:7])
     assert not release.exists()
     release.mkdir(mode=0o755)
     for n in ['server', 'web', 'map-demo']:
         shutil.copytree(str(package / n), str(release / n))
+    if prepare_web is not None:
+        prepare_web(release, manifest)
     arch = subprocess.check_output(['uname', '-m']).decode().strip()
     assert arch == 'x86_64', 'this_package_requires_linux_amd64'
     os.chmod(str(release / 'server/exhibition'), 0o755)
@@ -193,7 +199,7 @@ def stage(package):
     print(json.dumps({'staged': True, 'release': str(release), 'mapFiles': len(manifest['mapFiles']), 'android': manifest['android']['version']}))
 
 
-def candidate():
+def candidate(check=None):
     value = state(); assert value['staged']
     release = Path(value['release']); work = BASE / 'shared' / ('video109-candidate-' + secrets.token_hex(6))
     work.mkdir(mode=0o700)
@@ -261,6 +267,8 @@ def candidate():
                 maps.append({'code': code, 'total': stats['total'], 'sha256': boundary['sha256']})
             assert mysql(cfg, 'SELECT MAX(version) FROM schema_migrations', db) == '30'
             assert counts(cfg, db) == value['counts']
+            if check is not None:
+                value['candidateSEO'] = check(18098, release)
             value.update(candidateVerified=True, candidateChecks=checks, candidateMap=maps, isolatedRestoreVerified=True)
             save(value)
             print(json.dumps({'candidateVerified': True, 'productionConfiguration': True, 'serviceUser': 'zqzt', 'separateNginxProxy': True, 'isolatedRestoreVerified': True, 'checks': checks, 'map': maps}))
@@ -303,14 +311,16 @@ def rollback():
     print(json.dumps({'rolledBack': True, 'databaseRestored': False}))
 
 
-def apply():
+def apply(check=None, extra_environment=None):
     value = state(); assert value.get('candidateVerified')
     assert str((BASE / 'current').resolve()) == value['previous'] and sha(ENV) == value['configSHA256']
     assert protected() == value['protected'], 'protected_configuration_changed'
     cfg = config(); name, ops = database(cfg)
     assert name == value['database'] and mysql(cfg, 'SELECT MAX(version) FROM schema_migrations', name) in ['30']
     release = Path(value['release']); env = ENV.read_text()
-    for k, v in [('WEB_DIR', str(release / 'web/dist')), ('MAP_DEMO_DIR', str(release / 'map-demo')), ('DOUYIN_VIDEO_ENABLED', 'true')]:
+    updates = [('WEB_DIR', str(release / 'web/dist')), ('MAP_DEMO_DIR', str(release / 'map-demo'))]
+    updates += [('DOUYIN_VIDEO_ENABLED', 'true')] if extra_environment is None else extra_environment
+    for k, v in updates:
         if not re.search(r'^' + k + r'=', env, re.M): env += '\n' + k + '=' + v + '\n'
         env = re.sub(r'^' + k + r'=.*$', k + '=' + v, env, flags=re.M)
     started = time.time()
@@ -321,6 +331,8 @@ def apply():
         assert sha(release / 'web/dist/downloads/dalunongji.apk') == value['android']['sha256']
         assert protected() == value['protected']
         assert mysql(config(), 'SELECT MAX(version) FROM schema_migrations', name) == '30'
+        if check is not None:
+            value['productionSEO'] = check(release)
     except Exception:
         rollback(); raise
     value.update(promoted=True, rolledBack=False, restartHealthSeconds=round(time.time() - started, 3))

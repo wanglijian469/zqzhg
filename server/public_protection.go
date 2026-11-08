@@ -144,7 +144,7 @@ func (g *publicGuard) check(ip, kind string, refs map[string]string) int {
 	return 0
 }
 func guardKind(path string) string {
-	if path == "/sitemap.xml" || strings.HasPrefix(path, "/sitemaps/") {
+	if path == "/sitemap.xml" || strings.HasPrefix(path, "/sitemaps/") || strings.HasPrefix(path, "/sitemap-") {
 		return "list"
 	}
 	if path == "/api/v1/favorites" {
@@ -185,7 +185,9 @@ func deniedAgent(ua string) bool {
 }
 func robotsPolicy() string {
 	// Public runtime APIs are needed when a search crawler renders the React page.
-	s := "User-agent: *\nDisallow: /api/\nAllow: /api/v1/public/\nAllow: /api/v1/media/\nDisallow: /api/v1/public/service-requests\nDisallow: /api/v1/public/service-evidence\nDisallow: /admin\nDisallow: /merchant\nDisallow: /auth\nDisallow: /login\nDisallow: /register\nDisallow: /service-requests\n\n"
+	// Anonymous shells contain no private data and must be fetchable so a
+	// search engine can read their noindex response.
+	s := "User-agent: *\nDisallow: /api/\nAllow: /api/v1/public/\nAllow: /api/v1/media/\nDisallow: /api/v1/public/service-requests\nDisallow: /api/v1/public/service-evidence\n\n"
 	for _, ua := range deniedAgents {
 		s += "User-agent: " + ua + "\nDisallow: /\n\n"
 	}

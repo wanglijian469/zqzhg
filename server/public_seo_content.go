@@ -31,6 +31,7 @@ type seoPage struct {
 	Images   []seoImage
 	Products []seoLink
 	Vendor   seoLink
+	Crumbs   []seoLink
 }
 
 var seoBody = template.Must(template.New("public-content").Funcs(template.FuncMap{"previewImage": func(raw string) string {
@@ -42,7 +43,8 @@ var seoBody = template.Must(template.New("public-content").Funcs(template.FuncMa
 	query.Set("w", "480")
 	u.RawQuery = query.Encode()
 	return u.String()
-}}).Parse(`<main class="container section seo-content" data-seo-content>
+}}).Parse(`<main class="container section seo-content" data-seo-content{{if .Company}} data-seo-showroom{{end}}>
+{{if .Crumbs}}<nav aria-label="面包屑导航"><ol>{{range .Crumbs}}<li>{{if .URL}}<a href="{{.URL}}">{{.Name}}</a>{{else}}<span aria-current="page">{{.Name}}</span>{{end}}</li>{{end}}</ol></nav>{{end}}
 <article><h1>{{.Data.Name}}</h1>
 {{range .Images}}<img src="{{previewImage .URL}}" alt="{{.Alt}}" style="max-width:100%;object-fit:contain" width="320" height="240" loading="lazy" decoding="async">{{end}}
 {{if .Company}}
@@ -91,6 +93,21 @@ func renderSEO(page seoPage, structured map[string]any) (seoContent, error) {
 	return result, nil
 }
 
+func detailSEOGraph(base, canonical string, entity map[string]any, crumbs []seoLink) map[string]any {
+	delete(entity, "@context")
+	items := make([]map[string]any, 0, len(crumbs))
+	for i, crumb := range crumbs {
+		target := canonical
+		if crumb.URL != "" {
+			target = base + crumb.URL
+		}
+		items = append(items, map[string]any{"@type": "ListItem", "position": i + 1, "name": crumb.Name, "item": target})
+	}
+	return map[string]any{"@context": "https://schema.org", "@graph": []any{
+		entity, map[string]any{"@type": "BreadcrumbList", "itemListElement": items},
+	}}
+}
+
 func (a *App) vendorSEO(c *gin.Context, item View, products []View, canonical string) (seoContent, error) {
 	d := item.Data
 	page := seoPage{Company: true, Data: d}
@@ -126,10 +143,12 @@ func (a *App) vendorSEO(c *gin.Context, item View, products []View, canonical st
 	return result, err
 }
 
-func (a *App) productSEO(c *gin.Context, item, vendor View, canonical string) (seoContent, error) {
+func (a *App) productSEO(c *gin.Context, hall Hall, item, vendor View, canonical string) (seoContent, error) {
 	d := item.Data
 	vendorPath := "/v/" + vendor.ShowroomSlug
-	page := seoPage{Data: d, Model: seoProductModel(d), Vendor: seoLink{vendorPath, vendor.Data.Name}}
+	page := seoPage{Data: d, Model: seoProductModel(d), Vendor: seoLink{vendorPath, vendor.Data.Name}, Crumbs: []seoLink{
+		{"/", a.brandName()}, {hallSEOPath("/browse", hall.Slug, nil), "企业名单与厂家展厅"}, {vendorPath, vendor.Data.Name}, {"", d.Name},
+	}}
 	product := map[string]any{
 		"@context": "https://schema.org", "@type": "Product", "name": d.Name, "url": canonical,
 		"manufacturer": map[string]string{"@type": "Organization", "name": vendor.Data.Name, "url": a.publicBase(c) + vendorPath},
@@ -152,23 +171,7 @@ func (a *App) productSEO(c *gin.Context, item, vendor View, canonical string) (s
 	if len(images) > 0 {
 		product["image"] = images
 	}
-	result, err := renderSEO(page, product)
+	result, err := renderSEO(page, detailSEOGraph(a.publicBase(c), canonical, product, page.Crumbs))
 	result.Keywords = productSEOKeywords(d, vendor.Data)
 	return result, err
-}
-
-var seoLandingBody = template.Must(template.New("public-landing").Parse(`<main class="container section seo-content" data-seo-content><h1>{{.Title}}</h1>{{if not .Home}}<p>{{.Description}}</p>{{end}}<p><a href="{{.Vendors}}">企业名单与厂家展厅</a> · <a href="{{.Products}}">产品展示</a></p></main>`))
-
-func landingSEO(title, description, hall string, home bool) (seoContent, error) {
-	vendors, products := "/browse", "/browse/products"
-	if hall != "agriculture" {
-		vendors += "?hall=" + url.QueryEscape(hall)
-		products += "?hall=" + url.QueryEscape(hall)
-	}
-	var body bytes.Buffer
-	err := seoLandingBody.Execute(&body, struct {
-		Title, Description, Vendors, Products string
-		Home                                  bool
-	}{title, description, vendors, products, home})
-	return seoContent{Body: body.String()}, err
 }

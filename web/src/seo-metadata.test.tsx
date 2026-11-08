@@ -9,7 +9,7 @@ import {emptyData} from './types';
 afterEach(()=>{cleanup();vi.unstubAllGlobals();document.head.innerHTML=''});
 function Pages(){
  const {pathname}=useLocation(),privatePage=pathname==='/procurement';
- const metadata=companySEO({...emptyData,name:pathname==='/v/a'?'厂家甲':'厂家乙'},'zh','home','','中企展馆');
+ const metadata=companySEO({...emptyData,name:pathname==='/v/a'?'厂家甲':'厂家乙'},'zh','中企展馆');
  usePageMetadata(privatePage?'':metadata.title,metadata.description,undefined,false,0,metadata.keywords);
  return <><Link to="/v/b">厂家乙</Link><Link to="/procurement">采购</Link></>;
 }

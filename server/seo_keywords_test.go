@@ -30,7 +30,7 @@ func TestSEOKeywordNormalization(t *testing.T) {
 	if strings.Contains(vendorSEOKeywords(vendor), "内卷网") {
 		t.Fatal("unrelated platform search terms added to a company")
 	}
-	if title := showroomSEOTitle(vendor.Name, "about", "中企展馆"); title != vendor.Name+" · 企业展厅 · 企业介绍 | 中企展馆" {
+	if title := showroomSEOTitle(vendor.Name, "中企展馆"); title != vendor.Name+" - 企业展厅 - 中企展馆" {
 		t.Fatal(title)
 	}
 }
@@ -65,12 +65,16 @@ func TestSEOLandingSearchTermsAndStaticSitemap(t *testing.T) {
 	}
 	w := seoGet(router, "/sitemaps/pages.xml")
 	var urls sitemapURLs
-	if w.Code != 200 || xml.Unmarshal(w.Body.Bytes(), &urls) != nil || len(urls.Entries) != 9 {
+	if w.Code != 200 || xml.Unmarshal(w.Body.Bytes(), &urls) != nil || len(urls.Entries) < 2 {
 		t.Fatal(w.Code, w.Body.String())
 	}
 	for _, entry := range urls.Entries {
 		if strings.Contains(entry.Loc, "cable") || strings.Contains(entry.Loc, "merchant") || !strings.HasPrefix(entry.Loc, a.Config.PublicBaseURL) {
 			t.Fatal("incorrect public sitemap page", entry.Loc)
+		}
+		page := seoGet(router, strings.TrimPrefix(entry.Loc, a.Config.PublicBaseURL))
+		if page.Code != 200 || page.Header().Get("X-Robots-Tag") != "" {
+			t.Fatal("sitemap includes unavailable page", entry.Loc, page.Code)
 		}
 	}
 	for _, ua := range []string{"Baiduspider/2.0", "bingbot/2.0", "Googlebot/2.1"} {

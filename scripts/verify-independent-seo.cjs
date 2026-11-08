@@ -53,9 +53,17 @@ const {chromium} = require('../.tools/browser-qa/node_modules/playwright');
     for (const width of [390, 1440]) {
       const context = await browser.newContext({javaScriptEnabled: false, viewport: {width, height: 950}});
       const page = await context.newPage();
-      const response = await page.goto(base + companyPath);
+      await page.goto(base);
+      await page.locator('[data-seo-content] a[href="/browse"]').click();
+      const [response] = await Promise.all([
+        page.waitForResponse(r=>r.url()===base+companyPath&&r.request().isNavigationRequest()),
+        page.locator(`[data-seo-content] a[href="${companyPath}"]`).click()
+      ]);
       assert.equal(response.status(), 200);
       await page.locator('[data-seo-content] h1').waitFor();
+      assert.equal(await page.locator('[data-seo-content] nav[aria-label="面包屑导航"]').count(), 0);
+      assert.equal(await page.locator('[data-seo-content]').evaluate(node=>getComputedStyle(node).overflowWrap), 'normal');
+      assert.equal(await page.locator(`a[href="${productPath}"]`).evaluate(node=>getComputedStyle(node).textDecorationLine), 'none');
       assert((await page.locator('body').innerText()).includes('无需执行脚本也能读取的企业介绍'));
       await metadata(page, base + companyPath, 'index,follow');
       await noOverflow(page);
@@ -65,7 +73,7 @@ const {chromium} = require('../.tools/browser-qa/node_modules/playwright');
       await metadata(page, base + productPath, 'index,follow');
       await noOverflow(page);
       await page.screenshot({path: path.join(out, `product-no-js-${width}.png`), fullPage: true});
-      await page.locator(`a[href="${companyPath}"]`).click();
+      await page.locator(`nav[aria-label="面包屑导航"] a[href="${companyPath}"]`).click();
       assert.equal(new URL(page.url()).pathname, companyPath);
       checks.push({width, javaScript: false, companyAndProductBody: true, crossLinks: true, overflow: false});
       await context.close();
@@ -80,11 +88,13 @@ const {chromium} = require('../.tools/browser-qa/node_modules/playwright');
       assert.equal(await page.locator('[data-seo-content]').count(), 0);
       assert.equal(await page.locator('h1').count(), 1);
       await metadata(page, base + companyPath, 'index,follow');
+      assert.equal(await page.locator('.public-detail-breadcrumb').count(), 0);
       await noOverflow(page);
       await page.screenshot({path: path.join(out, `company-js-${width}-${lang}.png`), fullPage: true});
       await page.getByRole('tab').nth(2).click();
       await page.locator(`#panel-products .showroom-product-grid a[href*="${productPath}"]`).first().click();
       await page.locator('.public-product-detail h1').waitFor();
+      await page.locator('.public-detail-breadcrumb [aria-current="page"]').waitFor();
       await metadata(page, base + productPath, 'index,follow');
       await noOverflow(page);
       await page.screenshot({path: path.join(out, `product-js-${width}-${lang}.png`), fullPage: true});

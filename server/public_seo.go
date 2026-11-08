@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 func (a *App) publicBase(c *gin.Context) string {
@@ -63,6 +64,27 @@ func showroomSearchVariant(query url.Values) bool {
 	}
 	page, _ := strconv.Atoi(query.Get("page"))
 	return page > 1
+}
+
+func showroomSEODescription(data Payload) string {
+	intro := strings.Join(strings.Fields(data.Description), " ")
+	if data.CompanyProfile != nil {
+		if summary := strings.Join(strings.Fields(data.CompanyProfile.Summary), " "); summary != "" {
+			intro = summary
+		}
+	}
+	main := strings.Join(strings.Fields(data.MainProducts), " ")
+	if main != "" && !strings.Contains(strings.ToLower(intro), strings.ToLower(main)) {
+		if intro != "" {
+			intro += " "
+		}
+		intro += "主营产品：" + main
+	}
+	result := strings.Join(strings.Fields(data.Name), " ") + "企业展厅。" + intro
+	if utf8.RuneCountInString(result) > 160 {
+		result = string([]rune(result)[:160])
+	}
+	return result
 }
 func cleanHTMLMetadata(source string) string {
 	for _, pattern := range []string{`(?is)<title[^>]*>.*?</title\s*>`, `(?is)<meta\b[^>]*(?:name\s*=\s*["'](?:description|keywords|robots|zqzg-public-base)["']|property\s*=\s*["']og:[^"']+["'])[^>]*>`, `(?is)<link\b[^>]*rel\s*=\s*["']canonical["'][^>]*>`, `(?is)<script\b[^>]*type\s*=\s*["']application/ld\+json["'][^>]*>.*?</script\s*>`} {
@@ -147,6 +169,13 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 			return a.sendPublicHTML(c, index, 404, "产品暂未公开 | "+a.brandName(), "产品不存在、暂未公开或已下架。", canonical, "noindex,follow")
 		}
 		p := items[0]
+		if target := "/products/" + strconv.FormatUint(p.ID, 10); path != target {
+			if c.Request.URL.RawQuery != "" {
+				target += "?" + c.Request.URL.RawQuery
+			}
+			c.Redirect(301, target)
+			return true
+		}
 		var hall Hall
 		if a.DB.First(&hall, p.HallID).Error != nil {
 			return a.sendPublicHTML(c, index, 503, title, desc, canonical, "noindex,follow")
@@ -169,7 +198,7 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 			parts = append(parts, p.Data.Description)
 		}
 		desc = strings.Join(parts, " · ")
-		detail, err := a.productSEO(c, p, vendors[0], canonical)
+		detail, err := a.productSEO(c, hall, p, vendors[0], canonical)
 		if err != nil {
 			return a.sendPublicHTML(c, index, 500, "服务暂不可用 | "+a.brandName(), "请稍后重试。", canonical, "noindex,follow")
 		}
@@ -209,10 +238,17 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 			title = a.brandName() + "-" + hall.Name
 			desc = hall.Name + "：" + publicSEOCopy.ZH.HomeIntro
 		}
-		if hall.Status == "open" && (path == "/" || path == "/browse" || path == "/browse/products") {
-			landing, err := landingSEO(title, desc, hall.Slug, path == "/")
+		if hall.Status == "open" {
+			if !validPublicQuery(c) {
+				return a.sendPublicHTML(c, index, 400, title, desc, canonical, "noindex,follow")
+			}
+			landing, directoryTitle, directoryDesc, indexable, err := a.directorySEO(c, hall, title, desc)
 			if err != nil {
-				return a.sendPublicHTML(c, index, 500, "服务暂不可用 | "+a.brandName(), "请稍后重试。", canonical, "noindex,follow")
+				return a.sendPublicHTML(c, index, 503, "服务暂不可用 | "+a.brandName(), "请稍后重试。", canonical, "noindex,follow")
+			}
+			title, desc = directoryTitle, directoryDesc
+			if !indexable {
+				robots = "noindex,follow"
 			}
 			values := []string{a.brandName(), hall.Name}
 			if path == "/" || path == "/browse" {
@@ -224,14 +260,6 @@ func (a *App) publicHTML(c *gin.Context, index string) bool {
 			landing.Keywords = seoKeywords(values...)
 			landing.Structured = map[string]any{"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": desc, "url": canonical}
 			content = append(content, landing)
-		}
-		for _, k := range []string{"q", "category_id", "region_id", "region_code", "unassigned", "vendor_id", "sort"} {
-			if c.Query(k) != "" {
-				robots = "noindex,follow"
-			}
-		}
-		if page, _ := strconv.Atoi(c.Query("page")); page > 1 {
-			robots = "noindex,follow"
 		}
 	}
 	runes := []rune(strings.TrimSpace(desc))
