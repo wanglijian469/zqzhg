@@ -32,6 +32,7 @@ class VideoPlayerActivity : Activity() {
     private lateinit var progress: View
     private lateinit var status: TextView
     private lateinit var retry: Button
+    private lateinit var openOriginal: Button
 
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
@@ -52,7 +53,9 @@ class VideoPlayerActivity : Activity() {
         progress = findViewById(R.id.videoProgress)
         status = findViewById(R.id.videoStatus)
         retry = findViewById(R.id.videoRetry)
+        openOriginal = findViewById(R.id.videoOpenOriginal)
         retry.setOnClickListener { if (ui.canRetry()) player?.start() }
+        openOriginal.setOnClickListener { launchOriginal() }
         findViewById<ImageButton>(R.id.videoClose).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.videoMore).setOnClickListener { showMore(it) }
         original = OfficialVideoPolicy.originalVideoURL(intent.getStringExtra("url") ?: "")
@@ -96,22 +99,28 @@ class VideoPlayerActivity : Activity() {
         progress.visibility = if (ui.busy()) View.VISIBLE else View.GONE
         retry.visibility = if (ui.retryVisible()) View.VISIBLE else View.GONE
         retry.isEnabled = ui.canRetry()
+        openOriginal.visibility = if (ui.retryVisible() && original.isNotEmpty()) View.VISIBLE else View.GONE
+    }
+
+    private fun launchOriginal() {
+        if (original.isEmpty()) return
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(original)))
+        } catch (_: Exception) {
+            status.text = "暂时无法打开原视频，请稍后重试。"
+            statusRow.visibility = View.VISIBLE
+        }
     }
 
     private fun showMore(anchor: View) {
         PopupMenu(this, anchor, Gravity.END).apply {
             menu.add(0, 1, 0, "重新加载").isEnabled = ui.canRetry()
-            if (original.isNotEmpty()) menu.add(0, 2, 1, "打开抖音原视频")
+            if (original.isNotEmpty()) menu.add(0, 2, 1, "前往抖音观看")
             menu.add(0, 3, 2, "播放诊断")
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     1 -> if (ui.canRetry()) player?.start()
-                    2 -> try {
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(original)))
-                    } catch (_: Exception) {
-                        status.text = "暂时无法打开原视频，请稍后重试。"
-                        statusRow.visibility = View.VISIBLE
-                    }
+                    2 -> launchOriginal()
                     3 -> showDiagnostic()
                 }
                 true
@@ -150,10 +159,10 @@ class VideoPlayerActivity : Activity() {
             reason == "network" && code == -2 -> "暂时找不到播放服务，请切换网络后重试。"
             reason == "network" && code == -8 -> "连接超时，请重试。"
             reason == "app_policy" -> "播放器页面被拦截，可在更多中复制诊断。"
-            reason == "http" -> "视频请求未能通过，请重试或在更多中打开原视频。"
+            reason == "http" -> "视频请求未能通过，请重试。"
             reason == "renderer" -> "网页播放组件已停止，请关闭后重新打开。"
             reason == "invalid_player" -> "播放器地址无效，请返回重新检查链接。"
-            else -> "视频暂时无法加载，请重试或在更多中打开原视频。"
+            else -> "视频暂时无法加载，请重试。"
         }
     }
 

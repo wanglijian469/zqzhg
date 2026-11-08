@@ -235,6 +235,7 @@ class CompanyPortalBody extends StatelessWidget {
               PortalResourceSummary(
                 vendorID: result!['item']['id'],
                 kind: entry.$1,
+                fallbackIDs: showroomVideoImages(data),
               ),
               TextButton(
                 onPressed: () => onTab!(entry.$2),
@@ -256,24 +257,33 @@ class CompanyPortalBody extends StatelessWidget {
 class PortalResourceSummary extends StatelessWidget {
   final int vendorID;
   final String kind;
+  final List<int> fallbackIDs;
   const PortalResourceSummary({
     super.key,
     required this.vendorID,
     required this.kind,
+    this.fallbackIDs = const [],
   });
   @override
   Widget build(BuildContext context) {
     final m = ModelScope.of(context);
     return AsyncPane(
       identity: '${m.baseUrl}:portal-resources:$vendorID:$kind',
-      load: () => m.api(
-        '/public/resources?vendor_id=$vendorID&kind=$kind&page_size=3&page=1&video_api_version=2',
+      load: () async => m.api(
+        await m.videoPath(
+          '/public/resources?vendor_id=$vendorID&kind=$kind&page_size=3&page=1',
+        ),
       ),
       builder: (r) => Column(
         children: rows(r['items'])
             .where((item) => item['vendor_id'] == vendorID)
             .take(3)
-            .map((item) => NativePublicResourceCard(item: item))
+            .map(
+              (item) => NativePublicResourceCard(
+                item: item,
+                fallbackIDs: fallbackIDs,
+              ),
+            )
             .toList(),
       ),
     );

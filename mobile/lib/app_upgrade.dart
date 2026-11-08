@@ -377,58 +377,104 @@ class NativeCompanyGallery extends StatelessWidget {
   }
 }
 
-class NativePublicResourceCard extends StatelessWidget {
-  final Json item;
-  const NativePublicResourceCard({super.key, required this.item});
+List<int> showroomVideoImages(Json data) => [
+  (asMap(data['company_profile'] ?? {})['cover_media_id'] as num? ?? 0).toInt(),
+  ...imageIDs(data),
+];
+
+class NativeVideoPoster extends StatelessWidget {
+  final Json data;
+  final List<int> fallbackIDs;
+  const NativeVideoPoster({
+    super.key,
+    required this.data,
+    this.fallbackIDs = const [],
+  });
+
   @override
   Widget build(BuildContext context) {
-    final m = ModelScope.of(context),
-        d = asMap(item['data']),
-        file = asMap(item['file'] ?? {});
-    final video = item['kind'] == 'video',
-        pages =
-            (file['page_count'] as num?)?.toInt() ??
-            (d['page_media_ids'] as List? ?? []).length;
-    final duration = (file['duration'] as num?)?.ceil() ?? 0;
-    final cover = (d['cover_media_id'] as num?)?.toInt() ?? 0;
-    final id = cover > 0
+    final ids = <int>{
+      (data['cover_media_id'] as num? ?? 0).toInt(),
+      (data['file_media_id'] as num? ?? 0).toInt(),
+      ...fallbackIDs,
+    }.where((id) => id > 0).toList();
+    const placeholder = ColoredBox(
+      color: industrialSurface,
+      child: Center(
+        child: Icon(Icons.movie_outlined, size: 44, color: industrialBlue),
+      ),
+    );
+    return ids.isEmpty
+        ? const AspectRatio(aspectRatio: 16 / 9, child: placeholder)
+        : ColoredBox(
+            color: industrialSurface,
+            child: Photo(
+              id: ids.first,
+              fallbackIDs: ids.skip(1).toList(),
+              aspectRatio: 16 / 9,
+              radius: 0,
+              errorPlaceholder: placeholder,
+            ),
+          );
+  }
+}
+
+class NativePublicResourceCard extends StatelessWidget {
+  final Json item;
+  final List<int> fallbackIDs;
+  const NativePublicResourceCard({
+    super.key,
+    required this.item,
+    this.fallbackIDs = const [],
+  });
+  @override
+  Widget build(BuildContext context) {
+    final m = ModelScope.of(context), d = asMap(item['data']);
+    final file = asMap(item['file'] ?? {}), video = item['kind'] == 'video';
+    final catalogImages = (d['page_media_ids'] as List? ?? []);
+    final pages = (file['page_count'] as num?)?.toInt() ?? catalogImages.length;
+    final cover = (d['cover_media_id'] as num? ?? 0).toInt();
+    final catalogCover = cover > 0
         ? cover
-        : video
-        ? (d['file_media_id'] as num?)?.toInt() ?? 0
-        : ((d['page_media_ids'] as List? ?? []).firstOrNull as num?)?.toInt() ??
-              0;
+        : (catalogImages.firstOrNull as num? ?? 0).toInt();
+    final description = m.content(d, 'description').trim();
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => openNativeResource(context, item),
+        onTap: () =>
+            openNativeResource(context, item, fallbackIDs: fallbackIDs),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Stack(
+              alignment: Alignment.center,
               children: [
-                if (id > 0)
-                  Photo(id: id, aspectRatio: 16 / 9)
+                if (video)
+                  NativeVideoPoster(data: d, fallbackIDs: fallbackIDs)
+                else if (catalogCover > 0)
+                  Photo(id: catalogCover, aspectRatio: 16 / 9)
                 else
-                  AspectRatio(
+                  const AspectRatio(
                     aspectRatio: 16 / 9,
                     child: Center(
-                      child: Icon(
-                        isDouyinVideo(item)
-                            ? Icons.video_library
-                            : Icons.menu_book_outlined,
-                        size: 44,
-                      ),
+                      child: Icon(Icons.menu_book_outlined, size: 44),
                     ),
                   ),
-                Positioned(
-                  right: 12,
-                  bottom: 12,
-                  child: Icon(
-                    video ? Icons.play_circle_fill : Icons.menu_book,
-                    color: industrialBlue,
-                    size: 36,
+                if (video)
+                  const CircleAvatar(
+                    backgroundColor: Color(0xd915324e),
+                    child: Icon(Icons.play_arrow, color: Colors.white),
+                  )
+                else
+                  const Positioned(
+                    right: 12,
+                    bottom: 12,
+                    child: Icon(
+                      Icons.menu_book,
+                      color: industrialBlue,
+                      size: 36,
+                    ),
                   ),
-                ),
               ],
             ),
             Padding(
@@ -436,8 +482,6 @@ class NativePublicResourceCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (video && d['video_source'] == 'DOUYIN')
-                    const Text('来源：抖音'),
                   Text(
                     resourceTitle(m, item),
                     style: Theme.of(context).textTheme.titleMedium,
@@ -445,22 +489,15 @@ class NativePublicResourceCard extends StatelessWidget {
                   space(4),
                   Text(
                     video
-                        ? m.t(
-                                d['purpose'] == 'production'
-                                    ? 'productionVideo'
-                                    : d['purpose'] == 'product'
-                                    ? 'productVideo'
-                                    : 'companyVideo',
-                              ) +
-                              (duration > 0 ? ' · $duration s' : '')
+                        ? m.t(videoPurposes[d['purpose']] ?? 'otherVideo')
                         : pages > 0
                         ? '$pages ${m.t('pageNumber')}'
                         : m.t('readCatalog'),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                  if (m.content(d, 'description').isNotEmpty)
+                  if (description.isNotEmpty)
                     Text(
-                      m.content(d, 'description'),
+                      description,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),

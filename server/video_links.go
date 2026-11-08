@@ -22,10 +22,12 @@ import (
 
 const videoLocal = "LOCAL"
 const videoDouyin = "DOUYIN"
+const videoKuaishou = "KUAISHOU"
 const videoRightsVersion = "video-rights-v1"
 
 func douyinVideoEnabled() bool    { return env("DOUYIN_VIDEO_ENABLED", "false") == "true" }
-func videoV2(c *gin.Context) bool { return c.Query("video_api_version") == "2" }
+func videoV3(c *gin.Context) bool { return c.Query("video_api_version") == "3" }
+func videoV2(c *gin.Context) bool { return c.Query("video_api_version") == "2" || videoV3(c) }
 func videoSource(p ResourcePayload) string {
 	if p.VideoSource == "" {
 		return videoLocal
@@ -68,7 +70,7 @@ func validateShareURL(raw string) (*url.URL, error) {
 	}
 	return u, nil
 }
-func extractVideoShare(text string) (string, error) {
+func extractVideoURL(text string) (string, error) {
 	if len(text) > 8000 || videoHTMLPattern.MatchString(text) {
 		return "", fmt.Errorf("invalid_video_link")
 	}
@@ -76,11 +78,48 @@ func extractVideoShare(text string) (string, error) {
 	if len(links) != 1 {
 		return "", fmt.Errorf("one_video_link_required")
 	}
-	raw := strings.TrimRight(links[0], "，。！？；、）)]】》")
+	return strings.TrimRight(links[0], "，。！？；、）)]】》"), nil
+}
+func extractVideoShare(text string) (string, error) {
+	raw, e := extractVideoURL(text)
+	if e != nil {
+		return "", e
+	}
 	if _, e := validateShareURL(raw); e != nil {
 		return "", e
 	}
 	return raw, nil
+}
+
+var kuaishouSharePath = regexp.MustCompile(`^/([A-Za-z0-9]{3,48})/?$`)
+var kuaishouPhotoPath = regexp.MustCompile(`^/short-video/([A-Za-z0-9]{3,48})/?$`)
+
+func checkKuaishou(text string) (VideoLinkCheck, error) {
+	raw, e := extractVideoURL(text)
+	if e != nil {
+		return VideoLinkCheck{}, e
+	}
+	u, e := url.Parse(raw)
+	if e != nil || len(raw) > 2048 || u.Scheme != "https" || u.User != nil || u.Opaque != "" || u.Fragment != "" || u.RawPath != "" || u.Port() != "" {
+		return VideoLinkCheck{}, fmt.Errorf("invalid_video_link")
+	}
+	var match []string
+	var prefix string
+	switch strings.ToLower(u.Host) {
+	case "v.kuaishou.com":
+		match, prefix = kuaishouSharePath.FindStringSubmatch(u.Path), "share:"
+	case "www.kuaishou.com":
+		match, prefix = kuaishouPhotoPath.FindStringSubmatch(u.Path), "photo:"
+	}
+	if len(match) != 2 {
+		return VideoLinkCheck{}, fmt.Errorf("invalid_video_link")
+	}
+	now := time.Now()
+	return VideoLinkCheck{
+		Source: videoKuaishou, VideoID: prefix + match[1],
+		CanonicalURL: "https://" + strings.ToLower(u.Host) + strings.TrimSuffix(u.Path, "/"),
+		Status:       "EXTERNAL_ONLY", CheckedAt: now, ExpiresAt: now.Add(time.Minute),
+	}, nil
 }
 func videoIDFromURL(u *url.URL) string {
 	if u.Hostname() == "v.douyin.com" {
@@ -377,20 +416,38 @@ func (a *App) checkVideoLink(c *gin.Context) {
 			return
 		}
 	}
-	if !douyinVideoEnabled() {
-		fail(c, 503, "douyin_video_disabled")
-		return
-	}
 	if !permit(fmt.Sprintf("video-check:%d", actor(c).ID), 20, time.Minute) {
 		fail(c, 429, "rate_limited")
 		return
 	}
 	var req struct {
-		Text string `json:"text"`
+		Text   string `json:"text"`
+		Source string `json:"source"`
 	}
 	c.Request.Body = httpMaxBody(c, 10000)
 	if c.ShouldBindJSON(&req) != nil {
 		fail(c, 400, "invalid_video_link")
+		return
+	}
+	if req.Source == videoKuaishou {
+		if !videoV3(c) {
+			fail(c, 409, "video_client_upgrade_required")
+			return
+		}
+		check, e := checkKuaishou(req.Text)
+		if e != nil {
+			dbFail(c, e)
+			return
+		}
+		c.JSON(200, gin.H{"original_share_url": check.CanonicalURL, "check": check})
+		return
+	}
+	if req.Source != "" && req.Source != videoDouyin {
+		fail(c, 400, "unsupported_video_source")
+		return
+	}
+	if !douyinVideoEnabled() {
+		fail(c, 503, "douyin_video_disabled")
 		return
 	}
 	original, _, check, e := a.inspectVideoShare(c.Request.Context(), req.Text)

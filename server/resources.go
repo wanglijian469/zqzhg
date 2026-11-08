@@ -180,7 +180,7 @@ func (a *App) validateResource(tx *gorm.DB, r Resource, p *ResourcePayload, read
 	if r.Kind == "video" {
 		expected = "video"
 		p.Format = "video"
-		if (videoSource(*p) == videoLocal && p.FileMediaID == 0) || len(p.PageMediaIDs) > 0 || (p.Purpose != "company" && p.Purpose != "production" && p.Purpose != "product") || (p.Purpose == "product" && p.ProductID == 0) {
+		if (videoSource(*p) == videoLocal && p.FileMediaID == 0) || len(p.PageMediaIDs) > 0 || (p.Purpose != "company" && p.Purpose != "production" && p.Purpose != "product" && p.Purpose != "other") || (p.Purpose == "product" && p.ProductID == 0) {
 			return fmt.Errorf("invalid_request")
 		}
 		if e := a.validateVideoResource(tx, r, p, ready); e != nil {
@@ -326,7 +326,7 @@ func (a *App) resourceDetail(c *gin.Context) {
 		fail(c, 500, "internal_error")
 		return
 	}
-	if rev.VideoSource == videoDouyin && !videoV2(c) {
+	if r.Kind == "video" && !supportsVideo(c, rev.VideoSource, rev.Purpose) {
 		fail(c, 409, "video_client_upgrade_required")
 		return
 	}

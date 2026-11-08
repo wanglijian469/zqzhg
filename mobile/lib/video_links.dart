@@ -4,6 +4,102 @@ String videoV2(String path) =>
     '$path${path.contains('?') ? '&' : '?'}video_api_version=2';
 bool isDouyinVideo(Json item) =>
     item['kind'] == 'video' && item['data']?['video_source'] == 'DOUYIN';
+bool isKuaishouVideo(Json item) =>
+    item['kind'] == 'video' && item['data']?['video_source'] == 'KUAISHOU';
+bool isExternalVideo(Json item) => isDouyinVideo(item) || isKuaishouVideo(item);
+bool canPreviewVideo(Json? check) =>
+    check?['status'] == 'READY' || check?['status'] == 'EXTERNAL_ONLY';
+
+extension VideoCapabilities on AppModel {
+  Future<int> videoVersion() async {
+    try {
+      final caps = await clientCapabilities();
+      return (caps['video_api_version'] as num? ?? 2) >= 3 ? 3 : 2;
+    } catch (_) {
+      return 2;
+    }
+  }
+
+  Future<String> videoPath(String path) async =>
+      '$path${path.contains('?') ? '&' : '?'}video_api_version=${await videoVersion()}';
+}
+
+const videoPurposes = {
+  'company': 'companyVideo',
+  'product': 'productVideo',
+  'production': 'productionVideo',
+  'other': 'otherVideo',
+};
+
+class NativeVideoPurpose extends StatelessWidget {
+  final String value;
+  final bool filter;
+  final ValueChanged<String>? onChanged;
+  const NativeVideoPurpose({
+    super.key,
+    required this.value,
+    this.filter = false,
+    this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final m = ModelScope.of(context);
+    return NativeFieldLabel(
+      label: m.t('purpose'),
+      child: FutureBuilder<int>(
+        future: m.videoVersion(),
+        builder: (_, snapshot) => DropdownButtonFormField<String>(
+          key: ValueKey(value),
+          initialValue: value,
+          isExpanded: true,
+          decoration: const InputDecoration(),
+          items: [
+            if (filter)
+              DropdownMenuItem(value: '', child: Text(m.t('allVideoTypes'))),
+            for (final entry in videoPurposes.entries)
+              if (entry.key != 'other' ||
+                  snapshot.data == 3 ||
+                  value == 'other')
+                DropdownMenuItem(
+                  value: entry.key,
+                  child: Text(m.t(entry.value)),
+                ),
+          ],
+          onChanged: onChanged == null
+              ? null
+              : (value) {
+                  if (value != null) onChanged!(value);
+                },
+        ),
+      ),
+    );
+  }
+}
+
+Uri? trustedExternalVideo(String raw, {required bool kuaishou}) {
+  final uri = Uri.tryParse(raw);
+  if (uri == null ||
+      uri.scheme != 'https' ||
+      uri.hasPort ||
+      uri.userInfo.isNotEmpty ||
+      uri.hasFragment) {
+    return null;
+  }
+  if (kuaishou) {
+    if (uri.hasQuery) return null;
+    final path = switch (uri.host) {
+      'v.kuaishou.com' => RegExp(r'^/[A-Za-z0-9]{3,48}$'),
+      'www.kuaishou.com' => RegExp(r'^/short-video/[A-Za-z0-9]{3,48}$'),
+      _ => null,
+    };
+    return path?.hasMatch(uri.path) == true ? uri : null;
+  }
+  return const ['www.douyin.com', 'v.douyin.com'].contains(uri.host)
+      ? uri
+      : null;
+}
+
 Uri? trustedDouyinPlayer(String raw, String id) {
   final u = Uri.tryParse(raw);
   return u != null &&
@@ -33,7 +129,7 @@ String videoErrorText(Object e) {
         'invalid_official_player': '抖音未返回可用播放器，请换一个公开视频或稍后重试。',
         'video_check_required': '请先检查链接并确认能够预览，再提交审核。',
         'video_rights_required': '请确认您有权展示该视频。',
-        'invalid_video_link': '请输入有效的抖音视频分享链接。',
+        'invalid_video_link': '请输入有效的视频分享链接。',
         'one_video_link_required': '请每次粘贴一个视频链接。',
         'duplicate_video': '这个视频已添加过，请到视频列表修改。',
         'video_not_public': '该视频目前无法公开播放，请确认公开视频状态。',
@@ -77,6 +173,7 @@ Future<void> openNativeResource(
   Json item, {
   bool private = false,
   Json? check,
+  List<int> fallbackIDs = const [],
 }) async {
   if (_nativeResourceOpening != null) return;
   final opening = Object();
@@ -99,19 +196,98 @@ Future<void> openNativeResource(
       (WidgetsBinding.instance.lifecycleState == null ||
           WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed);
   try {
-    if (isDouyinVideo(item)) {
-      final m = ModelScope.of(context);
-      final result =
-          check ??
-          asMap(
-            await m.api(
-              videoV2(
-                '/${private ? 'merchant' : 'public'}/resources/${item['id']}/playback',
-              ),
+    if (isExternalVideo(item)) {
+      final data = asMap(item['data']);
+      final kuaishou = isKuaishouVideo(item);
+      String? failure;
+      if (!kuaishou) {
+        try {
+          final result =
+              check ??
+              asMap(
+                await model.api(
+                  await model.videoPath(
+                    '/${private ? 'merchant' : 'public'}/resources/${item['id']}/playback',
+                  ),
+                ),
+              );
+          if (!active()) return;
+          await openOfficialVideo(result, canOpen: active);
+          return;
+        } catch (e) {
+          failure = videoErrorText(e);
+        }
+      }
+      await NativeVideoSessions.stopAll();
+      if (!context.mounted || !active()) return;
+      final uri = trustedExternalVideo(
+        (check?['canonical_url'] ?? data['canonical_video_url'] ?? '')
+            .toString(),
+        kuaishou: kuaishou,
+      );
+      final description = model.content(data, 'description').trim();
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(resourceTitle(model, item)),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                NativeVideoPoster(data: data, fallbackIDs: fallbackIDs),
+                const SizedBox(height: 12),
+                if (description.isNotEmpty) Text(description),
+                Text(
+                  failure ??
+                      syncText(
+                        context,
+                        '此视频在快手播放。',
+                        'This video plays on Kuaishou.',
+                      ),
+                ),
+                if (uri == null) Text(model.t('invalid_video_link')),
+              ],
             ),
-          );
-      if (!active()) return;
-      await openOfficialVideo(result, canOpen: active);
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(model.t('close')),
+            ),
+            if (uri != null)
+              FilledButton(
+                onPressed: () async {
+                  try {
+                    if (await launchUrl(
+                      uri,
+                      mode: LaunchMode.externalApplication,
+                    )) {
+                      return;
+                    }
+                  } catch (_) {}
+                  if (dialogContext.mounted) {
+                    ScaffoldMessenger.of(dialogContext).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          syncText(
+                            dialogContext,
+                            '暂时无法打开原视频。',
+                            'Could not open the original video.',
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Text(
+                  kuaishou
+                      ? syncText(context, '前往快手观看', 'Watch on Kuaishou')
+                      : syncText(context, '前往抖音观看', 'Watch on Douyin'),
+                ),
+              ),
+          ],
+        ),
+      );
     } else {
       await NativeVideoSessions.stopAll();
       if (!context.mounted || !active()) return;
@@ -139,12 +315,12 @@ class NativeVideoAddScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final m = ModelScope.of(context);
-    Future<void> select(bool link) async {
+    Future<void> select(String source) async {
       final result = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => link
-              ? NativeDouyinEditor(productID: productID)
+          builder: (_) => source != 'LOCAL'
+              ? NativeDouyinEditor(productID: productID, source: source)
               : NativeResourceEditor(kind: 'video', productID: productID),
         ),
       );
@@ -173,19 +349,26 @@ class NativeVideoAddScreen extends StatelessWidget {
                 children: [
                   OutlinedButton(
                     onPressed: snapshot.data?['douyin_video'] == true
-                        ? () => select(true)
+                        ? () => select('DOUYIN')
                         : null,
-                    child: const Text('粘贴视频链接'),
+                    child: Text(
+                      (snapshot.data?['video_api_version'] as num? ?? 2) >= 3
+                          ? '抖音分享链接'
+                          : '粘贴视频链接',
+                    ),
                   ),
+                  if ((snapshot.data?['video_api_version'] as num? ?? 2) >= 3)
+                    OutlinedButton(
+                      onPressed: () => select('KUAISHOU'),
+                      child: const Text('快手分享链接'),
+                    ),
                   OutlinedButton(
-                    onPressed: () => select(false),
+                    onPressed: () => select('LOCAL'),
                     child: const Text('上传本地视频'),
                   ),
                 ],
               ),
             ),
-            space(),
-            const Text('粘贴链接仅支持抖音公开视频；其他视频请使用原本地上传功能。'),
           ],
         ),
       ),
@@ -196,7 +379,13 @@ class NativeVideoAddScreen extends StatelessWidget {
 class NativeDouyinEditor extends StatefulWidget {
   final Json? item;
   final int? productID;
-  const NativeDouyinEditor({super.key, this.item, this.productID});
+  final String source;
+  const NativeDouyinEditor({
+    super.key,
+    this.item,
+    this.productID,
+    this.source = 'DOUYIN',
+  });
   @override
   State<NativeDouyinEditor> createState() => _NativeDouyinEditorState();
 }
@@ -233,7 +422,7 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
             'file_media_id': 0,
             'cover_media_id': 0,
             'page_media_ids': <int>[],
-            'video_source': 'DOUYIN',
+            'video_source': widget.source,
             'original_share_url': '',
           }
         : asMap(widget.item!['data']);
@@ -273,9 +462,9 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
     try {
       final r = asMap(
         await ModelScope.of(context).api(
-          videoV2('/merchant/video-links/check'),
+          await ModelScope.of(context).videoPath('/merchant/video-links/check'),
           method: 'POST',
-          data: {'text': share.text},
+          data: {'text': share.text, 'source': data['video_source']},
         ),
       );
       if (!mounted || g != generation) return;
@@ -290,6 +479,40 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
     } finally {
       checkLock = false;
       if (mounted) setState(() => checking = false);
+    }
+  }
+
+  Future<void> uploadCover() async {
+    if (busy || !await sessionReady() || !mounted) return;
+    final m = ModelScope.of(context);
+    setState(() {
+      busy = true;
+      error = '';
+    });
+    try {
+      final files = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'webp'],
+      );
+      if (files.isEmpty || !mounted || !await sessionReady() || !mounted) {
+        return;
+      }
+      final file = files.first;
+      final path = file.path;
+      if (path == null) throw ApiFailure('invalid_image');
+      if ((await file.length() ?? 0) > 10 * 1024 * 1024) {
+        throw ApiFailure('file_too_large');
+      }
+      final id = await m.upload(path, purpose: 'resource_cover');
+      if (mounted && m.baseUrl == endpoint && m.account['id'] == ownerID) {
+        setState(() => data['cover_media_id'] = id);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => error = m.t(e is ApiFailure ? e.code : 'invalid_image'));
+      }
+    } finally {
+      if (mounted) setState(() => busy = false);
     }
   }
 
@@ -312,7 +535,7 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
         data['purpose'] = 'product';
       }
       if (submit && check == null) throw ApiFailure('video_check_required');
-      if (submit && check!['status'] != 'READY') {
+      if (submit && !canPreviewVideo(check)) {
         throw ApiFailure(
           (check!['reason'] ?? 'video_check_required').toString(),
         );
@@ -330,7 +553,7 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
       final m = ModelScope.of(context);
       final result = asMap(
         await m.api(
-          videoV2(
+          await m.videoPath(
             current == null
                 ? '/merchant/resources'
                 : '/merchant/resources/${current!['id']}/draft',
@@ -347,7 +570,7 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
       if (submit) {
         if (!await sessionReady() || !mounted) return;
         await m.api(
-          videoV2('/merchant/resources/${result['id']}/submit'),
+          await m.videoPath('/merchant/resources/${result['id']}/submit'),
           method: 'POST',
           data: {'revision_id': result['revision_id']},
         );
@@ -379,24 +602,32 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final m = ModelScope.of(context);
     final disabled = busy || current?['status'] == 'pending';
+    final kuaishou = data['video_source'] == 'KUAISHOU';
+    final platform = kuaishou ? '快手' : '抖音';
+    final cover = (data['cover_media_id'] as num? ?? 0).toInt();
     return Scaffold(
       appBar: appBar(context, '粘贴视频链接'),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const Text('视频来源：抖音', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            '视频来源：$platform',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           space(),
           TextField(
             controller: share,
             enabled: !disabled,
             maxLength: 8000,
             maxLines: 3,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: '视频分享链接',
-              hintText: '粘贴从抖音复制的分享链接或分享内容',
+              hintText: '粘贴从$platform复制的分享链接或分享内容',
             ),
           ),
+          if (kuaishou) const Text('链接检查仅验证格式。审核时会确认作品可公开打开。'),
           Wrap(
             spacing: 12,
             runSpacing: 8,
@@ -406,14 +637,18 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
                 child: Text(checking ? '正在检查…' : '检查链接'),
               ),
               OutlinedButton(
-                onPressed: disabled || check?['status'] != 'READY'
+                onPressed: disabled || !canPreviewVideo(check)
                     ? null
                     : () => openNativeResource(
                         context,
                         {
                           'id': current?['id'] ?? 0,
                           'kind': 'video',
-                          'data': {...data, 'video_source': 'DOUYIN'},
+                          'data': {
+                            ...data,
+                            'title': title.text.trim(),
+                            'description': description.text,
+                          },
                         },
                         private: true,
                         check: check,
@@ -426,7 +661,9 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
-                check!['status'] == 'READY'
+                check!['status'] == 'EXTERNAL_ONLY'
+                    ? '链接格式正确，访客可前往快手观看。'
+                    : check!['status'] == 'READY'
                     ? '官方播放器可预览，请点击预览确认播放效果。'
                     : '${videoErrorText(ApiFailure((check!['reason'] ?? '').toString()))} 可以先保存草稿，暂不能提交审核。',
               ),
@@ -443,7 +680,7 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
             enabled: !disabled,
             maxLength: 10000,
             maxLines: 3,
-            decoration: const InputDecoration(labelText: '视频说明'),
+            decoration: InputDecoration(labelText: m.t('videoDescription')),
           ),
           if (widget.productID != null)
             Padding(
@@ -477,8 +714,31 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
                 ),
               ],
             ),
+          if (cover > 0) Photo(id: cover, aspectRatio: 16 / 9),
+          Wrap(
+            spacing: 12,
+            children: [
+              OutlinedButton(
+                onPressed: disabled ? null : uploadCover,
+                child: Text(m.t('videoCover')),
+              ),
+              if (cover > 0)
+                TextButton(
+                  onPressed: disabled
+                      ? null
+                      : () => setState(() => data['cover_media_id'] = 0),
+                  child: Text(m.t('remove')),
+                ),
+            ],
+          ),
+          NativeVideoPurpose(
+            value: (data['purpose'] ?? 'company').toString(),
+            onChanged: disabled || widget.productID != null
+                ? null
+                : (value) => setState(() => data['purpose'] = value),
+          ),
           const NativePublicationAgreements(hideAccepted: true),
-          const Text('视频仍保存在抖音，不占展厅的视频文件空间。资料修改后需重新审核，已公开的旧版本继续展示。'),
+          const Text('视频保存在原平台，上传的封面计入展厅存储。修改审核期间继续展示已公开的版本。'),
           space(),
           if (error.isNotEmpty) message(context, error),
           if (errorCode == 'duplicate_video' && widget.productID != null) ...[
@@ -507,7 +767,7 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
                 child: const Text('保存云端草稿'),
               ),
               FilledButton(
-                onPressed: disabled || checking || check?['status'] != 'READY'
+                onPressed: disabled || checking || !canPreviewVideo(check)
                     ? null
                     : () => save(true),
                 child: const Text('提交审核'),

@@ -61,8 +61,10 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
       appBar: appBar(context, m.t('brand')),
       body: AsyncPane(
         identity: '${m.baseUrl}:showroom:${widget.slug}',
-        load: () => m.api(
-          videoV2('/public/showrooms/${Uri.encodeComponent(widget.slug)}'),
+        load: () async => m.api(
+          await m.videoPath(
+            '/public/showrooms/${Uri.encodeComponent(widget.slug)}',
+          ),
         ),
         builder: (result) {
           final item = asMap(result['item']),
@@ -277,6 +279,7 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
                                   key: ValueKey('${widget.slug}:$resourceTab'),
                                   vendorID: item['id'],
                                   kind: resourceTab == 2 ? 'video' : 'catalog',
+                                  fallbackIDs: showroomVideoImages(data),
                                 ),
                               ),
 
@@ -563,12 +566,14 @@ class NativeResourceList extends StatefulWidget {
   final int? vendorID, productID;
   final String? kind;
   final bool management;
+  final List<int> fallbackIDs;
   const NativeResourceList({
     super.key,
     this.vendorID,
     this.productID,
     this.kind,
     this.management = false,
+    this.fallbackIDs = const [],
   });
   @override
   State<NativeResourceList> createState() => _NativeResourceListState();
@@ -604,7 +609,6 @@ class _NativeResourceListState extends State<NativeResourceList> {
     final q = {
       'page': '$page',
       'page_size': '12',
-      if (widget.kind != 'catalog') 'video_api_version': '2',
       if (widget.vendorID != null) 'vendor_id': '${widget.vendorID}',
       if (widget.productID != null) 'product_id': '${widget.productID}',
       if (widget.kind != null) 'kind': widget.kind!,
@@ -673,38 +677,32 @@ class _NativeResourceListState extends State<NativeResourceList> {
         if (!widget.management &&
             widget.kind == 'video' &&
             widget.productID == null)
-          NativeFieldLabel(
-            label: m.t('purpose'),
-            child: DropdownButtonFormField<String>(
-              initialValue: purpose,
-              isExpanded: true,
-              decoration: InputDecoration(),
-              items: [
-                DropdownMenuItem(value: '', child: Text(m.t('allVideoTypes'))),
-                for (final p in [
-                  ['company', 'companyVideo'],
-                  ['production', 'productionVideo'],
-                  ['product', 'productVideo'],
-                ])
-                  DropdownMenuItem(value: p[0], child: Text(m.t(p[1]))),
-              ],
-              onChanged: (v) => setState(() {
-                purpose = v ?? '';
-                page = 1;
-              }),
-            ),
+          NativeVideoPurpose(
+            value: purpose,
+            filter: true,
+            onChanged: (value) => setState(() {
+              purpose = value;
+              page = 1;
+            }),
           ),
         space(),
         AsyncPane(
           identity:
               '${m.scope}:${widget.management}:$version:${Uri(queryParameters: q).query}',
-          load: () => m.api(
-            '/${widget.management ? 'merchant' : 'public'}/resources?${Uri(queryParameters: q).query}',
-          ),
+          load: () async {
+            final path =
+                '/${widget.management ? 'merchant' : 'public'}/resources?${Uri(queryParameters: q).query}';
+            return m.api(
+              widget.kind == 'catalog' ? path : await m.videoPath(path),
+            );
+          },
           builder: (r) => Column(
             children: [
               if (rows(r['items']).isEmpty)
-                message(context, m.t('noResources')),
+                message(
+                  context,
+                  m.t(widget.kind == 'video' ? 'noVideos' : 'noResources'),
+                ),
               for (final item in rows(r['items']).where(
                 (e) =>
                     widget.management ||
@@ -712,7 +710,10 @@ class _NativeResourceListState extends State<NativeResourceList> {
                     e['vendor_id'] == widget.vendorID,
               ))
                 if (!widget.management)
-                  NativePublicResourceCard(item: item)
+                  NativePublicResourceCard(
+                    item: item,
+                    fallbackIDs: widget.fallbackIDs,
+                  )
                 else
                   Card(
                     child: Padding(
@@ -760,6 +761,8 @@ class _NativeResourceListState extends State<NativeResourceList> {
                                         ? 'productionVideo'
                                         : item['data']['purpose'] == 'product'
                                         ? 'productVideo'
+                                        : item['data']['purpose'] == 'other'
+                                        ? 'otherVideo'
                                         : 'companyVideo',
                                   ) +
                                   ((item['file']?['duration'] as num? ?? 0) > 0
@@ -828,7 +831,7 @@ class _NativeResourceListState extends State<NativeResourceList> {
                                     await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => isDouyinVideo(item)
+                                        builder: (_) => isExternalVideo(item)
                                             ? NativeDouyinEditor(
                                                 item: item,
                                                 productID: widget.productID,
@@ -853,8 +856,8 @@ class _NativeResourceListState extends State<NativeResourceList> {
                                         : () async {
                                             try {
                                               await m.api(
-                                                isDouyinVideo(item)
-                                                    ? videoV2(
+                                                item['kind'] == 'video'
+                                                    ? await m.videoPath(
                                                         '/merchant/resources/${item['id']}/submit',
                                                       )
                                                     : '/merchant/resources/${item['id']}/submit',
@@ -897,8 +900,8 @@ class _NativeResourceListState extends State<NativeResourceList> {
                                       if (ok != true) return;
                                       try {
                                         await m.api(
-                                          isDouyinVideo(item)
-                                              ? videoV2(
+                                          item['kind'] == 'video'
+                                              ? await m.videoPath(
                                                   '/merchant/resources/${item['id']}/offline',
                                                 )
                                               : '/merchant/resources/${item['id']}/offline',
@@ -1664,6 +1667,7 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
           await sink.close();
         }
         if (actual == 0) throw ApiFailure('invalid_request');
+        if (kind == 'cover') uploads.removeWhere((f) => f['kind'] == 'cover');
         uploads.add({'path': path, 'name': f.name, 'kind': kind});
       }
       if (mounted) setState(() {});
@@ -1763,11 +1767,12 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
       data['purpose'] = 'product';
     }
     try {
+      final path = current == null
+          ? '/merchant/resources'
+          : '/merchant/resources/${current!['id']}/draft';
       final r = asMap(
         await m.api(
-          current == null
-              ? '/merchant/resources'
-              : '/merchant/resources/${current!['id']}/draft',
+          widget.kind == 'video' ? await m.videoPath(path) : path,
           method: current == null ? 'POST' : 'PUT',
           data: current == null
               ? {'kind': widget.kind, 'data': data}
@@ -1779,7 +1784,9 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
       await persist();
       if (submit) {
         await m.api(
-          '/merchant/resources/${r['id']}/submit',
+          widget.kind == 'video'
+              ? await m.videoPath('/merchant/resources/${r['id']}/submit')
+              : '/merchant/resources/${r['id']}/submit',
           method: 'POST',
           data: {'revision_id': r['revision_id']},
         );
@@ -1820,7 +1827,11 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
                 padding: const EdgeInsets.only(bottom: 18),
                 child: NativeFieldLabel(
                   label: m.t(
-                    k == 'title' ? 'resourceTitle' : 'resourceDescription',
+                    k == 'title'
+                        ? 'resourceTitle'
+                        : widget.kind == 'video'
+                        ? 'videoDescription'
+                        : 'resourceDescription',
                   ),
                   child: TextField(
                     controller: fields[k],
@@ -1856,27 +1867,14 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
               ],
             ),
             if (widget.kind == 'video')
-              NativeFieldLabel(
-                label: m.t('purpose'),
-                child: DropdownButtonFormField<String>(
-                  initialValue: data['purpose'],
-                  isExpanded: true,
-                  decoration: InputDecoration(),
-                  items: [
-                    for (final p in [
-                      ['company', 'companyVideo'],
-                      ['production', 'productionVideo'],
-                      ['product', 'productVideo'],
-                    ])
-                      DropdownMenuItem(value: p[0], child: Text(m.t(p[1]))),
-                  ],
-                  onChanged: disabled || widget.productID != null
-                      ? null
-                      : (v) {
-                          setState(() => data['purpose'] = v);
-                          persist();
-                        },
-                ),
+              NativeVideoPurpose(
+                value: (data['purpose'] ?? 'company').toString(),
+                onChanged: disabled || widget.productID != null
+                    ? null
+                    : (value) {
+                        setState(() => data['purpose'] = value);
+                        persist();
+                      },
               )
             else
               NativeFieldLabel(
@@ -1945,10 +1943,32 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
                 ),
               ),
             ),
+            if (widget.kind == 'video' &&
+                (data['cover_media_id'] as num? ?? 0) > 0)
+              Photo(
+                id: (data['cover_media_id'] as num).toInt(),
+                aspectRatio: 16 / 9,
+              ),
             OutlinedButton(
               onPressed: disabled ? null : () => pick('cover'),
-              child: Text(m.t('resourceCover')),
+              child: Text(
+                m.t(widget.kind == 'video' ? 'videoCover' : 'resourceCover'),
+              ),
             ),
+            if (widget.kind == 'video' &&
+                (data['cover_media_id'] as num? ?? 0) > 0)
+              TextButton(
+                onPressed: disabled
+                    ? null
+                    : () {
+                        setState(() {
+                          data['cover_media_id'] = 0;
+                          uploads.removeWhere((f) => f['kind'] == 'cover');
+                        });
+                        persist();
+                      },
+                child: Text(m.t('remove')),
+              ),
             for (final f in uploads)
               ListTile(
                 title: Text(f['name']),

@@ -99,6 +99,40 @@ void main() {
     messenger.setMockMethodCallHandler(channel, null);
   });
   testWidgets(
+    'Kuaishou card opens information before the explicit watch action',
+    (tester) async {
+      var playerOpens = 0;
+      messenger.setMockMethodCallHandler(channel, (_) async {
+        playerOpens++;
+        return null;
+      });
+      final m = await f.fixture();
+      final video = item();
+      video['data'] = {
+        ...asMap(video['data']),
+        'video_source': 'KUAISHOU',
+        'purpose': 'other',
+        'canonical_video_url': 'https://v.kuaishou.com/Abc123',
+        'description': '快手视频简介',
+      };
+      await tester.pumpWidget(
+        f.harness(
+          m,
+          home: Scaffold(body: NativePublicResourceCard(item: video)),
+        ),
+      );
+      await tester.tap(find.byType(InkWell).first);
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.text('前往快手观看'), findsOneWidget);
+      expect(find.text('快手视频简介'), findsNWidgets(2));
+      expect(playerOpens, 0);
+      await tester.tap(find.widgetWithText(TextButton, m.t('close')));
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsNothing);
+    },
+  );
+  testWidgets(
     'local card opens one playback route and starts audible playback once',
     (tester) async {
       final platform = PopupVideoPlatform();

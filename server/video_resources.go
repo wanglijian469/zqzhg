@@ -13,6 +13,9 @@ import (
 
 func (a *App) prepareVideoPayload(c *gin.Context, p *ResourcePayload) error {
 	p.VideoSource = videoSource(*p)
+	if !supportsVideo(c, p.VideoSource, p.Purpose) {
+		return fmt.Errorf("video_client_upgrade_required")
+	}
 	if p.VideoSource == videoLocal {
 		p.OriginalShareURL = ""
 		p.CanonicalVideoURL = ""
@@ -22,13 +25,10 @@ func (a *App) prepareVideoPayload(c *gin.Context, p *ResourcePayload) error {
 		}
 		return nil
 	}
-	if p.VideoSource != videoDouyin {
+	if p.VideoSource != videoDouyin && p.VideoSource != videoKuaishou {
 		return fmt.Errorf("unsupported_video_source")
 	}
-	if !videoV2(c) {
-		return fmt.Errorf("video_client_upgrade_required")
-	}
-	if !douyinVideoEnabled() {
+	if p.VideoSource == videoDouyin && !douyinVideoEnabled() {
 		return fmt.Errorf("douyin_video_disabled")
 	}
 	if !p.RightsConfirmed {
@@ -40,11 +40,18 @@ func (a *App) prepareVideoPayload(c *gin.Context, p *ResourcePayload) error {
 	if !permit(fmt.Sprintf("video-save:%d", actor(c).ID), 30, time.Minute) {
 		return fmt.Errorf("rate_limited")
 	}
-	original, id, check, e := a.inspectVideoShare(c.Request.Context(), p.OriginalShareURL)
+	var original, id string
+	var check VideoLinkCheck
+	var e error
+	if p.VideoSource == videoKuaishou {
+		check, e = checkKuaishou(p.OriginalShareURL)
+		original, id = check.CanonicalURL, check.VideoID
+	} else {
+		original, id, check, e = a.inspectVideoShare(c.Request.Context(), p.OriginalShareURL)
+	}
 	if e != nil {
 		return e
 	}
-	p.VideoSource = videoDouyin
 	p.OriginalShareURL = original
 	p.CanonicalVideoURL = check.CanonicalURL
 	p.ExternalVideoID = id
@@ -64,10 +71,18 @@ func (a *App) validateVideoResource(tx *gorm.DB, r Resource, p *ResourcePayload,
 	if source == videoLocal {
 		return nil
 	}
-	if source != videoDouyin || (p.ExternalVideoID != "" && !videoIDPattern.MatchString(p.ExternalVideoID)) || p.FileMediaID != 0 {
+	if p.FileMediaID != 0 || (source != videoDouyin && source != videoKuaishou) {
 		return fmt.Errorf("invalid_video_link")
 	}
-	if !douyinVideoEnabled() {
+	if source == videoKuaishou {
+		check, e := checkKuaishou(p.OriginalShareURL)
+		if e != nil || check.VideoID != p.ExternalVideoID || check.CanonicalURL != p.CanonicalVideoURL {
+			return fmt.Errorf("invalid_video_link")
+		}
+	} else if p.ExternalVideoID != "" && !videoIDPattern.MatchString(p.ExternalVideoID) {
+		return fmt.Errorf("invalid_video_link")
+	}
+	if source == videoDouyin && !douyinVideoEnabled() {
 		return fmt.Errorf("douyin_video_disabled")
 	}
 	if !p.RightsConfirmed {
@@ -98,7 +113,11 @@ func (a *App) validateVideoResource(tx *gorm.DB, r Resource, p *ResourcePayload,
 	}
 	if ready {
 		check := p.videoCheck
-		if check == nil || check.VideoID != p.ExternalVideoID || check.Status != "READY" || !check.ExpiresAt.After(time.Now()) {
+		status := "READY"
+		if source == videoKuaishou {
+			status = "EXTERNAL_ONLY"
+		}
+		if check == nil || check.VideoID != p.ExternalVideoID || check.Status != status || !check.ExpiresAt.After(time.Now()) {
 			if check != nil && check.Reason != "" {
 				return fmt.Errorf("%s", check.Reason)
 			}
@@ -123,7 +142,7 @@ func (a *App) prepareStoredVideo(c *gin.Context, rid, revid uint64) (*VideoLinkC
 	if r.Kind != "video" || videoSource(p) == videoLocal {
 		return nil, nil
 	}
-	if !videoV2(c) {
+	if !supportsVideo(c, videoSource(p), p.Purpose) {
 		return nil, fmt.Errorf("video_client_upgrade_required")
 	}
 	if rev.RightsActorID == 0 || !p.RightsConfirmed {
@@ -134,21 +153,43 @@ func (a *App) prepareStoredVideo(c *gin.Context, rid, revid uint64) (*VideoLinkC
 	if p.ExternalVideoID == "" {
 		return nil, fmt.Errorf("video_check_required")
 	}
-	result := a.checkDouyin(c.Request.Context(), p.ExternalVideoID)
-	return &result, nil
+	result, e := a.checkStoredVideo(c, p)
+	return &result, e
+}
+func (a *App) checkStoredVideo(c *gin.Context, p ResourcePayload) (VideoLinkCheck, error) {
+	if videoSource(p) == videoKuaishou {
+		return checkKuaishou(p.OriginalShareURL)
+	}
+	return a.checkDouyin(c.Request.Context(), p.ExternalVideoID), nil
+}
+func supportsVideo(c *gin.Context, source, purpose string) bool {
+	if source == videoKuaishou || purpose == "other" {
+		return videoV3(c)
+	}
+	return source != videoDouyin || videoV2(c)
 }
 func resourceClientFilter(q *gorm.DB, c *gin.Context, alias string) *gorm.DB {
-	if !videoV2(c) || (alias == "pr" && !douyinVideoEnabled()) {
-		return q.Where("("+alias+".video_source=? OR resources.kind<>'video')", videoLocal)
+	sources := []string{videoLocal}
+	if videoV2(c) && (alias != "pr" || douyinVideoEnabled()) {
+		sources = append(sources, videoDouyin)
 	}
-	return q
+	if videoV3(c) {
+		sources = append(sources, videoKuaishou)
+	} else {
+		q = q.Where("(" + alias + ".purpose<>'other' OR resources.kind<>'video')")
+	}
+	return q.Where("("+alias+".video_source IN ? OR resources.kind<>'video')", sources)
 }
 func guardVideoMutationClient(c *gin.Context, tx *gorm.DB, r Resource) error {
-	if r.Kind != "video" || videoV2(c) {
+	if r.Kind != "video" || videoV3(c) {
 		return nil
 	}
 	var n int64
-	if e := tx.Model(&ResourceRevision{}).Where("id IN ? AND video_source=?", []uint64{r.DraftRevisionID, r.PublishedRevisionID}, videoDouyin).Count(&n).Error; e != nil {
+	sources := []string{videoKuaishou}
+	if !videoV2(c) {
+		sources = append(sources, videoDouyin)
+	}
+	if e := tx.Model(&ResourceRevision{}).Where("id IN ? AND (video_source IN ? OR purpose='other')", []uint64{r.DraftRevisionID, r.PublishedRevisionID}, sources).Count(&n).Error; e != nil {
 		return e
 	}
 	if n > 0 {
@@ -190,15 +231,15 @@ func (a *App) videoPlayback(c *gin.Context, public bool) {
 		fail(c, 500, "internal_error")
 		return
 	}
+	if !supportsVideo(c, videoSource(p), p.Purpose) {
+		fail(c, 409, "video_client_upgrade_required")
+		return
+	}
 	if videoSource(p) == videoLocal {
 		c.JSON(200, gin.H{"source": videoLocal, "status": "READY", "media_id": p.FileMediaID})
 		return
 	}
-	if !videoV2(c) {
-		fail(c, 409, "video_client_upgrade_required")
-		return
-	}
-	if !douyinVideoEnabled() {
+	if videoSource(p) == videoDouyin && !douyinVideoEnabled() {
 		fail(c, 503, "douyin_video_disabled")
 		return
 	}
@@ -210,7 +251,11 @@ func (a *App) videoPlayback(c *gin.Context, public bool) {
 		fail(c, 429, "rate_limited")
 		return
 	}
-	result := a.checkDouyin(c.Request.Context(), p.ExternalVideoID)
+	result, e := a.checkStoredVideo(c, p)
+	if e != nil {
+		dbFail(c, e)
+		return
+	}
 	if public {
 		var n int64
 		a.resourceQuery().Where("resources.id=? AND resources.published_revision_id=?", r.ID, rev.ID).Count(&n)
