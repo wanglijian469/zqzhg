@@ -1,10 +1,10 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {chromium}=require('../.tools/browser-qa/node_modules/playwright');
 const [base,output,assetRoot]=process.argv.slice(2),reference=path.resolve(__dirname,'../.local/map-preview');
-const evidence={base,embeddedAPKAssets:!!assetRoot,map:[],layouts:[],mobileRetry:false,pageErrors:[]};
+const evidence={base,embeddedAPKAssets:!!assetRoot,map:[],layouts:[],mobileRetry:false,pageErrors:[],httpErrors:[]};
 const bundle=assetRoot&&path.resolve(assetRoot,'workspace');
-let next=Date.now()+12000,queue=Promise.resolve();
-function pace(url){if(!/^\/(regions|browse|api\/v1\/public\/(industry-map|products|showrooms))/.test(new URL(url).pathname))return Promise.resolve();queue=queue.then(async()=>{const delay=next-Date.now();if(delay>0)await new Promise(r=>setTimeout(r,delay));next=Date.now()+1800});return queue;}
+let next=Date.now()+20000,queue=Promise.resolve();
+function pace(url){if(!/^\/(regions|browse|api\/v1\/public\/(industry-map|products|showrooms))/.test(new URL(url).pathname))return Promise.resolve();queue=queue.then(async()=>{const delay=next-Date.now();if(delay>0)await new Promise(r=>setTimeout(r,delay));next=Date.now()+3300});return queue;}
 async function main(){
  const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',args:['--no-proxy-server']});
  const config=await fetch(base+'/api/v1/public/config').then(r=>{assert(r.ok);return r.json()});
@@ -30,7 +30,7 @@ async function main(){
    }
    return route.continue();
   });
-  const page=await context.newPage();page.on('pageerror',e=>evidence.pageErrors.push(e.message));
+  const page=await context.newPage();page.on('pageerror',e=>evidence.pageErrors.push(e.message));page.on('response',r=>{if(r.url().startsWith(base)&&r.status()>=400){const row={url:r.url(),status:r.status()};evidence.httpErrors.push(row);console.log(JSON.stringify(row));}});
   const ready=()=>page.locator('[data-map-mode=outline] .industry-chart svg path').first().waitFor({state:'attached',timeout:45000});
   await page.goto(base+'/regions',{waitUntil:'domcontentloaded'});await ready();
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
@@ -50,7 +50,7 @@ async function main(){
    const product=data.items.find(p=>p.data.vendor_product_category_id);assert(product);
    const id=product.data.vendor_product_category_id,vid=product.vendor_id;
    const showroom=product.vendor?.showroom_slug||('v-'+vid),query='?tab=products&vendor_product_category_id='+id;
-   await page.goto(base+'/v/'+showroom+query);await page.locator('#panel-products .showroom-product-grid article').first().waitFor({timeout:45000});
+   console.log('Checking company '+JSON.stringify({vid,showroom,category:id}));await page.goto(base+'/v/'+showroom+query);await page.locator('#panel-products .showroom-product-grid article').first().waitFor({timeout:45000});
    assert.equal(await page.locator('#panel-products select').first().inputValue(),String(id));
    await page.locator('#panel-products .showroom-product-grid a[href*="/products/"]').first().click();await page.locator('.public-detail-breadcrumb').waitFor();assert.equal(await page.locator('.public-detail-breadcrumb li').count(),2);
    assert((await page.locator('.taxonomy-public-attributes').innerText()).includes(product.vendor_product_category.name));
