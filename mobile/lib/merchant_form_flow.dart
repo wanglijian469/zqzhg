@@ -7,6 +7,7 @@ Json cloneProductDraft(Json source) => {
     'name',
     'name_en',
     'product_category_id',
+    'vendor_product_category_id',
     'category_id',
     'brand',
     'model',

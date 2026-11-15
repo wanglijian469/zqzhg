@@ -52,7 +52,7 @@ export function canonicalPublicURL(path:string,search:string,base:string,explici
  if(['/','/browse','/browse/products','/regions'].includes(url.pathname)){for(const key of keys){let v=source.get(key)?.trim();if(!v||(key==='hall'&&v==='agriculture')||(key==='page'&&(!/^\d+$/.test(v)||Number(v)<=1)))continue;if(key==='page')v=String(Number(v));q.set(key,v)}}q.sort();url.search=q.toString();return url.href;
 }
 export function showroomSearchVariant(path:string,search:string){const q=new URLSearchParams(search);return /^\/(?:v|vendors)\//.test(path)&&Number(q.get('page'))>1}
-const filterKeys=['q','category_id','region_id','region_code','unassigned','vendor_id','sort','business_nature','industrial_belt_id'];
+const filterKeys=['vendor_product_category_id','q','category_id','region_id','region_code','unassigned','vendor_id','sort','business_nature','industrial_belt_id'];
 export function filteredSearch(search:string){const q=new URLSearchParams(search);return Number(q.get('page'))>1||filterKeys.some(k=>!!q.get(k))}
 export function indexableDirectory(search:string,facet:'category_id'|'region_code',validFacet:boolean,total:number){
  const params=new URLSearchParams(search),page=params.get('page');

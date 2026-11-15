@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-15",
+  "production_deployed": false,
+  "database_api_or_recording_rules_changed": false,
+  "physical_device_verified": false,
+  "typecheck": "passed",
+  "production_frontend_build": "passed; package.json stages executed with Node directly because npm is unavailable",
+  "focused_frontend_tests": {
+    "files": 6,
+    "unique_tests_passed": 42,
+    "note": "One pre-existing lazy admin import timeout passed when its file was run alone."
+  },
+  "additional_frontend_tests": {
+    "files": 4,
+    "passed": 14,
+    "failed": 4,
+    "failures_preexisting": true,
+    "baseline_reproduction": ".local/company-info-baseline-footer.log",
+    "reason": "showroom-footer tests expect old share dialog buttons; same 4 failures reproduced with this task changes reverted in an isolated copy."
+  },
+  "backend_tests": {
+    "passed": [
+      "TestIndependentSEOHTMLAndPublication",
+      "TestIndependentSEOHistoryRedirects",
+      "TestIndependentSEOCanonicalAndSafeTemplate",
+      "TestIndependentSEOBrowser"
+    ],
+    "isolated_database": true
+  },
+  "responsive_browser": {
+    "pages_and_scenarios": 23,
+    "widths": [
+      1440,
+      1024,
+      768,
+      390,
+      360
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "page_errors": [],
+    "source": "production frontend build with isolated public API fixtures",
+    "long_chinese_names": true,
+    "optional_production_fields": [
+      1,
+      2,
+      3
+    ],
+    "footer_obscured_at_page_end": false
+  },
+  "production_panel_comparison": [
+    {
+      "width": 1440,
+      "production_before_px": 190,
+      "production_after_px": 132,
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1024,
+      "production_before_px": 222,
+      "production_after_px": 132,
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "production_before_px": 400,
+      "production_after_px": 212,
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "production_before_px": 577,
+      "production_after_px": 204,
+      "horizontal_overflow": false
+    },
+    {
+      "width": 360,
+      "production_before_px": 577,
+      "production_after_px": 226,
+      "horizontal_overflow": false
+    }
+  ]
+}

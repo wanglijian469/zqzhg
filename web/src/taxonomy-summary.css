@@ -1,0 +1,17 @@
+/* Loaded by the public summary itself, independent of editor/admin routes. */
+.taxonomy-public-attributes{display:grid;gap:8px;margin:16px 0;min-width:0;font-size:14px;line-height:1.6}
+.taxonomy-public-attributes>.taxonomy-attribute-row{display:grid;grid-template-columns:112px minmax(0,1fr);gap:16px;min-width:0}
+.taxonomy-public-attributes dt{color:#657991;min-width:0;overflow-wrap:anywhere}
+.taxonomy-public-attributes dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.showroom-v2 .company-business-info>.taxonomy-public-attributes{margin:0;padding:24px;background:#fff;border:1px solid #e2e9f2;border-radius:12px;gap:0}
+.showroom-v2 .company-business-info .taxonomy-attribute-row{padding-block:14px}
+.showroom-v2 .company-business-info .taxonomy-attribute-row:first-child{padding-top:0}
+.showroom-v2 .company-business-info .taxonomy-attribute-row:last-child{padding-bottom:0}
+.showroom-v2 .company-business-info .taxonomy-attribute-row+.taxonomy-attribute-row{border-top:1px solid #e8edf4}
+.showroom-v2 .company-business-info dt{padding-top:3px;font-size:13px}
+.showroom-v2 .company-business-info .taxonomy-category-list{display:flex;flex-wrap:wrap;gap:12px 24px;min-width:0}
+.showroom-v2 .company-business-info .taxonomy-category-item{display:grid;align-content:start;gap:4px;max-width:100%;min-width:0}
+.showroom-v2 .company-business-info .taxonomy-category-name{font-size:14px;font-weight:600;color:#173b67;line-height:1.6}
+.showroom-v2 .company-business-info .taxonomy-category-parent{font-size:12px;line-height:1.6;color:#6b7e96}
+.showroom-v2 .company-business-info .taxonomy-business-nature{display:inline-block;padding:3px 10px;border-radius:6px;background:#edf4fc;color:#245a92;font-size:13px;line-height:1.6}
+@media(max-width:600px){.taxonomy-public-attributes>.taxonomy-attribute-row{grid-template-columns:96px minmax(0,1fr);gap:12px}.showroom-v2 .company-business-info>.taxonomy-public-attributes{padding:16px}.showroom-v2 .company-business-info .taxonomy-category-list{flex-direction:column;gap:12px}.showroom-v2 .company-business-info .taxonomy-attribute-row{padding-block:12px}.showroom-v2 .company-business-info .taxonomy-attribute-row:first-child{padding-top:0}.showroom-v2 .company-business-info .taxonomy-attribute-row:last-child{padding-bottom:0}}

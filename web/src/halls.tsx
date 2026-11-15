@@ -1,6 +1,6 @@
 import {runtimeConfig} from './runtime-config';
 import {mediaURL} from './runtime-config';
-import {indexablePublicPath,canonicalPublicURL,filteredSearch,showroomSearchVariant,seoText} from './seo';
+import {indexablePublicPath,canonicalPublicURL,filteredSearch,showroomSearchVariant} from './seo';
 import {HomeVisual} from './home-display';
 import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from 'react';
 import {Link,useLocation,useNavigate} from 'react-router-dom';
@@ -35,10 +35,9 @@ export function HallSwitcher(){
 export function HallGate({children}:{children:ReactNode}){const {loading,error,reload,hall}=useHall();if(loading)return <div className="container section"><Loading/></div>;if(error)return <div className="container section"><ErrorState code={error} retry={reload}/></div>;if(!hall)return <div className="container section"><ErrorState code="not_found"/></div>;return children}
 export function PreparingHall(){const {hall}=useHall();const {lang,t}=useLanguage();return <section className="container preparing-hall"><span className="preparing-symbol"><Cable size={48}/></span>{lang==='en'&&<span className="eyebrow">ZQZG / INDUSTRIAL EXHIBITION</span>}<h1>{t('brand')} · {lang==='en'?hall?.name_en:hall?.name}</h1><span className="status-pill">{t('hallPreparing')}</span><p>{(lang==='en'?hall?.description_en:hall?.description)||t('preparingDescription')}</p>{!!hall?.hero_media_id&&<div className="preparing-visual"><HomeVisual id={hall.hero_media_id}/></div>}<Link className="button" to="/">{t('backOpenHall')}</Link></section>}
 export function PublicDetailBreadcrumb({name,vendor}:{name:string;vendor?:{name:string;path:string}}){
- const {lang,t}=useLanguage();const {href}=useHall();
+ const {lang}=useLanguage();const {href}=useHall();
  return <nav className="public-detail-breadcrumb" aria-label={lang==='zh'?'面包屑导航':'Breadcrumb'}>
-  <ol><li><Link to="/">{t('brand')}</Link></li><li><Link to={href('/browse')}>{seoText(lang).directoryTitle}</Link></li>
-   {vendor&&<li><Link to={vendor.path}>{vendor.name}</Link></li>}<li aria-current="page">{name}</li></ol>
+  <ol>{vendor&&<li><Link to={href(vendor.path)}>{vendor.name}</Link></li>}<li aria-current="page">{name}</li></ol>
  </nav>;
 }
 

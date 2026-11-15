@@ -250,9 +250,19 @@ class ItemTile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  if (m.productCategory(data).isNotEmpty)
+                  if (m.productCategory({
+                    ...data,
+                    if (item['vendor_product_category'] != null)
+                      '_vendor_product_category':
+                          item['vendor_product_category'],
+                  }).isNotEmpty)
                     Text(
-                      m.productCategory(data),
+                      m.productCategory({
+                        ...data,
+                        if (item['vendor_product_category'] != null)
+                          '_vendor_product_category':
+                              item['vendor_product_category'],
+                      }),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodySmall,

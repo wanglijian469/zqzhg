@@ -495,5 +495,9 @@
   "phone_login_unavailable": "This number is not registered or verified. Register, or use your existing company account to link it.",
   "https_required": "Use https://zqzhg.com for SMS verification. You can switch the server in App settings.",
   "share": "Share",
-  "verification_merged": "Verification is part of content review. Update the app or open company agreements and submission."
+  "verification_merged": "Verification is part of content review. Update the app or open company agreements and submission.",
+  "vendor_name_exists": "This company name already exists. Find and edit the existing showroom, or contact the platform.",
+  "vendorProductCategories": "Product categories",
+  "vendor_product_category_exists": "This company already has the category in this industry.",
+  "vendor_product_category_in_use": "Product versions reference this category. Deactivate it instead."
 }

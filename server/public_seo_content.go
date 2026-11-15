@@ -25,13 +25,14 @@ type seoContent struct {
 type seoImage struct{ URL, Alt string }
 type seoLink struct{ URL, Name string }
 type seoPage struct {
-	Company  bool
-	Data     Payload
-	Model    string
-	Images   []seoImage
-	Products []seoLink
-	Vendor   seoLink
-	Crumbs   []seoLink
+	VendorProductCategory *VendorProductCategory
+	Company               bool
+	Data                  Payload
+	Model                 string
+	Images                []seoImage
+	Products              []seoLink
+	Vendor                seoLink
+	Crumbs                []seoLink
 }
 
 var seoBody = template.Must(template.New("public-content").Funcs(template.FuncMap{"previewImage": func(raw string) string {
@@ -53,7 +54,7 @@ var seoBody = template.Must(template.New("public-content").Funcs(template.FuncMa
 {{end}}
 {{with .Data.Description}}<section><h2>{{if $.Company}}企业介绍{{else}}产品介绍{{end}}</h2><p style="white-space:pre-wrap;overflow-wrap:anywhere">{{.}}</p></section>{{end}}
 {{if not .Company}}
-{{with .Model}}<p>型号：{{.}}</p>{{end}}{{with .Data.Brand}}<p>品牌：{{.}}</p>{{end}}
+{{with .Model}}<p>型号：{{.}}</p>{{end}}{{with .VendorProductCategory}}<p>产品分类：{{.Name}}</p>{{with .IndustryName}}<p>所属行业大类：{{.}}</p>{{end}}{{end}}{{with .Data.Brand}}<p>品牌：{{.}}</p>{{end}}
 {{with .Data.Parameters}}<section><h2>产品参数</h2><p style="white-space:pre-wrap;overflow-wrap:anywhere">{{.}}</p></section>{{end}}
 <p>所属厂商：<a href="{{.Vendor.URL}}">{{.Vendor.Name}}</a></p>
 {{else}}
@@ -146,12 +147,15 @@ func (a *App) vendorSEO(c *gin.Context, item View, products []View, canonical st
 func (a *App) productSEO(c *gin.Context, hall Hall, item, vendor View, canonical string) (seoContent, error) {
 	d := item.Data
 	vendorPath := "/v/" + vendor.ShowroomSlug
-	page := seoPage{Data: d, Model: seoProductModel(d), Vendor: seoLink{vendorPath, vendor.Data.Name}, Crumbs: []seoLink{
-		{"/", a.brandName()}, {hallSEOPath("/browse", hall.Slug, nil), "企业名单与厂家展厅"}, {vendorPath, vendor.Data.Name}, {"", d.Name},
+	page := seoPage{Data: d, VendorProductCategory: item.VendorProductCategory, Model: seoProductModel(d), Vendor: seoLink{vendorPath, vendor.Data.Name}, Crumbs: []seoLink{
+		{hallSEOPath(vendorPath, hall.Slug, nil), vendor.Data.Name}, {"", d.Name},
 	}}
 	product := map[string]any{
 		"@context": "https://schema.org", "@type": "Product", "name": d.Name, "url": canonical,
 		"manufacturer": map[string]string{"@type": "Organization", "name": vendor.Data.Name, "url": a.publicBase(c) + vendorPath},
+	}
+	if item.VendorProductCategory != nil {
+		product["category"] = item.VendorProductCategory.Name
 	}
 	if d.Description != "" {
 		product["description"] = d.Description

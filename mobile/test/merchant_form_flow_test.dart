@@ -64,6 +64,8 @@ void main() {
       expect(find.text('产品图片'), findsOneWidget);
       expect(nativeField('产品品牌'), findsNothing);
       await t.enterText(nativeField(m.t('productName')), '翻转犁😀');
+      await t.ensureVisible(find.text('2 完善详情'));
+      await t.pumpAndSettle();
       await t.tap(find.text('2 完善详情'));
       await t.pumpAndSettle();
       await t.enterText(nativeField('产品品牌'), '冀农');
@@ -73,6 +75,8 @@ void main() {
         t.widget<TextField>(nativeField(m.t('productName'))).controller!.text,
         '翻转犁😀',
       );
+      await t.ensureVisible(find.text('2 完善详情'));
+      await t.pumpAndSettle();
       await t.tap(find.text('2 完善详情'));
       await t.pumpAndSettle();
       expect(t.widget<TextField>(nativeField('产品品牌')).controller!.text, '冀农');

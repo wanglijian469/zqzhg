@@ -285,7 +285,12 @@ func (a *App) publicShowroom(c *gin.Context) {
 			}{category.ID, category.Name, category.NameEN}
 		}
 	}
-	c.JSON(200, gin.H{"business_category": businessCategory, "representative_products": representatives, "home_products": homeProducts, "item": item, "categories": cats, "product_count": total, "canonical_url": canonical, "resource_counts": resourceCounts})
+	vendorCategories, categoryErr := a.publicVendorCategories(item.ID)
+	if categoryErr != nil {
+		dbFail(c, categoryErr)
+		return
+	}
+	c.JSON(200, gin.H{"vendor_product_categories": vendorCategories, "business_category": businessCategory, "representative_products": representatives, "home_products": homeProducts, "item": item, "categories": cats, "product_count": total, "canonical_url": canonical, "resource_counts": resourceCounts})
 }
 func (a *App) setShowroomSlug(c *gin.Context) { a.saveShowroomAddress(c, true) }
 

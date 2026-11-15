@@ -81,6 +81,9 @@ func mergeTaxonomyFields(next *Payload, old Payload) {
 	if !has["business_nature"] {
 		next.BusinessNature = old.BusinessNature
 	}
+	if !has["vendor_product_category_id"] {
+		next.VendorProductCategoryID = old.VendorProductCategoryID
+	}
 	if !has["product_category_id"] {
 		next.ProductCategoryID = old.ProductCategoryID
 	}
@@ -199,6 +202,18 @@ func validateTaxonomy(tx *gorm.DB, content Content, p *Payload) error {
 		if e := check(&p.SecondaryCategoryIDs[i], "vendor", "secondary_category_ids", false); e != nil {
 			return e
 		}
+	}
+	if content.Kind == "product" && p.VendorProductCategoryID > 0 {
+		// The company category owns grouping, but compatibility IDs must still
+		// be product categories in this hall, never manufacturer category IDs.
+		if p.ProductCategoryID > 0 {
+			var previous Category
+			p.ProductCategoryID = canonicalCategory(tx, p.ProductCategoryID)
+			if tx.First(&previous, p.ProductCategoryID).Error != nil || previous.CategoryKind != "product" || previous.HallID != content.HallID {
+				return fieldFailure("invalid_category", "product_category_id", "category_unavailable")
+			}
+		}
+		return nil
 	}
 	return check(&p.ProductCategoryID, "product", "product_category_id", true)
 }
@@ -387,9 +402,22 @@ func (a *App) hydrateTaxonomyViews(items []View) error {
 		}
 		item.Data.IndustrialBeltIDs = belts[vendor]
 	}
-	return nil
+	return a.hydrateVendorProductCategories(items)
 }
 func submitTaxonomy(tx *gorm.DB, content Content, rev Revision) error {
+	if content.Kind == "product" && vendorCategoryAvailable(tx) {
+		var binding RevisionVendorProductCategory
+		if err := tx.Where("revision_id=? AND vendor_id=?", rev.ID, content.VendorID).Limit(1).Find(&binding).Error; err != nil {
+			return err
+		}
+		if binding.CategoryID > 0 {
+			var category VendorProductCategory
+			if tx.Where("id=? AND vendor_id=? AND hall_id=?", binding.CategoryID, content.VendorID, content.HallID).First(&category).Error != nil {
+				return fieldFailure("invalid_category", "vendor_product_category_id", "category_unavailable")
+			}
+			return nil
+		}
+	}
 	if !content.TaxonomyRequired || content.HallID != 1 {
 		return nil
 	}

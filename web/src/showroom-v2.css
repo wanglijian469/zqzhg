@@ -43,7 +43,7 @@
 .showroom-v2 .portal-description p{margin-top:12px;line-height:1.9}
 .showroom-v2 .portal-basic-panel{padding:24px}
 .showroom-v2 .portal-basic dd{font-size:14px}
-.showroom-v2 .portal-production>div{padding:24px}
+
 .showroom-v2 .portal-gallery:not(.certificate-gallery){display:block;columns:3;column-gap:20px}
 .showroom-v2 .portal-gallery:not(.certificate-gallery) figure{display:inline-block;width:100%;break-inside:avoid;margin-bottom:20px}
 .showroom-v2 .portal-gallery:not(.certificate-gallery) .portal-image-button{height:auto;aspect-ratio:auto;background:#fff}

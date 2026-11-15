@@ -99,6 +99,7 @@ String fieldIssueText(AppModel m, Json issue) {
         'category_or_keywords': zh
             ? '请选择分类或填写关键词'
             : 'Choose a category or enter keywords',
+        'vendor_name_exists': m.t('vendor_name_exists'),
         'already_used': zh
             ? '此登录账号已使用，请更换'
             : 'This account name is already used',

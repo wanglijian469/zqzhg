@@ -52,7 +52,7 @@ func (a *App) adminCreateVendor(c *gin.Context) {
 	var account Account
 	var content Content
 	var password string
-	e := a.watermarkTransaction(func(tx *gorm.DB) error {
+	e := a.contentTransaction(func(tx *gorm.DB) error {
 		if req.AccountID != 0 {
 			if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("id=? AND role='merchant'", req.AccountID).First(&account).Error; e != nil {
 				return e
@@ -137,7 +137,7 @@ func (a *App) adminCreateProduct(c *gin.Context) {
 		return
 	}
 	var content Content
-	e := a.watermarkTransaction(func(tx *gorm.DB) error {
+	e := a.contentTransaction(func(tx *gorm.DB) error {
 		vendor, e := loadOwned(tx, id(c), actor(c), true)
 		if e != nil {
 			return e

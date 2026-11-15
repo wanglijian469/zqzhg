@@ -344,6 +344,14 @@ class MerchantWorkspace extends StatelessWidget {
                                 ),
                               ),
                               (
+                                'vendorProductCategories',
+                                Icons.category_outlined,
+                                () => push(
+                                  context,
+                                  const VendorProductCategoriesScreen(),
+                                ),
+                              ),
+                              (
                                 'previewShowroom',
                                 Icons.visibility_outlined,
                                 () => push(

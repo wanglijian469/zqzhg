@@ -243,7 +243,6 @@ class NativeTaxonomyFields extends StatefulWidget {
 
 class _NativeTaxonomyFieldsState extends State<NativeTaxonomyFields> {
   final controllers = <String, TextEditingController>{};
-  bool recommending = false;
   List<String> tokens(String value) => value
       .split(RegExp(r'[,，;；\n]'))
       .map((s) => s.trim())
@@ -288,70 +287,6 @@ class _NativeTaxonomyFieldsState extends State<NativeTaxonomyFields> {
   }
 
   void set(String key, dynamic value) => widget.onChanged({key: value});
-  Future<void> recommend() async {
-    final m = ModelScope.of(context);
-    setState(() => recommending = true);
-    try {
-      final result = await m.api(
-        '/public/category-recommendations',
-        method: 'POST',
-        data: {
-          'hall_id': widget.hallID,
-          'name': widget.data['name'] ?? '',
-          'keywords': widget.data['keywords'] ?? '',
-        },
-      );
-      if (!mounted) return;
-      final items = rows(result['items']);
-      if (items.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              m.language == 'zh'
-                  ? '暂无匹配推荐，请搜索选择分类。'
-                  : 'No matching recommendation. Search for a category.',
-            ),
-          ),
-        );
-        return;
-      }
-      final id = await showModalBottomSheet<int>(
-        context: context,
-        isScrollControlled: true,
-        builder: (c) => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  m.language == 'zh'
-                      ? '点击应用推荐分类'
-                      : 'Select a recommended category',
-                ),
-                for (final item in items)
-                  ListTile(
-                    title: Text(
-                      (m.language == 'zh' ? item['path'] : item['path_en']) ??
-                          item['path'],
-                    ),
-                    onTap: () => Navigator.pop(c, item['id']),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      );
-      if (id != null && mounted && widget.enabled) {
-        set('product_category_id', id);
-      }
-    } catch (e) {
-      if (mounted) showError(context, e);
-    } finally {
-      if (mounted) setState(() => recommending = false);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final m = ModelScope.of(context), zh = m.language == 'zh';
@@ -460,22 +395,12 @@ class _NativeTaxonomyFieldsState extends State<NativeTaxonomyFields> {
           ),
         ] else ...[
           if (!widget.detailsOnly)
-            picker(
-              'product_category_id',
-              d['product_category_id'] ?? 0,
-              zh ? '产品分类' : 'Product category',
-              (v) => set('product_category_id', v),
-              [],
+            NativeVendorProductCategoryPicker(
+              value: d['vendor_product_category_id'] ?? 0,
+              enabled: widget.enabled,
+              issue: widget.issues['vendor_product_category_id'],
+              onChanged: (v) => set('vendor_product_category_id', v),
             ),
-          OutlinedButton(
-            onPressed:
-                widget.enabled &&
-                    !recommending &&
-                    (d['name'] ?? '').toString().trim().isNotEmpty
-                ? recommend
-                : null,
-            child: Text(zh ? '推荐分类' : 'Recommend categories'),
-          ),
           for (final entry in {
             'brand': zh ? '产品品牌' : 'Product brand',
             'model': zh ? '产品型号' : 'Product model',
@@ -544,7 +469,14 @@ class NativeTaxonomySummary extends StatelessWidget {
                   ? 'primary_category_id'
                   : 'product_category_id'] ??
               0;
-          if (id > 0) {
+          final own = m.vendorProductCategory(data);
+          if (kind == 'product' && own.isNotEmpty) {
+            details[zh ? '产品分类' : 'Product category'] = m.content(own, 'name');
+            final industry = m.content(own, 'industry_name');
+            if (industry.isNotEmpty) {
+              details[zh ? '所属行业大类' : 'Industry category'] = industry;
+            }
+          } else if (id > 0) {
             details[zh
                 ? (kind == 'vendor' ? '主营分类' : '产品分类')
                 : (kind == 'vendor'

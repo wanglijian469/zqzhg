@@ -41,3 +41,21 @@
   content: "/";
   margin-inline-end: .5rem;
 }
+
+.public-detail-breadcrumb ol,
+.seo-content:not([data-seo-showroom]) nav > ol {
+  margin-top: 0;
+  min-width: 0;
+  line-height: 1.65;
+}
+.public-detail-breadcrumb li,
+.seo-content:not([data-seo-showroom]) nav > ol > li {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.public-product-detail.section { padding-top: 28px; }
+@media (max-width: 600px) {
+  .public-product-detail.section { padding-top: 20px; }
+  .public-detail-breadcrumb { font-size: 13px; margin-bottom: 16px; }
+}

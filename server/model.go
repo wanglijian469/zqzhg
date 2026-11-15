@@ -81,32 +81,33 @@ type Content struct {
 	UpdatedAt           time.Time `json:"updated_at"`
 }
 type Payload struct {
-	PrimaryCategoryID    uint64   `json:"primary_category_id"`
-	SecondaryCategoryIDs []uint64 `json:"secondary_category_ids"`
-	BusinessNature       string   `json:"business_nature"`
-	ProductCategoryID    uint64   `json:"product_category_id"`
-	Brand                string   `json:"brand"`
-	Model                string   `json:"model"`
-	ApplicableBrands     []string `json:"applicable_brands"`
-	ApplicableModels     []string `json:"applicable_models"`
-	IndustrialBeltIDs    []uint64 `json:"industrial_belt_ids,omitempty" gorm:"-"`
-	taxonomyFields       map[string]bool
-	RegionCode           string          `json:"region_code,omitempty"`
-	CompanyProfile       *CompanyProfile `json:"company_profile,omitempty"`
-	Name                 string          `json:"name"`
-	NameEN               string          `json:"name_en"`
-	MainProducts         string          `json:"main_products"`
-	Keywords             string          `json:"keywords"`
-	RegionID             uint64          `json:"region_id"`
-	RegionName           string          `json:"region_name"`
-	CategoryID           uint64          `json:"category_id"`
-	Description          string          `json:"description"`
-	DescriptionEN        string          `json:"description_en"`
-	Phone                string          `json:"phone"`
-	Wechat               string          `json:"wechat"`
-	Address              string          `json:"address"`
-	Parameters           string          `json:"parameters"`
-	MediaIDs             []uint64        `json:"media_ids"`
+	PrimaryCategoryID       uint64   `json:"primary_category_id"`
+	SecondaryCategoryIDs    []uint64 `json:"secondary_category_ids"`
+	BusinessNature          string   `json:"business_nature"`
+	ProductCategoryID       uint64   `json:"product_category_id"`
+	VendorProductCategoryID uint64   `json:"vendor_product_category_id,omitempty"`
+	Brand                   string   `json:"brand"`
+	Model                   string   `json:"model"`
+	ApplicableBrands        []string `json:"applicable_brands"`
+	ApplicableModels        []string `json:"applicable_models"`
+	IndustrialBeltIDs       []uint64 `json:"industrial_belt_ids,omitempty" gorm:"-"`
+	taxonomyFields          map[string]bool
+	RegionCode              string          `json:"region_code,omitempty"`
+	CompanyProfile          *CompanyProfile `json:"company_profile,omitempty"`
+	Name                    string          `json:"name"`
+	NameEN                  string          `json:"name_en"`
+	MainProducts            string          `json:"main_products"`
+	Keywords                string          `json:"keywords"`
+	RegionID                uint64          `json:"region_id"`
+	RegionName              string          `json:"region_name"`
+	CategoryID              uint64          `json:"category_id"`
+	Description             string          `json:"description"`
+	DescriptionEN           string          `json:"description_en"`
+	Phone                   string          `json:"phone"`
+	Wechat                  string          `json:"wechat"`
+	Address                 string          `json:"address"`
+	Parameters              string          `json:"parameters"`
+	MediaIDs                []uint64        `json:"media_ids"`
 }
 type Revision struct {
 	AdministrativeSnapshot
@@ -163,16 +164,17 @@ type OperationLog struct {
 type View struct {
 	Demonstration bool `json:"demonstration,omitempty"`
 	Content
-	ShowroomSlug     string         `json:"showroom_slug,omitempty"`
-	PublicVisible    bool           `json:"public_visible"`
-	Data             Payload        `json:"data"`
-	Status           string         `json:"status"`
-	RevisionID       uint64         `json:"revision_id"`
-	ReviewNote       string         `json:"review_note"`
-	MatchingProducts []View         `json:"matching_products,omitempty"`
-	Vendor           *VendorSummary `json:"vendor,omitempty"`
-	Published        *View          `json:"published,omitempty"`
-	ProductCount     int64          `json:"product_count,omitempty"`
+	VendorProductCategory *VendorProductCategory `json:"vendor_product_category,omitempty"`
+	ShowroomSlug          string                 `json:"showroom_slug,omitempty"`
+	PublicVisible         bool                   `json:"public_visible"`
+	Data                  Payload                `json:"data"`
+	Status                string                 `json:"status"`
+	RevisionID            uint64                 `json:"revision_id"`
+	ReviewNote            string                 `json:"review_note"`
+	MatchingProducts      []View                 `json:"matching_products,omitempty"`
+	Vendor                *VendorSummary         `json:"vendor,omitempty"`
+	Published             *View                  `json:"published,omitempty"`
+	ProductCount          int64                  `json:"product_count,omitempty"`
 }
 
 type VendorSummary struct {

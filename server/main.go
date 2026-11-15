@@ -174,6 +174,11 @@ func migrateThrough(db *gorm.DB, maximum int) error {
 				}
 			}
 		}
+		if version == 31 {
+			if e = migrateVendorProductCategories(db); e != nil {
+				return e
+			}
+		}
 		if version == 16 {
 			if e = backfillAdministrativeSnapshots(db); e != nil {
 				return e
@@ -533,6 +538,7 @@ func (a *App) router() *gin.Engine {
 	merchant.GET("/taxonomy", a.allTaxonomy)
 	merchant.POST("/categories", a.suggestCategory)
 	admin := api.Group("/admin", a.requireAuth("platform"), a.platformPolicy())
+	a.vendorProductCategoryRoutes(merchant, admin)
 	a.resourceRoutes(pub, merchant, admin)
 	a.operatorRoutes(admin)
 	a.jobRoutes(admin, api)

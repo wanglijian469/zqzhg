@@ -1,3 +1,4 @@
+import {VendorProductCategoryManager} from './vendor-product-categories';
 import {VerificationPage,ServiceLinks,PrivacyControls} from './service-center';
 import {ShowroomLinkEditor} from './showroom-link-editor';
 import {CompanyEditPage,CompanyChecklist} from './company-editor';
@@ -31,7 +32,7 @@ export function MerchantWorkspace(){
  if(!entered)return <Navigate to={'/merchant/login?next='+encodeURIComponent(location.pathname+location.search)} replace/>;
  return <><MerchantConsole logout={()=>void logout()}/>{expired&&<Modal close={()=>void logout()}><h2>{t('merchantSessionExpired')}</h2><p>{t('merchantSessionRetained')}</p><MerchantAuth defaultMode="account" onLogin={()=>{if(account.current!==sessionStorage.getItem('zqzt.merchant.id')){window.location.assign('/merchant');return}setExpired(false)}}/></Modal>}</>;
 }
-const navigation=[{path:'/merchant/verification',key:'companyVerification',Icon:Building2},{path:'/merchant',key:'dashboard',Icon:LayoutDashboard},{path:'/merchant/booth',key:'boothManage',Icon:Building2},{path:'/merchant/products',key:'productManage',Icon:Package},{path:'/merchant/promotion',key:'promotion',Icon:Share2},{path:'/merchant/settings',key:'appSettings',Icon:Settings}];
+const navigation=[{path:'/merchant/verification',key:'companyVerification',Icon:Building2},{path:'/merchant',key:'dashboard',Icon:LayoutDashboard},{path:'/merchant/booth',key:'boothManage',Icon:Building2},{path:'/merchant/products',key:'productManage',Icon:Package},{path:'/merchant/product-categories',key:'vendorProductCategories',Icon:Package},{path:'/merchant/promotion',key:'promotion',Icon:Share2},{path:'/merchant/settings',key:'appSettings',Icon:Settings}];
 export function MerchantConsole({logout,notice}:{logout:()=>void;notice?:string}){
  const {t,lang,toggle}=useLanguage();const location=useLocation();const [collapsed,setCollapsed]=useState(()=>sessionStorage.getItem('zqzt.merchant.collapsed')==='1');const [drawer,setDrawer]=useState(false);const aside=useRef<HTMLElement>(null);const toggleRef=useRef<HTMLButtonElement>(null);const [generation,setGeneration]=useState(0);
  const business=useBusinessAccount();const canLoad=sessionStorage.getItem('zqzt.merchant.role')!=='visitor'&&business.account?.role!=='visitor'&&!!token('merchant')&&(!location.pathname.startsWith('/merchant/opportunities')||business.account?.role==='merchant');
@@ -46,6 +47,7 @@ export function MerchantConsole({logout,notice}:{logout:()=>void;notice?:string}
  <Route path="/merchant/verification" element={<VerificationPage/>}/><Route path="/merchant" element={<Dashboard vendor={vendor} booth={booth} stats={stats}/>}/>
  <Route path="/merchant/booth" element={<BoothPage vendor={vendor} booth={booth} refresh={refresh}/>}/>
  <Route path="/merchant/booth/edit" element={booth.error?<ErrorState code={booth.error} retry={booth.reload}/>:booth.data?<CompanyEditPage vendor={vendor} changed={refresh}/>:<Loading/>}/>
+ <Route path="/merchant/product-categories" element={vendor?<VendorProductCategoryManager/>:booth.error?<ErrorState code={booth.error} retry={booth.reload}/>:booth.data?<NoBooth/>:<Loading/>}/>
  <Route path="/merchant/products" element={<ProductsPage vendor={vendor} key={generation}/>}/>
  <Route path="/merchant/products/representatives" element={vendor?<RepresentativeProducts/>:booth.error?<ErrorState code={booth.error} retry={booth.reload}/>:booth.data?<NoBooth/>:<Loading/>}/>
  <Route path="/merchant/products/new" element={vendor?<EditPage changed={refresh} create/>:booth.error?<ErrorState code={booth.error} retry={booth.reload}/>:booth.data?<NoBooth/>:<Loading/>}/>

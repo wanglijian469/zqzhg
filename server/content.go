@@ -45,7 +45,7 @@ func dbFail(c *gin.Context, e error) {
 	var validation *FieldValidationError
 	if errors.As(e, &validation) {
 		status := 400
-		if validation.Code == "phone_exists" || validation.Code == "phone_already_bound" || validation.Code == "login_name_exists" || validation.Code == "vendor_required" {
+		if validation.Code == "phone_exists" || validation.Code == "phone_already_bound" || validation.Code == "login_name_exists" || validation.Code == "vendor_required" || validation.Code == "vendor_name_exists" {
 			status = 409
 		}
 		c.AbortWithStatusJSON(status, gin.H{"error": gin.H{"code": validation.Code, "fields": validation.Fields}})
@@ -63,7 +63,7 @@ func dbFail(c *gin.Context, e error) {
 		fail(c, 400, code)
 	case "forbidden":
 		fail(c, 403, code)
-	case "watermark_not_ready", "watermark_vendor_required", "storage_quota_exceeded", "disk_space_insufficient", "media_in_use", "pending_review", "stale_revision", "already_reviewed", "vendor_required", "product_limit_reached", "login_name_exists", "showroom_slug_exists", "showroom_slug_locked", "resource_limit_reached", "media_not_ready", "featured_limit_reached", "representative_limit_reached":
+	case "vendor_product_category_exists", "vendor_product_category_in_use", "watermark_not_ready", "watermark_vendor_required", "storage_quota_exceeded", "disk_space_insufficient", "media_in_use", "pending_review", "stale_revision", "already_reviewed", "vendor_required", "product_limit_reached", "login_name_exists", "showroom_slug_exists", "showroom_slug_locked", "resource_limit_reached", "media_not_ready", "featured_limit_reached", "representative_limit_reached":
 		fail(c, 409, code)
 	case "storage_unavailable":
 		fail(c, 503, e.Error())
@@ -147,6 +147,9 @@ func (a *App) validatePayloadMode(tx *gorm.DB, who Account, kind string, p *Payl
 	return nil
 }
 func makeDraft(tx *gorm.DB, content *Content, p Payload) error {
+	if e := checkVendorName(tx, *content, p.Name); e != nil {
+		return e
+	}
 	p.IndustrialBeltIDs = nil
 	if e := validateContentHall(tx, content, p); e != nil {
 		return e
@@ -157,6 +160,9 @@ func makeDraft(tx *gorm.DB, content *Content, p Payload) error {
 		}
 	}
 	if e := validateTaxonomy(tx, *content, &p); e != nil {
+		return e
+	}
+	if e := prepareVendorProductCategory(tx, *content, &p); e != nil {
 		return e
 	}
 	if content.DraftRevisionID == 0 && content.HallID == 1 {
@@ -183,6 +189,9 @@ func makeDraft(tx *gorm.DB, content *Content, p Payload) error {
 		r.AdministrativeSnapshot = administrativeSnapshot(p, region)
 	}
 	if e = tx.Create(&r).Error; e != nil {
+		return e
+	}
+	if e = indexVendorProductCategory(tx, *content, r, p); e != nil {
 		return e
 	}
 	if e = indexTaxonomyRevision(tx, *content, r, p, false); e != nil {
@@ -238,7 +247,7 @@ func (a *App) createContent(c *gin.Context) {
 	created := true
 	fingerprint := contentCreateFingerprint(req.Kind, req.HallID, req.Data)
 	content := Content{Kind: req.Kind, OwnerID: who.ID, HallID: req.HallID}
-	e := a.watermarkTransaction(func(tx *gorm.DB) error {
+	e := a.contentTransaction(func(tx *gorm.DB) error {
 		var request ContentCreateRequest
 		if req.ClientRequestID != "" {
 			request = ContentCreateRequest{OwnerID: who.ID, RequestID: req.ClientRequestID, Fingerprint: fingerprint}
@@ -319,7 +328,7 @@ func (a *App) saveDraft(c *gin.Context) {
 	}
 	who := actor(c)
 	var content Content
-	e := a.watermarkTransaction(func(tx *gorm.DB) error {
+	e := a.contentTransaction(func(tx *gorm.DB) error {
 		var e error
 		content, e = loadOwned(tx, id(c), who, true)
 		if e != nil {
@@ -347,7 +356,13 @@ func (a *App) saveDraft(c *gin.Context) {
 		previousTaxonomy.PrimaryCategoryID = oldView[0].Data.PrimaryCategoryID
 		previousTaxonomy.SecondaryCategoryIDs = oldView[0].Data.SecondaryCategoryIDs
 		previousTaxonomy.ProductCategoryID = oldView[0].Data.ProductCategoryID
+		previousTaxonomy.VendorProductCategoryID = oldView[0].Data.VendorProductCategoryID
+		legacyChanged := (req.Data.taxonomyFields["product_category_id"] && canonicalCategory(tx, req.Data.ProductCategoryID) != previousTaxonomy.ProductCategoryID) ||
+			(req.Data.taxonomyFields["category_id"] && canonicalCategory(tx, req.Data.CategoryID) != previousTaxonomy.CategoryID)
 		mergeTaxonomyFields(&req.Data, previousTaxonomy)
+		if !req.Data.taxonomyFields["vendor_product_category_id"] && legacyChanged {
+			req.Data.VendorProductCategoryID = 0
+		}
 		if !content.TaxonomyRequired && ((req.Data.PrimaryCategoryID > 0 && req.Data.PrimaryCategoryID != previousTaxonomy.PrimaryCategoryID) || (req.Data.ProductCategoryID > 0 && req.Data.ProductCategoryID != previousTaxonomy.ProductCategoryID)) {
 			content.TaxonomyRequired = true
 			if e = tx.Model(&content).Update("taxonomy_required", true).Error; e != nil {
@@ -397,7 +412,7 @@ func (a *App) submit(c *gin.Context) {
 		return
 	}
 	who := actor(c)
-	e := a.watermarkTransaction(func(tx *gorm.DB) error {
+	e := a.contentTransaction(func(tx *gorm.DB) error {
 		content, e := loadOwned(tx, id(c), who, true)
 		if e != nil {
 			return e
@@ -460,7 +475,7 @@ func (a *App) review(c *gin.Context) {
 		return
 	}
 	who := actor(c)
-	e := a.watermarkTransaction(func(tx *gorm.DB) error {
+	e := a.contentTransaction(func(tx *gorm.DB) error {
 		var initial Revision
 		if e := tx.First(&initial, id(c)).Error; e != nil {
 			return e
@@ -600,13 +615,20 @@ func (a *App) listContents(c *gin.Context, admin bool) {
 	if kind := c.Query("kind"); kind != "" {
 		q = q.Where("contents.kind = ?", kind)
 	}
+	if value := c.Query("vendor_product_category_id"); value != "" && vendorCategoryAvailable(a.DB) {
+		q = q.Where("EXISTS (SELECT 1 FROM revision_vendor_product_categories vp WHERE vp.revision_id=dr.id AND vp.vendor_id=contents.vendor_id AND vp.category_id=?)", positiveFilterID(value))
+	}
 	if status := c.Query("status"); status != "" {
 		q = q.Where("dr.status = ?", status)
 	}
 	if strings.TrimSpace(c.Query("q")) != "" {
 		k := keyword(c)
 		if !admin && c.Query("kind") == "product" {
-			q = q.Where(specKeywordCondition("dr"), k, k, k, k, k)
+			if vendorCategoryAvailable(a.DB) {
+				q = q.Where("("+specKeywordCondition("dr")+" OR "+vendorCategoryKeywordSQL("dr")+")", k, k, k, k, k, k, k)
+			} else {
+				q = q.Where(specKeywordCondition("dr"), k, k, k, k, k)
+			}
 		} else {
 			q = q.Where(keywordCondition("dr"), k, k, k, k)
 		}

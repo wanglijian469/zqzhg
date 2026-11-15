@@ -1,5 +1,8 @@
 export const merchantMessages: Record<string, Record<string, string>> = {
   "zh": {
+    "vendorProductCategories": "产品分类管理",
+    "vendor_product_category_exists": "本企业在该大类下已有同名分类，请选择已有分类或修改名称。",
+    "vendor_product_category_in_use": "此分类仍被产品版本引用，可停用，不能删除。",
     "merchantCenter": "厂商工作台",
     "merchantWorkspace": "厂商工作台",
     "myBooth": "我的企业展厅",
@@ -55,6 +58,9 @@ export const merchantMessages: Record<string, Record<string, string>> = {
     "reviewStopped": "审核已终止（下架）"
   },
   "en": {
+    "vendorProductCategories": "Product categories",
+    "vendor_product_category_exists": "Your company already has this category in the selected industry.",
+    "vendor_product_category_in_use": "Product versions reference this category. Deactivate it instead of deleting.",
     "merchantCenter": "Manufacturer workspace",
     "merchantWorkspace": "Manufacturer workspace",
     "myBooth": "My company showroom",

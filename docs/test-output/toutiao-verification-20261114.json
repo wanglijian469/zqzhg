@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-14",
+  "verification_file": "ByteDanceVerify.html",
+  "bytes": 20,
+  "public_checks": [
+    {
+      "url": "http://www.zqzhg.com/ByteDanceVerify.html",
+      "status": 200,
+      "redirected": false,
+      "sha256": "fbf65ebdb484cbeba68109cf9107c9c160b3ba6d6d993675945d4480b5fdc981"
+    },
+    {
+      "url": "http://zqzhg.com/ByteDanceVerify.html",
+      "status": 200,
+      "redirected": false,
+      "sha256": "fbf65ebdb484cbeba68109cf9107c9c160b3ba6d6d993675945d4480b5fdc981"
+    },
+    {
+      "url": "https://www.zqzhg.com/ByteDanceVerify.html",
+      "status": 200,
+      "redirected": false,
+      "sha256": "fbf65ebdb484cbeba68109cf9107c9c160b3ba6d6d993675945d4480b5fdc981"
+    },
+    {
+      "url": "https://zqzhg.com/ByteDanceVerify.html",
+      "status": 200,
+      "redirected": false,
+      "sha256": "fbf65ebdb484cbeba68109cf9107c9c160b3ba6d6d993675945d4480b5fdc981"
+    }
+  ],
+  "platform_verification_clicked": false,
+  "platform_submission_completed": false,
+  "sitemap": "https://zqzhg.com/sitemap.xml"
+}

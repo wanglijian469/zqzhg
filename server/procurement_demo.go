@@ -39,7 +39,7 @@ func (a *App) procurementDemoAccounts() []procurementDemoAccount {
 }
 
 func (a *App) seedProcurementDemo() error {
-	return a.DB.Transaction(func(tx *gorm.DB) error {
+	return a.contentTransaction(func(tx *gorm.DB) error {
 		var hall Hall
 		if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&hall, 1).Error; e != nil {
 			return e

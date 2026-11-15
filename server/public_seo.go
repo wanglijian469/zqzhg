@@ -30,7 +30,7 @@ func (a *App) publicBase(c *gin.Context) string {
 }
 func canonicalPublic(base, path string, query url.Values) string {
 	q := url.Values{}
-	keys := []string{"hall", "q", "category_id", "region_id", "industrial_belt_id", "business_nature", "vendor_id", "sort", "page"}
+	keys := []string{"hall", "q", "vendor_product_category_id", "category_id", "region_id", "industrial_belt_id", "business_nature", "vendor_id", "sort", "page"}
 	if path == "/regions" {
 		keys = []string{"hall", "q", "category_id", "region_code", "unassigned", "page"}
 	}
@@ -57,7 +57,7 @@ func canonicalPublic(base, path string, query url.Values) string {
 	return strings.TrimRight(base, "/") + path + suffix
 }
 func showroomSearchVariant(query url.Values) bool {
-	for _, key := range []string{"q", "category_id", "region_id", "vendor_id", "sort"} {
+	for _, key := range []string{"q", "vendor_product_category_id", "category_id", "region_id", "vendor_id", "sort"} {
 		if strings.TrimSpace(query.Get(key)) != "" {
 			return true
 		}

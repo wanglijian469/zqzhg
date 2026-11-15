@@ -88,6 +88,24 @@ func TestIndependentSEOHTMLAndPublication(t *testing.T) {
 				!strings.Contains(raw, `aria-label="面包屑导航"`) {
 				t.Fatal("product breadcrumb missing", match)
 			}
+			var crumbs []struct {
+				Position int    `json:"position"`
+				Name     string `json:"name"`
+				Item     string `json:"item"`
+			}
+			if err := json.Unmarshal(graph[1]["itemListElement"], &crumbs); err != nil || len(crumbs) != 2 {
+				t.Fatalf("expected company/product breadcrumb: %s", graph[1]["itemListElement"])
+			}
+			if crumbs[0].Position != 1 || crumbs[0].Name != "SEO厂家 & 制造厂" || crumbs[0].Item != "https://seo.example/v/seo-company" ||
+				crumbs[1].Position != 2 || crumbs[1].Name != "SEO产品 <一号>" || crumbs[1].Item != spec.canonical {
+				t.Fatalf("incorrect company/product breadcrumb: %+v", crumbs)
+			}
+			nav := regexp.MustCompile(`<nav aria-label="面包屑导航">(.*?)</nav>`).FindStringSubmatch(raw)
+			if len(nav) != 2 || strings.Count(nav[1], "<li>") != 2 || strings.Contains(nav[1], "企业名单与厂家展厅") ||
+				!strings.Contains(nav[1], `<a href="/v/seo-company">SEO厂家 &amp; 制造厂</a>`) ||
+				!strings.Contains(nav[1], `<span aria-current="page">SEO产品 &lt;一号&gt;</span>`) {
+				t.Fatalf("initial HTML must match structured breadcrumb: %v", nav)
+			}
 			entity = graph[0]
 		} else if strings.Contains(raw, `aria-label="面包屑导航"`) || strings.Contains(raw, `"BreadcrumbList"`) {
 			t.Fatal("showroom should not contain breadcrumbs")

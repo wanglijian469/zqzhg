@@ -60,7 +60,7 @@ func (a *App) importVendor(manifestPath string) (result importResult, err error)
 			}
 		}
 	}()
-	err = a.watermarkTransaction(func(tx *gorm.DB) error {
+	err = a.contentTransaction(func(tx *gorm.DB) error {
 		var admin Account
 		if e := tx.Where("role = 'admin'").Order("id").First(&admin).Error; e != nil {
 			return e

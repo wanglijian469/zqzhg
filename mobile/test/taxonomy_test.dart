@@ -36,37 +36,26 @@ const categories = [
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   testWidgets(
-    'Product category search uses full paths and leaf selection; recommendations require confirmation',
+    'Company product categories are independent and selected without platform recommendations',
     (tester) async {
       final m = await fixture.upgradeModel(
         signed: true,
         handler: (r) async {
-          if (r.url.path.endsWith('/taxonomy')) {
-            return fixture.jsonResponse({
-              'categories': categories,
-              'regions': [],
-              'aliases': [],
-            });
-          }
-          if (r.url.path.endsWith('/category-recommendations')) {
+          if (r.url.path.endsWith('/product-categories')) {
             return fixture.jsonResponse({
               'items': [
-                {
-                  'id': 103,
-                  'path': '液压系统及零部件 / 液压阀',
-                  'path_en': 'Hydraulics / Hydraulic valves',
-                },
+                {'id': 51, 'name': '回转马达', 'enabled': true},
               ],
+              'industry_categories': [
+                {'id': 13, 'name': '液压大类'},
+              ],
+              'preferred_industry_ids': [13],
             });
           }
           return null;
         },
       );
-      Json data = {
-        'name': '液压油缸',
-        'product_category_id': 102,
-        'category_id': 0,
-      };
+      Json data = {'name': '液压回转马达', 'vendor_product_category_id': 0};
       await tester.pumpWidget(
         fixture.upgradeApp(
           m,
@@ -87,25 +76,14 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(NativeCategoryPicker), findsOneWidget);
-      await fixture.tapReachable(
-        tester,
-        find.widgetWithText(OutlinedButton, '推荐分类'),
-      );
-      expect(data['product_category_id'], 102);
-      await tester.tap(find.text('液压系统及零部件 / 液压阀').last);
+      expect(find.byType(NativeVendorProductCategoryPicker), findsOneWidget);
+      expect(find.byType(NativeCategoryPicker), findsNothing);
+      expect(find.text('推荐分类'), findsNothing);
+      await tester.tap(find.byType(DropdownButtonFormField<int>).first);
       await tester.pumpAndSettle();
-      expect(data['product_category_id'], 103);
-      await fixture.tapReachable(
-        tester,
-        find.text('液压系统及零部件 / 液压阀').first,
-      );
-      await tester.enterText(find.byType(TextField).last, '油缸');
+      await tester.tap(find.text('回转马达').last);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('液压系统及零部件 / 液压油缸').last);
-      await tester.pumpAndSettle();
-      expect(data['product_category_id'], 102);
-      expect(nativeCategoryPath(categories, 102, m), '液压系统及零部件 / 液压油缸');
+      expect(data['vendor_product_category_id'], 51);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     },
@@ -140,11 +118,8 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await tester.enterText(nativeField( '产品品牌'), '品牌A');
-      await tester.enterText(
-        nativeField( '适用机型'),
-        'A100，B200',
-      );
+      await tester.enterText(nativeField('产品品牌'), '品牌A');
+      await tester.enterText(nativeField('适用机型'), 'A100，B200');
       await tester.pump();
       expect(data['brand'], '品牌A');
       expect(data['applicable_models'], ['A100', 'B200']);
@@ -216,7 +191,8 @@ void main() {
                   reason: '$width/$lang/$kind/$scale/keyboard=$keyboard',
                 );
                 if (keyboard && kind == 'product') {
-                  final field = nativeField(lang == 'zh' ? '适用机型' : 'Compatible models',
+                  final field = nativeField(
+                    lang == 'zh' ? '适用机型' : 'Compatible models',
                   );
                   await tester.ensureVisible(field);
                   await tester.pumpAndSettle();

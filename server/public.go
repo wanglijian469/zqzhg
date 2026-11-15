@@ -87,15 +87,28 @@ func positiveFilterID(value string) uint64 {
 	return n
 }
 func (a *App) filterProducts(c *gin.Context, q *gorm.DB) *gorm.DB {
+	if value := c.Query("vendor_product_category_id"); value != "" {
+		if c.Query("vendor_id") == "" || !vendorCategoryAvailable(a.DB) {
+			return q.Where("1=0")
+		}
+		q = q.Where("EXISTS (SELECT 1 FROM revision_vendor_product_categories vpf JOIN vendor_product_categories vpc ON vpc.id=vpf.category_id AND vpc.vendor_id=vpf.vendor_id WHERE vpf.revision_id=r.id AND vpf.vendor_id=contents.vendor_id AND vpc.id=?)", positiveFilterID(value))
+	}
 	if strings.TrimSpace(c.Query("q")) != "" {
 		k := keyword(c)
-		q = q.Where("("+specKeywordCondition("r")+" OR JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.brand')) LIKE ? OR JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.model')) LIKE ? OR JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.applicable_brands')) LIKE ? OR JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.applicable_models')) LIKE ? OR EXISTS (SELECT 1 FROM revision_categories rc WHERE rc.revision_id=r.id AND rc.category_id IN ?))", k, k, k, k, k, k, k, k, k, categoryKeywordIDs(a.DB, k))
+		condition := "(" + specKeywordCondition("r") + " OR JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.brand')) LIKE ? OR JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.model')) LIKE ? OR JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.applicable_brands')) LIKE ? OR JSON_UNQUOTE(JSON_EXTRACT(r.payload,'$.applicable_models')) LIKE ? OR EXISTS (SELECT 1 FROM revision_categories rc WHERE rc.revision_id=r.id AND rc.category_id IN ?)"
+		args := []any{k, k, k, k, k, k, k, k, k, categoryKeywordIDs(a.DB, k)}
+		if vendorCategoryAvailable(a.DB) {
+			condition += " OR " + vendorCategoryKeywordSQL("r")
+			args = append(args, k, k)
+		}
+		q = q.Where(condition+")", args...)
+
 	}
 	if ids, modern := a.newCategoryFilter(c.Query("category_id"), "product"); modern {
 		if len(ids) == 0 {
 			return q.Where("1=0")
 		}
-		q = taxonomyFilter(q, "r", ids)
+		q = productCategoryFilter(q, a.DB, "r", ids)
 	} else if ids := a.categoryIDs(c.Query("category_id")); c.Query("category_id") != "" {
 		if len(ids) == 0 {
 			return q.Where("1=0")

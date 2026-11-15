@@ -1,0 +1,57 @@
+{
+  "date": "2026-11-15",
+  "scope": "enterprise-owned product categories",
+  "productionDeployed": false,
+  "officialAppReleased": false,
+  "downloadPackageReplaced": false,
+  "isolatedDatabase": true,
+  "schemaVersion": 31,
+  "validation": {
+    "backendFeatureTests": {"passed": 7, "failed": 0},
+    "backendMigrationFollowup": {
+      "passed": 1,
+      "checks": ["schema30_to_31", "idempotent", "published_draft_pending", "original_names", "unchanged_audit_json", "unknown_industry_retained"]
+    },
+    "encryptedBackupRestore": {"passed": true, "newTablesVerified": 3, "productionCutover": false},
+    "backendRelatedRegression": {
+      "passed": 11,
+      "preexistingFailures": [
+        {"test": "TestMerchantRootCategoriesScopePublishAndNormalization", "error": "agreement_required", "reproducedBeforeFeature": true},
+        {"test": "TestCompanyCategorySuggestionsAndAliases", "error": "agreement_required", "reproducedBeforeFeature": true}
+      ]
+    },
+    "goVet": "passed",
+    "webTests": {"files": 8, "passed": 44, "failed": 0},
+    "typeScriptBuild": "passed",
+    "viteBuild": {"status": "passed", "warnings": ["existing chunk size warning"]},
+    "optionalResourcePreparationRerun": {
+      "status": "not_executed",
+      "reason": "Automatic approval review rejected the extra combined resource-preparation command because it might modify project/map resources. No bypass was attempted."
+    },
+    "webBrowser": {
+      "report": "vendor-product-categories-browser-20261115.json",
+      "cases": 10,
+      "widths": [360, 390, 768, 1024, 1440],
+      "languages": ["zh", "en"],
+      "pageErrors": [],
+      "horizontalOverflow": false,
+      "checks": ["create_and_select", "preferred_industry", "long_category_names", "management", "public_counts_and_filter", "page2_return", "product_category", "initial_html_and_jsonld", "two_level_breadcrumb"]
+    },
+    "flutterAnalyze": "No issues found",
+    "flutterTests": {
+      "files": 4,
+      "passed": 23,
+      "failed": 0,
+      "checks": ["create_and_select", "preferred_industry", "rename_sort_disable", "company_filter_search_state", "language_fallback", "draft_clone", "64_taxonomy_layout_subcases", "6_long_category_management_large_text_cases"]
+    },
+    "flutterCaptureTests": {"passed": 2, "widths": [390, 768]},
+    "physicalDeviceVerified": false
+  },
+  "limitations": [
+    "App verification uses Flutter widget tests and native-widget rendering, not a physical phone or released installation package.",
+    "The existing complete backup/cutover test uses procurement fixtures disabled in this release; the new category encrypted-backup test exercises actual isolated restore without production cutover."
+  ],
+  "screenshots": "../screenshots/vendor-product-categories-20261115",
+  "documentation": "../VENDOR_PRODUCT_CATEGORIES_20261115.md",
+  "localLogs": ".local/vendor-product-categories-20261115"
+}

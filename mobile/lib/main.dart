@@ -47,6 +47,7 @@ part 'password_policy.dart';
 part 'mobile_upgrade.dart';
 part 'procurement_workspace.dart';
 part 'product_quality.dart';
+part 'vendor_product_categories.dart';
 
 typedef Json = Map<String, dynamic>;
 const green = industrialBlue;
@@ -101,7 +102,21 @@ class AppModel extends ChangeNotifier {
   final browseMemory = <String, Json>{};
   final _taxonomies = <String, Future<dynamic>>{};
   final _categoryLabels = <String, Json>{};
+  final _vendorProductCategories = <String, Json>{};
+  void rememberVendorProductCategories(List<Json> categories) {
+    for (final c in categories) {
+      _vendorProductCategories['$scope:${token.hashCode}:${c['id']}'] = c;
+    }
+  }
+
+  Json vendorProductCategory(Json data) => asMap(
+    data['_vendor_product_category'] ??
+        _vendorProductCategories['$scope:${token.hashCode}:${data['vendor_product_category_id']}'] ??
+        {},
+  );
   String productCategory(Json data) {
+    final own = vendorProductCategory(data);
+    if (own.isNotEmpty) return content(own, 'name');
     final supplied = content(data, 'category_name');
     if (supplied.isNotEmpty) return supplied;
     final modern = (data['product_category_id'] as num? ?? 0).toInt();
@@ -659,7 +674,8 @@ Widget dataDetails(
         m.content(data, 'name'),
         style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
       ),
-      if ((data['category_id'] ?? 0) != 0)
+      if ((data['category_id'] ?? 0) != 0 &&
+          (kind != 'product' || (data['vendor_product_category_id'] ?? 0) == 0))
         AsyncPane(
           identity: '${m.baseUrl}:category:${data['category_id']}',
           load: () => m.api(
@@ -859,7 +875,12 @@ class _DetailScreenState extends State<DetailScreen> {
                       ],
                     ),
                   ),
-                  dataDetails(context, data, widget.kind),
+                  dataDetails(context, {
+                    ...data,
+                    if (item['vendor_product_category'] != null)
+                      '_vendor_product_category':
+                          item['vendor_product_category'],
+                  }, widget.kind),
                   if (widget.kind == 'product') ...[space(12)],
                   if (widget.kind == 'product') ...[
                     Text(
@@ -1652,12 +1673,9 @@ class _EditorScreenState extends State<EditorScreen> {
       );
     }
     if (widget.kind == 'product' && submit) {
-      final categoryField = editorHallID == 1 ? 'product_category_id' : 'category_id';
+      const categoryField = 'vendor_product_category_id';
       if ((data[categoryField] ?? 0) == 0) {
-        errors[categoryField] = {
-          'field': categoryField,
-          'code': 'required',
-        };
+        errors[categoryField] = {'field': categoryField, 'code': 'required'};
       }
       if (galleryEntries().isEmpty) {
         errors['media_ids'] = {'field': 'media_ids', 'code': 'required'};
@@ -1984,6 +2002,7 @@ class _EditorScreenState extends State<EditorScreen> {
       } else if ([
         'category_id',
         'product_category_id',
+        'vendor_product_category_id',
         'brand',
         'model',
         'applicable_brands',
@@ -1998,6 +2017,7 @@ class _EditorScreenState extends State<EditorScreen> {
           ? ([
                   'name',
                   'product_category_id',
+                  'vendor_product_category_id',
                   'category_id',
                   'media_ids',
                 ].contains(key)
@@ -2273,15 +2293,13 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   Widget productBasics() {
-    final categoryField = editorHallID == 1 ? 'product_category_id' : 'category_id';
+    const categoryField = 'vendor_product_category_id';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         field(context, 'name', 'productName'),
-        NativeCategoryPicker(
+        NativeVendorProductCategoryPicker(
           value: data[categoryField] ?? 0,
-          kind: 'product',
-          hallID: editorHallID,
           enabled: !busy && current?['status'] != 'pending',
           issue: issues[categoryField],
           onChanged: (id) {

@@ -1,0 +1,232 @@
+{
+  "phase": "before",
+  "fixture": "isolated public-page data",
+  "errors": [],
+  "results": [
+    {
+      "kind": "product",
+      "lang": "zh",
+      "language": "zh-CN",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "rows": [],
+      "breadcrumb": [
+        "中企展馆",
+        "企业名单与厂家展厅",
+        "河北冀农农机具有限公司",
+        "液压翻转犁1LF-440"
+      ],
+      "backLinks": 1
+    },
+    {
+      "kind": "company",
+      "lang": "zh",
+      "language": "zh-CN",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "rows": [
+        {
+          "x": 80,
+          "y": 648.984375,
+          "width": 413.328125,
+          "height": 189.78125
+        },
+        {
+          "x": 513.328125,
+          "y": 648.984375,
+          "width": 413.328125,
+          "height": 189.78125
+        },
+        {
+          "x": 946.65625,
+          "y": 648.984375,
+          "width": 413.328125,
+          "height": 189.78125
+        }
+      ],
+      "breadcrumb": [],
+      "backLinks": 0,
+      "productionHeight": 189.78125
+    },
+    {
+      "kind": "product",
+      "lang": "zh",
+      "language": "zh-CN",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "rows": [],
+      "breadcrumb": [
+        "中企展馆",
+        "企业名单与厂家展厅",
+        "河北冀农农机具有限公司",
+        "液压翻转犁1LF-440"
+      ],
+      "backLinks": 1
+    },
+    {
+      "kind": "company",
+      "lang": "zh",
+      "language": "zh-CN",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "rows": [
+        {
+          "x": 32,
+          "y": 616.578125,
+          "width": 306.671875,
+          "height": 222.171875
+        },
+        {
+          "x": 358.671875,
+          "y": 616.578125,
+          "width": 306.671875,
+          "height": 222.171875
+        },
+        {
+          "x": 685.34375,
+          "y": 616.578125,
+          "width": 306.671875,
+          "height": 222.171875
+        }
+      ],
+      "breadcrumb": [],
+      "backLinks": 0,
+      "productionHeight": 222.171875
+    },
+    {
+      "kind": "product",
+      "lang": "zh",
+      "language": "zh-CN",
+      "width": 768,
+      "scrollWidth": 768,
+      "rows": [],
+      "breadcrumb": [
+        "中企展馆",
+        "企业名单与厂家展厅",
+        "河北冀农农机具有限公司",
+        "液压翻转犁1LF-440"
+      ],
+      "backLinks": 1
+    },
+    {
+      "kind": "company",
+      "lang": "zh",
+      "language": "zh-CN",
+      "width": 768,
+      "scrollWidth": 768,
+      "rows": [
+        {
+          "x": 32,
+          "y": 359.375,
+          "width": 342,
+          "height": 189.78125
+        },
+        {
+          "x": 394,
+          "y": 359.375,
+          "width": 342,
+          "height": 189.78125
+        },
+        {
+          "x": 32,
+          "y": 569.15625,
+          "width": 704,
+          "height": 189.78125
+        }
+      ],
+      "breadcrumb": [],
+      "backLinks": 0,
+      "productionHeight": 399.5625
+    },
+    {
+      "kind": "product",
+      "lang": "zh",
+      "language": "zh-CN",
+      "width": 390,
+      "scrollWidth": 390,
+      "rows": [],
+      "breadcrumb": [
+        "中企展馆",
+        "企业名单与厂家展厅",
+        "河北冀农农机具有限公司",
+        "液压翻转犁1LF-440"
+      ],
+      "backLinks": 1
+    },
+    {
+      "kind": "company",
+      "lang": "zh",
+      "language": "zh-CN",
+      "width": 390,
+      "scrollWidth": 390,
+      "rows": [
+        {
+          "x": 16,
+          "y": 352,
+          "width": 358,
+          "height": 157.390625
+        },
+        {
+          "x": 16,
+          "y": 529.390625,
+          "width": 358,
+          "height": 189.78125
+        },
+        {
+          "x": 16,
+          "y": 739.171875,
+          "width": 358,
+          "height": 189.78125
+        }
+      ],
+      "breadcrumb": [],
+      "backLinks": 0,
+      "productionHeight": 576.953125
+    },
+    {
+      "kind": "product",
+      "lang": "zh",
+      "language": "zh-CN",
+      "width": 360,
+      "scrollWidth": 360,
+      "rows": [],
+      "breadcrumb": [
+        "中企展馆",
+        "企业名单与厂家展厅",
+        "河北冀农农机具有限公司",
+        "液压翻转犁1LF-440"
+      ],
+      "backLinks": 1
+    },
+    {
+      "kind": "company",
+      "lang": "zh",
+      "language": "zh-CN",
+      "width": 360,
+      "scrollWidth": 360,
+      "rows": [
+        {
+          "x": 16,
+          "y": 352,
+          "width": 328,
+          "height": 157.390625
+        },
+        {
+          "x": 16,
+          "y": 529.390625,
+          "width": 328,
+          "height": 189.78125
+        },
+        {
+          "x": 16,
+          "y": 739.171875,
+          "width": 328,
+          "height": 189.78125
+        }
+      ],
+      "breadcrumb": [],
+      "backLinks": 0,
+      "productionHeight": 576.953125
+    }
+  ]
+}

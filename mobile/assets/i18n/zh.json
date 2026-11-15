@@ -495,5 +495,9 @@
   "phone_login_unavailable": "该手机号尚未注册或验证，请先注册；已有企业展厅请使用原账号登录后绑定手机号。",
   "https_required": "请使用 https://zqzhg.com 进行短信验证；App可在设置中切换服务器地址。",
   "share": "分享",
-  "verification_merged": "企业核验已合并，请更新App或在企业资料中确认协议并提交。"
+  "verification_merged": "企业核验已合并，请更新App或在企业资料中确认协议并提交。",
+  "vendor_name_exists": "该企业名称已存在，请先查找并编辑已有展厅；如需处理，请联系平台。",
+  "vendorProductCategories": "产品分类管理",
+  "vendor_product_category_exists": "本企业在该大类下已有同名分类。",
+  "vendor_product_category_in_use": "此分类仍被产品版本引用，可停用，不能删除。"
 }

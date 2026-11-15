@@ -33,7 +33,7 @@ it('keeps showroom search, category, page and language across product details an
  await user.click(await screen.findByRole('button',{name:'下一页'}));expect(location.search).toContain('page=2');
  await user.click(screen.getByRole('button',{name:'English'}));expect(location.pathname).toBe('/v/sample');
  await user.click((await screen.findAllByRole('link',{name:product.data.name}))[0]);await screen.findByRole('heading',{name:product.data.name});
- await user.click(within(document.querySelector('main')!).getByRole('link',{name:messages.en.backVendor}));
+ const breadcrumb=screen.getByRole('navigation',{name:'Breadcrumb'});expect(within(breadcrumb).getAllByRole('listitem')).toHaveLength(2);expect(document.querySelector('.public-product-detail > .back')).toBeNull();await user.click(within(breadcrumb).getByRole('link',{name:vendor.data.name}));
  await screen.findByRole('heading',{name:vendor.data.name});expect(location.search).toContain('q=TEST');expect(location.search).toContain('category_id=1');expect(location.search).toContain('page=2');expect(location.hash).toBe('#showroom-products');
  cleanup();render(<BrowserRouter><App/></BrowserRouter>);expect(await screen.findByRole('textbox',{name:'Product name / model'})).toHaveProperty('value','TEST');expect((screen.getByRole('combobox',{name:'Product category'}) as HTMLSelectElement).value).toBe('1');
 });

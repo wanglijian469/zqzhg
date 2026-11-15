@@ -7,7 +7,7 @@ export function productQuality(data:Data){
  const name=(data.name||'').trim();
  const checks=[
   {key:'name',ok:!!name,zh:'产品名称',en:'Product name'},
-  {key:'category',ok:!!(data.product_category_id||data.category_id),zh:'产品分类',en:'Product category'},
+  {key:'category',ok:!!(data.vendor_product_category_id||data.product_category_id||data.category_id),zh:'产品分类',en:'Product category'},
   {key:'cover',ok:!!data.media_ids?.length,zh:'产品封面',en:'Cover image'},
   {key:'model',ok:!!data.model?.trim()||/^(?:型号|model)[ \t]*[:：][ \t]*\S[^\r\n]*$/im.test(data.parameters||''),zh:'型号信息',en:'Model information'},
   {key:'description',ok:!!data.description?.trim(),zh:'产品介绍',en:'Description'},

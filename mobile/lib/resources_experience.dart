@@ -266,7 +266,13 @@ class _CompanyShowroomScreenState extends State<CompanyShowroomScreen> {
                               child: NativeCompanyProducts(
                                 vendorID: item['id'],
                                 hall: ownHall,
-                                categories: rows(result['categories']),
+                                categories: rows(
+                                  result['vendor_product_categories'] ??
+                                      result['categories'],
+                                ),
+                                companyCategories: result.containsKey(
+                                  'vendor_product_categories',
+                                ),
                                 memory: productState,
                               ),
                             ),
@@ -363,12 +369,14 @@ class NativeCompanyProducts extends StatefulWidget {
   final int vendorID;
   final ExhibitionHall? hall;
   final List<Json> categories;
+  final bool companyCategories;
   final Json memory;
   const NativeCompanyProducts({
     super.key,
     required this.vendorID,
     required this.hall,
     required this.categories,
+    this.companyCategories = false,
     required this.memory,
   });
   @override
@@ -423,7 +431,11 @@ class _NativeCompanyProductsState extends State<NativeCompanyProducts> {
         'page': '$page',
         'page_size': '24',
         'q': term,
-        if (category > 0) 'category_id': '$category',
+        if (category > 0)
+          (widget.companyCategories
+                  ? 'vendor_product_category_id'
+                  : 'category_id'):
+              '$category',
         if (m.modernPublicApi && order.isNotEmpty) 'sort': order,
       },
     ).query;
@@ -466,7 +478,7 @@ class _NativeCompanyProductsState extends State<NativeCompanyProducts> {
                     DropdownMenuItem(
                       value: c['id'],
                       child: Text(
-                        m.content(c, 'name'),
+                        '${m.content(c, 'name')}${c.containsKey('product_count') ? ' (${c['product_count']})' : ''}',
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -520,7 +532,13 @@ class _NativeCompanyProductsState extends State<NativeCompanyProducts> {
             final products = uniqueContent(rows(r['items'])).map((p) {
               final d = asMap(p['data']);
               final c = widget.categories
-                  .where((c) => c['id'] == d['category_id'])
+                  .where(
+                    (c) =>
+                        c['id'] ==
+                        (widget.companyCategories
+                            ? d['vendor_product_category_id']
+                            : d['category_id']),
+                  )
                   .firstOrNull;
               return <String, dynamic>{
                 ...p,

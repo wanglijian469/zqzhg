@@ -8,7 +8,11 @@ class NativeProductQuality extends StatelessWidget {
     final fields = <String, bool>{
       '产品名称': (data['name'] ?? '').toString().trim().isNotEmpty,
       '产品分类':
-          ((data['product_category_id'] ?? data['category_id'] ?? 0) as num) >
+          ((data['vendor_product_category_id'] ??
+                  data['product_category_id'] ??
+                  data['category_id'] ??
+                  0)
+              as num) >
           0,
       '产品封面': imageIDs(data).isNotEmpty,
       '型号信息':

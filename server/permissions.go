@@ -216,6 +216,11 @@ func (a *App) permissionForRequest(c *gin.Context) string {
 			action = "offline"
 		}
 		return "resource." + action
+	case strings.HasPrefix(path, "vendors/") && strings.Contains(path, "/product-categories"):
+		if method == "GET" || method == "HEAD" {
+			return "product.read"
+		}
+		return "product.write"
 	case strings.HasPrefix(path, "vendors"):
 		if strings.HasSuffix(path, "/products") {
 			return "product.write"
