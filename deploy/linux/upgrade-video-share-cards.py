@@ -192,12 +192,30 @@ def stage(package, prepare_web=None):
     # The existing resolver atomically refreshes mapping JSON on every request.
     # Keep this cache writable by the service, outside the public Web directory.
     map_cache = release / 'map-demo'
+    assert inventory(map_cache) == manifest['mapFiles']
+    previous_cache = Path(config()['MAP_DEMO_DIR']).resolve(strict=True)
+    assert previous_cache == Path(value['previous']) / 'map-demo'
+    retained_maps = {}
+    for source in previous_cache.rglob('*'):
+        if not source.is_file():
+            continue
+        assert not source.is_symlink(), 'map_cache_symlink'
+        relative = source.relative_to(previous_cache).as_posix()
+        if relative in manifest['mapFiles']:
+            continue
+        target = map_cache / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        digest = sha(source)
+        shutil.copy2(str(source), str(target))
+        assert sha(target) == digest
+        retained_maps[relative] = digest
     subprocess.run(['chown', '-R', 'zqzt:zqzt', str(map_cache)], check=True)
     for p in [map_cache] + list(map_cache.rglob('*')):
         os.chmod(str(p), 0o700 if p.is_dir() else 0o600)
     subprocess.run(['runuser', '-u', 'zqzt', '--', 'test', '-w', str(map_cache)], check=True)
-    assert inventory(release / 'map-demo') == manifest['mapFiles']
-    value.update(release=str(release), downloadsBefore=downloads_before, staged=True, candidateVerified=False, isolatedRestoreVerified=False, promoted=False, rolledBack=False, gitCommit=manifest['gitCommit'], android=manifest['android'])
+    staged_maps = inventory(map_cache)
+    assert all(staged_maps.get(name) == digest for name, digest in manifest['mapFiles'].items())
+    value.update(release=str(release), downloadsBefore=downloads_before, retainedRuntimeMapFiles=retained_maps, staged=True, candidateVerified=False, isolatedRestoreVerified=False, promoted=False, rolledBack=False, gitCommit=manifest['gitCommit'], android=manifest['android'])
     save(value)
     print(json.dumps({'staged': True, 'release': str(release), 'mapFiles': len(manifest['mapFiles']), 'android': manifest['android']['version']}))
 
