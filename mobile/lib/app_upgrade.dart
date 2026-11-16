@@ -495,6 +495,29 @@ class NativePublicResourceCard extends StatelessWidget {
                         : m.t('readCatalog'),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
+                  if (video) ...[
+                    space(8),
+                    Text(
+                      videoPlatformLabel(
+                        (d['video_source'] ?? 'LOCAL').toString(),
+                        m.language == 'zh',
+                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.labelMedium?.copyWith(color: industrialBlue),
+                    ),
+                  ],
+                  if (isShareLinkVideo(item)) ...[
+                    space(8),
+                    Text(
+                      shareVideoTip(
+                        (d['video_source'] ?? '').toString(),
+                        m.language == 'zh',
+                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    NativeShareVideoActions(item: item),
+                  ],
                   if (description.isNotEmpty)
                     Text(
                       description,

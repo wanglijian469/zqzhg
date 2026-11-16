@@ -8,10 +8,13 @@ import {useLanguage,Loading,Modal} from './ui';
 import {runtimeConfig,useRuntimeConfig} from './runtime-config';
 import type {ResourceData,ResourceItem} from './resources';
 
-export type VideoSource='LOCAL'|'DOUYIN'|'KUAISHOU';
-export const videoAPIVersion=(config=runtimeConfig())=>Number(config.capabilities?.video_api_version)>=3?'3':'2';
+export type VideoSource='LOCAL'|'DOUYIN'|'KUAISHOU'|'WECHAT_CHANNELS';
+export const videoAPIVersion=(config=runtimeConfig())=>Number(config.capabilities?.video_api_version)>=4?'4':Number(config.capabilities?.video_api_version)>=3?'3':'2';
 export const videoV2=(path:string)=>path+(path.includes('?')?'&':'?')+'video_api_version='+videoAPIVersion();
-export const isExternalVideo=(source?:VideoSource)=>source==='DOUYIN'||source==='KUAISHOU';
+export const isShareLinkVideo=(source?:VideoSource)=>source==='KUAISHOU'||source==='WECHAT_CHANNELS';
+export const isExternalVideo=(source?:VideoSource)=>source==='DOUYIN'||isShareLinkVideo(source);
+export const videoPlatformLabel=(source?:VideoSource,zh=true)=>source==='WECHAT_CHANNELS'?(zh?'微信视频号':'WeChat Channels'):source==='KUAISHOU'?(zh?'快手':'Kuaishou'):source==='DOUYIN'?(zh?'抖音':'Douyin'):(zh?'本地视频':'Local video');
+export const shareVideoWatchLabel=(source?:VideoSource,zh=true)=>zh?'前往'+(source==='WECHAT_CHANNELS'?'视频号':'快手')+'观看':'Watch on '+videoPlatformLabel(source,false);
 export interface VideoCheck {source:string;video_id:string;canonical_url:string;player_url?:string;title:string;width:number;height:number;status:string;reason:string;expires_at:string}
 export function trustedPlayer(raw:string,id?:string){try{const u=new URL(raw);return u.protocol==='https:'&&u.hostname==='open.douyin.com'&&!u.port&&!u.username&&!u.password&&u.pathname==='/player/video'&&u.searchParams.get('autoplay')==='0'&&(!id||u.searchParams.get('vid')===id)?u.href:''}catch{return ''}}
 const sessions=new Set<()=>void>();
@@ -20,19 +23,19 @@ export function VideoNavigation(){const location=useLocation();useLayoutEffect((
 export function usePlaybackSession(stop:()=>void,enabled=true){const ref=useRef(stop);ref.current=stop;useEffect(()=>{if(!enabled)return;const end=()=>ref.current();stopAllVideoSessions();sessions.add(end);const hidden=()=>{if(document.hidden)stopAllVideoSessions()};document.addEventListener('visibilitychange',hidden);window.addEventListener('pagehide',stopAllVideoSessions);return()=>{sessions.delete(end);document.removeEventListener('visibilitychange',hidden);window.removeEventListener('pagehide',stopAllVideoSessions)}},[enabled])}
 export function originalVideoURL(raw:string){try{const u=new URL(raw);return u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&['www.douyin.com','v.douyin.com'].includes(u.hostname)?u.href:''}catch{return ''}}
 export function externalVideoURL(raw:string,source?:VideoSource){
- if(source!=='KUAISHOU')return originalVideoURL(raw);
+ if(!isShareLinkVideo(source))return originalVideoURL(raw);
  try{
   const u=new URL(raw);
   if(u.protocol!=='https:'||u.username||u.password||u.port||u.search||u.hash)return '';
-  const path=u.hostname==='v.kuaishou.com'?/^\/[A-Za-z0-9]{3,48}$/:u.hostname==='www.kuaishou.com'?/^\/short-video\/[A-Za-z0-9]{3,48}$/:null;
-  return path?.test(u.pathname)?u.href:'';
+  const path=source==='WECHAT_CHANNELS'?(u.hostname==='weixin.qq.com'?/^\/sph\/[A-Za-z0-9_-]{3,60}$/:null):u.hostname==='v.kuaishou.com'?/^\/[A-Za-z0-9]{3,48}$/:u.hostname==='www.kuaishou.com'?/^\/short-video\/[A-Za-z0-9]{3,48}$/:null;
+  return path?.test(u.pathname)&&raw===u.origin+u.pathname?u.href:'';
  }catch{return ''}
 }
 export function douyinHostDocument(raw:string){const src=trustedPlayer(raw);if(!src)return '';const escaped=src.replace(/&/g,'&amp;').replace(/"/g,'&quot;');return `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; frame-src https://open.douyin.com; style-src 'unsafe-inline'; object-src 'none'; base-uri 'none'"><style>html,body{margin:0;width:100%;height:100%;background:#000}iframe{display:block;width:100%;height:100%;border:0}</style></head><body><iframe src="${escaped}" title="抖音视频" sandbox="allow-scripts allow-same-origin allow-presentation" allow="fullscreen; encrypted-media; picture-in-picture" referrerpolicy="origin" allowfullscreen></iframe></body></html>`}
 // All video entry points share the existing accessible dialog and explicit retry lifecycle.
 export function VideoModal({close,originalURL='',source,children}:{close:()=>void;originalURL?:string;source?:VideoSource;children:(headingID:string)=>ReactNode}){
- const headingID=useId(),{lang}=useLanguage();const [attempt,setAttempt]=useState(0);const original=externalVideoURL(originalURL,source);const kuaishou=source==='KUAISHOU';
- return createPortal(<div onKeyDownCapture={event=>{if(event.key==='Escape'&&document.fullscreenElement){event.preventDefault();event.stopPropagation();if(typeof document.exitFullscreen==='function')void document.exitFullscreen().catch(()=>{})}}}><Modal close={close} labelledBy={headingID} className="video-modal"><div className="video-modal-actions">{!kuaishou&&<button type="button" className="text-link" onClick={()=>setAttempt(n=>n+1)}>{lang==='zh'?'重试播放':'Retry playback'}</button>}{original&&<a className="text-link" href={original} target="_blank" rel="noopener noreferrer">{lang==='zh'?(kuaishou?'前往快手观看':source==='DOUYIN'?'前往抖音观看':'打开原视频'):(kuaishou?'Watch on Kuaishou':source==='DOUYIN'?'Watch on Douyin':'Open original video')}</a>}</div><div key={attempt}>{children(headingID)}</div></Modal></div>,document.body);
+ const headingID=useId(),{lang}=useLanguage();const [attempt,setAttempt]=useState(0);const original=externalVideoURL(originalURL,source);const kuaishou=isShareLinkVideo(source);
+ return createPortal(<div onKeyDownCapture={event=>{if(event.key==='Escape'&&document.fullscreenElement){event.preventDefault();event.stopPropagation();if(typeof document.exitFullscreen==='function')void document.exitFullscreen().catch(()=>{})}}}><Modal close={close} labelledBy={headingID} className="video-modal"><div className="video-modal-actions">{!kuaishou&&<button type="button" className="text-link" onClick={()=>setAttempt(n=>n+1)}>{lang==='zh'?'重试播放':'Retry playback'}</button>}{original&&!kuaishou&&<a className="text-link" href={original} target="_blank" rel="noopener noreferrer">{lang==='zh'?(kuaishou?'前往快手观看':source==='DOUYIN'?'前往抖音观看':'打开原视频'):(kuaishou?'Watch on Kuaishou':source==='DOUYIN'?'Watch on Douyin':'Open original video')}</a>}</div><div key={attempt}>{children(headingID)}</div></Modal></div>,document.body);
 }
 export function OfficialVideo({item,role,check}:{item?:ResourceItem;role?:'merchant'|'admin';check?:VideoCheck}){
  const {lang}=useLanguage(),zh=lang==='zh';const [result,setResult]=useState(check),[error,setError]=useState(''),[active,setActive]=useState(true);const host=useRef<HTMLDivElement>(null);const [size,setSize]=useState({width:800,height:window.innerHeight*.65});usePlaybackSession(()=>setActive(false));
@@ -53,8 +56,8 @@ export const canPreviewVideo=(check?:VideoCheck)=>check?.status==='READY'||check
 
 export function VideoSourceFields({data,onChange,onCheck,role,disabled}:{data:ResourceData;onChange:(d:ResourceData)=>void;onCheck:(c?:VideoCheck)=>void;role:'merchant'|'admin';disabled:boolean}){
  const {lang}=useLanguage(),zh=lang==='zh',config=useRuntimeConfig();
- const kuaishou=data.video_source==='KUAISHOU',enabled=kuaishou?videoAPIVersion(config)==='3':config.capabilities?.douyin_video===true;
- const platform=kuaishou?(zh?'快手':'Kuaishou'):(zh?'抖音':'Douyin');
+ const kuaishou=isShareLinkVideo(data.video_source),enabled=kuaishou?Number(videoAPIVersion(config))>=(data.video_source==='WECHAT_CHANNELS'?4:3):config.capabilities?.douyin_video===true;
+ const platform=videoPlatformLabel(data.video_source,zh);
  const [checking,setChecking]=useState(false),[check,setCheck]=useState<VideoCheck>(),[error,setError]=useState(''),[preview,setPreview]=useState(false);
  const generation=useRef(0),current=useRef(data);current.current=data;
  useEffect(()=>()=>{generation.current++},[]);
@@ -74,12 +77,12 @@ export function VideoSourceFields({data,onChange,onCheck,role,disabled}:{data:Re
  return <div className="video-source-fields">
   <p>{zh?'视频来源':'Source'} <strong>{platform}</strong></p>
   <label>{zh?'视频分享链接':platform+' share link'}<textarea maxLength={8000} value={data.original_share_url||''} disabled={disabled||!enabled} onChange={e=>change(e.target.value)} placeholder={zh?'粘贴从'+platform+'复制的分享链接或分享内容':''}/></label>
-  <p className="muted">{kuaishou?(zh?'链接检查仅验证格式。审核时会确认作品可公开打开。':'Link check validates the format. Review confirms public access.'):(zh?'请使用抖音公开视频的分享链接。':'Use a share link for a public Douyin video.')}</p>
+  <p className="muted">{kuaishou?(zh?'链接检查仅验证格式。审核后访客可前往原平台观看。':'Only the link format is checked. Visitors can open the original platform after review.'):(zh?'请使用抖音公开视频的分享链接。':'Use a share link for a public Douyin video.')}</p>
   <div className="form-actions">
    <button type="button" className="button secondary" disabled={disabled||checking||!enabled||!data.original_share_url?.trim()} onClick={()=>void inspect()}>{checking?(zh?'正在检查…':'Checking…'):(zh?'检查链接':'Check link')}</button>
    {!kuaishou&&<button type="button" className="button secondary" disabled={!canPreviewVideo(check)||disabled} onClick={()=>setPreview(true)}>{zh?'预览播放':'Preview playback'}</button>}
   </div>
-  {check&&<p role="status" className="notice">{kuaishou?(zh?'链接格式正确，访客可前往快手观看。':'The link format is valid. Visitors can watch on Kuaishou.'):check.status==='READY'?(zh?'官方播放器可预览，请点击预览确认播放效果。':'Official preview available.'):videoMessage(check.reason,zh)}</p>}
+  {check&&<p role="status" className="notice">{kuaishou?(zh?'链接格式正确，审核后访客可前往原平台观看。':'Valid link format. Visitors can open the original platform after review.'):check.status==='READY'?(zh?'官方播放器可预览，请点击预览确认播放效果。':'Official preview available.'):videoMessage(check.reason,zh)}</p>}
   {check&&!canPreviewVideo(check)&&<p className="muted">{zh?'可以先保存草稿；检查通过并保存后，才能提交审核。':'You may save a draft. Check successfully and save before submitting.'}</p>}
   {error&&<p role="alert" className="notice error">{videoMessage(error,zh)}</p>}
   <PublicationAgreements hideAccepted role={role}/>
@@ -89,8 +92,8 @@ export function VideoSourceFields({data,onChange,onCheck,role,disabled}:{data:Re
 
 export function VideoAddChoice({value,onChange,product=false}:{product?:boolean;value?:VideoSource;onChange:(v:VideoSource)=>void}){
  const {lang}=useLanguage(),zh=lang==='zh',config=useRuntimeConfig(),enabled=config.capabilities?.douyin_video===true;
- const sources:VideoSource[]=videoAPIVersion(config)==='3'?['DOUYIN','KUAISHOU','LOCAL']:['DOUYIN','LOCAL'];
- const labels={DOUYIN:zh?(sources.includes('KUAISHOU')?'抖音分享链接':'粘贴视频链接'):'Paste Douyin link',KUAISHOU:zh?'快手分享链接':'Paste Kuaishou link',LOCAL:zh?'上传本地视频':'Upload local video'};
+ const version=Number(videoAPIVersion(config));const sources:VideoSource[]=version>=4?['DOUYIN','KUAISHOU','WECHAT_CHANNELS','LOCAL']:version>=3?['DOUYIN','KUAISHOU','LOCAL']:['DOUYIN','LOCAL'];
+ const labels={DOUYIN:zh?(sources.includes('KUAISHOU')?'抖音分享链接':'粘贴视频链接'):'Paste Douyin link',KUAISHOU:zh?'快手分享链接':'Paste Kuaishou link',WECHAT_CHANNELS:zh?'微信视频号分享链接':'Paste WeChat Channels link',LOCAL:zh?'上传本地视频':'Upload local video'};
  return <section className="douyin-add-choice">
   <h2>{product?(zh?'添加产品视频':'Add product video'):(zh?'添加企业宣传视频':'Add company video')}</h2>
   <div role="group" aria-label={zh?'选择添加方式':'Choose video source'}>{sources.map(v=><button type="button" aria-pressed={value===v} disabled={v==='DOUYIN'&&!enabled} key={v} onClick={()=>onChange(v)}>{labels[v]}</button>)}</div>

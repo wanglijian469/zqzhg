@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-16",
+  "scope": "local-source-and-acceptance",
+  "productionChanged": false,
+  "officialAppPublished": false,
+  "databaseMigrationRequired": false,
+  "videoApiVersion": 4,
+  "paidResolversUsed": false,
+  "originalVideoDownloadedOrStored": false,
+  "backendRelatedTests": { "passed": 14, "isolatedMysql": true },
+  "webRelatedTests": { "files": 4, "passed": 33 },
+  "typescript": "passed",
+  "webBuild": "passed-with-existing-chunk-size-warning",
+  "goVet": "passed",
+  "flutterAnalyze": "no-issues",
+  "flutterRelatedTests": { "files": 5, "passed": 31 },
+  "flutterScreenshotTests": { "passed": 2, "screenshots": 6, "widths": [390, 768] },
+  "browserAcceptance": {
+    "report": "video-share-cards-browser-20261116.json",
+    "widths": [1440, 1024, 768, 390, 360],
+    "languages": ["zh", "en"],
+    "cases": 10,
+    "externalPlatformPagesIntercepted": true,
+    "androidDeviceVerified": false
+  },
+  "notes": [
+    "Share-link format validation does not establish actual video availability.",
+    "WeChat Channels may require opening the copied link inside WeChat.",
+    "Optional cover images continue to use existing image storage."
+  ]
+}

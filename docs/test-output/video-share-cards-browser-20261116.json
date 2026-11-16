@@ -1,0 +1,121 @@
+{
+  "isolatedDatabase": true,
+  "productionChanged": false,
+  "paidResolversUsed": false,
+  "externalPlatformIntercepted": true,
+  "checks": [
+    {
+      "width": 1440,
+      "lang": "zh",
+      "directExternalOpen": true,
+      "copy": true,
+      "stateRetained": true,
+      "noPlayer": true,
+      "createWechatDraft": true,
+      "noVideoUpload": true,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "directExternalOpen": true,
+      "copy": true,
+      "stateRetained": true,
+      "noPlayer": true,
+      "createWechatDraft": true,
+      "noVideoUpload": true,
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "lang": "zh",
+      "directExternalOpen": true,
+      "copy": true,
+      "stateRetained": true,
+      "noPlayer": true,
+      "createWechatDraft": true,
+      "noVideoUpload": true,
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "lang": "en",
+      "directExternalOpen": true,
+      "copy": true,
+      "stateRetained": true,
+      "noPlayer": true,
+      "createWechatDraft": true,
+      "noVideoUpload": true,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "zh",
+      "directExternalOpen": true,
+      "copy": true,
+      "stateRetained": true,
+      "noPlayer": true,
+      "createWechatDraft": true,
+      "noVideoUpload": true,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "lang": "en",
+      "directExternalOpen": true,
+      "copy": true,
+      "stateRetained": true,
+      "noPlayer": true,
+      "createWechatDraft": true,
+      "noVideoUpload": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "directExternalOpen": true,
+      "copy": true,
+      "stateRetained": true,
+      "noPlayer": true,
+      "createWechatDraft": true,
+      "noVideoUpload": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "directExternalOpen": true,
+      "copy": true,
+      "stateRetained": true,
+      "noPlayer": true,
+      "createWechatDraft": true,
+      "noVideoUpload": true,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "zh",
+      "directExternalOpen": true,
+      "copy": true,
+      "stateRetained": true,
+      "noPlayer": true,
+      "createWechatDraft": true,
+      "noVideoUpload": true,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "lang": "en",
+      "directExternalOpen": true,
+      "copy": true,
+      "stateRetained": true,
+      "noPlayer": true,
+      "createWechatDraft": true,
+      "noVideoUpload": true,
+      "overflow": false
+    }
+  ],
+  "pageErrors": [],
+  "unexpectedRequests": [],
+  "passed": true
+}

@@ -23,10 +23,12 @@ import (
 const videoLocal = "LOCAL"
 const videoDouyin = "DOUYIN"
 const videoKuaishou = "KUAISHOU"
+const videoWechatChannels = "WECHAT_CHANNELS"
 const videoRightsVersion = "video-rights-v1"
 
 func douyinVideoEnabled() bool    { return env("DOUYIN_VIDEO_ENABLED", "false") == "true" }
-func videoV3(c *gin.Context) bool { return c.Query("video_api_version") == "3" }
+func videoV4(c *gin.Context) bool { return c.Query("video_api_version") == "4" }
+func videoV3(c *gin.Context) bool { return c.Query("video_api_version") == "3" || videoV4(c) }
 func videoV2(c *gin.Context) bool { return c.Query("video_api_version") == "2" || videoV3(c) }
 func videoSource(p ResourcePayload) string {
 	if p.VideoSource == "" {
@@ -93,6 +95,34 @@ func extractVideoShare(text string) (string, error) {
 
 var kuaishouSharePath = regexp.MustCompile(`^/([A-Za-z0-9]{3,48})/?$`)
 var kuaishouPhotoPath = regexp.MustCompile(`^/short-video/([A-Za-z0-9]{3,48})/?$`)
+var wechatSharePath = regexp.MustCompile(`^/sph/([A-Za-z0-9_-]{3,60})/?$`)
+
+func externalShareSource(source string) bool {
+	return source == videoKuaishou || source == videoWechatChannels
+}
+
+func checkExternalShare(source, text string) (VideoLinkCheck, error) {
+	if source == videoKuaishou {
+		return checkKuaishou(text)
+	}
+	if source != videoWechatChannels {
+		return VideoLinkCheck{}, fmt.Errorf("unsupported_video_source")
+	}
+	raw, err := extractVideoURL(text)
+	if err != nil {
+		return VideoLinkCheck{}, err
+	}
+	u, err := url.Parse(raw)
+	if err != nil || len(raw) > 2048 || u.Scheme != "https" || strings.ToLower(u.Host) != "weixin.qq.com" || u.User != nil || u.Opaque != "" || u.Fragment != "" || u.RawPath != "" || u.Port() != "" {
+		return VideoLinkCheck{}, fmt.Errorf("invalid_video_link")
+	}
+	match := wechatSharePath.FindStringSubmatch(u.Path)
+	if len(match) != 2 {
+		return VideoLinkCheck{}, fmt.Errorf("invalid_video_link")
+	}
+	now := time.Now()
+	return VideoLinkCheck{Source: source, VideoID: "sph:" + match[1], CanonicalURL: "https://weixin.qq.com/sph/" + match[1], Status: "EXTERNAL_ONLY", CheckedAt: now, ExpiresAt: now.Add(time.Minute)}, nil
+}
 
 func checkKuaishou(text string) (VideoLinkCheck, error) {
 	raw, e := extractVideoURL(text)
@@ -429,12 +459,12 @@ func (a *App) checkVideoLink(c *gin.Context) {
 		fail(c, 400, "invalid_video_link")
 		return
 	}
-	if req.Source == videoKuaishou {
-		if !videoV3(c) {
+	if externalShareSource(req.Source) {
+		if !supportsVideo(c, req.Source, "company") {
 			fail(c, 409, "video_client_upgrade_required")
 			return
 		}
-		check, e := checkKuaishou(req.Text)
+		check, e := checkExternalShare(req.Source, req.Text)
 		if e != nil {
 			dbFail(c, e)
 			return

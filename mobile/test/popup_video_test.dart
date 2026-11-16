@@ -8,6 +8,9 @@ import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 import 'app_navigation_test.dart' as f;
+import 'video_share_cards_test.dart' show ShareCardLauncher;
+// ignore: depend_on_referenced_packages
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 class PopupVideoPlatform extends VideoPlayerPlatform {
   int creates = 0, plays = 0, disposals = 0;
@@ -99,9 +102,13 @@ void main() {
     messenger.setMockMethodCallHandler(channel, null);
   });
   testWidgets(
-    'Kuaishou card opens information before the explicit watch action',
+    'Kuaishou card opens the external app directly without a playback window',
     (tester) async {
       var playerOpens = 0;
+      final previousLauncher = UrlLauncherPlatform.instance;
+      final launcher = ShareCardLauncher();
+      UrlLauncherPlatform.instance = launcher;
+      addTearDown(() => UrlLauncherPlatform.instance = previousLauncher);
       messenger.setMockMethodCallHandler(channel, (_) async {
         playerOpens++;
         return null;
@@ -123,13 +130,13 @@ void main() {
       );
       await tester.tap(find.byType(InkWell).first);
       await tester.pumpAndSettle();
-      expect(find.byType(AlertDialog), findsOneWidget);
-      expect(find.text('前往快手观看'), findsOneWidget);
-      expect(find.text('快手视频简介'), findsNWidgets(2));
-      expect(playerOpens, 0);
-      await tester.tap(find.widgetWithText(TextButton, m.t('close')));
-      await tester.pumpAndSettle();
       expect(find.byType(AlertDialog), findsNothing);
+      expect(find.text('前往快手观看'), findsOneWidget);
+      expect(find.text('快手视频简介'), findsOneWidget);
+      expect(launcher.calls.single, 'https://v.kuaishou.com/Abc123');
+      expect(launcher.modes.single, PreferredLaunchMode.externalApplication);
+      expect(playerOpens, 0);
+      await tester.pumpWidget(const SizedBox());
     },
   );
   testWidgets(

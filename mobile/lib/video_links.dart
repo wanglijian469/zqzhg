@@ -6,7 +6,12 @@ bool isDouyinVideo(Json item) =>
     item['kind'] == 'video' && item['data']?['video_source'] == 'DOUYIN';
 bool isKuaishouVideo(Json item) =>
     item['kind'] == 'video' && item['data']?['video_source'] == 'KUAISHOU';
-bool isExternalVideo(Json item) => isDouyinVideo(item) || isKuaishouVideo(item);
+bool isShareLinkVideo(Json item) =>
+    isKuaishouVideo(item) ||
+    (item['kind'] == 'video' &&
+        item['data']?['video_source'] == 'WECHAT_CHANNELS');
+bool isExternalVideo(Json item) =>
+    isDouyinVideo(item) || isShareLinkVideo(item);
 bool canPreviewVideo(Json? check) =>
     check?['status'] == 'READY' || check?['status'] == 'EXTERNAL_ONLY';
 
@@ -14,7 +19,12 @@ extension VideoCapabilities on AppModel {
   Future<int> videoVersion() async {
     try {
       final caps = await clientCapabilities();
-      return (caps['video_api_version'] as num? ?? 2) >= 3 ? 3 : 2;
+      final version = (caps['video_api_version'] as num? ?? 2).toInt();
+      return version >= 4
+          ? 4
+          : version >= 3
+          ? 3
+          : 2;
     } catch (_) {
       return 2;
     }
@@ -59,7 +69,7 @@ class NativeVideoPurpose extends StatelessWidget {
               DropdownMenuItem(value: '', child: Text(m.t('allVideoTypes'))),
             for (final entry in videoPurposes.entries)
               if (entry.key != 'other' ||
-                  snapshot.data == 3 ||
+                  (snapshot.data ?? 2) >= 3 ||
                   value == 'other')
                 DropdownMenuItem(
                   value: entry.key,
@@ -77,7 +87,11 @@ class NativeVideoPurpose extends StatelessWidget {
   }
 }
 
-Uri? trustedExternalVideo(String raw, {required bool kuaishou}) {
+Uri? trustedExternalVideo(
+  String raw, {
+  required bool kuaishou,
+  String? source,
+}) {
   final uri = Uri.tryParse(raw);
   if (uri == null ||
       uri.scheme != 'https' ||
@@ -85,6 +99,15 @@ Uri? trustedExternalVideo(String raw, {required bool kuaishou}) {
       uri.userInfo.isNotEmpty ||
       uri.hasFragment) {
     return null;
+  }
+  if (source == 'WECHAT_CHANNELS') {
+    return !uri.hasQuery &&
+            raw == uri.toString() &&
+            uri.host == 'weixin.qq.com' &&
+            RegExp(r'^/sph/[A-Za-z0-9_-]{3,60}$').hasMatch(uri.path) &&
+            !raw.contains('%')
+        ? uri
+        : null;
   }
   if (kuaishou) {
     if (uri.hasQuery) return null;
@@ -196,6 +219,70 @@ Future<void> openNativeResource(
       (WidgetsBinding.instance.lifecycleState == null ||
           WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed);
   try {
+    if (isShareLinkVideo(item)) {
+      await NativeVideoSessions.stopAll();
+      if (!active()) return;
+      final data = asMap(item['data']);
+      final source = (data['video_source'] ?? '').toString();
+      final uri = trustedExternalVideo(
+        (check?['canonical_url'] ?? data['canonical_video_url'] ?? '')
+            .toString(),
+        kuaishou: source == 'KUAISHOU',
+        source: source,
+      );
+      Future<bool> launch() async {
+        if (uri == null) return false;
+        try {
+          return await launchUrl(uri, mode: LaunchMode.externalApplication);
+        } catch (_) {
+          return false;
+        }
+      }
+
+      if (!private && uri != null && await launch()) return;
+      if (!context.mounted || !active()) return;
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(resourceTitle(model, item)),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                NativeVideoPoster(data: data, fallbackIDs: fallbackIDs),
+                if (model.content(data, 'description').trim().isNotEmpty)
+                  Text(model.content(data, 'description')),
+                Text(shareVideoTip(source, model.language == 'zh')),
+                if (!private)
+                  Text(
+                    syncText(
+                      ctx,
+                      '暂时无法打开原视频，可复制链接后在原平台打开。',
+                      'Could not open the video. Copy the link and open it on the original platform.',
+                    ),
+                  ),
+                NativeShareVideoActions(
+                  item: item,
+                  url: uri?.toString(),
+                  onWatch: () async {
+                    if (!await launch() && ctx.mounted) {
+                      showError(ctx, ApiFailure('network_error'));
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(model.t('close')),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
     if (isExternalVideo(item)) {
       final data = asMap(item['data']);
       final kuaishou = isKuaishouVideo(item);
@@ -339,7 +426,7 @@ class NativeVideoAddScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('请选择添加方式'),
+            Text(syncText(context, '请选择添加方式', 'Choose how to add the video')),
             space(),
             FutureBuilder<Json>(
               future: m.clientCapabilities(),
@@ -353,18 +440,33 @@ class NativeVideoAddScreen extends StatelessWidget {
                         : null,
                     child: Text(
                       (snapshot.data?['video_api_version'] as num? ?? 2) >= 3
-                          ? '抖音分享链接'
-                          : '粘贴视频链接',
+                          ? syncText(context, '抖音分享链接', 'Paste Douyin link')
+                          : syncText(context, '粘贴视频链接', 'Paste video link'),
                     ),
                   ),
                   if ((snapshot.data?['video_api_version'] as num? ?? 2) >= 3)
                     OutlinedButton(
                       onPressed: () => select('KUAISHOU'),
-                      child: const Text('快手分享链接'),
+                      child: Text(
+                        syncText(context, '快手分享链接', 'Paste Kuaishou link'),
+                      ),
+                    ),
+                  if ((snapshot.data?['video_api_version'] as num? ?? 2) >= 4)
+                    OutlinedButton(
+                      onPressed: () => select('WECHAT_CHANNELS'),
+                      child: Text(
+                        syncText(
+                          context,
+                          '微信视频号分享链接',
+                          'Paste WeChat Channels link',
+                        ),
+                      ),
                     ),
                   OutlinedButton(
                     onPressed: () => select('LOCAL'),
-                    child: const Text('上传本地视频'),
+                    child: Text(
+                      syncText(context, '上传本地视频', 'Upload local video'),
+                    ),
                   ),
                 ],
               ),
@@ -604,8 +706,12 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
   Widget build(BuildContext context) {
     final m = ModelScope.of(context);
     final disabled = busy || current?['status'] == 'pending';
-    final kuaishou = data['video_source'] == 'KUAISHOU';
-    final platform = kuaishou ? '快手' : '抖音';
+    final kuaishou = isShareLinkVideo({'kind': 'video', 'data': data});
+    final zh = m.language == 'zh';
+    final platform = videoPlatformLabel(
+      (data['video_source'] ?? '').toString(),
+      zh,
+    );
     final cover = (data['cover_media_id'] as num? ?? 0).toInt();
     return Scaffold(
       appBar: appBar(context, '粘贴视频链接'),
@@ -613,7 +719,7 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
         padding: const EdgeInsets.all(20),
         children: [
           Text(
-            '视频来源：$platform',
+            zh ? '视频来源：$platform' : 'Source: $platform',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           space(),
@@ -623,18 +729,29 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
             maxLength: 8000,
             maxLines: 3,
             decoration: InputDecoration(
-              labelText: '视频分享链接',
-              hintText: '粘贴从$platform复制的分享链接或分享内容',
+              labelText: zh ? '视频分享链接' : 'Video share link',
+              hintText: zh
+                  ? '粘贴从$platform复制的分享链接或分享内容'
+                  : 'Paste a share link from $platform',
             ),
           ),
-          if (kuaishou) const Text('链接检查仅验证格式。审核时会确认作品可公开打开。'),
+          if (kuaishou)
+            Text(
+              zh
+                  ? '链接检查仅验证格式。审核后访客可前往原平台观看。'
+                  : 'Only the link format is checked. Visitors can open the original platform after review.',
+            ),
           Wrap(
             spacing: 12,
             runSpacing: 8,
             children: [
               OutlinedButton(
                 onPressed: disabled || checking ? null : inspect,
-                child: Text(checking ? '正在检查…' : '检查链接'),
+                child: Text(
+                  checking
+                      ? (zh ? '正在检查…' : 'Checking…')
+                      : (zh ? '检查链接' : 'Check link'),
+                ),
               ),
               OutlinedButton(
                 onPressed: disabled || !canPreviewVideo(check)
@@ -653,7 +770,11 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
                         private: true,
                         check: check,
                       ),
-                child: const Text('预览播放'),
+                child: Text(
+                  kuaishou
+                      ? (zh ? '预览卡片' : 'Preview card')
+                      : (zh ? '预览播放' : 'Preview playback'),
+                ),
               ),
             ],
           ),
@@ -662,7 +783,9 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 check!['status'] == 'EXTERNAL_ONLY'
-                    ? '链接格式正确，访客可前往快手观看。'
+                    ? (zh
+                          ? '链接格式正确，审核后访客可前往原平台观看。'
+                          : 'Valid link format. Visitors can open the original platform after review.')
                     : check!['status'] == 'READY'
                     ? '官方播放器可预览，请点击预览确认播放效果。'
                     : '${videoErrorText(ApiFailure((check!['reason'] ?? '').toString()))} 可以先保存草稿，暂不能提交审核。',
@@ -673,7 +796,7 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
             controller: title,
             enabled: !disabled,
             maxLength: 200,
-            decoration: const InputDecoration(labelText: '视频名称'),
+            decoration: InputDecoration(labelText: zh ? '视频名称' : 'Video name'),
           ),
           TextField(
             controller: description,
@@ -738,7 +861,11 @@ class _NativeDouyinEditorState extends State<NativeDouyinEditor> {
                 : (value) => setState(() => data['purpose'] = value),
           ),
           const NativePublicationAgreements(hideAccepted: true),
-          const Text('视频保存在原平台，上传的封面计入展厅存储。修改审核期间继续展示已公开的版本。'),
+          Text(
+            zh
+                ? '视频保存在原平台，上传的封面计入展厅存储。修改审核期间继续展示已公开的版本。'
+                : 'Videos remain on the original platform. Uploaded covers use showroom storage. Published versions stay visible during review.',
+          ),
           space(),
           if (error.isNotEmpty) message(context, error),
           if (errorCode == 'duplicate_video' && widget.productID != null) ...[

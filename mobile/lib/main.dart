@@ -29,6 +29,7 @@ part 'merchant_workspace.dart';
 part 'merchant_products.dart';
 part 'resources_experience.dart';
 part 'video_links.dart';
+part 'video_share.dart';
 part 'inline_video.dart';
 part 'inline_resource.dart';
 part 'merchant_form_flow.dart';
