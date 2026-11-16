@@ -1,0 +1,20 @@
+{
+  "url": "https://github.com/wanglijian469/zqzhg/releases/tag/v1.11.1",
+  "tag": "v1.11.1",
+  "commit": "8ec30448fb50544b89c0259c86b2611150b8346f",
+  "draft": false,
+  "assets": [
+    {
+      "name": "APK-SHA256.txt",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.11.1/APK-SHA256.txt",
+      "size": 82,
+      "digest": "sha256:f9df24f198fbfe05ac8d08831df5cf5212ce39403f2d3d6d8cd52d0df1092cc6"
+    },
+    {
+      "name": "manifest-v1.11.1.json",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.11.1/manifest-v1.11.1.json",
+      "size": 8917,
+      "digest": "sha256:612837861e0981e294b94e639df9d58b1a79b15d552fdd74d4782b128b83eaf5"
+    }
+  ]
+}

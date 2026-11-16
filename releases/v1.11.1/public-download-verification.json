@@ -1,0 +1,21 @@
+{
+  "version": "1.11.1",
+  "https": true,
+  "videoApiVersion": 4,
+  "androidVersion": "1.11.1+52",
+  "versionCode": 52,
+  "sourceCommit": "8ec30448fb50544b89c0259c86b2611150b8346f",
+  "officialDownload": {
+    "sha256": "ecbf2209bceae3fa7f2dfe493ab06253e93de7d73a402efadcd2b68748014306",
+    "bytes": 86365139,
+    "elapsedSeconds": 224.22,
+    "matchesLocal": true
+  },
+  "videoTotalsByApiVersion": {
+    "2": 4,
+    "3": 4,
+    "4": 4
+  },
+  "certificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+  "deviceValidation": false
+}
