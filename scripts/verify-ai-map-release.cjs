@@ -30,8 +30,12 @@ async function main(){
    }
    return route.continue();
   });
-  const page=await context.newPage();page.on('pageerror',e=>evidence.pageErrors.push(e.message));page.on('response',r=>{if(r.url().startsWith(base)&&r.status()>=400){const row={url:r.url(),status:r.status()};evidence.httpErrors.push(row);console.log(JSON.stringify(row));}});
-  const ready=()=>page.locator('[data-map-mode=outline] .industry-chart svg path').first().waitFor({state:'attached',timeout:45000});
+  const page=await context.newPage();page.setDefaultNavigationTimeout(90000);page.on('pageerror',e=>evidence.pageErrors.push(e.message));page.on('response',r=>{if(r.url().startsWith(base)&&r.status()>=400){const row={url:r.url(),status:r.status()};evidence.httpErrors.push(row);console.log(JSON.stringify(row));}});
+  const ready=async()=>{
+   await page.locator('[data-map-mode=outline] .industry-chart svg path').first().waitFor({state:'attached',timeout:45000});
+   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+   await page.waitForFunction(()=>!document.querySelector('.industry-map-page .loading')&&document.querySelector('[data-map-mode=outline] .industry-map-controls'),{},{timeout:45000});
+  };
   await page.goto(base+'/regions',{waitUntil:'domcontentloaded'});await ready();
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   if(width===1440){for(const [code,label] of [['','全国'],['13','河北'],['1305','邢台'],['130528','宁晋']]){

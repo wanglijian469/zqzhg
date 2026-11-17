@@ -1,0 +1,39 @@
+{
+  "syntheticDocument": true,
+  "realBrochureUploaded": false,
+  "success": true,
+  "model": "qwen3.8-flash",
+  "probePage": 1,
+  "submittedBytes": 41151,
+  "sourceSHA256": "e90b0fce9b344bbd10da1a3c15988912d6a918a175111249cdc273494f10196d",
+  "serviceUser": "zqzt",
+  "businessDatabaseAccessed": false,
+  "attempts": [
+    {
+      "http_status": 200,
+      "error": null,
+      "duration_ms": 37182,
+      "usage": {
+        "prompt_tokens": 2609,
+        "total_tokens": 2611,
+        "completion_tokens": 2,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "image_tokens": 2496,
+          "text_tokens": 113
+        },
+        "completion_tokens_details": {
+          "text_tokens": 2
+        },
+        "x_tools": {
+          "pdf_page_parser": {
+            "count": 1,
+            "strategy": "normal"
+          }
+        }
+      }
+    }
+  ],
+  "estimatedCost": null,
+  "priceConfigured": false
+}

@@ -1,0 +1,12 @@
+{
+  "version": "1.12.0",
+  "https": true,
+  "aiPagesReachable": true,
+  "unauthenticatedAIRequestsDenied": true,
+  "videoApiVersion": 4,
+  "existingAppPreserved": "1.11.1+52",
+  "officialDownloadSHA256": "ecbf2209bceae3fa7f2dfe493ab06253e93de7d73a402efadcd2b68748014306",
+  "officialDownloadBytes": 86365139,
+  "realBrochureUploaded": false,
+  "nativeAppBuilt": false
+}

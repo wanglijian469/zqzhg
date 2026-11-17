@@ -1,0 +1,39 @@
+{
+  "isolatedProductionCandidate": true,
+  "readOnly": true,
+  "checks": [
+    {
+      "role": "admin",
+      "width": 390,
+      "loaded": true,
+      "flash": true,
+      "overflow": false,
+      "paidModelTestExecuted": false
+    },
+    {
+      "role": "merchant",
+      "width": 390,
+      "loaded": true,
+      "flash": true,
+      "overflow": false,
+      "paidModelTestExecuted": false
+    },
+    {
+      "role": "admin",
+      "width": 1440,
+      "loaded": true,
+      "flash": true,
+      "overflow": false,
+      "paidModelTestExecuted": false
+    },
+    {
+      "role": "merchant",
+      "width": 1440,
+      "loaded": true,
+      "flash": true,
+      "overflow": false,
+      "paidModelTestExecuted": false
+    }
+  ],
+  "errors": []
+}

@@ -39,3 +39,5 @@ python3 /opt/zqzt/shared/packages/zqzg-v1.12.0/upgrade.py rollback
 ## 验证范围
 
 已有本地真实洋柯、派一、劳斯耐斯画册识别记录，均为待人工审核草稿，尚未进行真实样例人工批准。自动化验证、已知基线失败及真实识别限制见 `docs/AI_IMPORT_TEST_RESULTS.md`。本包生产候选和上线结果另外记录于发布回执，不将未执行项目标为通过。
+
+2026-11-17已完成ECS上线：Schema34、flash默认、独立候选及正式HTTPS五种布局和四级真实地图验收通过。生效媒体821文件、业务审核JSON、原App下载校验一致。构建提交93576b2；详细回执及回滚见 `docs/RELEASE_1.12.0_20261117.md`、本目录 `deployment.json`、`production-browser.json`。
