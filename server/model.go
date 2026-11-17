@@ -81,16 +81,17 @@ type Content struct {
 	UpdatedAt           time.Time `json:"updated_at"`
 }
 type Payload struct {
-	PrimaryCategoryID       uint64   `json:"primary_category_id"`
-	SecondaryCategoryIDs    []uint64 `json:"secondary_category_ids"`
-	BusinessNature          string   `json:"business_nature"`
-	ProductCategoryID       uint64   `json:"product_category_id"`
-	VendorProductCategoryID uint64   `json:"vendor_product_category_id,omitempty"`
-	Brand                   string   `json:"brand"`
-	Model                   string   `json:"model"`
-	ApplicableBrands        []string `json:"applicable_brands"`
-	ApplicableModels        []string `json:"applicable_models"`
-	IndustrialBeltIDs       []uint64 `json:"industrial_belt_ids,omitempty" gorm:"-"`
+	ProductDetails          *ProductDetails `json:"product_details,omitempty"`
+	PrimaryCategoryID       uint64          `json:"primary_category_id"`
+	SecondaryCategoryIDs    []uint64        `json:"secondary_category_ids"`
+	BusinessNature          string          `json:"business_nature"`
+	ProductCategoryID       uint64          `json:"product_category_id"`
+	VendorProductCategoryID uint64          `json:"vendor_product_category_id,omitempty"`
+	Brand                   string          `json:"brand"`
+	Model                   string          `json:"model"`
+	ApplicableBrands        []string        `json:"applicable_brands"`
+	ApplicableModels        []string        `json:"applicable_models"`
+	IndustrialBeltIDs       []uint64        `json:"industrial_belt_ids,omitempty" gorm:"-"`
 	taxonomyFields          map[string]bool
 	RegionCode              string          `json:"region_code,omitempty"`
 	CompanyProfile          *CompanyProfile `json:"company_profile,omitempty"`

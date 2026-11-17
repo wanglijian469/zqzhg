@@ -70,6 +70,24 @@ func systemConfigDB(db *gorm.DB) (SystemConfig, error) {
 }
 func (a *App) effectiveConfig(c *gin.Context) SystemConfig {
 	cfg, _ := a.systemConfig()
+	// A separate loopback development candidate must not send its sessions to
+	// addresses saved for the primary site. Never modify stored URLs.
+	if a.Config.Env == "development" && env("LOCAL_PREVIEW_SAME_ORIGIN", "false") == "true" {
+		u, e := url.Parse("http://" + c.Request.Host)
+		if e == nil {
+			host := u.Hostname()
+			ip := net.ParseIP(host)
+			if host == "localhost" || (ip != nil && ip.IsLoopback()) {
+				scheme := "http"
+				if c.Request.TLS != nil {
+					scheme = "https"
+				}
+				origin := scheme + "://" + c.Request.Host
+				cfg.Site.WebURL, cfg.Site.APIURL, cfg.Site.MediaURL = origin, origin+"/api/v1", origin+"/media"
+				return cfg
+			}
+		}
+	}
 	base := strings.TrimRight(a.Config.PublicBaseURL, "/")
 	if base == "" {
 		scheme := "http"
@@ -239,6 +257,7 @@ func (a *App) safeProbe(ctx context.Context, raw, currentOrigin string) (map[str
 	return info, nil
 }
 func (a *App) settingsRoutes(admin, pub *gin.RouterGroup) {
+	a.aiModelSettingsRoutes(admin)
 	a.watermarkRoutes(admin)
 	pub.GET("/config", a.publicRuntimeConfig)
 	admin.GET("/settings", func(c *gin.Context) {

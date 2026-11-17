@@ -1015,7 +1015,11 @@ func validateMediaInventory(db *gorm.DB, objects []StoredObject) error {
 			}
 		}
 	}
-	for _, table := range []string{"media_references", "resource_media_references", "home_display_media"} {
+	tables := []string{"media_references", "resource_media_references", "home_display_media"}
+	if db.Migrator().HasTable(&AIImportAsset{}) {
+		tables = append(tables, "ai_import_assets")
+	}
+	for _, table := range tables {
 		var missing int64
 		if err := db.Table(table + " refs").Joins("LEFT JOIN media ON media.id=refs.media_id").Where("media.id IS NULL").Count(&missing).Error; err != nil {
 			return err

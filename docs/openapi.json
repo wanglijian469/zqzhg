@@ -3,7 +3,7 @@
   "info": {
     "title": "中企展馆 · ZQZG",
     "version": "2.0.0",
-    "description": "Published snapshots only. Draft and pending content and media require ownership or administrator access. Error messages are localized by clients using error.code. Resource snapshots have independent review and processing states; anonymous media access also requires a public parent showroom and linked product. Platform operators use effective feature permissions. Administrator-only storage, persistent jobs and encrypted isolated recovery are provided. Anonymous analytics do not identify people.\nPublic data reads use shared per-IP page/API limits, bounded pagination and distinct content budgets; 429 includes Retry-After. Schema14 preserves historical showroom addresses. Schema18 compacts the official product taxonomy to 10 roots and 35 children; existing IDs resolve through aliases. Search UI removes industrial belt and business nature while APIs preserve legacy filter compatibility. Schema19 adds globally unique verified account phones and purpose-scoped verification; legacy username and SMS endpoints remain compatible. Native App removes map functionality; website maps remain available.\nSchema20 stores immutable upload-time watermark config, server-resolved manufacturer label and separate source/display media references. Only new company gallery, showroom cover and product images are rendered. Legacy media, logos, credentials, banners, category images and resource media are unchanged. Public media IDs always serve the authorized display variant; original=1 cannot expose protected clean sources. Legacy upload IDs may resolve to their public watermarked variant. New clients must use normalized media IDs returned after draft saving.\nSchema21 introduces procurement with additive buyer identity, reviewed publication/expansion, immutable demand and quotation versions, private attachments and conversations, deterministic supplier matching, scoped notifications and restored-object validation. Prices and quantities are decimal strings. Native App APIs remain compatible. Procurement may be disabled with PROCUREMENT_ENABLED=false.\nSupplier opportunities use /merchant/opportunities; legacy /buyer/opportunities pages redirect with query and fragment preserved. Procurement notifications support optional buyer/supplier scope for lists, unread counts and marking read. Phone SMS login uses purpose=login and the existing verification lifecycle. Runtime capabilities include phone_sms_auth, development_sms and procurement_demo; demo_accounts is only populated in explicit isolated demo mode. Production never exposes development codes.\nSchema29 adds version-scoped Douyin identities, authorization declarations and five-minute official playback checks. video_api_version=2 opts into external video lists and counts; older clients receive local video only. DOUYIN_VIDEO_ENABLED defaults false. Existing local storage quotas, media processing and review remain unchanged. The previously executed migration retains unused removal/order/cleanup structures; no deletion, sorting or cleanup business routes are enabled.\nVideo API v4 adds WECHAT_CHANNELS external share cards with EXTERNAL_ONLY playback metadata. Kuaishou and WeChat share links are validated locally without resolving, downloading or proxying video. Existing database fields and version snapshots are retained; no schema migration is required."
+    "description": "Published snapshots only. Draft and pending content and media require ownership or administrator access. Error messages are localized by clients using error.code. Resource snapshots have independent review and processing states; anonymous media access also requires a public parent showroom and linked product. Platform operators use effective feature permissions. Administrator-only storage, persistent jobs and encrypted isolated recovery are provided. Anonymous analytics do not identify people.\nPublic data reads use shared per-IP page/API limits, bounded pagination and distinct content budgets; 429 includes Retry-After. Schema14 preserves historical showroom addresses. Schema18 compacts the official product taxonomy to 10 roots and 35 children; existing IDs resolve through aliases. Search UI removes industrial belt and business nature while APIs preserve legacy filter compatibility. Schema19 adds globally unique verified account phones and purpose-scoped verification; legacy username and SMS endpoints remain compatible. Native App removes map functionality; website maps remain available.\nSchema20 stores immutable upload-time watermark config, server-resolved manufacturer label and separate source/display media references. Only new company gallery, showroom cover and product images are rendered. Legacy media, logos, credentials, banners, category images and resource media are unchanged. Public media IDs always serve the authorized display variant; original=1 cannot expose protected clean sources. Legacy upload IDs may resolve to their public watermarked variant. New clients must use normalized media IDs returned after draft saving.\nSchema21 introduces procurement with additive buyer identity, reviewed publication/expansion, immutable demand and quotation versions, private attachments and conversations, deterministic supplier matching, scoped notifications and restored-object validation. Prices and quantities are decimal strings. Native App APIs remain compatible. Procurement may be disabled with PROCUREMENT_ENABLED=false.\nSupplier opportunities use /merchant/opportunities; legacy /buyer/opportunities pages redirect with query and fragment preserved. Procurement notifications support optional buyer/supplier scope for lists, unread counts and marking read. Phone SMS login uses purpose=login and the existing verification lifecycle. Runtime capabilities include phone_sms_auth, development_sms and procurement_demo; demo_accounts is only populated in explicit isolated demo mode. Production never exposes development codes.\nSchema29 adds version-scoped Douyin identities, authorization declarations and five-minute official playback checks. video_api_version=2 opts into external video lists and counts; older clients receive local video only. DOUYIN_VIDEO_ENABLED defaults false. Existing local storage quotas, media processing and review remain unchanged. The previously executed migration retains unused removal/order/cleanup structures; no deletion, sorting or cleanup business routes are enabled.\nVideo API v4 adds WECHAT_CHANNELS external share cards with EXTERNAL_ONLY playback metadata. Kuaishou and WeChat share links are validated locally without resolving, downloading or proxying video. Existing database fields and version snapshots are retained; no schema migration is required.\nSchema32/33 add merchant-private AI brochure import, human version confirmation, explicit existing-product update suggestions and resumable idempotent submission to the existing platform review. AI never approves or publishes unreviewed content. Server-only pay-as-you-go credentials, local evidence extraction and original technical diagram crops are retained.\nSchema34 adds explicit per-task model consent and snapshots. Ordinary extraction, review and retries always use qwen3.8-flash. Max is never automatically selected. Administrator-only AI configuration encrypts secrets and never returns them."
   },
   "servers": [
     {
@@ -15721,6 +15721,1458 @@
           }
         }
       }
+    },
+    "/merchant/ai-import/config": {
+      "get": {
+        "summary": "Get non-secret AI readiness and limits",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get non-secret AI readiness and limits",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "configured": {
+                      "type": "boolean"
+                    },
+                    "pdf_tools_ready": {
+                      "type": "boolean"
+                    },
+                    "max_file_bytes": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "max_pages": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "image_mib": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        }
+      }
+    },
+    "/merchant/ai-import/tasks": {
+      "post": {
+        "summary": "Upload private brochure and queue import",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Upload private brochure and queue import",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "task": {
+                      "$ref": "#/components/schemas/AIImportTask"
+                    },
+                    "duplicate": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          },
+          "200": {
+            "description": "Existing request or identical file; no new task"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "request_id": {
+                    "type": "string"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "",
+                      "update"
+                    ]
+                  },
+                  "model_mode": {
+                    "type": "string",
+                    "enum": [
+                      "flash",
+                      "max"
+                    ],
+                    "default": "flash"
+                  },
+                  "confirm_max": {
+                    "type": "boolean",
+                    "description": "Required true for max; never inferred automatically."
+                  }
+                },
+                "required": [
+                  "files",
+                  "request_id"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "List only the current merchant import tasks",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List only the current merchant import tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AIImportTask"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "page": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "page_size": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ]
+      }
+    },
+    "/merchant/ai-import/tasks/{id}": {
+      "get": {
+        "summary": "Get owned task status",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get owned task status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIImportTask"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ]
+      }
+    },
+    "/merchant/ai-import/tasks/{id}/result": {
+      "get": {
+        "summary": "Get private drafts, evidence, usage and final business state",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get private drafts, evidence, usage and final business state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIImportResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ]
+      }
+    },
+    "/merchant/ai-import/tasks/{id}/retry": {
+      "post": {
+        "summary": "Retry a failed stage, retaining completed drafts",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retry a failed stage, retaining completed drafts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/ai-import/tasks/{id}/reopen-failed": {
+      "post": {
+        "summary": "Reopen failed unsubmitted items for corrections",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reopen failed unsubmitted items for corrections",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/ai-import/tasks/{id}/continue-review": {
+      "post": {
+        "summary": "Continue remaining unsubmitted drafts after a successful batch",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Continue remaining unsubmitted drafts after a successful batch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/ai-import/company/{id}": {
+      "put": {
+        "summary": "Save versioned private company draft; edits invalidate confirmation",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Save versioned private company draft; edits invalidate confirmation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 0
+                  },
+                  "data": {
+                    "$ref": "#/components/schemas/Payload"
+                  },
+                  "selected_fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "version",
+                  "data"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/ai-import/products/{id}": {
+      "put": {
+        "summary": "Save versioned private products draft; edits invalidate confirmation",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Save versioned private products draft; edits invalidate confirmation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 0
+                  },
+                  "data": {
+                    "$ref": "#/components/schemas/Payload"
+                  },
+                  "selected_fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "publish_mode": {
+                    "type": "string",
+                    "enum": [
+                      "create",
+                      "update",
+                      "undecided"
+                    ]
+                  },
+                  "target_content_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 0
+                  },
+                  "target_revision_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "version",
+                  "data"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Soft-delete an unsubmitted recognition draft",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Soft-delete an unsubmitted recognition draft",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ]
+      }
+    },
+    "/merchant/ai-import/tasks/{id}/review": {
+      "post": {
+        "summary": "Confirm exact saved versions with a human resolution",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Confirm exact saved versions with a human resolution",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "company",
+                            "product"
+                          ]
+                        },
+                        "id": {
+                          "type": "integer",
+                          "format": "int64",
+                          "minimum": 0
+                        },
+                        "version": {
+                          "type": "integer",
+                          "format": "int64",
+                          "minimum": 0
+                        },
+                        "resolution": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id",
+                        "version"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "items"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/ai-import/tasks/{id}/products/merge": {
+      "post": {
+        "summary": "Merge unsubmitted drafts without deleting business products",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Merge unsubmitted drafts without deleting business products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "products": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int64",
+                          "minimum": 0
+                        },
+                        "version": {
+                          "type": "integer",
+                          "format": "int64",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "version"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "products"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/ai-import/products/{id}/split": {
+      "post": {
+        "summary": "Split draft, preserving all model/configuration identities",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Split draft, preserving all model/configuration identities",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 0
+                  },
+                  "products": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Payload"
+                    }
+                  }
+                },
+                "required": [
+                  "version",
+                  "products"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/ai-import/assets/{id}": {
+      "get": {
+        "summary": "Read own private original or derived asset",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read own private original or derived asset",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ]
+      }
+    },
+    "/merchant/ai-import/assets/{id}/crops": {
+      "post": {
+        "summary": "Deterministically crop source pixels and retain lineage",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Deterministically crop source pixels and retain lineage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIImportAsset"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AIRegion"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/ai-import/tasks/{id}/publish": {
+      "post": {
+        "summary": "Idempotently save confirmed items and submit existing platform review; never approve",
+        "tags": [
+          "merchant-ai-import"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Idempotently save confirmed items and submit existing platform review; never approve",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "submitted": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "failed": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 0
+                          },
+                          "content_id": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 0
+                          },
+                          "revision_id": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 0
+                          },
+                          "error": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, source, limit or review resolution"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "Not found or not owned"
+          },
+          "409": {
+            "description": "Version, review, quota, task or submission conflict"
+          },
+          "503": {
+            "description": "Feature disabled or configuration/dependency unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AIImportPublishRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/settings/ai-models": {
+      "get": {
+        "summary": "Administrator-only AI model settings; flash default, encrypted key never returned",
+        "tags": [
+          "admin-settings"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Non-secret settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIModelSettings"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Super administrator required"
+          },
+          "400": {
+            "description": "Invalid official endpoint, timeout, key or action"
+          },
+          "409": {
+            "description": "Stale settings version"
+          },
+          "503": {
+            "description": "Encryption configuration required"
+          }
+        }
+      },
+      "put": {
+        "summary": "Administrator-only AI model settings; flash default, encrypted key never returned",
+        "tags": [
+          "admin-settings"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Non-secret settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIModelSettings"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Super administrator required"
+          },
+          "400": {
+            "description": "Invalid official endpoint, timeout, key or action"
+          },
+          "409": {
+            "description": "Stale settings version"
+          },
+          "503": {
+            "description": "Encryption configuration required"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AIModelSettingsWrite"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/settings/ai-models/test": {
+      "post": {
+        "summary": "Explicit paid short-text test using saved settings; max needs explicit confirmation",
+        "tags": [
+          "admin-settings"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model_mode": {
+                    "type": "string",
+                    "enum": [
+                      "flash",
+                      "max"
+                    ],
+                    "default": "flash"
+                  },
+                  "confirm_max": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Model/request ID/usage and nullable estimated cost; no document or saved key returned"
+          },
+          "400": {
+            "description": "Max confirmation required or config unavailable"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Super administrator required"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "502": {
+            "description": "Redacted provider failure"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -15880,12 +17332,15 @@
             "format": "int64",
             "minimum": 0,
             "description": "Company-owned product category. Explicit 0 clears a draft assignment. Omission preserves it for older clients."
+          },
+          "product_details": {
+            "$ref": "#/components/schemas/ProductDetails"
           }
         },
         "required": [
           "name"
         ],
-        "description": "Schema17/18 agriculture classification: drafts may omit classifications. New agriculture manufacturers require one primary category when submitted; new products require one product category. Up to two distinct secondary manufacturer categories. New product selections use leaves of a tree of at most three levels. Pre-upgrade content retains its historical classification. Omitted new fields on updates are preserved; explicit zero, empty string or empty array clears the field. Legacy category_id and parameters are retained. Approval and ownership rules are unchanged."
+        "description": "Schema17/18 agriculture classification: drafts may omit classifications. New agriculture manufacturers require one primary category when submitted; new products require one product category. Up to two distinct secondary manufacturer categories. New product selections use leaves of a tree of at most three levels. Pre-upgrade content retains its historical classification. Omitted new fields on updates are preserved; explicit zero, empty string or empty array clears the field. Legacy category_id and parameters are retained. Approval and ownership rules are unchanged. Optional product_details preserves series, model variants, original technical strings, evidence pages and technical images. Omission by a legacy edit preserves existing details; an explicit null clears details."
       },
       "View": {
         "type": "object",
@@ -18699,6 +20154,667 @@
             "minimum": 0
           }
         }
+      },
+      "AIParameter": {
+        "type": "object",
+        "properties": {
+          "parameter_name": {
+            "type": "string"
+          },
+          "raw_value": {
+            "type": "string"
+          },
+          "raw_unit": {
+            "type": "string"
+          },
+          "normalized_value": {
+            "type": "string",
+            "nullable": true
+          },
+          "normalized_unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "source_page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "review_required": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "parameter_name",
+          "raw_value",
+          "source_page"
+        ]
+      },
+      "AIProductModel": {
+        "type": "object",
+        "properties": {
+          "model_name": {
+            "type": "string"
+          },
+          "variant": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AIParameter"
+            }
+          }
+        },
+        "required": [
+          "model_name",
+          "parameters"
+        ]
+      },
+      "AIProductImage": {
+        "type": "object",
+        "properties": {
+          "media_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "image_type": {
+            "type": "string",
+            "enum": [
+              "logo",
+              "product_main",
+              "product_photo",
+              "structure",
+              "schematic",
+              "dimensions",
+              "parameter_table",
+              "other"
+            ]
+          },
+          "source_page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "caption": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "media_id",
+          "image_type",
+          "source_page"
+        ]
+      },
+      "ProductDetails": {
+        "type": "object",
+        "properties": {
+          "series_name": {
+            "type": "string"
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "applications": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AIProductModel"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AIProductImage"
+            }
+          },
+          "source_pages": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "AIImportTask": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "vendor_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "file_hash": {
+            "type": "string"
+          },
+          "file_name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "processing",
+              "review_pending",
+              "failed",
+              "completed"
+            ]
+          },
+          "stage": {
+            "type": "string"
+          },
+          "progress": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "error": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "work": {
+            "type": "object",
+            "nullable": true,
+            "description": "Current real processing unit; preserved across progress refreshes. Counts are completed extraction/review steps, not a simulated timer.",
+            "properties": {
+              "product": {
+                "type": "string"
+              },
+              "product_index": {
+                "type": "integer"
+              },
+              "product_total": {
+                "type": "integer"
+              },
+              "source_page": {
+                "type": "integer"
+              },
+              "done": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              },
+              "message": {
+                "type": "string"
+              },
+              "started_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "model_mode": {
+            "type": "string",
+            "enum": [
+              "flash",
+              "max"
+            ],
+            "description": "Default flash. max requires explicit confirmation at task creation."
+          },
+          "max_confirmed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "extraction_model": {
+            "type": "string"
+          },
+          "review_model": {
+            "type": "string"
+          }
+        }
+      },
+      "AIImportDraft": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "task_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "temp_id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "reviewed_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "data": {
+            "$ref": "#/components/schemas/Payload"
+          },
+          "source_pages": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "field_sources": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "review_issues": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "selected_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "content_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "revision_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "base_revision_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "target_content_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "publish_mode": {
+            "type": "string",
+            "enum": [
+              "",
+              "create",
+              "update",
+              "undecided"
+            ]
+          },
+          "target_product": {
+            "type": "object",
+            "nullable": true
+          },
+          "business_status": {
+            "type": "string"
+          },
+          "public_visible": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "AIRegion": {
+        "type": "object",
+        "properties": {
+          "source_page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "panel": {
+            "type": "string",
+            "enum": [
+              "",
+              "left",
+              "right",
+              "whole"
+            ]
+          },
+          "printed_page": {
+            "type": "string"
+          },
+          "image_type": {
+            "type": "string",
+            "enum": [
+              "logo",
+              "product_main",
+              "product_photo",
+              "structure",
+              "schematic",
+              "dimensions",
+              "parameter_table",
+              "other"
+            ]
+          },
+          "crop_region": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "caption": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_page",
+          "image_type",
+          "crop_region"
+        ]
+      },
+      "AIImportAsset": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "task_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "media_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "source_asset_id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "source_page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "panel": {
+            "type": "string"
+          },
+          "printed_page": {
+            "type": "string"
+          },
+          "image_type": {
+            "type": "string"
+          },
+          "crop_region": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "number"
+            }
+          },
+          "width": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "height": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string"
+          }
+        }
+      },
+      "AIImportPublishRequest": {
+        "type": "object",
+        "properties": {
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "company_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 0
+                },
+                "version": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "id",
+                "version"
+              ]
+            }
+          }
+        },
+        "required": [
+          "idempotency_key",
+          "company_version",
+          "products"
+        ]
+      },
+      "AIImportResult": {
+        "type": "object",
+        "properties": {
+          "task": {
+            "$ref": "#/components/schemas/AIImportTask"
+          },
+          "company": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AIImportDraft"
+              }
+            ],
+            "nullable": true
+          },
+          "existing_company": {
+            "type": "object",
+            "nullable": true
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AIImportDraft"
+            }
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AIImportAsset"
+            }
+          },
+          "publish_request": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AIImportPublishRequest"
+              }
+            ],
+            "nullable": true
+          },
+          "calls": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "stage": {
+                  "type": "string"
+                },
+                "model": {
+                  "type": "string"
+                },
+                "request_id": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                },
+                "usage": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "estimated_cost": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "price_basis": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AIModelSettings": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "base_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "timeout_seconds": {
+            "type": "integer",
+            "minimum": 15,
+            "maximum": 600
+          },
+          "allow_manual_max": {
+            "type": "boolean"
+          },
+          "default_model": {
+            "type": "string",
+            "enum": [
+              "qwen3.8-flash"
+            ]
+          },
+          "review_model": {
+            "type": "string",
+            "enum": [
+              "qwen3.8-flash"
+            ]
+          },
+          "advanced_model": {
+            "type": "string",
+            "enum": [
+              "qwen3.8-max"
+            ]
+          },
+          "key_configured": {
+            "type": "boolean"
+          },
+          "key_source": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "environment",
+              "disabled"
+            ]
+          },
+          "configured": {
+            "type": "boolean"
+          },
+          "configuration_error": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AIModelSettingsWrite": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "base_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "timeout_seconds": {
+            "type": "integer",
+            "minimum": 15,
+            "maximum": 600
+          },
+          "allow_manual_max": {
+            "type": "boolean"
+          },
+          "key_action": {
+            "type": "string",
+            "enum": [
+              "keep",
+              "replace",
+              "environment",
+              "disable"
+            ]
+          },
+          "api_key": {
+            "type": "string",
+            "writeOnly": true,
+            "description": "Only required for replace; never returned or logged."
+          }
+        },
+        "required": [
+          "version",
+          "base_url",
+          "timeout_seconds",
+          "allow_manual_max",
+          "key_action"
+        ]
       }
     }
   }

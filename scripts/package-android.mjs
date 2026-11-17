@@ -12,7 +12,7 @@ for(const file of ['delivery/android/dalunongji.apk','web/public/downloads/dalun
 const signingCertificate=fs.readFileSync('docs/test-output/android-sync-apk-signature.txt','utf8').match(/Signer #1 certificate SHA-256 digest: ([a-f0-9]{64})/)[1];
 if(signingCertificate!=='85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585')throw Error('Original signing certificate changed');
 const excludedDirs=new Set(['node_modules','pdfjs','dist','build','.dart_tool','.gradle','.idea','ephemeral','.symlinks','Pods','.plugin_symlinks','data','test-output']);
-const excludedFiles=new Set(['.env','key.properties','local.properties','.flutter-plugins-dependencies','Generated.xcconfig','flutter_export_environment.sh','GeneratedPluginRegistrant.java']);
+const excludedFiles=new Set(['阿里云百炼大模型.txt','.env','key.properties','local.properties','.flutter-plugins-dependencies','Generated.xcconfig','flutter_export_environment.sh','GeneratedPluginRegistrant.java']);
 const audit=[];
 function copy(src,dst){if(fs.statSync(src).isDirectory()){if(excludedDirs.has(path.basename(src)))return;fs.mkdirSync(dst,{recursive:true});for(const name of fs.readdirSync(src))copy(path.join(src,name),path.join(dst,name));}else{if(excludedFiles.has(path.basename(src))||/\.(exe|apk|jks|keystore|log|iml|tsbuildinfo)$/.test(src))return;fs.copyFileSync(src,dst);audit.push(path.relative(root,src).replaceAll('\\','/'));}}
 const sourceStage=path.join(root,`.local/android-source-${version}`),deployStage=path.join(root,`.local/android-deploy-${version}`);

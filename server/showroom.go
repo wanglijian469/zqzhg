@@ -100,6 +100,11 @@ func showroomSlug(c Content) string {
 }
 func payloadMedia(p Payload) []uint64 {
 	ids := append([]uint64{}, p.MediaIDs...)
+	if p.ProductDetails != nil {
+		for _, im := range p.ProductDetails.Images {
+			ids = append(ids, im.MediaID)
+		}
+	}
 	if p.CompanyProfile != nil {
 		ids = append(ids, p.CompanyProfile.LogoMediaID, p.CompanyProfile.CoverMediaID)
 		for _, row := range p.CompanyProfile.Credentials {

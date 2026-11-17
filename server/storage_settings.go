@@ -578,7 +578,11 @@ func (a *App) deleteUnusedMedia(c *gin.Context) {
 		return
 	}
 	var refs int64
-	for _, table := range []string{"media_references", "resource_media_references", "home_display_media"} {
+	tables := []string{"media_references", "resource_media_references", "home_display_media"}
+	if a.DB.Migrator().HasTable(&AIImportAsset{}) {
+		tables = append(tables, "ai_import_assets")
+	}
+	for _, table := range tables {
 		var n int64
 		if a.DB.Table(table).Where("media_id=?", media.ID).Count(&n).Error != nil {
 			fail(c, 500, "internal_error")

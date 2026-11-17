@@ -177,6 +177,17 @@ func (a *App) prepareWatermarkMedia(tx *gorm.DB, c *Content, p *Payload) error {
 		p.MediaIDs[i] = next
 		changed[id] = next
 	}
+	if p.ProductDetails != nil {
+		copyDetails := *p.ProductDetails
+		copyDetails.Images = append([]AIProductImage(nil), p.ProductDetails.Images...)
+		p.ProductDetails = &copyDetails
+		for i, im := range p.ProductDetails.Images {
+			if next, ok := changed[im.MediaID]; ok {
+				p.ProductDetails.Images[i].MediaID = next
+			}
+		}
+	}
+
 	if p.CompanyProfile != nil {
 		profileCopy := *p.CompanyProfile
 		p.CompanyProfile = &profileCopy

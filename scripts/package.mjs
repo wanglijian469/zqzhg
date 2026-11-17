@@ -8,7 +8,7 @@ if(!/^\d+\.\d+\.\d+$/.test(version))throw new Error('Use a semantic version, suc
 const stage=path.join(root,`.local/source-package-${version}`);
 fs.mkdirSync(stage,{recursive:true});
 const excludedDirs=new Set(['node_modules','pdfjs','dist','build','.dart_tool','.gradle','.idea','ephemeral','.symlinks','Pods','.plugin_symlinks','data']);
-const excludedFiles=new Set(['.env','key.properties','local.properties','.flutter-plugins-dependencies','Generated.xcconfig','flutter_export_environment.sh','GeneratedPluginRegistrant.java']);
+const excludedFiles=new Set(['阿里云百炼大模型.txt','.env','key.properties','local.properties','.flutter-plugins-dependencies','Generated.xcconfig','flutter_export_environment.sh','GeneratedPluginRegistrant.java']);
 function copy(src,dst){const stat=fs.statSync(src);if(stat.isDirectory()){if(excludedDirs.has(path.basename(src)))return;fs.mkdirSync(dst,{recursive:true});for(const file of fs.readdirSync(src))copy(path.join(src,file),path.join(dst,file))}else{if(excludedFiles.has(path.basename(src))||/\.(exe|apk|jks|keystore|log|iml|tsbuildinfo)$/.test(src))return;fs.copyFileSync(src,dst)}}
 for(const file of ['server','web','mobile','docs','scripts','需求文档','README.md','.gitignore'])copy(path.join(root,file),path.join(stage,file));
 fs.mkdirSync(path.join(root,'delivery/web/dist'),{recursive:true});

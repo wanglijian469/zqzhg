@@ -17,6 +17,7 @@ func id(c *gin.Context) uint64 { v, _ := strconv.ParseUint(c.Param("id"), 10, 64
 func view(content Content, rev Revision) View {
 	var data Payload
 	json.Unmarshal([]byte(rev.Payload), &data)
+	normalizeProductDetails(data.ProductDetails)
 	return View{Demonstration: strings.HasPrefix(rev.ReviewNote, publicDemoNote), Content: content, ShowroomSlug: showroomSlug(content), PublicVisible: content.Visible && content.PublishedRevisionID != 0, Data: data, Status: rev.Status, RevisionID: rev.ID, ReviewNote: rev.ReviewNote}
 }
 func (a *App) privateView(content Content, rev Revision) View {
@@ -123,6 +124,15 @@ func (a *App) validatePayloadMode(tx *gorm.DB, who Account, kind string, p *Payl
 	}
 	if kind != "vendor" && p.CompanyProfile != nil {
 		return fmt.Errorf("invalid_request")
+	}
+	if e := validateProductDetails(p.ProductDetails); e != nil {
+		return e
+	}
+	if kind != "product" && p.ProductDetails != nil {
+		return fmt.Errorf("invalid_request")
+	}
+	if e := validateAIPayloadAssets(tx, *p); e != nil {
+		return e
 	}
 	if e := validateCompanyProfile(p.CompanyProfile, draft); e != nil {
 		return e
@@ -269,35 +279,7 @@ func (a *App) createContent(c *gin.Context) {
 				return e
 			}
 		}
-		if e := a.validateDraftPayload(tx, who, req.Kind, &req.Data); e != nil {
-			return e
-		}
-		if req.Kind == "vendor" {
-			hall := Hall{}
-			hid := content.HallID
-			if hid == 0 {
-				hid = 1
-			}
-			if tx.First(&hall, hid).Error != nil || hall.Status != "open" {
-				return fmt.Errorf("invalid_request")
-			}
-			content.VendorOwnerKey = &who.ID
-			var n int64
-			tx.Model(&Content{}).Where("vendor_owner_key = ?", who.ID).Count(&n)
-			if n > 0 {
-				return fmt.Errorf("vendor_required")
-			}
-		} else {
-			var e error
-			content.VendorID, e = productSlot(tx, who.ID)
-			if e != nil {
-				return e
-			}
-		}
-		if e := tx.Create(&content).Error; e != nil {
-			return e
-		}
-		if e := a.makeDraft(tx, &content, req.Data); e != nil {
+		if e := a.createOwnedDraft(tx, &content, who, &req.Data); e != nil {
 			return e
 		}
 		if req.ClientRequestID != "" {
@@ -329,71 +311,7 @@ func (a *App) saveDraft(c *gin.Context) {
 	who := actor(c)
 	var content Content
 	e := a.contentTransaction(func(tx *gorm.DB) error {
-		var e error
-		content, e = loadOwned(tx, id(c), who, true)
-		if e != nil {
-			return e
-		}
-		if content.DraftRevisionID != req.RevisionID {
-			return fmt.Errorf("stale_revision")
-		}
-		var old Revision
-		if e = tx.First(&old, content.DraftRevisionID).Error; e != nil {
-			return e
-		}
-		if old.Status == "pending" {
-			return fmt.Errorf("pending_review")
-		}
-		var previousTaxonomy Payload
-		if e = json.Unmarshal([]byte(old.Payload), &previousTaxonomy); e != nil {
-			return e
-		}
-		oldView := []View{view(content, old)}
-		// Use the transaction to avoid a pool read outside the locked content.
-		if e = (&App{DB: tx}).hydrateTaxonomyViews(oldView); e != nil {
-			return e
-		}
-		previousTaxonomy.PrimaryCategoryID = oldView[0].Data.PrimaryCategoryID
-		previousTaxonomy.SecondaryCategoryIDs = oldView[0].Data.SecondaryCategoryIDs
-		previousTaxonomy.ProductCategoryID = oldView[0].Data.ProductCategoryID
-		previousTaxonomy.VendorProductCategoryID = oldView[0].Data.VendorProductCategoryID
-		legacyChanged := (req.Data.taxonomyFields["product_category_id"] && canonicalCategory(tx, req.Data.ProductCategoryID) != previousTaxonomy.ProductCategoryID) ||
-			(req.Data.taxonomyFields["category_id"] && canonicalCategory(tx, req.Data.CategoryID) != previousTaxonomy.CategoryID)
-		mergeTaxonomyFields(&req.Data, previousTaxonomy)
-		if !req.Data.taxonomyFields["vendor_product_category_id"] && legacyChanged {
-			req.Data.VendorProductCategoryID = 0
-		}
-		if !content.TaxonomyRequired && ((req.Data.PrimaryCategoryID > 0 && req.Data.PrimaryCategoryID != previousTaxonomy.PrimaryCategoryID) || (req.Data.ProductCategoryID > 0 && req.Data.ProductCategoryID != previousTaxonomy.ProductCategoryID)) {
-			content.TaxonomyRequired = true
-			if e = tx.Model(&content).Update("taxonomy_required", true).Error; e != nil {
-				return e
-			}
-		}
-		if canonicalCategory(tx, req.Data.CategoryID) != canonicalCategory(tx, previousTaxonomy.CategoryID) {
-			if !req.Data.taxonomyFields["primary_category_id"] {
-				req.Data.PrimaryCategoryID = 0
-			}
-			if !req.Data.taxonomyFields["product_category_id"] {
-				req.Data.ProductCategoryID = 0
-			}
-		}
-		if content.Kind == "vendor" {
-			var previous Payload
-			if e = json.Unmarshal([]byte(old.Payload), &previous); e != nil {
-				return e
-			}
-			mergePortalProfile(&req.Data, previous)
-		}
-		if e = a.validateDraftPayload(tx, Account{ID: content.OwnerID}, content.Kind, &req.Data, previousTaxonomy); e != nil {
-			return e
-		}
-		if e = a.makeDraft(tx, &content, req.Data); e != nil {
-			return e
-		}
-		if platformAccount(who) {
-			return recordOperation(tx, who.ID, content.Kind, content.ID, "draft_saved", "")
-		}
-		return nil
+		return a.saveOwnedDraft(tx, &content, who, id(c), req.RevisionID, &req.Data)
 	})
 	if e != nil {
 		dbFail(c, e)
@@ -413,47 +331,7 @@ func (a *App) submit(c *gin.Context) {
 	}
 	who := actor(c)
 	e := a.contentTransaction(func(tx *gorm.DB) error {
-		content, e := loadOwned(tx, id(c), who, true)
-		if e != nil {
-			return e
-		}
-		if content.DraftRevisionID != req.RevisionID {
-			return fmt.Errorf("stale_revision")
-		}
-		var rev Revision
-		if e = tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&rev, req.RevisionID).Error; e != nil {
-			return e
-		}
-		if rev.Status != "draft" {
-			return fmt.Errorf("pending_review")
-		}
-		if content.Epoch != rev.BaseEpoch {
-			return fmt.Errorf("stale_revision")
-		}
-		var publicationData Payload
-		if e = json.Unmarshal([]byte(rev.Payload), &publicationData); e != nil {
-			return e
-		}
-		var vendorData *Payload
-		if content.Kind == "vendor" {
-			vendorData = &publicationData
-		}
-		if e = publicationCompliance(tx, content.OwnerID, content.VendorID, vendorData); e != nil {
-			return e
-		}
-		if e = a.validatePayload(tx, Account{ID: content.OwnerID}, content.Kind, &publicationData, publicationData); e != nil {
-			return e
-		}
-		if content.Kind == "product" && len(publicationData.MediaIDs) == 0 {
-			return fieldFailure("invalid_request", "media_ids", "required")
-		}
-		if e = submitTaxonomy(tx, content, rev); e != nil {
-			return e
-		}
-		if e = tx.Model(&rev).Update("status", "pending").Error; e != nil {
-			return e
-		}
-		return recordReview(tx, ReviewLog{ContentID: content.ID, RevisionID: rev.ID, ActorID: who.ID, Action: "submit"})
+		return a.submitOwnedDraft(tx, who, id(c), req.RevisionID)
 	})
 	if e != nil {
 		dbFail(c, e)

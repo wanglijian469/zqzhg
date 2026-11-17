@@ -109,7 +109,7 @@ with zipfile.ZipFile(android_archive, 'x', compression=zipfile.ZIP_DEFLATED, com
 
 excluded_dirs = {'node_modules', 'pdfjs', 'dist', 'build', '.dart_tool', '.gradle', '.idea', 'ephemeral',
                  '.symlinks', 'Pods', '.plugin_symlinks', 'data', 'test-output', '__pycache__'}
-excluded_files = {'.env', 'key.properties', 'local.properties', '.flutter-plugins-dependencies',
+excluded_files = {'阿里云百炼大模型.txt', '.env', 'key.properties', 'local.properties', '.flutter-plugins-dependencies',
                   'Generated.xcconfig', 'flutter_export_environment.sh', 'GeneratedPluginRegistrant.java'}
 excluded_suffixes = {'.exe', '.apk', '.jks', '.keystore', '.log', '.iml', '.tsbuildinfo', '.pyc'}
 source_archive = DELIVERY / f'zqzt-exhibition-v{VERSION}-source.zip'

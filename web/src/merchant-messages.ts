@@ -1,5 +1,6 @@
 export const merchantMessages: Record<string, Record<string, string>> = {
   "zh": {
+    "aiSmartBuild": "AI智能建馆",
     "vendorProductCategories": "产品分类管理",
     "vendor_product_category_exists": "本企业在该大类下已有同名分类，请选择已有分类或修改名称。",
     "vendor_product_category_in_use": "此分类仍被产品版本引用，可停用，不能删除。",
@@ -58,6 +59,7 @@ export const merchantMessages: Record<string, Record<string, string>> = {
     "reviewStopped": "审核已终止（下架）"
   },
   "en": {
+    "aiSmartBuild": "AI showroom builder",
     "vendorProductCategories": "Product categories",
     "vendor_product_category_exists": "Your company already has this category in the selected industry.",
     "vendor_product_category_in_use": "Product versions reference this category. Deactivate it instead of deleting.",

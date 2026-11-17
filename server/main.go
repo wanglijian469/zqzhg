@@ -254,6 +254,9 @@ func main() {
 		}
 		return
 	}
+	if len(os.Args) >= 2 && os.Args[1] == "ai-import-sample" && (env("APP_ENV", "development") != "development" || (env("DB_HOST", "127.0.0.1") != "127.0.0.1" && env("DB_HOST", "") != "localhost")) {
+		log.Fatal("ai_sample_development_only")
+	}
 	cfg := Config{Env: env("APP_ENV", "development"), Addr: env("HTTP_ADDR", "0.0.0.0:8080"), MediaDir: env("MEDIA_DIR", "./data/media"), WebDir: env("WEB_DIR", "../web/dist"), CORS: env("CORS_ORIGIN", "http://localhost:5173"), SMSProvider: env("SMS_PROVIDER", "development"), PublicBaseURL: strings.TrimRight(env("PUBLIC_BASE_URL", ""), "/")}
 	cfg.ProcurementDemo = env("PROCUREMENT_DEMO", "false") == "true"
 	if len(os.Args) == 2 && (os.Args[1] == "seed-procurement-demo" || os.Args[1] == "reset-procurement-demo") && !cfg.ProcurementDemo {
@@ -340,6 +343,12 @@ func main() {
 	if e = db.Where("expires_at<=?", time.Now().UTC()).Delete(&MediaUploadReservation{}).Error; e != nil {
 		log.Fatal(e)
 	}
+	if len(os.Args) == 4 && os.Args[1] == "ai-import-sample" {
+		if err := a.aiImportSample(os.Args[2], os.Args[3]); err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
 	if len(os.Args) == 3 && os.Args[1] == "set-merchant-login" {
 		account, err := a.setMerchantLogin(os.Args[2], os.Getenv("MERCHANT_LOGIN_NAME"), os.Getenv("MERCHANT_LOGIN_PASSWORD"))
 		if err != nil {
@@ -397,10 +406,14 @@ func main() {
 		a.startHomeRotation(context.Background())
 		a.startOperations(context.Background())
 		a.startSearchWorker(context.Background())
+		a.startAIImportWorker(context.Background())
 	} else if env("MEDIA_WORKER_ENABLED", "false") == "true" {
 		// Isolated device tests can transcode uploads without running SMS,
 		// scheduled publishing, backup or other unrelated background jobs.
 		a.startMediaWorker(context.Background())
+	}
+	if env("BACKGROUND_WORKERS_ENABLED", "true") != "true" && env("AI_IMPORT_WORKER_ENABLED", "false") == "true" {
+		a.startAIImportWorker(context.Background())
 	}
 	srv := &http.Server{Addr: cfg.Addr, Handler: a.router(), ReadHeaderTimeout: 10 * time.Second, ReadTimeout: 15 * time.Minute, WriteTimeout: 15 * time.Minute, IdleTimeout: 60 * time.Second}
 	log.Printf("中企展馆 API listening on %s (%s)", cfg.Addr, cfg.Env)
@@ -421,7 +434,7 @@ func (a *App) router() *gin.Engine {
 		panic("Invalid TRUSTED_PROXIES: " + err.Error())
 	}
 	r.Use(func(c *gin.Context) {
-		if strings.HasPrefix(c.Request.URL.Path, "/api/") && !strings.HasSuffix(c.Request.URL.Path, "/service-evidence") && !strings.HasSuffix(c.Request.URL.Path, "/media") && !strings.HasSuffix(c.Request.URL.Path, "/attachments") && !strings.HasSuffix(c.Request.URL.Path, "/resource-media") && !(strings.HasPrefix(c.Request.URL.Path, "/api/v1/admin/backups/imports/") && strings.Contains(c.Request.URL.Path, "/chunks/")) {
+		if strings.HasPrefix(c.Request.URL.Path, "/api/") && c.Request.URL.Path != "/api/v1/merchant/ai-import/tasks" && !strings.HasSuffix(c.Request.URL.Path, "/service-evidence") && !strings.HasSuffix(c.Request.URL.Path, "/media") && !strings.HasSuffix(c.Request.URL.Path, "/attachments") && !strings.HasSuffix(c.Request.URL.Path, "/resource-media") && !(strings.HasPrefix(c.Request.URL.Path, "/api/v1/admin/backups/imports/") && strings.Contains(c.Request.URL.Path, "/chunks/")) {
 			c.Request.Body = httpMaxBody(c, 1<<20)
 		}
 		c.Header("X-Content-Type-Options", "nosniff")
@@ -522,6 +535,7 @@ func (a *App) router() *gin.Engine {
 	r.GET("/media/:id", a.mediaRead)
 	r.HEAD("/media/:id", a.mediaRead)
 	merchant := api.Group("/merchant", a.requireAuth("merchant"))
+	a.aiImportRoutes(merchant)
 	merchant.GET("/contents", a.myContents)
 	merchant.GET("/dashboard", a.merchantDashboard)
 	merchant.GET("/showroom-link", a.merchantLink)
