@@ -66,6 +66,14 @@ def mysql(cfg, sql, name=None):
     return r.stdout.decode().strip()
 
 
+def media_directory(cfg):
+    _, ops = database(cfg)
+    active = json.loads((ops / 'active.json').read_text()) if (ops / 'active.json').exists() else {}
+    target = Path(active.get('current', {}).get('media_dir') or cfg['MEDIA_DIR']).resolve(strict=True)
+    assert target.is_dir() and BASE / 'shared' in target.parents, 'unexpected_active_media_directory'
+    return target
+
+
 def protected():
     result = {}
     for folder in ['/etc/nginx', '/etc/letsencrypt/live']:
@@ -153,16 +161,34 @@ def backup():
     with gzip.open(str(dest / 'database.sql.gz'), 'rb') as inp:
         for part in iter(lambda: inp.read(1024 * 1024), b''): tail = (tail + part)[-4096:]
     assert b'Dump completed' in tail
-    media = Path(cfg['MEDIA_DIR']).resolve(strict=True)
+    media = media_directory(cfg)
     media_before = inventory(media)
     subprocess.run(['tar', '-czf', str(dest / 'media.tar.gz'), '-C', str(media), '.'], check=True)
     assert inventory(media) == media_before, 'media_changed_during_backup_retry_required'
     for n in ['release.tar.gz', 'media.tar.gz', 'configurations.tar.gz']:
         subprocess.run(['tar', '-tzf', str(dest / n)], stdout=subprocess.DEVNULL, check=True)
     assert protected() == before
-    value = {'previous': str(previous), 'backup': str(dest), 'database': name, 'schema': int(mysql(cfg, 'SELECT MAX(version) FROM schema_migrations', name)), 'counts': counts(cfg, name), 'configSHA256': sha(ENV), 'protected': before, 'media': media_before, 'revisionSnapshot': revision_snapshot(cfg, name), 'backupVerified': True, 'backupFiles': inventory(dest)}
+    value = {'previous': str(previous), 'backup': str(dest), 'database': name, 'schema': int(mysql(cfg, 'SELECT MAX(version) FROM schema_migrations', name)), 'counts': counts(cfg, name), 'configSHA256': sha(ENV), 'protected': before, 'media': media_before, 'mediaDir': str(media), 'mediaArchive': 'media.tar.gz', 'revisionSnapshot': revision_snapshot(cfg, name), 'backupVerified': True, 'backupFiles': inventory(dest)}
     save(value)
     print(json.dumps({'backupVerified': True, 'backup': str(dest), 'schema': value['schema'], 'mediaFiles': len(media_before), 'counts': value['counts']}))
+
+
+def refresh_media_backup():
+    # Repair a pre-promotion legacy backup without deleting or overwriting it.
+    value = state()
+    assert not value.get('promoted') and str((BASE / 'current').resolve()) == value['previous']
+    cfg = config(); name, _ = database(cfg)
+    assert counts(cfg, name) == value['counts'] and revision_snapshot(cfg, name) == value['revisionSnapshot']
+    media = media_directory(cfg); before = inventory(media)
+    archive = Path(value['backup']) / 'active-media.tar.gz'
+    assert not archive.exists(), 'active_media_backup_already_exists'
+    subprocess.run(['tar', '-czf', str(archive), '-C', str(media), '.'], check=True)
+    subprocess.run(['tar', '-tzf', str(archive)], stdout=subprocess.DEVNULL, check=True)
+    assert inventory(media) == before
+    value.update(legacyMedia=value['media'], media=before, mediaDir=str(media), mediaArchive=archive.name, candidateVerified=False, isolatedRestoreVerified=False)
+    value['backupFiles'] = inventory(Path(value['backup']))
+    save(value)
+    print(json.dumps({'activeMediaBackupVerified': True, 'mediaFiles': len(before), 'originalBackupPreserved': True}))
 
 
 def stage(package, prepare_web=None):
@@ -182,7 +208,7 @@ def stage(package, prepare_web=None):
     subprocess.run(['chown', '-R', 'root:zqzt', str(release)], check=True)
     os.chmod(str(release), 0o755)
     # The snapshot is public development-demo geometry, with unchanged source metadata.
-    for p in release.rglob('*'): os.chmod(str(p), 0o755 if p.is_dir() or p == release / 'server/exhibition' else 0o644)
+    for p in release.rglob('*'): os.chmod(str(p), 0o755 if p.is_dir() or p in [release / 'server/exhibition', release / 'server/bailian-preflight'] else 0o644)
     for p in [release, release / 'server/exhibition', release / 'web/dist/index.html', release / 'map-demo/national.mapping.json']:
         subprocess.run(['runuser', '-u', 'zqzt', '--', 'test', '-r', str(p)], check=True)
     subprocess.run(['runuser', '-u', 'zqzt', '--', 'test', '-x', str(release / 'server/exhibition')], check=True)
@@ -248,7 +274,7 @@ def candidate(check=None):
         restore = subprocess.Popen(['mysql', '--protocol=TCP', '--host=127.0.0.1', '--port=13399', '--user=root', '--binary-mode=1', db], env=dict(os.environ, MYSQL_PWD=secret), stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
         with gzip.open(str(Path(value['backup']) / 'database.sql.gz'), 'rb') as source: shutil.copyfileobj(source, restore.stdin)
         restore.stdin.close(); restore.stderr.read(); assert restore.wait() == 0, 'isolated_restore_failed'
-        subprocess.run(['tar', '-xzf', str(Path(value['backup']) / 'media.tar.gz'), '-C', str(work / 'media')], check=True)
+        subprocess.run(['tar', '-xzf', str(Path(value['backup']) / value.get('mediaArchive', 'media.tar.gz')), '-C', str(work / 'media')], check=True)
         assert inventory(work / 'media') == value['media']
         env = dict(os.environ, **cfg)
         env.update(APP_ENV='production', HTTP_ADDR='127.0.0.1:18099', DB_NAME=db, MEDIA_DIR=str(work / 'media'), OPERATIONS_DIR=str(work / 'operations'), MEDIA_TEMP_DIR=str(work / 'temp'), BACKUP_DIR=str(work / 'backups'), WEB_DIR=str(release / 'web/dist'), MAP_DEMO_ENABLED='true', MAP_DEMO_DIR=str(release / 'map-demo'), BACKGROUND_WORKERS_ENABLED='false', SMS_PROVIDER='disabled', SMS_ENABLED='false', DOUYIN_VIDEO_ENABLED='true', AI_IMPORT_ENABLED='true', AI_IMPORT_WORKER_ENABLED='false')
@@ -350,6 +376,7 @@ def apply(check=None, extra_environment=None):
         env = re.sub(r'^' + k + r'=.*$', k + '=' + v, env, flags=re.M)
     assert counts(cfg, name) == value['counts'], 'business_changed_since_backup'
     assert revision_snapshot(cfg, name) == value['revisionSnapshot'], 'revisions_changed_since_backup'
+    assert str(media_directory(cfg)) == value['mediaDir'] and inventory(media_directory(cfg)) == value['media'], 'active_media_changed_since_backup'
     assert inventory(Path(value['previous']) / 'web/dist/downloads') == value['downloadsBefore'], 'downloads_changed_since_stage'
     started = time.time()
     try:
@@ -534,7 +561,7 @@ def production_check(release):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=['check', 'backup', 'stage', 'candidate', 'apply', 'rollback', 'status'])
+    parser.add_argument('action', choices=['check', 'backup', 'refresh-media-backup', 'stage', 'candidate', 'apply', 'rollback', 'status'])
     parser.add_argument('--package', type=Path, default=Path(__file__).resolve().parent)
     args = parser.parse_args()
     assert os.geteuid() == 0, 'root_required'
@@ -547,7 +574,7 @@ def main():
         elif args.action == 'stage': stage(args.package)
         elif args.action == 'candidate': candidate()
         elif args.action == 'apply': apply(production_check)
-        else: {'backup': backup, 'rollback': rollback}[args.action]()
+        else: {'backup': backup, 'refresh-media-backup': refresh_media_backup, 'rollback': rollback}[args.action]()
 
 
 if __name__ == '__main__':

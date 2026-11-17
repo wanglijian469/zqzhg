@@ -24,6 +24,8 @@ python3 upgrade.py apply
 
 候选以独立恢复数据库和媒体、正式服务账号及 production 配置运行，经独立 Nginx 代理检查 Schema31→34、权限、flash配置、旧业务及地图。正式切换前还须通过桌面／手机实际页面的全国→河北→邢台→宁晋、统计、返回及边界失败重试。上线后重复正式HTTPS检查。完整历史下载、业务审核JSON、私有媒体和其他服务配置需保持一致。
 
+媒体备份和候选恢复必须读取 `operations/active.json` 中当前生效的 `current.media_dir`，不能只备份环境中的旧默认目录。本次候选曾发现该历史脚本问题，已修正并保留旧目录备份；候选页面的非预期媒体HTTP错误会阻止通过验收。服务器百炼连通性使用明确标注的合成PDF，未将本地真实企业画册上传ECS。
+
 密钥仅通过SSH独立传输到服务器私有配置（600），不放入包。`/opt/zqzt/shared/ai-import-1.12.0-private.env` 为本次受限配置输入，程序应用时合并到原 `/etc/zqzt/exhibition.env`，保留其余现有配置。默认并发1，PDF上限30,000,000字节／100页。启用 `AI_IMPORT_ENABLED=true` 和 worker；禁止部署本地预览地址、开发认证或Mock服务。
 
 ## 回滚
