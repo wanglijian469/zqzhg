@@ -1,4 +1,4 @@
-"""Website/backend-only v1.12.2 package; credentials and brochure data stay private."""
+"""Website/backend-only v1.12.3 package; credentials and brochure data stay private."""
 from datetime import datetime, timezone
 from pathlib import Path
 import hashlib
@@ -9,9 +9,9 @@ import tarfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-WORK = ROOT / '.local/release-1.12.2'
-OUT = ROOT / 'delivery/release-v1.12.2'
-NAME = 'zqzg-v1.12.2'
+WORK = ROOT / '.local/release-1.12.3'
+OUT = ROOT / 'delivery/release-v1.12.3'
+NAME = 'zqzg-v1.12.3'
 STAGE = WORK / 'package-final' / NAME
 
 
@@ -39,7 +39,7 @@ def main():
         shutil.copy2(binary, STAGE / 'server' / name)
     for folder in ['migrations', 'catalog', 'licenses']:
         shutil.copytree(ROOT / 'server' / folder, STAGE / 'server' / folder)
-    assert sorted(int(p.name.split('_')[0]) for p in (STAGE / 'server/migrations').glob('*.sql')) == list(range(1, 38))
+    assert sorted(int(p.name.split('_')[0]) for p in (STAGE / 'server/migrations').glob('*.sql')) == list(range(1, 39))
     (STAGE / 'web/dist').mkdir(parents=True)
     for name in ['index.html', 'brand.svg', 'ByteDanceVerify.html', 'assets', 'pdfjs', 'maps', 'guide-images']:
         src, dest = ROOT / '.local/ai-import-batch-web' / name, STAGE / 'web/dist' / name
@@ -50,7 +50,7 @@ def main():
     maps = inventory(STAGE / 'map-demo')
     reference = json.loads((WORK / 'inventory.json').read_text(encoding='utf-8-sig'))
     assert len(maps) == 77 and all(reference['map_files'].get(n) == v for n, v in maps.items())
-    for source, target in [('deploy/linux/upgrade-ai-import-batches.py', 'upgrade.py'), ('releases/v1.12.2/README.md', 'README.md'),
+    for source, target in [('deploy/linux/upgrade-ai-import-batches.py', 'upgrade.py'), ('releases/v1.12.3/README.md', 'README.md'),
                            ('server/.env.example', 'server/.env.example'), ('docs/MAP_DEPLOYMENT_REQUIREMENTS.md', 'MAP_DEPLOYMENT_REQUIREMENTS.md')]:
         (STAGE / target).write_bytes((ROOT / source).read_bytes().replace(b'\r\n', b'\n'))
     (STAGE / 'docs').mkdir()
@@ -58,13 +58,15 @@ def main():
         shutil.copy2(ROOT / 'docs' / name, STAGE / 'docs' / name)
     for source in (ROOT / 'deploy/linux').glob('rollback-service-use-*.sql'):
         shutil.copy2(source, STAGE / source.name)
+    for source in (ROOT / 'deploy/linux').glob('rollback-operation-log-*.sql'):
+        shutil.copy2(source, STAGE / source.name)
     for source in (ROOT / 'deploy/linux').glob('rollback-ai-import-*.sql'):
         shutil.copy2(source, STAGE / source.name)
-    manifest = dict(version='1.12.2', gitCommit=commit, schemaVersion=37, architecture='linux-amd64',
+    manifest = dict(version='1.12.3', gitCommit=commit, schemaVersion=38, architecture='linux-amd64',
                     createdUTC=datetime.now(timezone.utc).isoformat(), binarySHA256=sha(STAGE / 'server/exhibition'),
                     preflightSHA256=sha(STAGE / 'server/bailian-preflight'), mapFiles=maps, mapUsage='development-demonstration',
                     mapMissingCodes=['130571'], android=reference['android'], downloadPolicy='preserve-existing-app',
-                    databaseMigrationAdded=[35, 36, 37], defaultModel='qwen3.8-flash', automaticMaxEscalation=False,
+                    databaseMigrationAdded=[38], defaultModel='qwen3.8-flash', automaticMaxEscalation=False,
                     includesBusinessDatabase=False, includesPrivateMedia=False, includesCredentials=False)
     (STAGE / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     hashes = inventory(STAGE)
@@ -97,11 +99,11 @@ def main():
             assert not any(s in data for s in secrets if s), 'secret_in_archive'
             assert not any(part in n.split('/') for part in ['.local', '.tools', '厂商信息', 'node_modules'])
             assert not n.endswith(('/.env', '/39.97.250.244.txt', '/阿里云百炼大模型.txt', '.jks', '.keystore', '.apk'))
-    shutil.copy2(STAGE / 'manifest.json', OUT / 'manifest-v1.12.2.json')
-    shutil.copy2(ROOT / 'releases/v1.12.2/README.md', OUT / 'README.md')
-    assets = [archive, source_zip, OUT / 'manifest-v1.12.2.json', OUT / 'README.md']
+    shutil.copy2(STAGE / 'manifest.json', OUT / 'manifest-v1.12.3.json')
+    shutil.copy2(ROOT / 'releases/v1.12.3/README.md', OUT / 'README.md')
+    assets = [archive, source_zip, OUT / 'manifest-v1.12.3.json', OUT / 'README.md']
     (OUT / 'SHA256SUMS.txt').write_bytes(''.join(sha(p) + '  ' + p.name + '\n' for p in assets).encode())
-    receipt = {'version': '1.12.2', 'commit': commit, 'package': str(archive), 'mapFiles': len(maps), 'secretScanPassed': True,
+    receipt = {'version': '1.12.3', 'commit': commit, 'package': str(archive), 'mapFiles': len(maps), 'secretScanPassed': True,
                'assets': [{'path': str(p.relative_to(ROOT)), 'sha256': sha(p), 'bytes': p.stat().st_size} for p in assets]}
     (WORK / 'package-receipt.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf8')
     print(json.dumps(receipt, ensure_ascii=False))
