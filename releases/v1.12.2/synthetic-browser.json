@@ -1,0 +1,83 @@
+{
+  "syntheticUIFixture": true,
+  "isolatedDatabase": true,
+  "realModelInference": false,
+  "checks": [
+    {
+      "width": 360,
+      "noMerchantModelChoice": true,
+      "separateCompanyAction": true,
+      "pageSize5": true,
+      "defaultUnselected": true,
+      "stickySubmit": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "noMerchantModelChoice": true,
+      "separateCompanyAction": true,
+      "pageSize5": true,
+      "defaultUnselected": true,
+      "stickySubmit": true,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "noMerchantModelChoice": true,
+      "separateCompanyAction": true,
+      "pageSize5": true,
+      "defaultUnselected": true,
+      "stickySubmit": true,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "noMerchantModelChoice": true,
+      "separateCompanyAction": true,
+      "pageSize5": true,
+      "defaultUnselected": true,
+      "stickySubmit": true,
+      "overflow": false
+    },
+    {
+      "threeProductBatches": true,
+      "independentCompany": true,
+      "duplicateReplaySafe": true,
+      "saveConfirmSubmitTogether": true,
+      "publicBeforeApproval": false
+    },
+    {
+      "width": 360,
+      "publicAfterApproval": true,
+      "technicalDetails": true
+    },
+    {
+      "width": 390,
+      "publicAfterApproval": true,
+      "technicalDetails": true
+    },
+    {
+      "width": 768,
+      "publicAfterApproval": true,
+      "technicalDetails": true
+    },
+    {
+      "width": 1440,
+      "publicAfterApproval": true,
+      "technicalDetails": true
+    },
+    {
+      "width": 390,
+      "adminModelConfig": true,
+      "maxConfirmation": true,
+      "secretCleared": true
+    },
+    {
+      "width": 1440,
+      "adminModelConfig": true,
+      "maxConfirmation": true,
+      "secretCleared": true
+    }
+  ],
+  "errors": []
+}

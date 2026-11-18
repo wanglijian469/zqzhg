@@ -1,0 +1,17 @@
+{
+  "version": "1.12.2",
+  "https": true,
+  "aiPagesReachable": true,
+  "unauthenticatedAIRequestsDenied": true,
+  "videoApiVersion": 4,
+  "existingAppPreserved": "1.11.1+52",
+  "officialDownloadManifestSHA256": "ecbf2209bceae3fa7f2dfe493ab06253e93de7d73a402efadcd2b68748014306",
+  "officialDownloadExpectedBytes": 86365139,
+  "officialDownloadRangeBytesVerified": 65536,
+  "fullOfficialDownloadExecuted": false,
+  "fullAPKHashVerifiedOnServer": true,
+  "realBrochureUploaded": false,
+  "nativeAppBuilt": false,
+  "serviceUseNoticesVersioned": true,
+  "privacyNoticeDefaultOnWithOptOut": true
+}
