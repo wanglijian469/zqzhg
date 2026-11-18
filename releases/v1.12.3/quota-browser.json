@@ -1,0 +1,21 @@
+{
+  "isolatedProductionCandidate": true,
+  "productionQuotaChanged": false,
+  "checks": [
+    {
+      "width": 1440,
+      "saved300MB": true,
+      "refreshPersisted": true,
+      "originalQuotaRestored": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "saved300MB": true,
+      "refreshPersisted": true,
+      "originalQuotaRestored": true,
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

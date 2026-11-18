@@ -1,0 +1,25 @@
+{
+  "removedOnlyStoppedCandidateClones": [
+    "ai1120-candidate-9e48c8147a66",
+    "ai1120-candidate-adb42117238d",
+    "ai1121-candidate-1a3d682ea727",
+    "ai1122-candidate-1adaf376f904",
+    "ai1123-candidate-499d08917711",
+    "appflow108-candidate-6f28e7300747",
+    "categories111-candidate-2d47c0694b64",
+    "categories111-candidate-eb8a9522d183",
+    "guide106-candidate-2197c72689ca",
+    "guide106-candidate-81844993195d",
+    "guide106-candidate-dc77c7600b3c",
+    "share1111-candidate-b9a07024d08e",
+    "video107-candidate-8cb21c9bb438",
+    "video109-candidate-3ff04ff9663c",
+    "video109-candidate-623b3bd72187",
+    "video109-candidate-728ae3ec1d58",
+    "video109-candidate-792651804f03"
+  ],
+  "liveMediaAndBackupsPreserved": true,
+  "reclaimedBytes": 2284343296,
+  "freeBytes": 2284343296,
+  "explicitlyAuthorizedByUser": true
+}

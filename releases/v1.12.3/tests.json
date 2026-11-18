@@ -8,10 +8,14 @@
   "frontendChanged": false,
   "realModelCalled": false,
   "productionQuotaChanged": false,
-  "productionDeployed": false,
-  "productionVersion": "1.12.2",
+  "productionDeployed": true,
+  "productionVersion": "1.12.3",
   "targetVersion": "1.12.3",
   "candidateFailure": "ENOSPC during isolated media restoration; production not switched",
-  "pendingAuthorization": "Deletion of the explicitly listed 17 stopped temporary candidate clones",
-  "candidateUIAndProductionMapAcceptanceCompleted": false
+  "candidateUIAndProductionMapAcceptanceCompleted": true,
+  "quotaBrowserWidths": [
+    1440,
+    390
+  ],
+  "candidateFailureRecovered": true
 }

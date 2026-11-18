@@ -1,0 +1,123 @@
+{
+  "version": "1.12.3",
+  "promoted": true,
+  "current": "/opt/zqzt/releases/v1.12.3-80254bc",
+  "schema": 38,
+  "gitCommit": "80254bc4cd164eef44447ca2550e4877d2b464c4",
+  "businessCountsBefore": "17\t76\t93\t480\t18\t25",
+  "businessCountsAfter": "17\t76\t93\t480\t18\t25",
+  "contentAndResourceAuditJSONUnchanged": true,
+  "originalMediaFilesUnchanged": 892,
+  "protectedConfigurationFilesUnchanged": 33,
+  "categoryChecks": {
+    "isolation": true,
+    "filter": true,
+    "search": true,
+    "publicCount": 19,
+    "initialHTML": true,
+    "breadcrumbLevels": 2,
+    "categories": 16,
+    "revisionBindings": 65,
+    "unresolvedIndustries": 9
+  },
+  "videoChecks": {
+    "apiVersion": 4,
+    "legacyVisibility": true,
+    "publicVideoTotals": {
+      "2": 4,
+      "3": 4,
+      "4": 6
+    }
+  },
+  "aiChecks": {
+    "schema37to38": true,
+    "flashDefault": true,
+    "keyConfiguredNotReturned": true,
+    "pdfToolsServiceUser": true,
+    "authenticatedRoutes": true,
+    "unauthorizedDenied": true,
+    "existingAIDraftsPreserved": true
+  },
+  "productionAIData": 1,
+  "runtimeMapCacheFilesRetained": 6,
+  "candidateMap": [
+    {
+      "code": "",
+      "total": 10,
+      "sha256": "352c09e7064756c7c6a505c30dd3e7560b13a4edf87883a65fc3d008a3152802"
+    },
+    {
+      "code": "13",
+      "total": 9,
+      "sha256": "bd1daff0ea4d7253b6ce77784bf7f9669ad6e5a19d0815eb89d696e8db9b34ea"
+    },
+    {
+      "code": "1305",
+      "total": 7,
+      "sha256": "cd6acc3f9b1319610f28c83b88b8f79952b9b5242bfc34a47a10871e2247d8ba"
+    },
+    {
+      "code": "130528",
+      "total": 7,
+      "sha256": "f09314a4d4a0bc4ee436e982f282ef6ea59572c742fc01b7d1833d0634f51251"
+    }
+  ],
+  "productionChecks": {
+    "https": true,
+    "mapLevels": 4,
+    "existingAPKPreserved": true,
+    "aiEnabled": true,
+    "byteDanceVerification": true
+  },
+  "android": {
+    "productionDeployed": true,
+    "applicationId": "com.zqzt.dalunongji",
+    "signingMatchesPrevious": true,
+    "apiBaseUrl": "https://zqzhg.com",
+    "sha256": "ecbf2209bceae3fa7f2dfe493ab06253e93de7d73a402efadcd2b68748014306",
+    "certificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+    "deviceValidation": false,
+    "version": "1.11.1+52",
+    "appName": "大陆农机",
+    "versionName": "1.11.1",
+    "versionCode": 52,
+    "asset": "zqzhg-1.11.1-52.apk",
+    "sourceCommit": "8ec30448fb50544b89c0259c86b2611150b8346f",
+    "sourceTag": "v1.11.1",
+    "schemaVersion": 31,
+    "bytes": 86365139,
+    "officialDownloadURL": "https://zqzhg.com/downloads/dalunongji.apk",
+    "releaseStatus": "stable",
+    "endpointEditable": false,
+    "releaseBasis": "User-authorized release; build, signature, component and production-proxy checks; no new physical-device acceptance.",
+    "embeddedWebAssetsVerified": 237
+  },
+  "services": {
+    "nginx": "MainPID=264371\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+    "mysqld": "MainPID=78971\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+    "zqzt-exhibition": "MainPID=1315361\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+    "qiyuan-gosyncr": "MainPID=3309830\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+    "gosync-server": "MainPID=1098592\nActiveState=active\nSubState=running\nUnitFileState=enabled\n",
+    "dalu-parts": "MainPID=0\nActiveState=inactive\nSubState=dead\nUnitFileState=disabled\n",
+    "zqzhg-cert-renew.timer": "ActiveState=active\nSubState=waiting\nUnitFileState=enabled\n"
+  },
+  "temporaryCandidateListenersClosed": true,
+  "restartHealthSeconds": 3.711,
+  "backup": "/opt/zqzt/shared/upgrade-backups/ai-import-1.12.3-20261118-110410",
+  "rollback": "python3 /opt/zqzt/shared/packages/zqzg-v1.12.3/upgrade.py rollback",
+  "rollbackDoesNotRestoreDatabase": true,
+  "historicalOperationNotesUnchanged": true,
+  "systemSettingsUnchanged": true,
+  "operationLogNoteType": "text",
+  "defaultQuotaBytesAtRelease": 200000000,
+  "webAssetsIdenticalTo1122": true,
+  "realModelCalled": false,
+  "existingAIDraftsAutomaticallySubmitted": false,
+  "publicMapStatistics": {
+    "national": 10,
+    "13": 9,
+    "1305": 7,
+    "130528": 7
+  },
+  "packageSHA256": "bc66cd225e9abc53b92b75c4cd2d0894e0a8b8f7fce3c2f0ae1d0545fab387df"
+}
