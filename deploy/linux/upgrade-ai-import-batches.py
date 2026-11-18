@@ -19,10 +19,10 @@ import urllib.request
 from urllib.error import HTTPError
 from urllib.parse import quote
 
-VERSION = '1.12.1'
+VERSION = '1.12.2'
 BASE = Path('/opt/zqzt')
 ENV = Path('/etc/zqzt/exhibition.env')
-STATE = BASE / 'shared/upgrade-v1.12.1-private.json'
+STATE = BASE / 'shared/upgrade-v1.12.2-private.json'
 UNIT = 'zqzt-exhibition.service'
 
 
@@ -112,13 +112,13 @@ def get(path, port=8089):
 def verify_package(package):
     package = package.resolve(strict=True)
     manifest = json.loads((package / 'manifest.json').read_text())
-    assert manifest['version'] == VERSION and manifest['schemaVersion'] == 36
+    assert manifest['version'] == VERSION and manifest['schemaVersion'] == 37
     assert re.fullmatch(r'[a-f0-9]{40}', manifest['gitCommit'])
     assert manifest['downloadPolicy'] == 'preserve-existing-app'
     assert manifest['android']['applicationId'] == 'com.zqzt.dalunongji'
     assert manifest['android']['apiBaseUrl'] == 'https://zqzhg.com'
     verify_inventory(package, manifest)
-    assert sorted(int(p.name.split('_')[0]) for p in (package / 'server/migrations').glob('*.sql')) == list(range(1, 37))
+    assert sorted(int(p.name.split('_')[0]) for p in (package / 'server/migrations').glob('*.sql')) == list(range(1, 38))
     return manifest
 
 
@@ -139,11 +139,11 @@ def verify_inventory(package, manifest):
 def backup():
     assert not STATE.exists(), 'state_exists_use_status_or_rollback'
     cfg = config(); name, ops = database(cfg)
-    assert mysql(cfg, 'SELECT MAX(version) FROM schema_migrations', name) == '34', 'unexpected_schema'
+    assert mysql(cfg, 'SELECT MAX(version) FROM schema_migrations', name) in {'34', '36'}, 'unexpected_schema'
     assert mysql(cfg, "SELECT COUNT(*) FROM ai_import_tasks WHERE status IN ('queued','processing')", name) == '0', 'wait_for_active_ai_jobs'
     previous = (BASE / 'current').resolve(strict=True)
     assert previous.parent == BASE / 'releases'
-    dest = BASE / 'shared/upgrade-backups' / ('ai-import-1.12.1-' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S'))
+    dest = BASE / 'shared/upgrade-backups' / ('ai-import-1.12.2-' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S'))
     dest.mkdir(mode=0o700, parents=True)
     shutil.copy2(str(ENV), str(dest / 'exhibition.env'))
     before = protected()
@@ -247,7 +247,7 @@ def stage(package, prepare_web=None):
 
 def candidate(check=None):
     value = state(); assert value['staged']
-    release = Path(value['release']); work = BASE / 'shared' / ('ai1121-candidate-' + secrets.token_hex(6))
+    release = Path(value['release']); work = BASE / 'shared' / ('ai1122-candidate-' + secrets.token_hex(6))
     work.mkdir(mode=0o700)
     for n in ['mysql', 'media', 'operations', 'temp', 'backups']: (work / n).mkdir(mode=0o700)
     import pwd
@@ -258,7 +258,7 @@ def candidate(check=None):
     def service_identity():
         os.initgroups('zqzt', service.pw_gid)
         os.setgid(service.pw_gid); os.setuid(service.pw_uid)
-    secret = secrets.token_hex(24); db = 'ai1121_candidate'
+    secret = secrets.token_hex(24); db = 'ai1122_candidate'
     common = ['/usr/sbin/mysqld', '--no-defaults', '--user=root', '--datadir=' + str(work / 'mysql'), '--innodb-buffer-pool-size=32M', '--innodb-log-buffer-size=4M', '--innodb-redo-log-capacity=32M', '--performance-schema=OFF', '--max-connections=12', '--table-open-cache=128', '--mysqlx=OFF', '--skip-log-bin', '--bind-address=127.0.0.1', '--port=13399', '--socket=' + str(work / 'mysql.sock'), '--pid-file=' + str(work / 'mysql.pid'), '--log-error=' + str(work / 'mysql.log')]
     isolated = app = proxy = None
     try:
@@ -313,7 +313,7 @@ def candidate(check=None):
                 assert boundary['sha256'] == expected['sha256'] and boundary['geometry'] == expected['geometry']
                 assert boundary['geometry']['features']
                 maps.append({'code': code, 'total': stats['total'], 'sha256': boundary['sha256']})
-            assert mysql(cfg, 'SELECT MAX(version) FROM schema_migrations', db) == '36'
+            assert mysql(cfg, 'SELECT MAX(version) FROM schema_migrations', db) == '37'
             assert counts(cfg, db) == value['counts']
             assert revision_snapshot(cfg, db) == value['revisionSnapshot'], 'audit_payload_changed'
             assert ai_snapshot(cfg,db)==value['aiSnapshot'], 'candidate_ai_drafts_changed'
@@ -399,7 +399,7 @@ def apply(check=None, extra_environment=None):
         assert documents_snapshot(config(),name,value['documentMaxID'])==value['documentSnapshot'], 'historical_protocol_changed'
         value['productionVideo'] = video_checks(production_fetch)
         value['productionCategories'] = category_checks(production_fetch, config(), name)
-        assert mysql(config(), 'SELECT MAX(version) FROM schema_migrations', name) == '36'
+        assert mysql(config(), 'SELECT MAX(version) FROM schema_migrations', name) == '37'
         assert mysql(config(), 'SELECT COUNT(*) FROM ai_import_tasks', name) == str(value['aiCount']), 'unexpected_production_ai_data'
         if check is not None:
             value['productionSEO'] = check(release)
@@ -407,7 +407,7 @@ def apply(check=None, extra_environment=None):
         rollback(); raise
     value.update(promoted=True, rolledBack=False, restartHealthSeconds=round(time.time() - started, 3))
     save(value)
-    print(json.dumps({'promoted': True, 'version': VERSION, 'android': value['android']['version'], 'schema': 36, 'protectedConfigurationsUnchanged': True, 'restartHealthSeconds': value['restartHealthSeconds']}))
+    print(json.dumps({'promoted': True, 'version': VERSION, 'android': value['android']['version'], 'schema': 37, 'protectedConfigurationsUnchanged': True, 'restartHealthSeconds': value['restartHealthSeconds']}))
 
 
 def revision_snapshot(cfg, name):
@@ -512,7 +512,7 @@ def documents_snapshot(cfg,name,max_id):
 
 def ai_environment():
     # Private host-only configuration, never included in the delivery archive.
-    secret_file = BASE / 'shared/ai-import-1.12.1-private.env'
+    secret_file = BASE / 'shared/ai-import-1.12.2-private.env'
     assert secret_file.is_file() and (secret_file.stat().st_mode & 0o077) == 0
     allowed = {'DASHSCOPE_API_KEY', 'DASHSCOPE_BASE_URL', 'DASHSCOPE_MODEL', 'DASHSCOPE_REVIEW_MODEL', 'DASHSCOPE_TIMEOUT_SECONDS', 'AI_IMPORT_ENABLED', 'AI_IMPORT_WORKER_ENABLED', 'AI_IMPORT_MAX_FILE_BYTES', 'AI_IMPORT_MAX_PAGES', 'AI_IMPORT_CONCURRENCY', 'AI_IMPORT_OWNER_CONCURRENCY', 'AI_IMPORT_TASK_TIMEOUT_SECONDS', 'PDFTOTEXT_PATH', 'PDFTOPPM_PATH'}
     cfg = {}
@@ -530,7 +530,7 @@ def ai_environment():
 
 
 def ai_checks(cfg, db):
-    assert db == 'ai1121_candidate' and cfg['DB_PORT'] == '13399', 'isolated_db_only'
+    assert db == 'ai1122_candidate' and cfg['DB_PORT'] == '13399', 'isolated_db_only'
     tokens = []
     def request(path, token=None, expected=200):
         headers = {'Host': 'zqzhg.com', 'X-Forwarded-Proto': 'https'}
@@ -565,8 +565,8 @@ def ai_checks(cfg, db):
         request('/admin/settings/ai-models', None, 401)
         request('/merchant/ai-import/tasks', None, 401)
         assert mysql(cfg, 'SELECT COUNT(*) FROM ai_import_tasks', db) == str(state()['aiCount'])
-        assert mysql(cfg, 'SELECT COUNT(*) FROM schema_migrations WHERE version BETWEEN 35 AND 36', db) == '2'
-        return {'schema34to36': True, 'flashDefault': True, 'keyConfiguredNotReturned': True, 'pdfToolsServiceUser': True, 'authenticatedRoutes': True, 'unauthorizedDenied': True, 'existingAIDraftsPreserved': True}
+        assert mysql(cfg, 'SELECT COUNT(*) FROM schema_migrations WHERE version BETWEEN 35 AND 37', db) == '3'
+        return {'schema34or36to37': True, 'flashDefault': True, 'keyConfiguredNotReturned': True, 'pdfToolsServiceUser': True, 'authenticatedRoutes': True, 'unauthorizedDenied': True, 'existingAIDraftsPreserved': True}
     finally:
         for _, digest in tokens:
             mysql(cfg, "DELETE FROM sessions WHERE token_hash='" + digest + "'", db)
@@ -595,7 +595,7 @@ def main():
     args = parser.parse_args()
     assert os.geteuid() == 0, 'root_required'
     os.umask(0o077)
-    with (BASE / 'shared/upgrade-v1.12.1.lock').open('a') as lock:
+    with (BASE / 'shared/upgrade-v1.12.2.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         if args.action == 'check': print(json.dumps({'packageVerified': bool(verify_package(args.package))}))
         elif args.action == 'status':

@@ -189,6 +189,11 @@ func migrateThrough(db *gorm.DB, maximum int) error {
 				return e
 			}
 		}
+		if version == 37 {
+			if e = migrateAnalyticsNoticeCorrection(db); e != nil {
+				return e
+			}
+		}
 		if version == 16 {
 			if e = backfillAdministrativeSnapshots(db); e != nil {
 				return e

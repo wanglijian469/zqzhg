@@ -29,6 +29,7 @@ func migrateServiceUseNotices(db *gorm.DB) error {
 			"实质变更公布后，在下次提交资料前主动确认，不追溯伪造同意", "实质变更公布后，在下次使用AI识别或提交资料时展示当前版本并记录真实操作，不追溯补记历史同意",
 			"注册和必要业务操作记录主动同意，不使用默认勾选；变更后按提示确认", "首次注册保留主动勾选同意；已登录厂商后台使用AI识别或提交资料时，执行操作即表示已阅读并同意已展示的当前协议，不再重复勾选或单独确认",
 			"可选访问统计默认关闭，只有主动开启后才创建随机访问标识、记录页面、检索、资源及联系动作并发送至本平台后端", "未保存过选择时，可选访问统计默认开启；已明确关闭的选择保持关闭。开启时创建随机访问标识，记录公开页面、检索、资源及联系动作并发送至本平台后端，不采集厂商后台画册、企业草稿或技术参数",
+			"访问统计默认关闭，只有主动开启后才创建随机访问标识、记录页面、检索、资源及联系动作并发送至本平台后端", "未保存过选择时，可选访问统计默认开启；已明确关闭的选择保持关闭。开启时创建随机访问标识，记录公开页面、检索、资源及联系动作并发送至本平台后端，不采集厂商后台画册、企业草稿或技术参数",
 			"实质变更会提示主动确认", "实质变更会在相关操作前展示当前版本，保留版本及真实操作记录",
 		}
 		for _, old := range docs {
@@ -59,5 +60,37 @@ func migrateServiceUseNotices(db *gorm.DB) error {
 			created = append(created, next.ID)
 		}
 		return tx.Clauses(clause.OnConflict{UpdateAll: true}).Create(&SystemSetting{SettingKey: "service_use_notices_v2", Value: aiJSON(created), UpdatedAt: time.Now().UTC()}).Error
+	})
+}
+
+// Schema 36 sites may retain the original sentence without the optional prefix.
+// Publish a new privacy version rather than editing any historical document.
+func migrateAnalyticsNoticeCorrection(db *gorm.DB) error {
+	return db.Transaction(func(tx *gorm.DB) error {
+		if e := serviceLock(tx, true); e != nil {
+			return e
+		}
+		docs, e := activeServiceDocuments(tx)
+		if e != nil {
+			return e
+		}
+		for _, old := range docs {
+			if old.DocKey != "privacy" || !strings.Contains(old.Body, "访问统计默认关闭，只有主动开启后才") {
+				continue
+			}
+			next := old
+			next.ID = 0
+			next.Version++
+			next.Body = strings.ReplaceAll(old.Body, "访问统计默认关闭，只有主动开启后才", "未保存过选择时，访问统计默认开启；已明确关闭的选择保持关闭。开启时")
+			now := time.Now().UTC().Truncate(time.Millisecond)
+			next.CreatedAt, next.EffectiveAt = now, now
+			next.PublishedAt = &now
+			next.UpdatedBy = 0
+			next.Digest = documentDigest(next)
+			if e := tx.Create(&next).Error; e != nil {
+				return e
+			}
+		}
+		return nil
 	})
 }
