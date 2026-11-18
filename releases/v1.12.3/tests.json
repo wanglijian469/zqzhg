@@ -1,0 +1,17 @@
+{
+  "goTargetedTestsPassed": 3,
+  "strictMySQLOriginalFailureReproduced": true,
+  "completeAuditSnapshotsRetained": true,
+  "unsafeDowngradeRefusedWithoutTruncation": true,
+  "safeDowngradeAndReupgradeTested": true,
+  "goVet": true,
+  "frontendChanged": false,
+  "realModelCalled": false,
+  "productionQuotaChanged": false,
+  "productionDeployed": false,
+  "productionVersion": "1.12.2",
+  "targetVersion": "1.12.3",
+  "candidateFailure": "ENOSPC during isolated media restoration; production not switched",
+  "pendingAuthorization": "Deletion of the explicitly listed 17 stopped temporary candidate clones",
+  "candidateUIAndProductionMapAcceptanceCompleted": false
+}
