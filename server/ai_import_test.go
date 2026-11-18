@@ -259,6 +259,7 @@ func TestAIUploadContentValidationAndDuplicate(t *testing.T) {
 		part, _ := w.CreateFormFile("files", name)
 		part.Write(data)
 		w.WriteField("request_id", randomToken())
+		w.WriteField("agreements", aiJSON(serviceTestRefs(t, a, "terms", "privacy", "showroom-agreement")))
 		w.Close()
 		r := httptest.NewRequest("POST", "/api/v1/merchant/ai-import/tasks", &body)
 		r.Header.Set("Content-Type", w.FormDataContentType())

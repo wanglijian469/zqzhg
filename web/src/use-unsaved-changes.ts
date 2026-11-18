@@ -28,11 +28,11 @@ export function useUnsavedChanges(isDirty:()=>boolean,confirmLeave:()=>Promise<b
   };
   const originalPush=navigator.push,originalReplace=navigator.replace;
   const push:typeof navigator.push=(...args)=>{
-   if(bypass||!current.current.isDirty())originalPush.apply(navigator,args);
+   if(!active||bypass||!current.current.isDirty())originalPush.apply(navigator,args);
    else void request(()=>originalPush.apply(navigator,args));
   };
   const replace:typeof navigator.replace=(...args)=>{
-   if(bypass||!current.current.isDirty())originalReplace.apply(navigator,args);
+   if(!active||bypass||!current.current.isDirty())originalReplace.apply(navigator,args);
    else void request(()=>originalReplace.apply(navigator,args));
   };
   navigator.push=push;navigator.replace=replace;

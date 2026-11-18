@@ -1,5 +1,7 @@
 # AI模型配置与默认Flash策略
 
+2026-11-18更新：厂商模型选择已取消；管理员分别配置新任务的提取和复核模型，既有任务及重试使用原快照。当前实现以 [AI_IMPORT_BATCHES.md](AI_IMPORT_BATCHES.md) 为准，下文为schema34历史记录。
+
 2026-11-17，schema34，本机开发候选。入口：管理员后台 → 系统设置 → **AI模型配置**，直接地址 `/admin/settings?tab=ai`。
 
 ## 费用策略

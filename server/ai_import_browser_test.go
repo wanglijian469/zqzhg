@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http/httptest"
 	"os"
 	"os/exec"
@@ -41,7 +42,7 @@ func TestAIImportBrowser(t *testing.T) {
 	if a.effectiveConfig(probe).Site.APIURL != settings.Site.APIURL {
 		t.Fatal("preview override accepted a non-loopback host")
 	}
-	web, e := filepath.Abs("../.local/ai-import-web")
+	web, e := filepath.Abs("../.local/ai-import-batch-web")
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -83,12 +84,23 @@ func TestAIImportBrowser(t *testing.T) {
 	if e = a.DB.Table(aiTable("product")).Create(&draft).Error; e != nil {
 		t.Fatal(e)
 	}
+	for i := 2; i <= 7; i++ {
+		extra := draft
+		extra.ID = 0
+		extra.TempID = "ui-product-" + fmt.Sprint(i)
+		copy := p
+		copy.Name = "界面合成产品 " + fmt.Sprint(i) + "（非真实解析）"
+		extra.Data = aiJSON(copy)
+		if e = a.DB.Table(aiTable("product")).Create(&extra).Error; e != nil {
+			t.Fatal(e)
+		}
+	}
 	srv := httptest.NewServer(a.router())
 	defer srv.Close()
 	a.Config.PublicBaseURL = srv.URL
 	fixture := gin.H{"base": srv.URL, "owner": merchant, "admin": admin, "account": owner, "task": task.ID, "synthetic": true}
 	encoded, _ := json.Marshal(fixture)
-	cmd := exec.Command("node", "../scripts/verify-ai-import.cjs")
+	cmd := exec.Command("node", "../scripts/verify-ai-import-batches.cjs")
 	cmd.Stdin = bytes.NewReader(encoded)
 	out, e := cmd.CombinedOutput()
 	if e != nil {

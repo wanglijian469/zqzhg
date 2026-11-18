@@ -323,7 +323,8 @@ func (a *App) saveDraft(c *gin.Context) {
 }
 func (a *App) submit(c *gin.Context) {
 	var req struct {
-		RevisionID uint64 `json:"revision_id"`
+		RevisionID uint64         `json:"revision_id"`
+		Agreements []AgreementRef `json:"agreements"`
 	}
 	if c.ShouldBindJSON(&req) != nil {
 		fail(c, 400, "invalid_request")
@@ -331,6 +332,11 @@ func (a *App) submit(c *gin.Context) {
 	}
 	who := actor(c)
 	e := a.contentTransaction(func(tx *gorm.DB) error {
+		if who.Role == "merchant" {
+			if e := acceptServiceDocuments(tx, who.ID, req.Agreements, "web_use", []string{"terms", "privacy", "showroom-agreement"}); e != nil {
+				return e
+			}
+		}
 		return a.submitOwnedDraft(tx, who, id(c), req.RevisionID)
 	})
 	if e != nil {

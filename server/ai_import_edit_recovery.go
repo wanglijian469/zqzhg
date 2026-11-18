@@ -17,6 +17,9 @@ func aiEditableDraft(tx *gorm.DB, kind string, draftID, owner uint64) (AIImportD
 	// A current locking read after the task lock prevents stale repeatable-read
 	// snapshots from reporting a concurrent save/split as successful.
 	e := tx.Table(aiTable(kind)).Clauses(clause.Locking{Strength: "UPDATE"}).Where("id=? AND owner_id=? AND deleted=0", draftID, owner).First(&row).Error
+	if e == nil && row.ActiveBatchID != 0 {
+		return row, serviceFailure{"ai_draft_submitting", 409}
+	}
 	return row, e
 }
 func (a *App) aiReopenFailed(c *gin.Context) {

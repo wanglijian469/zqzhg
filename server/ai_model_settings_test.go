@@ -67,8 +67,8 @@ func TestAIModelPolicyEncryptedSettingsAndPermissions(t *testing.T) {
 	req["allow_manual_max"] = false
 	tc.call("PUT", path, admin, req, 200)
 	now := time.Now().UTC()
-	if _, e = a.aiTaskConfig(AIImportTask{ModelMode: "max", MaxConfirmedAt: &now}); e == nil {
-		t.Fatal("administrator max disable ignored")
+	if _, e = a.aiTaskConfig(AIImportTask{ModelMode: "max", MaxConfirmedAt: &now}); e != nil {
+		t.Fatal("old confirmed task model changed")
 	}
 	public := tc.call("GET", "/merchant/ai-import/config", merchant, nil, 200)
 	if strings.Contains(aiJSON(public), secret) || public["review_model"] != aiFlashModel {
@@ -91,7 +91,7 @@ func TestAIModelPolicyEncryptedSettingsAndPermissions(t *testing.T) {
 	if len(called) != 2 || called[0] != aiFlashModel || called[1] != aiFlashModel {
 		t.Fatal("retry automatically escalated", called)
 	}
-	tc.call("POST", path+"/test", admin, gin.H{"model_mode": "max", "confirm_max": true}, 400)
+	tc.call("POST", path+"/test", admin, gin.H{"model_mode": "max", "confirm_max": true}, 200)
 	req["version"] = 2
 	req["allow_manual_max"] = true
 	tc.call("PUT", path, admin, req, 200)
@@ -116,7 +116,7 @@ func TestAIModelPolicyEncryptedSettingsAndPermissions(t *testing.T) {
 	}
 }
 
-func TestAIUploadMaxRequiresExplicitConsent(t *testing.T) {
+func TestAIUploadUsesAdministratorSnapshots(t *testing.T) {
 	t.Setenv("AI_IMPORT_ENABLED", "true")
 	t.Setenv("DASHSCOPE_API_KEY", "synthetic-no-call")
 	t.Setenv("DASHSCOPE_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
@@ -130,6 +130,7 @@ func TestAIUploadMaxRequiresExplicitConsent(t *testing.T) {
 		part, _ := w.CreateFormFile("files", "fixture.png")
 		part.Write(aiTestPNG(t))
 		w.WriteField("request_id", randomToken())
+		w.WriteField("agreements", aiJSON(serviceTestRefs(t, a, "terms", "privacy", "showroom-agreement")))
 		w.WriteField("model_mode", mode)
 		w.WriteField("confirm_max", confirmation)
 		w.Close()
@@ -145,19 +146,32 @@ func TestAIUploadMaxRequiresExplicitConsent(t *testing.T) {
 		json.Unmarshal(out.Body.Bytes(), &data)
 		return data
 	}
-	upload("max", "", 400)
-	upload("automatic", "true", 400)
-	out := upload("max", "true", 202)
-	task := out["task"].(map[string]any)
-	if task["extraction_model"] != aiMaxModel || task["review_model"] != aiMaxModel || task["max_confirmed_at"] == nil {
-		t.Fatal("explicit task choice not persisted")
+	for _, mode := range []string{"max", "automatic", "flash", ""} {
+		out := upload(mode, "true", 202)
+		task := out["task"].(map[string]any)
+		if task["extraction_model"] != aiFlashModel || task["review_model"] != aiFlashModel || task["model_mode"] != "admin" {
+			t.Fatal("merchant overrode administrator models", task)
+		}
+		a.DB.Model(&AIImportTask{}).Where("id=?", task["id"]).Updates(map[string]any{"status": "failed", "file_hash": randomToken()})
 	}
-	a.DB.Model(&AIImportTask{}).Where("id=?", task["id"]).Update("status", "failed")
-	// Explicit new import avoids same-file dedup so default policy is verified independently.
-	a.DB.Model(&AIImportTask{}).Where("id=?", task["id"]).Update("file_hash", randomToken())
-	out = upload("", "", 202)
-	task = out["task"].(map[string]any)
-	if task["model_mode"] != "flash" || task["extraction_model"] != aiFlashModel || task["review_model"] != aiFlashModel || task["max_confirmed_at"] != nil {
-		t.Fatal("default upload not flash-only", task)
+	admin := resourceTestSession(t, a, "admin")
+	req := gin.H{"version": 0, "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "timeout_seconds": 90, "key_action": "keep", "extraction_model": aiMaxModel, "review_model": aiFlashModel}
+	tc.call("PUT", "/admin/settings/ai-models", admin, req, 400)
+	req["confirm_max"] = true
+	tc.call("PUT", "/admin/settings/ai-models", admin, req, 200)
+	out := upload("flash", "", 202)
+	task := out["task"].(map[string]any)
+	if task["extraction_model"] != aiMaxModel || task["review_model"] != aiFlashModel {
+		t.Fatal(task)
+	}
+	req["version"] = 1
+	req["extraction_model"] = aiFlashModel
+	req["confirm_max"] = false
+	tc.call("PUT", "/admin/settings/ai-models", admin, req, 200)
+	var persisted AIImportTask
+	a.DB.First(&persisted, task["id"])
+	cfg, e := a.aiTaskConfig(persisted)
+	if e != nil || cfg.Model != aiMaxModel || cfg.ReviewModel != aiFlashModel {
+		t.Fatal("old snapshot changed", e)
 	}
 }

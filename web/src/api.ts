@@ -4,8 +4,17 @@ let publicRetryUntil=0;
 export const publicRetrySeconds=()=>Math.max(0,Math.ceil((publicRetryUntil-Date.now())/1000));
 export class APIError extends Error { constructor(public code: string, public fields:import("./form-guide").FieldIssue[]=[]) { super(code); } }
 export function token(role: 'admin' | 'merchant') { return sessionStorage.getItem('zqzt.' + role) || ''; }
+export async function currentAgreementRefs(){
+ const docs=await api<{items:{key:string;version:number;digest:string}[]}>('/public/service-documents');
+ const refs=docs.items.filter(d=>['terms','privacy','showroom-agreement'].includes(d.key)).map(({key,version,digest})=>({key,version,digest}));
+ if(refs.length!==3)throw new APIError('agreement_required');return refs;
+}
 export async function api<T>(path: string, options: RequestInit = {}, role?: 'admin' | 'merchant'): Promise<T> {
  await loadRuntime();
+ if(role==='merchant'&&options.method==='POST'&&/^\/merchant\/(?:(?:contents|resources)\/\d+\/submit|ai-import\/tasks\/\d+\/(?:(?:company|products)\/submit|batches\/\d+\/retry))$/.test(path)&&typeof options.body==='string'){
+  let payload:Record<string,unknown>|undefined;try{payload=JSON.parse(options.body)}catch{/* Existing validation handles malformed input. */}
+  if(payload&&typeof payload==='object'&&!Array.isArray(payload)&&!('agreements' in payload))options={...options,body:JSON.stringify({...payload,agreements:await currentAgreementRefs()})};
+ }
  const protectedRead=/^\/public\/(?:industry-map|vendors|products|showrooms|resources|home|favorites\/resolve)(?:\/|\?|$)/.test(path);
  if(!role&&protectedRead&&publicRetrySeconds()>0)throw new APIError('public_rate_limited');
  const headers = new Headers(options.headers); if (!(options.body instanceof FormData) && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');

@@ -11,6 +11,7 @@ async function main(){
  const screenDir=path.resolve(path.dirname(output),'screenshots');fs.mkdirSync(screenDir,{recursive:true});
  try{for(const width of [1440,1024,768,390,360]){
   const context=await browser.newContext({viewport:{width,height:900},locale:'zh-CN'});
+  await context.addInitScript(()=>localStorage.setItem('zqzt.privacy.analytics','no'));
   await context.route(base+'/**',async route=>{
    const req=route.request(),u=new URL(req.url());await pace(u.href);
    if(bundle&&req.method()==='GET'&&!u.pathname.startsWith('/api/')){

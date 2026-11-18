@@ -9,6 +9,7 @@ import (
 )
 
 type AIImportTask struct {
+	SubmissionMode  string     `json:"submission_mode"`
 	ModelMode       string     `json:"model_mode"`
 	MaxConfirmedAt  *time.Time `json:"max_confirmed_at,omitempty"`
 	ExtractionModel string     `json:"extraction_model"`
@@ -37,6 +38,7 @@ type AIImportTask struct {
 func (AIImportTask) TableName() string { return "ai_import_tasks" }
 
 type AIImportDraft struct {
+	ActiveBatchID   uint64    `json:"active_batch_id"`
 	TargetContentID uint64    `gorm:"->" json:"target_content_id"`
 	PublishMode     string    `gorm:"->" json:"publish_mode"`
 	ID              uint64    `json:"id"`

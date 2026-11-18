@@ -398,7 +398,8 @@ func (a *App) saveResourceDraft(c *gin.Context) {
 }
 func (a *App) submitResource(c *gin.Context) {
 	var req struct {
-		RevisionID uint64 `json:"revision_id"`
+		RevisionID uint64         `json:"revision_id"`
+		Agreements []AgreementRef `json:"agreements"`
 	}
 	if c.ShouldBindJSON(&req) != nil {
 		fail(c, 400, "invalid_request")
@@ -433,6 +434,11 @@ func (a *App) submitResource(c *gin.Context) {
 		var p ResourcePayload
 		if json.Unmarshal([]byte(rev.Payload), &p) != nil {
 			return fmt.Errorf("invalid_request")
+		}
+		if actor(c).Role == "merchant" {
+			if e = acceptServiceDocuments(tx, actor(c).ID, req.Agreements, "web_use", []string{"terms", "privacy", "showroom-agreement"}); e != nil {
+				return e
+			}
 		}
 		if e = publicationCompliance(tx, r.OwnerID, r.VendorID, nil); e != nil {
 			return e

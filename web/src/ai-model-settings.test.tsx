@@ -9,7 +9,7 @@ const initial={version:0,base_url:'https://dashscope.aliyuncs.com/compatible-mod
 afterEach(()=>{cleanup();vi.clearAllMocks();localStorage.clear();sessionStorage.clear()});
 it('submits a replacement once, clears its input, and never stores or receives the saved key',async()=>{
  vi.mocked(api).mockResolvedValueOnce(initial).mockResolvedValueOnce({...initial,version:1,key_source:'admin'});
- render(<AIModelSettings/>);await screen.findByLabelText(/默认模型/);
+ render(<AIModelSettings/>);await screen.findByLabelText(/提取模型/);
  await userEvent.selectOptions(screen.getByLabelText('密钥操作'),'replace');const secret='synthetic-user-entered-key';await userEvent.type(screen.getByLabelText(/按量计费API Key/),secret);await userEvent.click(screen.getByRole('button',{name:'保存模型配置'}));await screen.findByText(/配置已保存/);
  const request=vi.mocked(api).mock.calls.find(([,options])=>options?.method==='PUT');expect(JSON.parse(String(request?.[1]?.body))).toMatchObject({key_action:'replace',api_key:secret});expect(screen.queryByDisplayValue(secret)).toBeNull();expect(JSON.stringify(localStorage)+JSON.stringify(sessionStorage)).not.toContain(secret);
 });

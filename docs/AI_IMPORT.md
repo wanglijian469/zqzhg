@@ -1,5 +1,7 @@
 # AI智能建馆：本地MVP交付说明
 
+2026-11-18交互更新：企业与产品独立分批提交，厂商不选择模型，协议由实际操作触发记录。当前流程、035／036迁移及API见 [AI_IMPORT_BATCHES.md](AI_IMPORT_BATCHES.md)；下文保留首次版本的历史流程与测试限制。
+
 日期：2026-11-17。适用于本次源码与 schema34。入口为企业工作台 `/merchant/ai-import`，任务页 `/merchant/ai-import/:id`。
 
 当前模型策略：提取、复核与重试默认全部Flash，Max仅在任务中手动选择并确认。管理员可在系统设置中界面化管理百炼连接及加密密钥，见 [AI模型配置说明](AI_IMPORT_MODEL_SETTINGS.md)。

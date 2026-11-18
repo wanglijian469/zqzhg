@@ -166,7 +166,7 @@ func acceptServiceDocuments(tx *gorm.DB, owner uint64, refs []AgreementRef, sour
 	if e != nil {
 		return e
 	}
-	if source != "android" && source != "ios" {
+	if source != "android" && source != "ios" && source != "web_use" {
 		source = "web"
 	}
 	for _, key := range keys {

@@ -31,8 +31,8 @@ func aiGuard(c *gin.Context) {
 func (a *App) aiImportRoutes(merchant *gin.RouterGroup) {
 	r := merchant.Group("/ai-import", aiGuard)
 	r.GET("/config", func(c *gin.Context) {
-		cfg, s, e := a.aiBailianConfig()
-		c.JSON(200, gin.H{"configured": e == nil && cfg.Validate() == nil, "default_model": aiFlashModel, "review_model": aiFlashModel, "advanced_model": aiMaxModel, "allow_manual_max": s.AllowManualMax, "pdf_tools_ready": aiToolsReady(), "max_file_bytes": settingInt("AI_IMPORT_MAX_FILE_BYTES", 30000000), "max_pages": settingInt("AI_IMPORT_MAX_PAGES", 100), "image_mib": a.uploadConfig().ImageMiB})
+		cfg, _, e := a.aiBailianConfig()
+		c.JSON(200, gin.H{"configured": e == nil && cfg.Validate() == nil, "default_model": cfg.Model, "review_model": cfg.ReviewModel, "model_selection": "admin", "allow_manual_max": false, "pdf_tools_ready": aiToolsReady(), "max_file_bytes": settingInt("AI_IMPORT_MAX_FILE_BYTES", 30000000), "max_pages": settingInt("AI_IMPORT_MAX_PAGES", 100), "image_mib": a.uploadConfig().ImageMiB})
 	})
 	r.POST("/tasks", a.aiCreateTask)
 	r.GET("/tasks", a.aiListTasks)
@@ -44,6 +44,9 @@ func (a *App) aiImportRoutes(merchant *gin.RouterGroup) {
 	r.DELETE("/products/:id", a.aiDeleteDraft)
 	r.POST("/tasks/:id/review", a.aiReview)
 	r.POST("/tasks/:id/publish", a.aiPublish)
+	r.POST("/tasks/:id/company/submit", a.aiSubmitCompanyBatch)
+	r.POST("/tasks/:id/products/submit", a.aiSubmitProductBatch)
+	r.POST("/tasks/:id/batches/:batch_id/retry", a.aiRetrySubmissionBatch)
 	r.POST("/tasks/:id/reopen-failed", a.aiReopenFailed)
 	r.POST("/tasks/:id/continue-review", a.aiContinueReview)
 	r.POST("/tasks/:id/products/merge", a.aiMerge)
@@ -80,7 +83,7 @@ func (a *App) aiGetTask(c *gin.Context) {
 	c.JSON(200, t)
 }
 func (a *App) aiCreateTask(c *gin.Context) {
-	cfg, settings, configError := a.aiBailianConfig()
+	cfg, _, configError := a.aiBailianConfig()
 	if configError != nil {
 		fail(c, 503, aiSafeError(configError))
 		return
@@ -99,26 +102,12 @@ func (a *App) aiCreateTask(c *gin.Context) {
 		fail(c, 400, "ai_invalid_upload")
 		return
 	}
-	modelMode := c.PostForm("model_mode")
-	if modelMode == "" {
-		modelMode = "flash"
-	}
+	// Client model fields are deprecated; only administrator configuration decides.
+	modelMode := "admin"
 	var maxConfirmed *time.Time
-	if modelMode == "max" {
-		if !settings.AllowManualMax {
-			fail(c, 403, "ai_max_disabled")
-			return
-		}
-		if c.PostForm("confirm_max") != "true" {
-			fail(c, 400, "ai_max_confirmation_required")
-			return
-		}
-		now := time.Now().UTC()
-		maxConfirmed = &now
-		cfg.Model = aiMaxModel
-		cfg.ReviewModel = aiMaxModel
-	} else if modelMode != "flash" {
-		fail(c, 400, "ai_invalid_model_mode")
+	var agreements []AgreementRef
+	if raw := c.PostForm("agreements"); raw != "" && json.Unmarshal([]byte(raw), &agreements) != nil {
+		fail(c, 400, "invalid_request")
 		return
 	}
 	files := form.File["files"]
@@ -262,6 +251,9 @@ func (a *App) aiCreateTask(c *gin.Context) {
 		if tx.Where("owner_id=? AND kind='vendor'", who.ID).First(&vendor).Error == nil {
 			task.VendorID = vendor.ID
 		}
+		if e := acceptServiceDocuments(tx, who.ID, agreements, "web_use", []string{"terms", "privacy", "showroom-agreement"}); e != nil {
+			return e
+		}
 		if e := tx.Create(&task).Error; e != nil {
 			return e
 		}
@@ -286,7 +278,7 @@ func aiDraftView(d AIImportDraft) gin.H {
 	json.Unmarshal([]byte(d.FieldSources), &sources)
 	var fields []string
 	json.Unmarshal([]byte(d.SelectedFields), &fields)
-	return gin.H{"id": d.ID, "task_id": d.TaskID, "temp_id": d.TempID, "version": d.Version, "reviewed_version": d.ReviewedVersion, "data": p, "source_pages": pages, "field_sources": sources, "review_issues": issues, "selected_fields": fields, "base_revision_id": d.BaseRevisionID, "content_id": d.ContentID, "revision_id": d.RevisionID, "error": d.Error, "target_content_id": d.TargetContentID, "publish_mode": d.PublishMode}
+	return gin.H{"id": d.ID, "task_id": d.TaskID, "temp_id": d.TempID, "active_batch_id": d.ActiveBatchID, "version": d.Version, "reviewed_version": d.ReviewedVersion, "data": p, "source_pages": pages, "field_sources": sources, "review_issues": issues, "selected_fields": fields, "base_revision_id": d.BaseRevisionID, "content_id": d.ContentID, "revision_id": d.RevisionID, "error": d.Error, "target_content_id": d.TargetContentID, "publish_mode": d.PublishMode}
 }
 func (a *App) aiResult(c *gin.Context) {
 	t, e := a.aiOwnedTask(c)
@@ -313,6 +305,7 @@ func (a *App) aiResult(c *gin.Context) {
 	views := []gin.H{}
 	for _, d := range products {
 		v := aiDraftView(d)
+		v["blocking_reasons"] = aiBatchBlockers(d, "product", true)
 		if d.TargetContentID > 0 {
 			var target Content
 			var rev Revision
@@ -332,7 +325,9 @@ func (a *App) aiResult(c *gin.Context) {
 	}
 	var company any
 	if len(companies) > 0 {
-		company = aiDraftView(companies[0])
+		v := aiDraftView(companies[0])
+		v["blocking_reasons"] = aiBatchBlockers(companies[0], "company", t.VendorID > 0)
+		company = v
 	}
 	var existing any
 	if t.VendorID > 0 {
@@ -351,7 +346,29 @@ func (a *App) aiResult(c *gin.Context) {
 	for _, call := range calls {
 		usage = append(usage, gin.H{"stage": call.Stage, "model": call.Model, "request_id": call.RequestID, "error": call.Error, "usage": json.RawMessage(call.UsageJSON), "estimated_cost": call.EstimatedCost, "price_basis": call.PriceBasis})
 	}
-	c.JSON(200, gin.H{"task": t, "company": company, "existing_company": existing, "publish_request": json.RawMessage(taskManifest(t)), "products": views, "assets": assets, "calls": usage})
+	batches := []AISubmissionBatch{}
+	batchItems := []AISubmissionItem{}
+	if e = a.DB.Where("task_id=? AND owner_id=?", t.ID, t.OwnerID).Order("id DESC").Find(&batches).Error; e != nil {
+		dbFail(c, e)
+		return
+	}
+	if e = a.DB.Where("task_id=? AND owner_id=?", t.ID, t.OwnerID).Order("id").Find(&batchItems).Error; e != nil {
+		dbFail(c, e)
+		return
+	}
+	submitted, failed, visible := 0, 0, 0
+	for _, v := range views {
+		if v["content_id"].(uint64) > 0 {
+			submitted++
+		}
+		if v["error"] != "" {
+			failed++
+		}
+		if v["public_visible"] == true {
+			visible++
+		}
+	}
+	c.JSON(200, gin.H{"task": t, "company": company, "existing_company": existing, "publish_request": json.RawMessage(taskManifest(t)), "products": views, "assets": assets, "calls": usage, "batches": batches, "batch_items": batchItems, "submission_stats": gin.H{"total": len(views), "submitted": submitted, "unsubmitted": len(views) - submitted, "failed": failed, "public": visible}})
 }
 func (a *App) aiRetry(c *gin.Context) {
 	t, e := a.aiOwnedTask(c)
@@ -389,7 +406,7 @@ func aiEditable(tx *gorm.DB, taskID, owner uint64) error {
 	if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("id=? AND owner_id=?", taskID, owner).First(&t).Error; e != nil {
 		return e
 	}
-	if t.Status != "review_pending" || t.PublishKey != "" {
+	if (t.Status != "review_pending" && !(t.Status == "completed" && t.SubmissionMode == "batch")) || (t.PublishKey != "" && t.SubmissionMode != "batch") {
 		return serviceFailure{"ai_task_locked", 409}
 	}
 	return nil
@@ -703,67 +720,74 @@ func aiSafeError(e error) string {
 	return "ai_processing_failed"
 }
 func (a *App) aiPublishCompany(task AIImportTask, who Account, version uint64) error {
-	return a.contentTransaction(func(tx *gorm.DB) error {
-		var d AIImportDraft
-		if e := tx.Table(aiTable("company")).Clauses(clause.Locking{Strength: "UPDATE"}).Where("task_id=? AND owner_id=?", task.ID, who.ID).First(&d).Error; e != nil {
+	return a.contentTransaction(func(tx *gorm.DB) error { return a.aiPublishCompanyTx(tx, task, who, version, 0) })
+}
+func (a *App) aiPublishCompanyTx(tx *gorm.DB, task AIImportTask, who Account, version uint64, batchID uint64) error {
+	var d AIImportDraft
+	if e := tx.Table(aiTable("company")).Clauses(clause.Locking{Strength: "UPDATE"}).Where("task_id=? AND owner_id=?", task.ID, who.ID).First(&d).Error; e != nil {
+		return e
+	}
+	if d.ActiveBatchID != 0 && d.ActiveBatchID != batchID {
+		return serviceFailure{"ai_draft_submitting", 409}
+	}
+	if d.ContentID > 0 {
+		return nil
+	}
+	if d.Version != version || d.ReviewedVersion != version {
+		return serviceFailure{"ai_review_required", 409}
+	}
+	var p Payload
+	if e := json.Unmarshal([]byte(d.Data), &p); e != nil {
+		return e
+	}
+	var content Content
+	e := tx.Where("kind='vendor' AND owner_id=?", who.ID).First(&content).Error
+	if errors.Is(e, gorm.ErrRecordNotFound) {
+		content = Content{Kind: "vendor", OwnerID: who.ID, HallID: 1}
+		if e = a.createOwnedDraft(tx, &content, who, &p); e != nil {
 			return e
 		}
-		if d.ContentID > 0 {
-			return nil
+	} else if e != nil {
+		return e
+	} else {
+		var fields []string
+		json.Unmarshal([]byte(d.SelectedFields), &fields)
+		if len(fields) == 0 {
+			if e := tx.Model(&AIImportTask{}).Where("id=?", task.ID).Update("vendor_id", content.ID).Error; e != nil {
+				return e
+			}
+			return tx.Table(aiTable("company")).Where("id=?", d.ID).Updates(map[string]any{"content_id": content.ID, "revision_id": content.DraftRevisionID, "error": ""}).Error
 		}
-		if d.Version != version || d.ReviewedVersion != version {
-			return serviceFailure{"ai_review_required", 409}
+		if content.DraftRevisionID != d.BaseRevisionID {
+			return serviceFailure{"stale_revision", 409}
 		}
-		var p Payload
-		if e := json.Unmarshal([]byte(d.Data), &p); e != nil {
+		var rev Revision
+		if e = tx.First(&rev, content.DraftRevisionID).Error; e != nil {
 			return e
 		}
-		var content Content
-		e := tx.Where("kind='vendor' AND owner_id=?", who.ID).First(&content).Error
-		if errors.Is(e, gorm.ErrRecordNotFound) {
-			content = Content{Kind: "vendor", OwnerID: who.ID, HallID: 1}
-			if e = a.createOwnedDraft(tx, &content, who, &p); e != nil {
-				return e
-			}
-		} else if e != nil {
-			return e
-		} else {
-			if content.DraftRevisionID != d.BaseRevisionID {
-				return serviceFailure{"stale_revision", 409}
-			}
-			var rev Revision
-			if e = tx.First(&rev, content.DraftRevisionID).Error; e != nil {
-				return e
-			}
-			var old Payload
-			if e = json.Unmarshal([]byte(rev.Payload), &old); e != nil {
-				return e
-			}
-			var fields []string
-			json.Unmarshal([]byte(d.SelectedFields), &fields)
-			if len(fields) == 0 {
-				return tx.Table(aiTable("company")).Where("id=?", d.ID).Updates(map[string]any{"content_id": content.ID, "revision_id": content.DraftRevisionID, "error": ""}).Error
-			}
-			if rev.Status == "pending" {
-				return serviceFailure{"pending_review", 409}
-			}
-			merged, e := aiMergeCompany(old, p, fields)
-			if e != nil {
-				return e
-			}
-			p = merged
-			if e = a.saveOwnedDraft(tx, &content, who, content.ID, d.BaseRevisionID, &p); e != nil {
-				return e
-			}
-		}
-		if e = a.submitOwnedDraft(tx, who, content.ID, content.DraftRevisionID); e != nil {
+		var old Payload
+		if e = json.Unmarshal([]byte(rev.Payload), &old); e != nil {
 			return e
 		}
-		if e = tx.Model(&AIImportTask{}).Where("id=? AND owner_id=?", task.ID, who.ID).Update("vendor_id", content.ID).Error; e != nil {
+		if rev.Status == "pending" {
+			return serviceFailure{"pending_review", 409}
+		}
+		merged, e := aiMergeCompany(old, p, fields)
+		if e != nil {
 			return e
 		}
-		return tx.Table(aiTable("company")).Where("id=?", d.ID).Updates(map[string]any{"content_id": content.ID, "revision_id": content.DraftRevisionID, "error": ""}).Error
-	})
+		p = merged
+		if e = a.saveOwnedDraft(tx, &content, who, content.ID, d.BaseRevisionID, &p); e != nil {
+			return e
+		}
+	}
+	if e = a.submitOwnedDraft(tx, who, content.ID, content.DraftRevisionID); e != nil {
+		return e
+	}
+	if e = tx.Model(&AIImportTask{}).Where("id=? AND owner_id=?", task.ID, who.ID).Update("vendor_id", content.ID).Error; e != nil {
+		return e
+	}
+	return tx.Table(aiTable("company")).Where("id=?", d.ID).Updates(map[string]any{"content_id": content.ID, "revision_id": content.DraftRevisionID, "error": ""}).Error
 }
 func aiMergeCompany(old, next Payload, fields []string) (Payload, error) {
 	allowed := map[string]bool{"name": true, "name_en": true, "description": true, "description_en": true, "main_products": true, "phone": true, "wechat": true, "address": true, "region_code": true, "region_name": true, "region_id": true, "primary_category_id": true, "secondary_category_ids": true, "business_nature": true, "company_profile": true, "media_ids": true, "keywords": true}
@@ -801,46 +825,50 @@ func aiMergeCompany(old, next Payload, fields []string) (Payload, error) {
 	return result, e
 }
 func (a *App) aiPublishProduct(task AIImportTask, who Account, v aiPublishSelection) error {
-	return a.contentTransaction(func(tx *gorm.DB) error {
-		var d AIImportDraft
-		if e := tx.Table(aiTable("product")).Clauses(clause.Locking{Strength: "UPDATE"}).Where("id=? AND task_id=? AND owner_id=? AND deleted=0", v.ID, task.ID, who.ID).First(&d).Error; e != nil {
+	return a.contentTransaction(func(tx *gorm.DB) error { return a.aiPublishProductTx(tx, task, who, v, 0) })
+}
+func (a *App) aiPublishProductTx(tx *gorm.DB, task AIImportTask, who Account, v aiPublishSelection, batchID uint64) error {
+	var d AIImportDraft
+	if e := tx.Table(aiTable("product")).Clauses(clause.Locking{Strength: "UPDATE"}).Where("id=? AND task_id=? AND owner_id=? AND deleted=0", v.ID, task.ID, who.ID).First(&d).Error; e != nil {
+		return e
+	}
+	if d.ActiveBatchID != 0 && d.ActiveBatchID != batchID {
+		return serviceFailure{"ai_draft_submitting", 409}
+	}
+	if d.ContentID > 0 {
+		return nil
+	}
+	if d.Version != v.Version || d.ReviewedVersion != d.Version {
+		return serviceFailure{"ai_review_required", 409}
+	}
+	var p Payload
+	if e := json.Unmarshal([]byte(d.Data), &p); e != nil {
+		return e
+	}
+	if e := a.aiValidateTaskMedia(tx, task.ID, p); e != nil {
+		return e
+	}
+	content := Content{Kind: "product", OwnerID: who.ID}
+	if d.PublishMode == "undecided" {
+		return serviceFailure{"ai_update_choice_required", 409}
+	}
+	if d.PublishMode == "update" {
+		if e := tx.Where("id=? AND owner_id=? AND kind='product'", d.TargetContentID, who.ID).First(&content).Error; e != nil {
 			return e
 		}
-		if d.ContentID > 0 {
-			return nil
-		}
-		if d.Version != v.Version || d.ReviewedVersion != d.Version {
-			return serviceFailure{"ai_review_required", 409}
-		}
-		var p Payload
-		if e := json.Unmarshal([]byte(d.Data), &p); e != nil {
+		if e := a.saveOwnedDraft(tx, &content, who, content.ID, d.BaseRevisionID, &p); e != nil {
 			return e
 		}
-		if e := a.aiValidateTaskMedia(tx, task.ID, p); e != nil {
+	} else {
+		if e := a.createOwnedDraft(tx, &content, who, &p); e != nil {
 			return e
 		}
-		content := Content{Kind: "product", OwnerID: who.ID}
-		if d.PublishMode == "undecided" {
-			return serviceFailure{"ai_update_choice_required", 409}
-		}
-		if d.PublishMode == "update" {
-			if e := tx.Where("id=? AND owner_id=? AND kind='product'", d.TargetContentID, who.ID).First(&content).Error; e != nil {
-				return e
-			}
-			if e := a.saveOwnedDraft(tx, &content, who, content.ID, d.BaseRevisionID, &p); e != nil {
-				return e
-			}
-		} else {
-			if e := a.createOwnedDraft(tx, &content, who, &p); e != nil {
-				return e
-			}
-		}
+	}
 
-		if e := a.submitOwnedDraft(tx, who, content.ID, content.DraftRevisionID); e != nil {
-			return e
-		}
-		return tx.Table(aiTable("product")).Where("id=?", d.ID).Updates(map[string]any{"content_id": content.ID, "revision_id": content.DraftRevisionID, "error": ""}).Error
-	})
+	if e := a.submitOwnedDraft(tx, who, content.ID, content.DraftRevisionID); e != nil {
+		return e
+	}
+	return tx.Table(aiTable("product")).Where("id=?", d.ID).Updates(map[string]any{"content_id": content.ID, "revision_id": content.DraftRevisionID, "error": ""}).Error
 }
 
 // Merge/split operate only on import drafts; they never delete business products.

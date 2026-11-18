@@ -17,11 +17,12 @@ const {chromium}=require('../.tools/browser-qa/node_modules/playwright');
    const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
    const url=role==='admin'?'/admin/settings?tab=ai':'/merchant/ai-import';await page.goto(fixture.base+url,{waitUntil:'domcontentloaded'});
    if(role==='admin'){
-    const panel=page.locator('.ai-model-settings');await panel.getByRole('heading',{name:'AI模型配置 · 阿里云百炼'}).waitFor();assert.equal(await panel.getByLabel('默认模型',{exact:false}).inputValue(),'qwen3.8-flash');
+    const panel=page.locator('.ai-model-settings');await panel.getByRole('heading',{name:'AI模型配置 · 阿里云百炼'}).waitFor();assert.equal(await panel.getByLabel('提取模型',{exact:true}).inputValue(),'qwen3.8-flash');assert.equal(await panel.getByLabel('复核模型',{exact:true}).inputValue(),'qwen3.8-flash');
     await panel.getByRole('combobox',{name:/^测试模型/}).selectOption('max');assert(await panel.getByRole('button',{name:'测试已保存的连接',exact:true}).isDisabled());
     await panel.getByRole('checkbox',{name:'我明确选择max，并确认费用较高',exact:true}).check();assert(!(await panel.getByRole('button',{name:'测试已保存的连接',exact:true}).isDisabled()));
    }else{
-    await page.getByRole('heading',{name:'AI智能建馆',exact:true}).waitFor();const model=page.locator('.ai-import select').first();await model.waitFor();assert.equal(await model.inputValue(),'flash');
+    await page.getByRole('heading',{name:'AI智能建馆',exact:true}).waitFor();assert.equal(await page.getByLabel('本次任务模型').count(),0);assert.equal(await page.getByRole('button',{name:'确认协议',exact:true}).count(),0);
+    if(fixture.task){await page.goto(fixture.base+'/merchant/ai-import/'+fixture.task);await page.getByRole('tab',{name:'企业资料',exact:true}).waitFor();await page.getByRole('button',{name:'确认并提交企业资料',exact:true}).waitFor();await page.getByRole('tab',{name:/产品资料/}).click();await page.locator('article.ai-product:visible').first().waitFor();assert((await page.locator('article.ai-product:visible').count())<=5);await page.getByRole('button',{name:'选择当前页',exact:true}).click();const submit=page.getByRole('button',{name:'确认并提交所选产品',exact:true});await submit.scrollIntoViewIfNeeded();assert(await submit.isEnabled());}
    }
    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await page.screenshot({path:path.join(screens,role+'-'+width+'.png'),fullPage:true});
    checks.push({role,width,loaded:true,flash:true,overflow:false,paidModelTestExecuted:false});await context.close();

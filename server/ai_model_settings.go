@@ -19,17 +19,19 @@ const aiMaxModel = "qwen3.8-max"
 const aiModelSettingKey = "ai_bailian_settings_v1"
 
 type AIModelSettings struct {
-	Version        uint64 `json:"version"`
-	BaseURL        string `json:"base_url"`
-	TimeoutSeconds int    `json:"timeout_seconds"`
-	AllowManualMax bool   `json:"allow_manual_max"`
-	KeyMode        string `json:"key_mode"`
-	EncryptedKey   string `json:"encrypted_key,omitempty"`
+	ExtractionModel string `json:"extraction_model"`
+	ReviewModel     string `json:"review_model"`
+	Version         uint64 `json:"version"`
+	BaseURL         string `json:"base_url"`
+	TimeoutSeconds  int    `json:"timeout_seconds"`
+	AllowManualMax  bool   `json:"allow_manual_max"`
+	KeyMode         string `json:"key_mode"`
+	EncryptedKey    string `json:"encrypted_key,omitempty"`
 }
 
 func aiDefaultModelSettings() AIModelSettings {
 	c := bailian.FromEnv()
-	return AIModelSettings{BaseURL: c.BaseURL, TimeoutSeconds: int(c.Timeout / time.Second), AllowManualMax: true, KeyMode: "environment"}
+	return AIModelSettings{ExtractionModel: aiFlashModel, ReviewModel: aiFlashModel, BaseURL: c.BaseURL, TimeoutSeconds: int(c.Timeout / time.Second), KeyMode: "environment"}
 }
 func (a *App) aiModelSettings() (AIModelSettings, error) {
 	s := aiDefaultModelSettings()
@@ -43,13 +45,19 @@ func (a *App) aiModelSettings() (AIModelSettings, error) {
 	if json.Unmarshal([]byte(row.Value), &s) != nil {
 		return s, errors.New("ai_invalid_model_settings")
 	}
+	if s.ExtractionModel == "" {
+		s.ExtractionModel = aiFlashModel
+	}
+	if s.ReviewModel == "" {
+		s.ReviewModel = aiFlashModel
+	}
 	return s, nil
 }
 func (a *App) aiBailianConfig() (bailian.Config, AIModelSettings, error) {
 	c := bailian.FromEnv()
 	s, e := a.aiModelSettings()
-	c.Model = aiFlashModel
-	c.ReviewModel = aiFlashModel
+	c.Model = s.ExtractionModel
+	c.ReviewModel = s.ReviewModel
 	if e != nil {
 		return c, s, e
 	}
@@ -71,24 +79,30 @@ func (a *App) aiBailianConfig() (bailian.Config, AIModelSettings, error) {
 	return c, s, nil
 }
 func (a *App) aiTaskConfig(t AIImportTask) (bailian.Config, error) {
-	c, s, e := a.aiBailianConfig()
+	c, _, e := a.aiBailianConfig()
 	if e != nil {
 		return c, e
 	}
-	if t.ModelMode == "max" {
+	if t.ExtractionModel != "" && t.ReviewModel != "" {
+		c.Model, c.ReviewModel = t.ExtractionModel, t.ReviewModel
+	} else if t.ModelMode == "max" {
 		if t.MaxConfirmedAt == nil {
 			return c, errors.New("ai_max_confirmation_required")
-		}
-		if !s.AllowManualMax {
-			return c, errors.New("ai_max_disabled")
 		}
 		c.Model = aiMaxModel
 		c.ReviewModel = aiMaxModel
 	} else if t.ModelMode != "" && t.ModelMode != "flash" {
 		return c, errors.New("ai_invalid_model_mode")
+	} else {
+		// Old tasks without snapshots retain their original Flash policy.
+		c.Model, c.ReviewModel = aiFlashModel, aiFlashModel
+	}
+	if !aiAllowedModel(c.Model) || !aiAllowedModel(c.ReviewModel) {
+		return c, errors.New("ai_invalid_model_settings")
 	}
 	return c, c.Validate()
 }
+func aiAllowedModel(s string) bool { return s == aiFlashModel || s == aiMaxModel }
 func (a *App) aiModelView() (gin.H, error) {
 	c, s, e := a.aiBailianConfig()
 	if e != nil && e.Error() != "ai_model_key_unreadable" {
@@ -100,7 +114,7 @@ func (a *App) aiModelView() (gin.H, error) {
 	} else if c.Validate() != nil {
 		code = "bailian_configuration_required"
 	}
-	return gin.H{"version": s.Version, "base_url": s.BaseURL, "timeout_seconds": s.TimeoutSeconds, "allow_manual_max": s.AllowManualMax, "default_model": aiFlashModel, "review_model": aiFlashModel, "advanced_model": aiMaxModel, "key_configured": c.Key != "" && e == nil, "key_source": s.KeyMode, "configured": code == "", "configuration_error": code, "enabled": aiEnabled()}, nil
+	return gin.H{"version": s.Version, "base_url": s.BaseURL, "timeout_seconds": s.TimeoutSeconds, "allow_manual_max": false, "default_model": s.ExtractionModel, "extraction_model": s.ExtractionModel, "review_model": s.ReviewModel, "advanced_model": aiMaxModel, "key_configured": c.Key != "" && e == nil, "key_source": s.KeyMode, "configured": code == "", "configuration_error": code, "enabled": aiEnabled()}, nil
 }
 func aiOfficialEndpoint(raw string) bool {
 	u, e := url.Parse(raw)
@@ -133,12 +147,15 @@ func (a *App) aiModelSettingsRoutes(admin *gin.RouterGroup) {
 }
 func (a *App) aiSaveModelSettings(c *gin.Context) {
 	var req struct {
-		Version        uint64 `json:"version"`
-		BaseURL        string `json:"base_url"`
-		TimeoutSeconds int    `json:"timeout_seconds"`
-		AllowManualMax bool   `json:"allow_manual_max"`
-		KeyAction      string `json:"key_action"`
-		APIKey         string `json:"api_key"`
+		ExtractionModel string `json:"extraction_model"`
+		ReviewModel     string `json:"review_model"`
+		ConfirmMax      bool   `json:"confirm_max"`
+		Version         uint64 `json:"version"`
+		BaseURL         string `json:"base_url"`
+		TimeoutSeconds  int    `json:"timeout_seconds"`
+		AllowManualMax  bool   `json:"allow_manual_max"`
+		KeyAction       string `json:"key_action"`
+		APIKey          string `json:"api_key"`
 	}
 	if c.ShouldBindJSON(&req) != nil {
 		fail(c, 400, "invalid_request")
@@ -187,7 +204,25 @@ func (a *App) aiSaveModelSettings(c *gin.Context) {
 		}
 		s.BaseURL = req.BaseURL
 		s.TimeoutSeconds = req.TimeoutSeconds
-		s.AllowManualMax = req.AllowManualMax
+		if req.ExtractionModel != "" {
+			s.ExtractionModel = req.ExtractionModel
+		}
+		if req.ReviewModel != "" {
+			s.ReviewModel = req.ReviewModel
+		}
+		if s.ExtractionModel == "" {
+			s.ExtractionModel = aiFlashModel
+		}
+		if s.ReviewModel == "" {
+			s.ReviewModel = aiFlashModel
+		}
+		if !aiAllowedModel(s.ExtractionModel) || !aiAllowedModel(s.ReviewModel) {
+			return serviceFailure{"ai_invalid_model_settings", 400}
+		}
+		if (s.ExtractionModel == aiMaxModel || s.ReviewModel == aiMaxModel) && !req.ConfirmMax {
+			return serviceFailure{"ai_max_confirmation_required", 400}
+		}
+		s.AllowManualMax = false
 		s.Version++
 		switch req.KeyAction {
 		case "replace":
@@ -203,7 +238,7 @@ func (a *App) aiSaveModelSettings(c *gin.Context) {
 		if e := tx.Model(&row).Updates(map[string]any{"value": aiJSON(s), "updated_at": time.Now().UTC()}).Error; e != nil {
 			return e
 		}
-		return recordOperation(tx, actor(c).ID, "ai_models", 0, "ai_models_saved", "default_flash;max_requires_explicit_task_confirmation")
+		return recordOperation(tx, actor(c).ID, "ai_models", 0, "ai_models_saved", "new_tasks;extraction="+s.ExtractionModel+";review="+s.ReviewModel)
 	})
 	if e != nil {
 		dbFail(c, e)
