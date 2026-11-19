@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "width": 1440,
+      "lang": "zh",
+      "pendingExplanation": true,
+      "falseErrorAbsent": true,
+      "overflow": false,
+      "syntheticPrivateRequestsIntercepted": true
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "pendingExplanation": true,
+      "falseErrorAbsent": true,
+      "overflow": false,
+      "syntheticPrivateRequestsIntercepted": true
+    },
+    {
+      "width": 390,
+      "lang": "zh",
+      "pendingExplanation": true,
+      "falseErrorAbsent": true,
+      "overflow": false,
+      "syntheticPrivateRequestsIntercepted": true
+    },
+    {
+      "width": 390,
+      "lang": "en",
+      "pendingExplanation": true,
+      "falseErrorAbsent": true,
+      "overflow": false,
+      "syntheticPrivateRequestsIntercepted": true
+    }
+  ],
+  "usesProductionCredentials": false,
+  "changesBusinessData": false
+}
