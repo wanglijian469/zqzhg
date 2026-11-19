@@ -5,7 +5,7 @@ import './police-registration.css';
 
 export function PoliceRegistration(){
  const {site}=useRuntimeConfig();
- return site.police_number?<a className="police-registration" href={site.police_url||'https://beian.mps.gov.cn/'} target="_blank" rel="noopener noreferrer"><img src="/police-beian.png" width={35} height={40} alt="" aria-hidden="true"/>{site.police_number}</a>:null;
+ return site.police_number?<a className="police-registration" href={site.police_url||'https://beian.mps.gov.cn/'} target="_blank" rel="noopener noreferrer"><img src="/police-beian.png" width={36} height={40} alt="" aria-hidden="true"/>{site.police_number}</a>:null;
 }
 
 export function FilingLinks(){
