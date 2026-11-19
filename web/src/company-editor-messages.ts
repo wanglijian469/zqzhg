@@ -1,5 +1,6 @@
 export const companyEditorMessages:Record<string,Record<string,string>>={
   "zh": {
+    "boothPendingReadOnly": "企业资料已提交，正在等待平台审核。待审期间暂不能修改，本次修改通过审核后更新；原已公开资料继续展示。",
     "vendor_name_exists": "该企业名称已存在，请先查找并编辑已有展厅；如需处理，请联系平台。",
     "cChecklist": "填写建议清单",
     "cTitle": "完善企业资料",
@@ -91,6 +92,7 @@ export const companyEditorMessages:Record<string,Record<string,string>>={
     "cTooLong": "内容超过字段限制，请缩短后再添加。"
   },
   "en": {
+    "boothPendingReadOnly": "Your company details have been submitted for platform review and cannot be edited while pending. Approved changes will replace the previously published details, which remain visible during review.",
     "vendor_name_exists": "This company name already exists. Find and edit the existing showroom, or contact the platform.",
     "cChecklist": "Completion suggestions",
     "cTitle": "Complete company details",
