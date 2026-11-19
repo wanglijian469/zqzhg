@@ -1,0 +1,179 @@
+{
+  "passed": true,
+  "completedUTC": "2026-11-19T05:30:51.585005+00:00",
+  "runtimeCommit": "0e47c8ced88a203cb283aaf22a27fd4abd8cbdb1",
+  "websiteVersion": "1.12.4",
+  "schemaVersion": 39,
+  "android": {
+    "url": "https://zqzhg.com/downloads/dalunongji.apk",
+    "version": "1.12.0+53",
+    "bytes": 86425090,
+    "sha256": "aeb8ee88816bd5976e676e5519c494d8142e8b9ad091f9e3423ff7f095ba24de",
+    "qr_url": "https://zqzhg.com/downloads/dalunongji.apk",
+    "https_full_download_verified": true,
+    "agent_real_sms_sends": 0
+  },
+  "policeNumber": "冀公网安备13052802002070号",
+  "policeURL": "https://beian.mps.gov.cn/#/query/webSearch?code=13052802002070",
+  "migrationScope": [
+    67,
+    79
+  ],
+  "companyMigrations": [
+    {
+      "enterprise_id": 67,
+      "company": "河北洋柯机械有限公司",
+      "status": "completed",
+      "private_objects": 73,
+      "source_bytes": 152542768,
+      "completed_copy_checkpoints": 114,
+      "historical_copy_bytes": 249698056
+    },
+    {
+      "enterprise_id": 79,
+      "company": "河北派一液压机械有限公司",
+      "status": "completed",
+      "private_objects": 370,
+      "source_bytes": 189460531,
+      "completed_copy_checkpoints": 517,
+      "historical_copy_bytes": 305139557
+    }
+  ],
+  "usage": {
+    "models": {
+      "extraction_model": "qwen3.8-flash",
+      "review_model": "qwen3.8-flash"
+    },
+    "companies": [
+      {
+        "enterprise_id": 67,
+        "used_bytes": 241115217,
+        "reserved_bytes": 0,
+        "quota_bytes": 314572800,
+        "remaining_bytes": 73457583
+      },
+      {
+        "enterprise_id": 79,
+        "used_bytes": 303562987,
+        "reserved_bytes": 0,
+        "quota_bytes": 314572800,
+        "remaining_bytes": 11009813
+      }
+    ]
+  },
+  "originalMediaFiles": 892,
+  "originalMediaHashesUnchanged": true,
+  "originalFilesDeleted": false,
+  "businessPayloadsUnchanged": true,
+  "quotaOverridesUnchanged": true,
+  "privatePrimaryMappings": 443,
+  "activePublicCopies": 184,
+  "accessChecks": [
+    {
+      "enterprise_id": 67,
+      "kind": "image",
+      "private_direct_range": true,
+      "other_company_denied": true
+    },
+    {
+      "enterprise_id": 67,
+      "kind": "pdf",
+      "private_direct_range": true,
+      "other_company_denied": true
+    },
+    {
+      "enterprise_id": 67,
+      "kind": "video",
+      "private_direct_range": true,
+      "other_company_denied": true
+    },
+    {
+      "enterprise_id": 67,
+      "existing_public_url_redirect": true
+    },
+    {
+      "enterprise_id": 79,
+      "kind": "image",
+      "private_direct_range": true,
+      "other_company_denied": true
+    },
+    {
+      "enterprise_id": 79,
+      "kind": "pdf",
+      "private_direct_range": true,
+      "other_company_denied": true
+    },
+    {
+      "enterprise_id": 79,
+      "kind": "video",
+      "private_direct_range": true,
+      "other_company_denied": true
+    },
+    {
+      "enterprise_id": 79,
+      "existing_public_url_redirect": true
+    }
+  ],
+  "backup": {
+    "destination": "operator-workstation-only",
+    "encrypted": "AES-256-GCM",
+    "verified": true,
+    "logicalFiles": 892,
+    "uniqueObjects": 713,
+    "sqlSHA256": "817ca158a7ce605e2b7574fae2773443abaccfb10e3b959990a5cd6843fc268e",
+    "sqlBytes": 1679938,
+    "ecsBackupCreated": false,
+    "ossBackupCreated": false,
+    "isolatedSQLRestoreVerified": true
+  },
+  "map": {
+    "snapshots": 77,
+    "nationalHebeiXingtaiNingjin": true,
+    "vendorCounts": [
+      10,
+      9,
+      7,
+      7
+    ],
+    "widths": [
+      1440,
+      1024,
+      768,
+      390,
+      360
+    ],
+    "mobileFailureRetry": true,
+    "productionWebsite": true,
+    "productionAPKAssets": true,
+    "attributionAndDemoNoticeRetained": true,
+    "retryRecord": "production-browser.json"
+  },
+  "tests": {
+    "go": 14,
+    "vet": true,
+    "web": 24,
+    "typescript": true,
+    "viteBuild": true,
+    "flutterAnalyze": true,
+    "flutter": 4,
+    "nativeBridge": 4,
+    "actualOSSUploadImagePdfVideo": true,
+    "multipartParts": 5,
+    "readCompatibleFallback": true,
+    "physicalAndroidDevice": false,
+    "productionMerchantUIWithExportedSessions": false
+  },
+  "limits": [
+    "Physical-device Android installation and offline flows not tested.",
+    "Production merchant UI session export was rejected by automatic review; no production tokens exported. Server-side access/isolation checks passed.",
+    "Independent operator-STS OSS backup/restore not run; workstation backup used by explicit user choice."
+  ],
+  "linuxPackage": {
+    "name": "zqzg-v1.12.4-linux-amd64.tar.gz",
+    "sha256": "9862ba8fba26b02335a171636869265ac4a389aee516c2d8d93c06e8a1ca193a"
+  },
+  "sourceCode": "Git tag v1.12.4; runtime commit 0e47c8ced88a203cb283aaf22a27fd4abd8cbdb1",
+  "containsCredentials": false,
+  "containsPrivateMedia": false,
+  "containsBusinessDatabase": false
+}

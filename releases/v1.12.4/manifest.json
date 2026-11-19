@@ -1,0 +1,23 @@
+{
+  "productionDeployed": true,
+  "certificateSHA256": "85656c85541b188c832dc48d67cbf320046a4311aa9e0fefcc662dbe2e0f1585",
+  "signingMatchesPrevious": true,
+  "applicationId": "com.zqzt.dalunongji",
+  "version": "1.12.0+53",
+  "sha256": "aeb8ee88816bd5976e676e5519c494d8142e8b9ad091f9e3423ff7f095ba24de",
+  "deviceValidation": false,
+  "apiBaseUrl": "https://zqzhg.com",
+  "appName": "大陆农机",
+  "versionName": "1.12.0",
+  "versionCode": 53,
+  "asset": "zqzhg-1.12.0-53.apk",
+  "sourceCommit": "0e47c8ced88a203cb283aaf22a27fd4abd8cbdb1",
+  "sourceTag": "v1.12.4",
+  "schemaVersion": 39,
+  "bytes": 86425090,
+  "officialDownloadURL": "https://zqzhg.com/downloads/dalunongji.apk",
+  "releaseStatus": "stable",
+  "endpointEditable": false,
+  "embeddedWebAssetsVerified": 239,
+  "releaseBasis": "User-authorized upgrade; same certificate, component tests and production-proxy acceptance. Physical-device acceptance not claimed."
+}

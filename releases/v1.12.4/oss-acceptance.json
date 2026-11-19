@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "checks": [
+    "default_quota_314572800_bytes",
+    "zqzhg-private-data: ListMultipartUploads + ListParts + AbortMultipartUpload",
+    "zqzhg-public-media: ListMultipartUploads + ListParts + AbortMultipartUpload",
+    "readiness: signed PUT, private rejection, Range, exact-origin CORS",
+    "synthetic-photo.png: upload + validate + private Range + isolation + public copy + idempotent retry",
+    "synthetic-drawing.png: upload + validate + private Range + isolation + public copy + idempotent retry",
+    "synthetic-catalog.pdf: upload + validate + private Range + isolation + public copy + idempotent retry",
+    "synthetic-video.mp4: upload + validate + private Range + isolation + public copy + idempotent retry",
+    "synthetic-multipart.pdf: upload + validate + private Range + isolation + public copy + idempotent retry",
+    "quota exhaustion rejected before upload",
+    "public prefixes: platform and company readable; upload-temp denied; exact-origin CORS"
+  ],
+  "multipart_resume_part_count": 5,
+  "synthetic_cleanup_completed": true,
+  "region": "cn-beijing",
+  "role": "ZQZHG-SMS-Role"
+}

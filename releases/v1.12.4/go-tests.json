@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "count": 14,
+  "tests": [
+    "TestAIIsolationCropIntegrityReviewAndSubmission",
+    "TestAIUploadContentValidationAndDuplicate",
+    "TestCompleteBackupRestoreAndCutover",
+    "TestOSSOfficialSDKPrivateObjectAndRangeContract",
+    "TestCloudMigrationDryRunMixedHistoricalCollations",
+    "TestCloudMigration039RollbackGuard",
+    "TestCloudPublicProbeRejectsMissingCompanyScopeAndWholeBucket",
+    "TestCloudUploadContentAndSafetyRules",
+    "TestCloudVideoFastStartParser",
+    "TestCloudCORSExposureForBrowserRange",
+    "TestCloudFileSessionsIsolationAccountingAndMigration",
+    "TestCloudSessionJSONNeverContainsObjectCredentials",
+    "TestSettingsQuotaSaveWithCompleteAuditAndSafeDowngrade",
+    "TestWatermarkSnapshotVariantsAndPublicProtection"
+  ],
+  "vetPassed": true,
+  "scope": "targeted regression; not all historical repository tests"
+}

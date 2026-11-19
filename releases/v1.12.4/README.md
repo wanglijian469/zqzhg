@@ -1,5 +1,7 @@
 # v1.12.4 · 企业文件 OSS 与 Android 升级
 
+**已上线（2026-11-19）**：正式网站 v1.12.4／Schema39、Android 1.12.0+53，洋柯 67／派一 79 文件迁移完成，ECS 原件保留。本文件下方说明部署流程；实际结果见 [上线记录](../../docs/RELEASE_1.12.4_20261119.md) 及本目录的 `deployment-verification.json`、`production-browser.json`、`production-apk-browser.json`、`manifest.json`。运行代码提交 `0e47c8ced88a203cb283aaf22a27fd4abd8cbdb1`，后续仅补验收文档。
+
 网站／Go 后端升级至 Schema 39，Android 升级为同包名、同证书的 1.12.0+53。保留短信、MySQL、现有企业产品 ID、手工编辑和平台审核逻辑；模型继续使用管理员已配置的 flash，不自动升为 max。
 
 本次用户授权新增公安备案号“冀公网安备13052802002070号”，查询链接为 `https://beian.mps.gov.cn/#/query/webSearch?code=13052802002070`。通过现有网站配置呈现在页脚，不将网站公安备案号冒用为原生 App 独立备案号。

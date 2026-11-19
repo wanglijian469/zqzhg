@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "width": 1440,
+      "policeFiling": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "policeFiling": true,
+      "overflow": false
+    }
+  ]
+}
