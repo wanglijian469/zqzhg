@@ -12,7 +12,10 @@ BASE=Path('/opt/zqzt');STATE=BASE/'shared/upgrade-v1.12.4-private.json'
 ENV=Path('/etc/zqzt/exhibition.env');UNIT='zqzt-exhibition'
 
 def digest(path):
-    with Path(path).open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
+    value=hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        for block in iter(lambda:stream.read(1024*1024),b''):value.update(block)
+    return value.hexdigest()
 def atomic(path,value):
     temp=path.with_name(path.name+'.'+secrets.token_hex(4));temp.write_text(json.dumps(value,ensure_ascii=False,indent=2));temp.chmod(0o600);os.replace(temp,path)
 def state():return json.loads(STATE.read_text())
