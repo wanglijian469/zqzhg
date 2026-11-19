@@ -1,0 +1,90 @@
+{
+  "passed": true,
+  "sourceImageSHA256": "8dfecad0dfcb3dc584f2c2447943eefb1fd65a058856eb0611e2c56ddc4c1fe1",
+  "checks": [
+    {
+      "width": 18,
+      "path": "/",
+      "imageHit": "IMG",
+      "anchorY": 862.125,
+      "scrollY": 2598,
+      "documentHeight": 3498,
+      "unobscured": true,
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/v/jinong",
+      "imageHit": "IMG",
+      "anchorY": 868.34375,
+      "scrollY": 1616,
+      "documentHeight": 2516,
+      "unobscured": true,
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/",
+      "imageHit": "IMG",
+      "anchorY": 800.171875,
+      "scrollY": 4125,
+      "documentHeight": 5025,
+      "unobscured": true,
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/v/jinong",
+      "imageHit": "IMG",
+      "anchorY": 792.375,
+      "scrollY": 2380,
+      "documentHeight": 3280,
+      "unobscured": true,
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/",
+      "imageHit": "IMG",
+      "anchorY": 799.6875,
+      "scrollY": 4230,
+      "documentHeight": 5130,
+      "unobscured": true,
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/v/jinong",
+      "imageHit": "IMG",
+      "anchorY": 792.4375,
+      "scrollY": 2310,
+      "documentHeight": 3210,
+      "unobscured": true,
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    }
+  ]
+}

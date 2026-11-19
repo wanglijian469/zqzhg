@@ -1,0 +1,14 @@
+{
+  "version": "1.12.5",
+  "packageKind": "schema39-managed-OSS-incremental",
+  "runtimeAndWebsiteCommit": "10121909d55f0943e1467b3073369c86f3d94cae",
+  "schemaVersion": 39,
+  "mapSnapshotCount": 77,
+  "androidUnchanged": "1.12.0+53",
+  "packageSHA256": "9568e429af73ede2ad72c79bd0ab11530af54f7d40bb5581898aed9ff4f0c553",
+  "packageBytes": 29009302,
+  "includesCredentials": false,
+  "includesBusinessDatabase": false,
+  "includesPrivateMedia": false,
+  "productionDeployed": true
+}

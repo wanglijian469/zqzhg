@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "version": "1.12.5",
+  "backendCommit": "10121909d55f0943e1467b3073369c86f3d94cae",
+  "schema": 39,
+  "videoMaxSeconds": 300,
+  "sourcePrivateAndUnchanged": true,
+  "realVideoDuration": 197.96,
+  "realVideoCodec": "h264",
+  "realAudioCodec": "aac",
+  "privateMediaReady": true,
+  "businessReferencesCreated": false,
+  "protectedConfigurationUnchanged": true,
+  "appUnchanged": "1.12.0+53",
+  "mapSnapshots": 77,
+  "workstationEncryptedBackupVerified": true,
+  "temporarySessionsDeleted": true,
+  "isolatedTestDatabaseRemoved": true
+}

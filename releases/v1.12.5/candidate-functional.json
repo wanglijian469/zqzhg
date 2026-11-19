@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "real_oss_incompatible_video_and_audio_converted": true,
+  "full_duration_seconds": 12.0,
+  "private_range": true,
+  "cross_owner_404": true,
+  "raw_sha_preserved": true,
+  "three_objects_exact_quota": true,
+  "duplicate_completion_no_new_media": true,
+  "delete_releases_original_display_cover": true,
+  "stages": [
+    "checking_file",
+    "creating_video_cover",
+    "preparing_video",
+    "processing_video",
+    "ready"
+  ]
+}

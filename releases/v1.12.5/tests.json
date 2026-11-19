@@ -1,0 +1,30 @@
+{
+  "goRegressionTopLevelPassed": [
+    "TestAIIsolationCropIntegrityReviewAndSubmission",
+    "TestAIUploadContentValidationAndDuplicate",
+    "TestCompleteBackupRestoreAndCutover",
+    "TestOSSOfficialSDKPrivateObjectAndRangeContract",
+    "TestCloudMigrationDryRunMixedHistoricalCollations",
+    "TestCloudMigration039RollbackGuard",
+    "TestCloudPublicProbeRejectsMissingCompanyScopeAndWholeBucket",
+    "TestCloudUploadContentAndSafetyRules",
+    "TestCloudVideoFastStartParser",
+    "TestCloudCORSExposureForBrowserRange",
+    "TestCloudFileSessionsIsolationAccountingAndMigration",
+    "TestCloudSessionJSONNeverContainsObjectCredentials",
+    "TestVideoWorkerProcessingRetryAndRecovery",
+    "TestSettingsQuotaSaveWithCompleteAuditAndSafeDowngrade",
+    "TestCloudVideoAutomaticConversion",
+    "TestCloudVideoConversionBoundsAndFailures",
+    "TestCloudVideoProgressIsScopedAndCleared",
+    "TestWatermarkSnapshotVariantsAndPublicProtection"
+  ],
+  "additionalFinalVideoFiveMinuteBoundaryPassed": true,
+  "goVetPassed": true,
+  "frontendFocusedTestsPassed": 20,
+  "typescriptPassed": true,
+  "productionBuildPassed": true,
+  "fullRepositorySuiteClaimed": false,
+  "androidRebuilt": false,
+  "androidRealDeviceTestedThisRelease": false
+}
