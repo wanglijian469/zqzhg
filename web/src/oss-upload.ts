@@ -2,7 +2,9 @@ import {api,body,APIError,token} from './api';
 import {runtimeConfig,mediaURL} from './runtime-config';
 
 type Role='merchant'|'admin';
-type Session={id:string;state:string;media_id?:number;error?:string;expires_at:string};
+export type UploadProcessing={stage:string;percent?:number};
+export type UploadProgress=(n:number,processing?:UploadProcessing)=>void;
+type Session={id:string;state:string;media_id?:number;error?:string;expires_at:string;processing_stage?:string;processing_percent?:number};
 type Authorization={session:Session;mode:'single'|'multipart';url?:string;headers?:Record<string,string>;part_size?:number;part_count?:number;uploaded_parts?:number[]};
 const sessions=new Map<string,string>(); // Session IDs only; signed URLs are never persisted.
 const prefix=(role:Role)=>role==='admin'?'/admin/storage/files':'/merchant/files';
@@ -25,7 +27,7 @@ function put(url:string,headers:Record<string,string>,data:Blob,signal:AbortSign
 }
 function pause(ms:number,signal:AbortSignal){return new Promise<void>((resolve,reject)=>{const abort=()=>{clearTimeout(timer);reject(new DOMException('Cancelled','AbortError'))};const timer=setTimeout(()=>{signal.removeEventListener('abort',abort);resolve()},ms);signal.addEventListener('abort',abort,{once:true});if(signal.aborted)abort()})}
 
-export async function uploadCloudFile(file:File,kind:string,purpose:string,role:Role,signal:AbortSignal,onProgress:(n:number)=>void,path=''){
+export async function uploadCloudFile(file:File,kind:string,purpose:string,role:Role,signal:AbortSignal,onProgress:UploadProgress,path=''){
  const root=prefix(role),key=JSON.stringify([role,token(role),path,kind,purpose,file.name,file.size,file.lastModified]);
  const business=path.match(/\/(contents|resources)\/(\d+)\//);
  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(key));const storageKey='zqzt.oss.upload.'+Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
@@ -60,13 +62,16 @@ export async function uploadCloudFile(file:File,kind:string,purpose:string,role:
    await Promise.all([parallel(),parallel()]);
   }
   await api(root+'/uploads/'+id+'/complete',{method:'POST',body:'{}',signal},role);
+  // The uploaded original and resumable session outlive this page's poller.
+  signal.removeEventListener('abort',cancel);
   const media=await waitForFile(root,id,role,signal,onProgress);forget();return media;
  }finally{signal.removeEventListener('abort',cancel)}
 }
-async function waitForFile(root:string,id:string,role:Role,signal:AbortSignal,progress:(n:number)=>void){
+async function waitForFile(root:string,id:string,role:Role,signal:AbortSignal,progress:UploadProgress){
  for(let n=0;n<450;n++){
   const {session}=await api<{session:Session}>(root+'/uploads/'+id,{signal},role);
   if(session.state==='completed'&&session.media_id){progress(100);return session.media_id}
+  if(session.state==='validating')progress(100,{stage:session.processing_stage||'checking_file',percent:session.processing_percent});
   if(['failed','cancelled','reclaimed'].includes(session.state))throw new APIError(session.error||'oss_upload_failed');
   await pause(2000,signal);
  }

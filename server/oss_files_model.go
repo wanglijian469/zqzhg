@@ -36,6 +36,8 @@ type EnterpriseFileObject struct {
 	UpdatedAt    time.Time `json:"updated_at"`
 }
 type FileUploadSession struct {
+	ProcessingStage    string     `gorm:"-" json:"processing_stage,omitempty"`
+	ProcessingPercent  *int       `gorm:"-" json:"processing_percent,omitempty"`
 	ID                 string     `gorm:"primaryKey" json:"id"`
 	OwnerID            uint64     `json:"-"`
 	ActorID            uint64     `json:"-"`

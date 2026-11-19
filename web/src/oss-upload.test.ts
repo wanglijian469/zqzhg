@@ -41,3 +41,15 @@ it('does not start an OSS request when already cancelled',async()=>{
  const controller=new AbortController();controller.abort();vi.stubGlobal('fetch',vi.fn().mockRejectedValue(new DOMException('Cancelled','AbortError')));
  await expect(uploadCloudFile(new File(['abc'],'cancel.png',{type:'image/png'}),'image','product_image','merchant',controller.signal,()=>{})).rejects.toBeDefined();expect(sent).toHaveLength(0);
 });
+it('shows server processing progress and resumes after leaving without uploading or cancelling again',async()=>{
+ const controller=new AbortController(),file=new File(['video data'],'continue-video.mp4',{type:'video/mp4',lastModified:123});let ready=false;const paths:string[]=[];const stages:string[]=[];
+ vi.stubGlobal('fetch',vi.fn(async(url:string)=>{
+  paths.push(url);
+  if(url.endsWith('/uploads'))return json({session:{id:'continue-video',state:'uploading',expires_at:'2099-01-01'},mode:'single',url:'https://upload.zqzhg.com/test-video',headers:{'Content-Type':'video/mp4'}});
+  if(url.endsWith('/complete'))return json({});
+  return json({session:ready?{id:'continue-video',state:'completed',media_id:88,expires_at:'2099-01-01'}:{id:'continue-video',state:'validating',processing_stage:'processing_video',processing_percent:37,expires_at:'2099-01-01'}});
+ }));
+ await expect(uploadCloudFile(file,'video','','merchant',controller.signal,(_n,p)=>{if(p){stages.push(p.stage);expect(p.percent).toBe(37);controller.abort()}},'/merchant/resource-media?kind=video')).rejects.toMatchObject({name:'AbortError'});
+ expect(stages).toEqual(['processing_video']);expect(paths.some(p=>p.endsWith('/cancel'))).toBe(false);ready=true;
+ expect(await uploadCloudFile(file,'video','','merchant',new AbortController().signal,()=>{},'/merchant/resource-media?kind=video')).toBe(88);expect(sent).toHaveLength(1);expect(paths.filter(p=>p.endsWith('/uploads'))).toHaveLength(1);
+});

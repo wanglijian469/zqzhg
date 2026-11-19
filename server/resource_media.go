@@ -297,7 +297,7 @@ func (a *App) processNextVideo(parent context.Context) bool {
 			break
 		}
 	}
-	if duration <= 0 || duration > float64(settingInt("MAX_VIDEO_SECONDS", 180)) || w < 1 || h < 1 || w > 4096 || h > 4096 {
+	if duration <= 0 || duration > float64(settingInt("MAX_VIDEO_SECONDS", 300)) || w < 1 || h < 1 || w > 4096 || h > 4096 {
 		failure("video_limit_exceeded")
 		return true
 	}

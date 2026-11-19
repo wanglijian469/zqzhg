@@ -541,6 +541,7 @@ func TestCloudFileSessionsIsolationAccountingAndMigration(t *testing.T) {
 	if e := migrate(a.DB); e != nil {
 		t.Fatal("migration not rerunnable", e)
 	}
+	assertCloudVideoConversionAccounting(t, a, tc, token, owner)
 }
 
 func TestCloudSessionJSONNeverContainsObjectCredentials(t *testing.T) {

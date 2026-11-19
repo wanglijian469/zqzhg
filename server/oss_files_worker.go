@@ -73,6 +73,8 @@ func (a *App) processNextCloudUploadLocked(parent context.Context) bool {
 		return false
 	}
 	s.LeaseToken = token
+	a.setCloudUploadProgress(s.ID, "checking_file", nil)
+	defer a.clearCloudUploadProgress(s.ID)
 	ctx, cancel := context.WithTimeout(parent, 10*time.Minute)
 	defer cancel()
 	ctx, stop := a.cloudLeaseContext(ctx, "upload", s.ID, token)
@@ -88,7 +90,7 @@ func cloudProcessingError(e error) string {
 		return ""
 	}
 	switch e.Error() {
-	case "invalid_image", "invalid_pdf", "file_size_mismatch", "unsupported_file", "file_too_large", "storage_quota_exceeded", "disk_space_insufficient", "file_upload_conflict", "video_probe_failed", "unsupported_video_codec", "video_limit_exceeded", "video_processing_failed", "checksum_mismatch", "file_backup_pinned", "oss_permission_denied", "oss_unavailable", "not_found", "media_not_ready", "watermark_not_ready":
+	case "invalid_image", "invalid_pdf", "file_size_mismatch", "unsupported_file", "file_too_large", "storage_quota_exceeded", "disk_space_insufficient", "file_upload_conflict", "video_probe_failed", "unsupported_video_codec", "video_limit_exceeded", "video_processing_failed", "video_processing_timeout", "video_conversion_unavailable", "checksum_mismatch", "file_backup_pinned", "oss_permission_denied", "oss_unavailable", "not_found", "media_not_ready", "watermark_not_ready":
 		return e.Error()
 	}
 	return "oss_unavailable"

@@ -21,12 +21,13 @@ import (
 )
 
 type cloudFilesRuntime struct {
-	mu         sync.Mutex
-	processMu  sync.Mutex
-	workerOnce sync.Once
-	clients    map[string]*oss.Client
-	provider   credentials.CredentialsProvider // Tests may inject a local provider; never set by HTTP input.
-	gcAfter    string
+	mu             sync.Mutex
+	processMu      sync.Mutex
+	workerOnce     sync.Once
+	clients        map[string]*oss.Client
+	provider       credentials.CredentialsProvider // Tests may inject a local provider; never set by HTTP input.
+	gcAfter        string
+	uploadProgress map[string]cloudUploadProgress
 }
 
 func (a *App) cloudFiles() *cloudFilesRuntime {

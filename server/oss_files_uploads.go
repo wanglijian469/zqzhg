@@ -510,6 +510,7 @@ func (a *App) cloudFileRoutes(admin, merchant *gin.RouterGroup) {
 				return
 			}
 			c.Header("Cache-Control", "no-store")
+			a.cloudUploadProgressView(&s)
 			c.JSON(200, gin.H{"session": s})
 		})
 		r.POST("/uploads/:id/authorization", func(c *gin.Context) {
