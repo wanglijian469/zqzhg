@@ -1,0 +1,62 @@
+{
+  "base": "http://127.0.0.1:59796",
+  "embeddedAPKAssets": false,
+  "map": [
+    {
+      "code": "",
+      "count": 10,
+      "sha256": "352c09e7064756c7c6a505c30dd3e7560b13a4edf87883a65fc3d008a3152802"
+    },
+    {
+      "code": "13",
+      "count": 9,
+      "sha256": "bd1daff0ea4d7253b6ce77784bf7f9669ad6e5a19d0815eb89d696e8db9b34ea"
+    },
+    {
+      "code": "1305",
+      "count": 7,
+      "sha256": "cd6acc3f9b1319610f28c83b88b8f79952b9b5242bfc34a47a10871e2247d8ba"
+    },
+    {
+      "code": "130528",
+      "count": 7,
+      "sha256": "f09314a4d4a0bc4ee436e982f282ef6ea59572c742fc01b7d1833d0634f51251"
+    }
+  ],
+  "layouts": [
+    {
+      "width": 1440,
+      "outline": true,
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "outline": true,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "outline": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "outline": true,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "outline": true,
+      "overflow": false
+    }
+  ],
+  "mobileRetry": true,
+  "pageErrors": [],
+  "httpErrors": [
+    {
+      "url": "http://127.0.0.1:59796/api/v1/public/map-demo/regions?",
+      "status": 503
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,206 @@
+{
+  "passed": true,
+  "webSourceCommit": "f2bb9e8db630eb0641b34b732836ab3e680fced7",
+  "backendCommit": "0e47c8ced88a203cb283aaf22a27fd4abd8cbdb1",
+  "schemaVersion": 39,
+  "imageSource": "user-provided official PNG, unchanged",
+  "imageSHA256": "8dfecad0dfcb3dc584f2c2447943eefb1fd65a058856eb0611e2c56ddc4c1fe1",
+  "intrinsicDimensions": [
+    36,
+    40
+  ],
+  "displayWidth": 18,
+  "link": "https://beian.mps.gov.cn/#/query/webSearch?code=13052802002070",
+  "target": "_blank",
+  "rel": "noopener noreferrer",
+  "productionChecks": [
+    {
+      "width": 18,
+      "path": "/",
+      "imageHit": "IMG",
+      "anchorY": 862.125,
+      "scrollY": 2598,
+      "documentHeight": 3498,
+      "unobscured": true,
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/v/jinong",
+      "imageHit": "IMG",
+      "anchorY": 868.34375,
+      "scrollY": 1616,
+      "documentHeight": 2516,
+      "unobscured": true,
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/",
+      "imageHit": "IMG",
+      "anchorY": 800.171875,
+      "scrollY": 4125,
+      "documentHeight": 5025,
+      "unobscured": true,
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/v/jinong",
+      "imageHit": "IMG",
+      "anchorY": 792.375,
+      "scrollY": 2380,
+      "documentHeight": 3280,
+      "unobscured": true,
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/",
+      "imageHit": "IMG",
+      "anchorY": 799.6875,
+      "scrollY": 4230,
+      "documentHeight": 5130,
+      "unobscured": true,
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/v/jinong",
+      "imageHit": "IMG",
+      "anchorY": 792.4375,
+      "scrollY": 2310,
+      "documentHeight": 3210,
+      "unobscured": true,
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    }
+  ],
+  "candidateChecks": [
+    {
+      "width": 18,
+      "path": "/",
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/v/jinong",
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/",
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/v/jinong",
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/",
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    },
+    {
+      "width": 18,
+      "path": "/v/jinong",
+      "before": true,
+      "centered": true,
+      "naturalWidth": 36,
+      "naturalHeight": 40,
+      "overflow": false
+    }
+  ],
+  "mapSnapshots": 77,
+  "mapGeometryMatchesDevelopment": true,
+  "mapVendorCounts": [
+    10,
+    9,
+    7,
+    7
+  ],
+  "mapMobileRetry": true,
+  "mapLayouts": [
+    {
+      "width": 1440,
+      "outline": true,
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "outline": true,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "outline": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "outline": true,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "outline": true,
+      "overflow": false
+    }
+  ],
+  "backendUnchanged": true,
+  "appUnchanged": true,
+  "appVersion": "1.12.0+53",
+  "businessCountsUnchangedAtSwitch": true,
+  "originalReleaseRetained": true,
+  "tests": {
+    "publicFooter": 16,
+    "showroomFiling": 1,
+    "typescript": true,
+    "productionBuild": true,
+    "existingSharingTestFailuresReproducedBeforePatch": 4
+  }
+}

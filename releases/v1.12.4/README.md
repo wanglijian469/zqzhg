@@ -1,6 +1,8 @@
 # v1.12.4 · 企业文件 OSS 与 Android 升级
 
-**已上线（2026-11-19）**：正式网站 v1.12.4／Schema39、Android 1.12.0+53，洋柯 67／派一 79 文件迁移完成，ECS 原件保留。本文件下方说明部署流程；实际结果见 [上线记录](../../docs/RELEASE_1.12.4_20261119.md) 及本目录的 `deployment-verification.json`、`production-browser.json`、`production-apk-browser.json`、`manifest.json`。运行代码提交 `0e47c8ced88a203cb283aaf22a27fd4abd8cbdb1`，后续仅补验收文档。
+**已上线（2026-11-19）**：正式网站 v1.12.4／Schema39、Android 1.12.0+53，洋柯 67／派一 79 文件迁移完成，ECS 原件保留。本文件下方说明部署流程；实际结果见 [上线记录](../../docs/RELEASE_1.12.4_20261119.md) 及本目录的 `deployment-verification.json`、`production-browser.json`、`production-apk-browser.json`、`manifest.json`。后端代码提交 `0e47c8ced88a203cb283aaf22a27fd4abd8cbdb1`，网站补丁见下文。
+
+同日网站页脚另补充用户提供的官方公安备案图标，网站补丁代码 `f2bb9e8`，后端、数据库和 APP 不变。详见 [图标补丁说明](../../docs/POLICE_FILING_ICON_20261119.md) 与 `police-icon-verification.json`。原 v1.12.4 全量包／标签及 APK 保持原始哈希，网站补丁源码位于 main。
 
 网站／Go 后端升级至 Schema 39，Android 升级为同包名、同证书的 1.12.0+53。保留短信、MySQL、现有企业产品 ID、手工编辑和平台审核逻辑；模型继续使用管理员已配置的 flash，不自动升为 max。
 
