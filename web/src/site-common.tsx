@@ -1,10 +1,16 @@
 import {Link} from 'react-router-dom';
 import {useLanguage} from './ui';
 import {useRuntimeConfig} from './runtime-config';
+import './police-registration.css';
+
+export function PoliceRegistration(){
+ const {site}=useRuntimeConfig();
+ return site.police_number?<a className="police-registration" href={site.police_url||'https://beian.mps.gov.cn/'} target="_blank" rel="noopener noreferrer"><img src="/police-beian.png" width={35} height={40} alt="" aria-hidden="true"/>{site.police_number}</a>:null;
+}
 
 export function FilingLinks(){
  const config=useRuntimeConfig();
- return <><a className="icp-registration" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">{config.site.icp_number||'冀ICP备2026047360号-2'}</a>{config.site.police_number&&<a href={config.site.police_url||'https://beian.mps.gov.cn/'} target="_blank" rel="noopener noreferrer">{config.site.police_number}</a>}</>;
+ return <><a className="icp-registration" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">{config.site.icp_number||'冀ICP备2026047360号-2'}</a><PoliceRegistration/></>;
 }
 export function ICPRegistration(){
  const {lang}=useLanguage();
