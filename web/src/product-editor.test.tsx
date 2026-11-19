@@ -15,6 +15,7 @@ const response=(data:unknown,status=200)=>new Response(JSON.stringify(data),{sta
 const vendor:Item={id:1,kind:'vendor',owner_id:9,vendor_id:0,status:'approved',revision_id:1,review_note:'',visible:true,public_visible:true,featured:false,sort_order:0,hall_id:1,data:{...emptyData,name:'真实测试企业',region_name:'河北',main_products:'机械',phone:'0319-1234567'}};
 let saved:Item|undefined,failSubmit=false,failSave=false;let calls:{url:string;method:string;data:any}[]=[];
 const fetchMock=async(url:string,opt?:RequestInit)=>{const method=opt?.method||'GET',data=opt?.body&&typeof opt.body==='string'?JSON.parse(opt.body):undefined;calls.push({url,method,data});
+ if(url.includes('/public/service-documents'))return response({items:['terms','privacy','showroom-agreement'].map((key,i)=>({id:i+1,key,title:key,version:1,digest:key+'-fixture',body:'fixture'}))});
  if(url.includes('/merchant/product-categories'))return response({items:[{id:51,name:'耕整机械',vendor_id:1,hall_id:1,industry_category_id:13,enabled:true}],industry_categories:[],preferred_industry_ids:[],vendor_id:1});
  if(url.includes('/taxonomy'))return response({categories:[{id:1,hall_id:1,name:'耕整机械',name_en:'Tillage',enabled:true,parent_id:0}],regions:[],halls:[]});
  if(url.endsWith('/merchant/contents')&&method==='POST'){saved={...vendor,id:5,kind:'product',vendor_id:1,status:'draft',revision_id:10,data:data.data};return response(saved,201)}

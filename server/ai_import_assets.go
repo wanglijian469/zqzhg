@@ -59,7 +59,7 @@ func (a *App) aiSaveAsset(ctx context.Context, owner, task, source uint64, page 
 		return asset, e
 	}
 	defer lease.Release()
-	key := "ai-" + randomToken() + ext
+	key := a.mediaObjectKey(owner, "ai_asset", "ai-"+randomToken(), ext)
 	temp := a.workPath(key)
 	if e = os.WriteFile(temp, b, 0600); e != nil {
 		return asset, e
@@ -112,6 +112,11 @@ func (a *App) aiSaveAsset(ctx context.Context, owner, task, source uint64, page 
 		// Only photographs enter the existing watermark pipeline. Diagrams are immutable PNGs.
 		if kind == "product_main" || kind == "product_photo" {
 			if e := stampWatermarkSnapshot(tx, m, "product_image"); e != nil {
+				return e
+			}
+		}
+		if cloudFilesEnabled() {
+			if e := a.registerEnterpriseFile(tx, m, "ai_"+kind, "", "", task); e != nil {
 				return e
 			}
 		}

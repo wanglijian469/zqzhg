@@ -319,11 +319,17 @@ func (a *App) watermarkVariant(tx *gorm.DB, c *Content, p Payload, id uint64, pu
 	format := "jpeg"
 	if extension == ".png" {
 		format = "png"
+	} else if cloudFilesEnabled() && extension == ".webp" {
+		format = "webp"
 	} else {
 		extension = ".jpg"
 	}
 	stem := randomToken()
 	variant := Media{OwnerID: c.OwnerID, Path: stem + extension, ThumbPath: stem + "-thumb" + extension}
+	if cloudFilesEnabled() {
+		variant.Path = a.mediaObjectKey(c.OwnerID, "watermark", stem, extension)
+		variant.ThumbPath = a.mediaObjectKey(c.OwnerID, "watermark", stem+"-thumb", extension)
+	}
 	paths := []string{a.workPath(variant.Path), a.workPath(variant.ThumbPath)}
 	defer func() {
 		for _, path := range paths {
@@ -396,6 +402,11 @@ func (a *App) watermarkVariant(tx *gorm.DB, c *Content, p Payload, id uint64, pu
 	}
 	if e := tx.Create(&variant).Error; e != nil {
 		return 0, e
+	}
+	if cloudFilesEnabled() {
+		if e := a.registerEnterpriseFile(tx, variant, "watermark", "", "", c.ID); e != nil {
+			return 0, e
+		}
 	}
 	if e := tx.Create(&MediaWatermark{MediaID: variant.ID, SourceMediaID: source.ID, VariantKey: &variantKey, Purpose: purpose, State: "ready", ConfigJSON: info.ConfigJSON, ConfigVersion: info.ConfigVersion, VendorID: info.VendorID, VendorText: info.VendorText, CreatedAt: time.Now().UTC()}).Error; e != nil {
 		return 0, e

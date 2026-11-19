@@ -36,6 +36,11 @@ func (a *App) createOwnedDraft(tx *gorm.DB, content *Content, who Account, p *Pa
 	if e := tx.Create(content).Error; e != nil {
 		return e
 	}
+	if content.Kind == "vendor" {
+		if e := associateEnterpriseFiles(tx, *content); e != nil {
+			return e
+		}
+	}
 	if e := a.makeDraft(tx, content, *p); e != nil {
 		return e
 	}

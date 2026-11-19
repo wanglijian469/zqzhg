@@ -83,6 +83,10 @@ func (a *App) aiGetTask(c *gin.Context) {
 	c.JSON(200, t)
 }
 func (a *App) aiCreateTask(c *gin.Context) {
+	if cloudFilesEnabled() && env("OSS_UPLOADS_ENABLED", "true") != "true" {
+		fail(c, 503, "oss_writes_disabled")
+		return
+	}
 	cfg, _, configError := a.aiBailianConfig()
 	if configError != nil {
 		fail(c, 503, aiSafeError(configError))
@@ -90,6 +94,10 @@ func (a *App) aiCreateTask(c *gin.Context) {
 	}
 	if e := cfg.Validate(); e != nil {
 		fail(c, 503, aiSafeError(e))
+		return
+	}
+	if strings.HasPrefix(c.GetHeader("Content-Type"), "application/json") {
+		a.aiCreateTaskFromCloudFiles(c)
 		return
 	}
 	limit := int64(settingInt("AI_IMPORT_MAX_FILE_BYTES", 30000000))

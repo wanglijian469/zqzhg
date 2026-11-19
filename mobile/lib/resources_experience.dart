@@ -1150,11 +1150,19 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
     if (!await NativeVideoSessions.activate(this, stopVideo) || !active()) {
       return;
     }
+    final access = widget.private
+        ? await m.privateFileAccess(widget.item['data']['file_media_id'])
+        : {
+            'url':
+                '${m.baseUrl}/api/v1/media/${widget.item['data']['file_media_id']}',
+            'direct': true,
+          };
+    if (!active()) return;
     final next = VideoPlayerController.networkUrl(
-      Uri.parse(
-        '${m.baseUrl}/api/v1/media/${widget.item['data']['file_media_id']}',
-      ),
-      httpHeaders: widget.private ? {'Authorization': 'Bearer ${m.token}'} : {},
+      Uri.parse(access['url']),
+      httpHeaders: access['direct'] == true
+          ? {}
+          : {'Authorization': 'Bearer ${m.token}'},
     );
     await video?.dispose();
     if (!active()) {
@@ -1326,7 +1334,9 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
                           ),
                   )
                 : d['format'] == 'pdf'
-                ? PdfViewer.uri(
+                ? CloudPdfViewer(
+                    mediaID: d['file_media_id'],
+                    private: widget.private,
                     key: ValueKey(readerVersion),
                     params: PdfViewerParams(
                       onViewerReady: (doc, controller) {
@@ -1344,22 +1354,12 @@ class _NativeResourceViewerState extends State<NativeResourceViewer>
                         }
                       },
                     ),
-                    Uri.parse(
-                      '${m.baseUrl}/api/v1/media/${d['file_media_id']}',
-                    ),
                     controller: pdfController,
-                    headers: widget.private
-                        ? {'Authorization': 'Bearer ${m.token}'}
-                        : {},
-                    preferRangeAccess: true,
                   )
                 : InteractiveViewer(
                     key: ValueKey('$page:$readerVersion'),
-                    child: Image.network(
-                      '${m.baseUrl}/api/v1/media/${d['page_media_ids'][page]}',
-                      headers: widget.private
-                          ? {'Authorization': 'Bearer ${m.token}'}
-                          : {},
+                    child: CloudNetworkImage(
+                      mediaID: d['page_media_ids'][page],
                       fit: BoxFit.contain,
                       errorBuilder: (_, _, _) => Column(
                         mainAxisSize: MainAxisSize.min,
@@ -1716,36 +1716,52 @@ class _NativeResourceEditorState extends State<NativeResourceEditor> {
         final path = file['kind'] == 'pages' || file['kind'] == 'cover'
             ? '/merchant/media'
             : '/merchant/resource-media?kind=${file['kind']}';
-        final request = ProgressMultipart(
-          'POST',
-          Uri.parse('${m.baseUrl}/api/v1$path'),
-          (sent, total) {
-            final p = (sent / total * 100).floor();
+        final cloud = await m.tryCloudUpload(
+          file['path'],
+          kind: path == '/merchant/media' ? 'image' : file['kind'],
+          purpose: 'resource_cover',
+          filename: file['name'],
+          uploadClient: uploadClient,
+          cancelled: () => cancelled,
+          onProgress: (p) {
             if (mounted && p != progress) setState(() => progress = p);
           },
         );
-        request.headers['Authorization'] = 'Bearer ${m.token}';
-        if (path == '/merchant/media') {
-          request.fields['purpose'] = 'resource_cover';
+        Json result;
+        if (cloud != null) {
+          result = cloud;
+        } else {
+          final request = ProgressMultipart(
+            'POST',
+            Uri.parse('${m.baseUrl}/api/v1$path'),
+            (sent, total) {
+              final p = (sent / total * 100).floor();
+              if (mounted && p != progress) setState(() => progress = p);
+            },
+          );
+          request.headers['Authorization'] = 'Bearer ${m.token}';
+          if (path == '/merchant/media') {
+            request.fields['purpose'] = 'resource_cover';
+          }
+          request.files.add(
+            await http.MultipartFile.fromPath(
+              'file',
+              file['path'],
+              filename: file['name'],
+            ),
+          );
+          final response = await http.Response.fromStream(
+            await uploadClient!
+                .send(request)
+                .timeout(const Duration(minutes: 15)),
+          ).timeout(const Duration(minutes: 15));
+          if (response.statusCode >= 400) {
+            if (response.statusCode == 401) await m.expireSession();
+            final error = asMap(jsonDecode(response.body));
+            throw ApiFailure(error['error']?['code'] ?? 'network_error');
+          }
+          result = asMap(jsonDecode(response.body));
         }
-        request.files.add(
-          await http.MultipartFile.fromPath(
-            'file',
-            file['path'],
-            filename: file['name'],
-          ),
-        );
-        final response = await http.Response.fromStream(
-          await uploadClient!
-              .send(request)
-              .timeout(const Duration(minutes: 15)),
-        ).timeout(const Duration(minutes: 15));
-        if (response.statusCode >= 400) {
-          if (response.statusCode == 401) await m.expireSession();
-          final error = asMap(jsonDecode(response.body));
-          throw ApiFailure(error['error']?['code'] ?? 'network_error');
-        }
-        final result = asMap(jsonDecode(response.body));
         final id = result['media_id'] ?? result['id'];
         file['media_id'] = id;
         if (file['kind'] == 'pages') {

@@ -44,7 +44,7 @@ func TestOSSOfficialSDKPrivateObjectAndRangeContract(t *testing.T) {
 	}))
 	defer server.Close()
 	cfg := oss.LoadDefaultConfig().WithRegion("cn-beijing").WithEndpoint(server.URL).WithDisableSSL(true).WithUsePathStyle(true).WithCredentialsProvider(credentials.NewStaticCredentialsProvider("test-key", "test-secret")).WithRetryMaxAttempts(1)
-	store := &ossObjectStore{oss.NewClient(cfg), "test-bucket", "private"}
+	store := &ossObjectStore{Client: oss.NewClient(cfg), Bucket: "test-bucket", Prefix: "private"}
 	ctx := context.Background()
 	if err := store.Put(ctx, "sample.pdf", bytes.NewReader(data), int64(len(data))); err != nil {
 		t.Fatal(err)

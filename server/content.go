@@ -54,6 +54,8 @@ func dbFail(c *gin.Context, e error) {
 	}
 	code := e.Error()
 	switch code {
+	case "oss_unverified", "oss_public_unverified", "oss_unavailable", "oss_permission_denied", "oss_writes_disabled":
+		fail(c, 503, code)
 	case "rate_limited":
 		fail(c, 429, code)
 	case "duplicate_video", "video_rights_required", "video_check_required", "video_not_public", "video_client_upgrade_required":
@@ -399,8 +401,18 @@ func (a *App) review(c *gin.Context) {
 					return e
 				}
 			}
-			if e = tx.Model(&content).Updates(map[string]any{"published_revision_id": rev.ID, "visible": true, "epoch": content.Epoch + 1}).Error; e != nil {
-				return e
+			vendor := content.VendorID
+			if content.Kind == "vendor" {
+				vendor = content.ID
+			}
+			queued, err := a.queueFilePublication(tx, "content", content.ID, rev.ID, content.Epoch, content.OwnerID, vendor, payloadMedia(p))
+			if err != nil {
+				return err
+			}
+			if !queued {
+				if e = tx.Model(&content).Updates(map[string]any{"published_revision_id": rev.ID, "visible": true, "epoch": content.Epoch + 1}).Error; e != nil {
+					return e
+				}
 			}
 		}
 		if e = tx.Model(&rev).Updates(map[string]any{"status": status, "review_note": req.Note, "reviewer_id": who.ID, "reviewed_at": time.Now().UTC()}).Error; e != nil {

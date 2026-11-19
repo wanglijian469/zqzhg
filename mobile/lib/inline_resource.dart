@@ -110,11 +110,18 @@ class _NativeInlineResourceState extends State<NativeInlineResource>
             g != generation) {
           return;
         }
+        final access = widget.private
+            ? await m.privateFileAccess(data['file_media_id'])
+            : {
+                'url': '${m.baseUrl}/api/v1/media/${data['file_media_id']}',
+                'direct': true,
+              };
+        if (!mounted || g != generation) return;
         final next = VideoPlayerController.networkUrl(
-          Uri.parse('${m.baseUrl}/api/v1/media/${data['file_media_id']}'),
-          httpHeaders: widget.private
-              ? {'Authorization': 'Bearer ${m.token}'}
-              : {},
+          Uri.parse(access['url']),
+          httpHeaders: access['direct'] == true
+              ? {}
+              : {'Authorization': 'Bearer ${m.token}'},
         );
         video = next;
         await next.initialize();

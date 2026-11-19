@@ -235,6 +235,45 @@ func TestProcurementDraftScopeAndSupersededExpansion(t *testing.T) {
 
 func procurementBackupFixture(t *testing.T, a *App) (uint64, ProcurementAttachment, uint64) {
 	t.Helper()
+	if !procurementEnabled() {
+		// Procurement is retired in the free-display release. Preserve historical
+		// rows in backup coverage without reopening its disabled business APIs.
+		project := ProcurementProject{BuyerID: 1, HallID: 1, State: "active", Audience: "direct", Version: 1}
+		if e := a.DB.Create(&project).Error; e != nil {
+			t.Fatal(e)
+		}
+		revision := ProcurementRevision{ProjectID: project.ID, Status: "approved", RequestedAudience: "direct", VendorIDs: "[1]", Title: "历史备份夹具", Deadline: time.Now().Add(24 * time.Hour)}
+		if e := a.DB.Create(&revision).Error; e != nil {
+			t.Fatal(e)
+		}
+		if e := a.DB.Model(&project).Updates(map[string]any{"draft_revision_id": revision.ID, "published_revision_id": revision.ID}).Error; e != nil {
+			t.Fatal(e)
+		}
+		quote := ProcurementQuote{ProjectID: project.ID, VendorID: 1, Version: 1}
+		if e := a.DB.Create(&quote).Error; e != nil {
+			t.Fatal(e)
+		}
+		quoteRevision := ProcurementQuoteRevision{QuoteID: quote.ID, DemandRevisionID: revision.ID, Status: "submitted", Freight: "0", ValidUntil: time.Now().Add(24 * time.Hour)}
+		if e := a.DB.Create(&quoteRevision).Error; e != nil {
+			t.Fatal(e)
+		}
+		if e := a.DB.Model(&quote).Updates(map[string]any{"submitted_revision_id": quoteRevision.ID, "draft_revision_id": quoteRevision.ID}).Error; e != nil {
+			t.Fatal(e)
+		}
+		data := []byte("%PDF-1.7 private procurement backup fixture")
+		path := filepath.Join(t.TempDir(), "historical-private.pdf")
+		if e := os.WriteFile(path, data, 0600); e != nil {
+			t.Fatal(e)
+		}
+		attachment := ProcurementAttachment{ProjectID: project.ID, OwnerID: 1, Scope: "requirement", ScopeID: revision.ID, ObjectKey: "procurement/" + randomToken() + ".pdf", Name: "private.pdf", ContentType: "application/pdf", Size: int64(len(data)), CreatedAt: time.Now().UTC()}
+		if e := a.storeWorkFile(context.Background(), attachment.ObjectKey, path); e != nil {
+			t.Fatal(e)
+		}
+		if e := a.DB.Create(&attachment).Error; e != nil {
+			t.Fatal(e)
+		}
+		return project.ID, attachment, quoteRevision.ID
+	}
 	cat := procurementCategory(t, a)
 	buyer, token := procurementTestAccount(t, a, "visitor")
 	_, supplier, vendor, product := procurementSupplier(t, a, cat)

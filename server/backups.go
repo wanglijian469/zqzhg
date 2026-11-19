@@ -231,6 +231,9 @@ func tableCounts(db *gorm.DB) (map[string]int64, error) {
 	return counts, nil
 }
 func (a *App) runBackup(ctx context.Context, job *OperationJob) (any, error) {
+	if cloudFilesEnabled() || a.cloudStorageInitialized() {
+		return nil, errors.New("oss_operator_backup_required")
+	}
 	r := a.operations()
 	r.gate.RLock()
 	defer r.gate.RUnlock()
@@ -406,6 +409,9 @@ func (a *App) runBackup(ctx context.Context, job *OperationJob) (any, error) {
 	return entry, nil
 }
 func (a *App) scheduledBackup() {
+	if cloudFilesEnabled() || a.cloudStorageInitialized() {
+		return
+	}
 	policy := a.backupPolicy()
 	if !policy.Enabled {
 		return
@@ -634,7 +640,7 @@ func (a *App) unpackBackup(ctx context.Context, job *OperationJob, destination s
 	}
 	err = json.NewDecoder(io.LimitReader(body, 8<<20)).Decode(&manifest)
 	body.Close()
-	if err != nil || manifest.Format != 1 || manifest.Schema > 31 || manifest.Schema < 10 || len(manifest.Objects) > 100000 {
+	if err != nil || manifest.Format != 1 || manifest.Schema > 39 || manifest.Schema < 10 || len(manifest.Objects) > 100000 {
 		return manifest, errors.New("backup_version_unsupported")
 	}
 	if _, exists := files["database.sql"]; !exists {
@@ -808,6 +814,14 @@ func (a *App) runRestore(ctx context.Context, job *OperationJob) (any, error) {
 	}
 	if err = db.Model(&StoredObject{}).Where("1=1").Update("store_id", 0).Error; err != nil {
 		return nil, err
+	}
+	if db.Migrator().HasColumn(&StoredObject{}, "remote_key") {
+		if err = db.Model(&StoredObject{}).Where("1=1").Update("remote_key", "").Error; err != nil {
+			return nil, err
+		}
+		if err = db.Model(&EnterpriseFileObject{}).Where("1=1").Updates(map[string]any{"store_id": 0, "physical_key": gorm.Expr("object_key"), "bucket": ""}).Error; err != nil {
+			return nil, err
+		}
 	}
 	if err = db.Clauses(clause.OnConflict{UpdateAll: true}).Create(&SystemSetting{SettingKey: "active_storage", Value: "0", UpdatedAt: time.Now().UTC()}).Error; err != nil {
 		return nil, err

@@ -1,0 +1,8 @@
+{
+ "Version":"1",
+ "Statement":[
+  {"Effect":"Allow","Action":["oss:GetObject"],"Resource":["acs:oss:*:*:zqzhg-private-data/*","acs:oss:*:*:zqzhg-public-media/*"]},
+  {"Effect":"Allow","Action":["oss:PutObject","oss:GetObject","oss:AbortMultipartUpload","oss:ListParts"],"Resource":["acs:oss:*:*:zqzhg-backup/objects/sha256/*","acs:oss:*:*:zqzhg-backup/snapshots/*"]},
+  {"Effect":"Allow","Action":["oss:ListMultipartUploads"],"Resource":["acs:oss:*:*:zqzhg-backup"]}
+ ]
+}

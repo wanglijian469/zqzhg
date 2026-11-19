@@ -46,6 +46,7 @@ part 'native_auth_entry.dart';
 part 'unified_auth.dart';
 part 'password_policy.dart';
 part 'mobile_upgrade.dart';
+part 'oss_upload.dart';
 part 'procurement_workspace.dart';
 part 'product_quality.dart';
 part 'vendor_product_categories.dart';
@@ -304,6 +305,8 @@ class AppModel extends ChangeNotifier {
 
   Future<int> upload(String path, {String purpose = 'unknown'}) async {
     try {
+      final cloud = await tryCloudUpload(path, purpose: purpose);
+      if (cloud != null) return (cloud['media_id'] as num).toInt();
       final req = http.MultipartRequest(
         'POST',
         Uri.parse('$baseUrl/api/v1/merchant/media'),
@@ -555,10 +558,9 @@ class Photo extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    final m = ModelScope.of(context);
-    final image = Image.network(
-      '${m.baseUrl}/api/v1/media/$id${thumb ? '?thumb=1' : ''}',
-      headers: m.token.isEmpty ? null : {'Authorization': 'Bearer ${m.token}'},
+    final image = CloudNetworkImage(
+      mediaID: id,
+      thumb: thumb,
       fit: fit,
       alignment: alignment,
       width: double.infinity,

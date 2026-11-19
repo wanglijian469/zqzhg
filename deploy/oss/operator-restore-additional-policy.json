@@ -1,0 +1,4 @@
+{
+ "Version":"1",
+ "Statement":[{"Effect":"Allow","Action":["oss:PutObject","oss:GetObject"],"Resource":["acs:oss:*:*:zqzhg-private-data/restores/*","acs:oss:*:*:zqzhg-public-media/platform/published/restored-*"]}]
+}

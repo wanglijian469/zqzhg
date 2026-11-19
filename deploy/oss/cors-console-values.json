@@ -1,0 +1,5 @@
+{
+ "note":"Console field values only. Review existing rules before changing them; this file is never applied automatically.",
+ "private_bucket":{"bucket":"zqzhg-private-data","allowed_origins":["https://zqzhg.com"],"allowed_methods":["GET","HEAD","PUT"],"allowed_headers":["content-type","range","x-oss-forbid-overwrite","x-oss-date","x-oss-security-token","x-oss-content-sha256"],"exposed_headers":["ETag","Content-Length","Content-Range","Accept-Ranges","x-oss-request-id"],"max_age_seconds":300},
+ "public_bucket":{"bucket":"zqzhg-public-media","allowed_origins":["https://zqzhg.com"],"allowed_methods":["GET","HEAD"],"allowed_headers":["range"],"exposed_headers":["ETag","Content-Length","Content-Range","Accept-Ranges"],"max_age_seconds":300}
+}

@@ -53,6 +53,10 @@ func pdfPages(path string) (int, error) {
 	return doc.PageCount, nil
 }
 func (a *App) uploadResourceMedia(c *gin.Context) {
+	if cloudFilesEnabled() {
+		a.uploadLegacyCloudFile(c, c.Query("kind"))
+		return
+	}
 	if e := a.checkUploadDisks(0); e != nil {
 		dbFail(c, e)
 		return

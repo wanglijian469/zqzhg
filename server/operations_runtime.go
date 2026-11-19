@@ -559,7 +559,7 @@ func (a *App) operationsTick() {
 func (a *App) workPath(key string) string {
 	path := a.mediaTempDir()
 	_ = os.MkdirAll(path, 0700)
-	return filepath.Join(path, key)
+	return filepath.Join(path, filepath.Base(key))
 }
 func fileSHA(path string) (string, int64, error) {
 	f, err := os.Open(path)

@@ -39,4 +39,9 @@
     if(String(u).startsWith('blob:')){save(u,'',true);return null;}
     return open.call(window,u,...args);
   };
+  // Pass only a media ID. Native code rechecks ownership and obtains a fresh
+  // short-lived URL after the user chooses a destination; no base64 copy.
+  window.__DLNJ_DOWNLOAD_MEDIA__=function(id,name,mime){
+    return prompt(p.nonce,JSON.stringify({op:'download_media',media_id:id,name,mime}))==='ok';
+  };
 })(__DLNJ_BOOTSTRAP__);

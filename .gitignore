@@ -57,6 +57,11 @@ __pycache__/
 # Operator-only SSH connection credentials; never package or commit.
 /需求文档/39.97.250.244.txt
 /需求文档/阿里云百炼大模型.txt
+# OSS console screenshots and operator STS material are private inputs.
+/需求文档/OSS*.bmp
+/需求文档/backup.bmp
+/.secrets/
+*.sts.json
 # SEO production observations and browser evidence remain local unless explicitly approved for publication.
 /docs/SEARCH_ENGINES_20261031.md
 /docs/screenshots/search-engines-20261031/

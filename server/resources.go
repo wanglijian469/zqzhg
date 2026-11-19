@@ -515,8 +515,21 @@ func (a *App) reviewResource(c *gin.Context) {
 				return e
 			}
 			status = "approved"
-			if e = tx.Model(&r).Updates(map[string]any{"published_revision_id": rev.ID, "visible": true, "epoch": r.Epoch + 1}).Error; e != nil {
-				return e
+			media := append([]uint64{}, p.PageMediaIDs...)
+			if p.FileMediaID > 0 {
+				media = append(media, p.FileMediaID)
+			}
+			if p.CoverMediaID > 0 {
+				media = append(media, p.CoverMediaID)
+			}
+			queued, err := a.queueFilePublication(tx, "resource", r.ID, rev.ID, r.Epoch, r.OwnerID, r.VendorID, media)
+			if err != nil {
+				return err
+			}
+			if !queued {
+				if e = tx.Model(&r).Updates(map[string]any{"published_revision_id": rev.ID, "visible": true, "epoch": r.Epoch + 1}).Error; e != nil {
+					return e
+				}
 			}
 		}
 		if e = tx.Model(&rev).Updates(map[string]any{"status": status, "review_note": req.Note}).Error; e != nil {

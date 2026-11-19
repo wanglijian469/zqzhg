@@ -26,20 +26,25 @@ import (
 )
 
 type StorageProfile struct {
-	RootKey     string    `json:"root_key"`
-	ID          uint64    `json:"id"`
-	Name        string    `json:"name"`
-	Kind        string    `json:"kind"`
-	LocalRoot   string    `json:"local_root"`
-	Region      string    `json:"region"`
-	Endpoint    string    `json:"endpoint"`
-	Bucket      string    `json:"bucket"`
-	Prefix      string    `json:"prefix"`
-	Credentials string    `json:"-"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	AuthMode      string    `json:"auth_mode"`
+	RoleName      string    `json:"role_name"`
+	Purpose       string    `json:"purpose"`
+	PublicBaseURL string    `json:"public_base_url"`
+	RootKey       string    `json:"root_key"`
+	ID            uint64    `json:"id"`
+	Name          string    `json:"name"`
+	Kind          string    `json:"kind"`
+	LocalRoot     string    `json:"local_root"`
+	Region        string    `json:"region"`
+	Endpoint      string    `json:"endpoint"`
+	Bucket        string    `json:"bucket"`
+	Prefix        string    `json:"prefix"`
+	Credentials   string    `json:"-"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
 }
 type StoredObject struct {
+	RemoteKey string    `json:"remote_key,omitempty"`
 	Key       string    `gorm:"primaryKey;column:object_key" json:"key"`
 	StoreID   uint64    `json:"store_id"`
 	Size      int64     `json:"size"`
@@ -180,12 +185,18 @@ func (r *contextReader) Read(p []byte) (int, error) {
 }
 
 type ossObjectStore struct {
-	Client *oss.Client
-	Bucket string
-	Prefix string
+	Client      *oss.Client
+	Bucket      string
+	Prefix      string
+	InheritACL  bool
+	LogicalKey  string
+	PhysicalKey string
 }
 
 func (s *ossObjectStore) key(key string) string {
+	if s.LogicalKey == key && s.PhysicalKey != "" {
+		key = s.PhysicalKey
+	}
 	if s.Prefix == "" {
 		return key
 	}
@@ -195,7 +206,11 @@ func (s *ossObjectStore) Put(ctx context.Context, key string, body io.Reader, si
 	if !safeObjectKey(key) {
 		return errors.New("invalid_object_key")
 	}
-	_, err := s.Client.PutObject(ctx, &oss.PutObjectRequest{Bucket: oss.Ptr(s.Bucket), Key: oss.Ptr(s.key(key)), Body: body, ContentLength: oss.Ptr(size), Acl: oss.ObjectACLPrivate, ForbidOverwrite: oss.Ptr("true"), ContentType: oss.Ptr(mime.TypeByExtension(filepath.Ext(key)))})
+	request := &oss.PutObjectRequest{Bucket: oss.Ptr(s.Bucket), Key: oss.Ptr(s.key(key)), Body: body, ContentLength: oss.Ptr(size), ForbidOverwrite: oss.Ptr("true"), ContentType: oss.Ptr(mime.TypeByExtension(filepath.Ext(key)))}
+	if !s.InheritACL {
+		request.Acl = oss.ObjectACLPrivate
+	}
+	_, err := s.Client.PutObject(ctx, request)
 	return err
 }
 func (s *ossObjectStore) Open(ctx context.Context, key string) (io.ReadCloser, error) {
@@ -250,6 +265,13 @@ func (a *App) profileStore(profile StorageProfile) (ObjectStore, error) {
 	if profile.Kind != "oss" {
 		return nil, errors.New("invalid_storage_profile")
 	}
+	if profile.AuthMode == "ecs_role" {
+		client, e := a.cloudClient(profile, false)
+		if e != nil {
+			return nil, e
+		}
+		return &ossObjectStore{Client: client, Bucket: profile.Bucket, Prefix: profile.Prefix, InheritACL: true}, nil
+	}
 	raw, err := a.openSecret(profile.Credentials)
 	if err != nil {
 		return nil, err
@@ -262,9 +284,16 @@ func (a *App) profileStore(profile StorageProfile) (ObjectStore, error) {
 	if profile.Endpoint != "" {
 		cfg = cfg.WithEndpoint(profile.Endpoint)
 	}
-	return &ossObjectStore{oss.NewClient(cfg), profile.Bucket, profile.Prefix}, nil
+	return &ossObjectStore{Client: oss.NewClient(cfg), Bucket: profile.Bucket, Prefix: profile.Prefix}, nil
 }
 func (a *App) defaultStoreID() uint64 {
+	if cloudFilesEnabled() {
+		p, e := a.cloudProfile("private")
+		if e != nil {
+			return ^uint64(0)
+		}
+		return p.ID
+	}
 	id, _ := strconv.ParseUint(a.setting("active_storage", "0"), 10, 64)
 	return id
 }
@@ -289,6 +318,15 @@ func (a *App) objectRecord(key string) (StoredObject, error) {
 	return object, err
 }
 func (a *App) storeWorkFile(ctx context.Context, key, path string) error {
+	if !cloudFilesEnabled() && env("OSS_ALLOW_LOCAL_WRITES", "false") != "true" {
+		var n int64
+		if a.DB.Migrator().HasColumn(&StorageProfile{}, "auth_mode") {
+			a.DB.Model(&StorageProfile{}).Where("auth_mode='ecs_role'").Count(&n)
+		}
+		if n > 0 {
+			return errors.New("oss_writes_disabled")
+		}
+	}
 	if !safeObjectKey(key) {
 		return errors.New("invalid_object_key")
 	}
@@ -504,6 +542,9 @@ func (a *App) validateProfile(profile StorageProfile) error {
 	if profile.Kind != "oss" || profile.Region == "" || profile.Bucket == "" || len(profile.Bucket) > 100 {
 		return errors.New("invalid_storage_profile")
 	}
+	if profile.Bucket == operatorBackupBucket {
+		return errors.New("oss_operator_backup_required")
+	}
 	if profile.Endpoint != "" {
 		u, err := url.Parse(profile.Endpoint)
 		if err != nil || u.Scheme != "https" || u.User != nil || u.RawQuery != "" || u.Fragment != "" || u.Path != "" || !strings.HasSuffix(u.Hostname(), ".aliyuncs.com") {
@@ -516,6 +557,9 @@ func (a *App) validateProfile(profile StorageProfile) error {
 	return nil
 }
 func (a *App) testStore(ctx context.Context, profile StorageProfile) error {
+	if profile.AuthMode == "ecs_role" {
+		return errors.New("oss_use_readiness_check")
+	}
 	if e := a.checkLocalWritable(profile); e != nil {
 		return e
 	}
@@ -600,6 +644,11 @@ func (a *App) storageRoutes(admin *gin.RouterGroup) {
 		}
 		defer r.work.Unlock()
 		profileID := id(c)
+		var managed StorageProfile
+		if a.DB.First(&managed, profileID).Error == nil && managed.AuthMode == "ecs_role" {
+			fail(c, 409, "oss_managed_profile")
+			return
+		}
 		var count int64
 		a.DB.Model(&StoredObject{}).Where("store_id=?", profileID).Count(&count)
 		var replicaCount int64
@@ -641,6 +690,10 @@ func (a *App) saveStorageProfile(c *gin.Context) {
 		return
 	}
 	profile := req.StorageProfile
+	if profile.AuthMode == "ecs_role" || profile.Purpose != "" {
+		fail(c, 400, "oss_managed_profile")
+		return
+	}
 	profile.ID = 0
 	if profile.Kind == "local" {
 		root, e := a.registeredRoot(profile.RootKey, profile.LocalRoot)
@@ -655,6 +708,10 @@ func (a *App) saveStorageProfile(c *gin.Context) {
 		var old StorageProfile
 		if a.DB.First(&old, id(c)).Error != nil {
 			fail(c, 404, "not_found")
+			return
+		}
+		if old.AuthMode == "ecs_role" {
+			fail(c, 409, "oss_managed_profile")
 			return
 		}
 		var count int64
@@ -748,9 +805,15 @@ func (a *App) runStorageMigration(ctx context.Context, job *OperationJob) (any, 
 	if err != nil {
 		return nil, err
 	}
+	if sourceProfile.AuthMode == "ecs_role" {
+		return nil, errors.New("oss_use_enterprise_migration")
+	}
 	targetProfile, err := a.storageProfile(req.TargetID)
 	if err != nil {
 		return nil, err
+	}
+	if targetProfile.AuthMode == "ecs_role" {
+		return nil, errors.New("oss_use_enterprise_migration")
 	}
 	if e := a.checkLocalWritable(targetProfile); e != nil {
 		return nil, e
@@ -827,6 +890,14 @@ func (a *App) runStorageMigration(ctx context.Context, job *OperationJob) (any, 
 	return gin.H{"migrated": len(objects)}, nil
 }
 func (a *App) cleanupRetiredObjects(c *gin.Context) {
+	if a.DB.Migrator().HasTable(&EnterpriseFileObject{}) {
+		var n int64
+		a.DB.Model(&EnterpriseFileObject{}).Where("store_id>0").Count(&n)
+		if n > 0 {
+			fail(c, 409, "oss_history_cleanup_requires_operator")
+			return
+		}
+	}
 	var req struct {
 		Confirm bool `json:"confirm"`
 	}

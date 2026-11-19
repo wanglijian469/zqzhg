@@ -1,3 +1,4 @@
+import {privateMediaAccess} from './oss-upload';
 import {useEffect,useRef,useState,type ReactNode} from 'react';
 import {ImageIcon} from 'lucide-react';
 import {token} from './api';
@@ -38,7 +39,7 @@ export function OptimizedMediaImage({id,role,thumb=true,className='',onClick,fit
  useEffect(()=>{
   if(!role||!visible)return;
   const controller=new AbortController();let url='';
-  fetch(base+query,{headers:{Authorization:'Bearer '+session},signal:controller.signal,cache:'no-store'})
+  privateMediaAccess(id,role,controller.signal,thumb,privateWidth).then(access=>fetch(access.url,{headers:access.headers,signal:controller.signal,cache:'no-store'}))
    .then(response=>{if(!response.ok)throw Error('image_unavailable');return response.blob()})
    .then(blob=>{if(!controller.signal.aborted){url=URL.createObjectURL(blob);setResult({key,src:url})}})
    .catch(()=>{if(!controller.signal.aborted)setResult({key,failed:true})});

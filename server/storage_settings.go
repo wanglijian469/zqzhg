@@ -97,7 +97,7 @@ func (a *App) resolveObject(ctx context.Context, key string) (StoredObject, Obje
 	if e != nil {
 		return object, nil, e
 	}
-	store, e := a.store(object.StoreID)
+	store, e := a.objectStore(object)
 	if e == nil {
 		if info, se := store.Stat(ctx, key); se == nil && info.Size == object.Size && a.verifyCachedObject(ctx, store, object, info, fmt.Sprintf("primary:%d:%s", object.StoreID, key)) == nil {
 			return object, store, nil
@@ -168,10 +168,11 @@ type MediaObjectOwner struct {
 	Size      int64
 }
 type MediaUploadReservation struct {
-	ID        string `gorm:"primaryKey"`
-	OwnerID   uint64
-	Bytes     int64
-	ExpiresAt time.Time
+	ID                 string `gorm:"primaryKey"`
+	OwnerID            uint64
+	Bytes              int64
+	ExpiresAt          time.Time
+	HoldUntilReclaimed bool
 }
 
 func (a *App) syncOwnerInventory(tx *gorm.DB, owner uint64) error {
@@ -254,7 +255,13 @@ func (a *App) ownerUsage(tx *gorm.DB, owner uint64) (int64, int64, int64, error)
 	if e := tx.Model(&MediaObjectOwner{}).Where("owner_id=?", owner).Select("COALESCE(SUM(size),0)").Scan(&used).Error; e != nil {
 		return 0, 0, 0, e
 	}
-	if e := tx.Model(&MediaUploadReservation{}).Where("owner_id=? AND expires_at>?", owner, time.Now().UTC()).Select("COALESCE(SUM(bytes),0)").Scan(&reserved).Error; e != nil {
+	reservationQuery := tx.Model(&MediaUploadReservation{}).Where("owner_id=?", owner)
+	if tx.Migrator().HasColumn(&MediaUploadReservation{}, "hold_until_reclaimed") {
+		reservationQuery = reservationQuery.Where("expires_at>? OR hold_until_reclaimed=1", time.Now().UTC())
+	} else {
+		reservationQuery = reservationQuery.Where("expires_at>?", time.Now().UTC())
+	}
+	if e := reservationQuery.Select("COALESCE(SUM(bytes),0)").Scan(&reserved).Error; e != nil {
 		return 0, 0, 0, e
 	}
 	cfg, e := systemConfigDB(tx)
@@ -421,10 +428,18 @@ func (a *App) usageJSON(owner uint64) (gin.H, error) {
 	state := "normal"
 	if used+reserved >= limit {
 		state = "exceeded"
-	} else if (used+reserved)*10 >= limit*9 {
+	} else if (used+reserved)*10 >= limit*8 {
 		state = "warning"
 	}
-	return gin.H{"account_id": owner, "used_bytes": used, "reserved_bytes": reserved, "quota_bytes": limit, "remaining_bytes": remaining, "state": state}, e
+	result := gin.H{"account_id": owner, "used_bytes": used, "reserved_bytes": reserved, "quota_bytes": limit, "remaining_bytes": remaining, "state": state, "unit": "MiB"}
+	if a.DB.Migrator().HasTable(&EnterpriseFileObject{}) {
+		var publicBytes int64
+		if err := a.DB.Model(&EnterpriseFileObject{}).Where("owner_id=? AND object_role='public' AND object_state='active'", owner).Select("COALESCE(SUM(file_size),0)").Scan(&publicBytes).Error; err != nil {
+			return nil, err
+		}
+		result["public_copy_bytes"] = publicBytes
+	}
+	return result, e
 }
 func (a *App) storageStatus(c *gin.Context) {
 	var objects int64
@@ -607,9 +622,32 @@ func (a *App) deleteUnusedMedia(c *gin.Context) {
 		return
 	}
 	keys := []string{media.Path, media.ThumbPath, meta.SourcePath}
+	if a.DB.Migrator().HasTable(&EnterpriseFileObject{}) {
+		var copies []EnterpriseFileObject
+		if e := a.DB.Where("media_id=? AND object_role='public' AND object_state='active'", media.ID).Find(&copies).Error; e != nil {
+			dbFail(c, e)
+			return
+		}
+		for _, o := range copies {
+			keys = append(keys, o.ObjectKey)
+		}
+		var active int64
+		if e := a.DB.Model(&FileUploadSession{}).Where("media_id=? AND signature_expires_at>?", media.ID, time.Now().UTC().Add(-30*time.Second)).Count(&active).Error; e != nil {
+			dbFail(c, e)
+			return
+		}
+		if active > 0 {
+			fail(c, 409, "file_access_expiry_pending")
+			return
+		}
+	}
 	for _, key := range keys {
 		if key == "" {
 			continue
+		}
+		if a.objectPinned(a.DB, key) {
+			fail(c, 409, "file_backup_pinned")
+			return
 		}
 		var other int64
 		if e := a.DB.Model(&Media{}).Where("id<>? AND (path=? OR thumb_path=?)", media.ID, key, key).Count(&other).Error; e != nil {
@@ -639,12 +677,16 @@ func (a *App) deleteUnusedMedia(c *gin.Context) {
 				continue
 			}
 		}
-		store, e := a.store(object.StoreID)
+		store, e := a.objectStore(object)
 		if e != nil {
 			fail(c, 503, "storage_unavailable")
 			return
 		}
 		if e = store.Delete(c.Request.Context(), key); e != nil && !os.IsNotExist(e) {
+			fail(c, 503, "storage_unavailable")
+			return
+		}
+		if _, e = store.Stat(c.Request.Context(), key); e == nil || !objectMissing(e) {
 			fail(c, 503, "storage_unavailable")
 			return
 		}
@@ -654,6 +696,10 @@ func (a *App) deleteUnusedMedia(c *gin.Context) {
 	}
 	a.DB.Where("media_id=?", media.ID).Delete(&MediaWatermark{})
 	a.DB.Where("media_id=?", media.ID).Delete(&MediaMetadata{})
+	if a.DB.Migrator().HasTable(&EnterpriseFileObject{}) {
+		a.DB.Model(&EnterpriseFileObject{}).Where("media_id=?", media.ID).Updates(map[string]any{"object_state": "deleted", "updated_at": time.Now().UTC()})
+		a.DB.Model(&EnterpriseFile{}).Where("media_id=?", media.ID).Updates(map[string]any{"file_status": "deleted", "updated_at": time.Now().UTC()})
+	}
 	a.DB.Delete(&media)
 	a.audit(actor(c).ID, "media", media.ID, "unused_media_deleted")
 	c.JSON(200, gin.H{"ok": true})
@@ -667,7 +713,10 @@ func (a *App) cleanupNewObjects(keys ...string) {
 		if a.DB.First(&obj, "object_key=?", key).Error != nil {
 			continue
 		}
-		if s, e := a.store(obj.StoreID); e == nil {
+		if a.objectPinned(a.DB, key) {
+			continue
+		}
+		if s, e := a.objectStore(obj); e == nil {
 			if e = s.Delete(context.Background(), key); e == nil {
 				a.DB.Where("object_key=?", key).Delete(&StoredObject{})
 				a.DB.Where("object_key=?", key).Delete(&MediaObjectOwner{})

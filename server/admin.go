@@ -101,6 +101,9 @@ func (a *App) adminCreateVendor(c *gin.Context) {
 		if e := tx.Create(&content).Error; e != nil {
 			return e
 		}
+		if e := associateEnterpriseFiles(tx, content); e != nil {
+			return e
+		}
 		if e := a.makeDraft(tx, &content, req.Data); e != nil {
 			return e
 		}

@@ -177,7 +177,7 @@ func TestWatermarkSnapshotVariantsAndPublicProtection(t *testing.T) {
 	if before != after || before == derived {
 		t.Fatal("source overwritten or watermark missing")
 	}
-	tc.call("POST", "/merchant/contents/"+number(saved["id"])+"/submit", token, gin.H{"revision_id": saved["revision_id"]}, 200)
+	tc.call("POST", "/merchant/contents/"+number(saved["id"])+"/submit", token, gin.H{"revision_id": saved["revision_id"], "agreements": serviceTestRefs(t, a, "terms", "privacy", "showroom-agreement")}, 200)
 	tc.call("POST", "/admin/revisions/"+number(saved["revision_id"])+"/review", admin, gin.H{"decision": "approve", "note": "isolated watermark"}, 200)
 	request := httptest.NewRequest("GET", "/api/v1/media/"+fmt.Sprint(marked)+"?original=1", nil)
 	w := httptest.NewRecorder()

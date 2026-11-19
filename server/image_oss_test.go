@@ -30,7 +30,7 @@ func TestDisplayImagePrivateOSSAndIntegrity(t *testing.T) {
 	}))
 	defer server.Close()
 	cfg := oss.LoadDefaultConfig().WithRegion("cn-beijing").WithEndpoint(server.URL).WithDisableSSL(true).WithUsePathStyle(true).WithCredentialsProvider(credentials.NewStaticCredentialsProvider("test-key", "test-secret")).WithRetryMaxAttempts(1)
-	store := &ossObjectStore{oss.NewClient(cfg), "test-bucket", "private"}
+	store := &ossObjectStore{Client: oss.NewClient(cfg), Bucket: "test-bucket", Prefix: "private"}
 	cache := newTestImageCache(t)
 	generate := func(ctx context.Context) ([]byte, error) {
 		return loadDisplayImage(ctx, store, "marked.png", imageDigest(data), 240)

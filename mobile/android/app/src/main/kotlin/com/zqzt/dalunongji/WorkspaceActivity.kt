@@ -18,6 +18,8 @@ import android.widget.*
 import org.json.JSONObject
 import java.io.ByteArrayInputStream
 import java.util.UUID
+import java.net.HttpURLConnection
+import java.net.URL
 
 /** Latest bundled React UI, same API origin and authorization as the native app.
  * No JavaScript interface, file:// access or token-bearing URLs are exposed. */
@@ -28,7 +30,9 @@ class WorkspaceActivity : Activity() {
     private val nonce = UUID.randomUUID().toString()
     private var picker: ValueCallback<Array<Uri>>? = null
     private var pendingBytes: ByteArray? = null
-    private var closing = false
+    private var pendingCloudMedia: Long? = null
+    @Volatile private var cloudDownloadBusy = false
+    @Volatile private var closing = false
     private var previewDialog: AlertDialog? = null
     private val allowedFiles = setOf("image/jpeg", "image/png", "image/webp", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     private fun trusted(url: String?): Boolean = try {
@@ -113,7 +117,7 @@ class WorkspaceActivity : Activity() {
                 override fun onProgressChanged(view: WebView, value: Int) { progress.progress = value; progress.visibility = if (value == 100) View.GONE else View.VISIBLE }
                 override fun onJsPrompt(view: WebView, url: String, message: String, value: String?, result: JsPromptResult): Boolean {
                     if (message == nonce && trusted(url)) {
-                        try { download(JSONObject(value ?: "{}")); result.confirm("ok") } catch (_: Exception) { result.cancel(); toast("附件无法保存，或超过20MB限制") }
+                        try { val request=JSONObject(value ?: "{}"); if(request.optString("op")=="download_media") chooseCloudDownload(request) else download(request); result.confirm("ok") } catch (_: Exception) { result.cancel(); toast("附件无法保存，请稍后重试") }
                     } else result.cancel()
                     return true
                 }
@@ -152,7 +156,7 @@ class WorkspaceActivity : Activity() {
     private fun words(zh: String, en: String) = if (payload.optString("language") == "en") en else zh
     private fun toast(s: String) = runOnUiThread { Toast.makeText(this, s, Toast.LENGTH_LONG).show() }
     private fun download(value: JSONObject) {
-        require(pendingBytes == null)
+        require(pendingBytes == null && !cloudDownloadBusy)
         val type = value.getString("mime").substringBefore(';')
         require(type in allowedFiles)
         val data = value.getString("data"); require(data.length <= 28 * 1024 * 1024 && data.startsWith("data:") && data.substringBefore(',').endsWith(";base64"))
@@ -162,6 +166,54 @@ class WorkspaceActivity : Activity() {
         val name = value.optString("name", "attachment").replace(Regex("[\\\\/\\p{Cntrl}]"), "_").take(160).ifBlank { "attachment" }
         pendingBytes = bytes
         try { startActivityForResult(Intent(Intent.ACTION_CREATE_DOCUMENT).apply { addCategory(Intent.CATEGORY_OPENABLE); this.type = type; putExtra(Intent.EXTRA_TITLE, if (name.contains('.')) name else "$name.$extension") }, 5102) } catch (e: Exception) { pendingBytes = null; throw e }
+    }
+    private fun chooseCloudDownload(value: JSONObject) {
+        require(!cloudDownloadBusy && pendingBytes == null)
+        val id=value.getLong("media_id"); require(id>0)
+        val type=value.optString("mime").substringBefore(';')
+        require(type in allowedFiles || type=="video/mp4" || type=="video/quicktime")
+        val name=value.optString("name","file").replace(Regex("[\\\\/\\p{Cntrl}]"),"_").take(160).ifBlank{"file"}
+        pendingCloudMedia=id;cloudDownloadBusy=true
+        try { startActivityForResult(Intent(Intent.ACTION_CREATE_DOCUMENT).apply { addCategory(Intent.CATEGORY_OPENABLE); this.type=type; putExtra(Intent.EXTRA_TITLE,name) },5103) }
+        catch(e:Exception){pendingCloudMedia=null;cloudDownloadBusy=false;throw e}
+    }
+    private fun streamCloudDownload(id:Long,destination:Uri) {
+        // The Web workspace may have logged out or switched accounts since its
+        // initial bootstrap. Read the current session, never reuse payload.token.
+        if(!trusted(web.url)){cloudDownloadBusy=false;toast("登录状态已变化，请重试");return}
+        web.evaluateJavascript("sessionStorage.getItem('zqzt.merchant')||''") { raw ->
+            val current = try { org.json.JSONTokener(raw).nextValue() as? String ?: "" } catch (_:Exception){""}
+            if(current.isBlank()||closing){cloudDownloadBusy=false;toast("请先登录后重试")}
+            else streamCloudDownloadAuthenticated(id,destination,current)
+        }
+    }
+    private fun streamCloudDownloadAuthenticated(id:Long,destination:Uri,currentToken:String) {
+        Thread {
+            var connection:HttpURLConnection?=null
+            try {
+                val api=URL(base.toString().trimEnd('/')+"/api/v1/merchant/files/$id/access").openConnection() as HttpURLConnection
+                api.instanceFollowRedirects=false;api.connectTimeout=15000;api.readTimeout=30000
+                api.setRequestProperty("Authorization","Bearer "+currentToken)
+                val access=try { require(api.responseCode==200);api.inputStream.bufferedReader().use { JSONObject(it.readText()) } } finally { api.disconnect() }
+                val expected=access.getLong("size");require(expected in 1L..(200L*1024*1024))
+                val address=access.getString("url");val parsed=Uri.parse(address);val direct=access.getBoolean("direct")
+                require(if(direct)parsed.scheme=="https"&&parsed.encodedAuthority=="upload.zqzhg.com"&&parsed.userInfo==null else trusted(address))
+                connection=URL(address).openConnection() as HttpURLConnection
+                connection.instanceFollowRedirects=false;connection.connectTimeout=15000;connection.readTimeout=360000
+                if(!direct)connection.setRequestProperty("Authorization","Bearer "+currentToken)
+                require(connection.responseCode==200)
+                require(connection.contentLengthLong<0||connection.contentLengthLong==expected)
+                connection.inputStream.use { input ->
+                    val output=contentResolver.openOutputStream(destination,"w")?:error("destination unavailable")
+                    output.use { target -> val buffer=ByteArray(64*1024);var total=0L
+                        while(true){require(!closing);val count=input.read(buffer);if(count<0)break;total+=count;require(total<=expected);target.write(buffer,0,count)}
+                        require(total==expected)
+                    }
+                }
+                toast("文件已保存")
+            } catch(_:Exception) { toast("保存失败，请删除不完整文件后重试") }
+            finally { connection?.disconnect();cloudDownloadBusy=false }
+        }.start()
     }
     private fun preview(bytes: ByteArray, type: String) {
         previewDialog?.dismiss()
@@ -233,8 +285,10 @@ class WorkspaceActivity : Activity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 5101) { picker?.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data)); picker = null }
         if (requestCode == 5102) { val bytes = pendingBytes; pendingBytes = null; if (resultCode == RESULT_OK && bytes != null && data?.data != null) try { contentResolver.openOutputStream(data.data!!, "w")?.use { it.write(bytes) }; toast("附件已保存") } catch (_: Exception) { toast("保存失败，请重试") } }
+        if(requestCode==5103){val id=pendingCloudMedia;pendingCloudMedia=null;if(resultCode==RESULT_OK&&id!=null&&data?.data!=null)streamCloudDownload(id,data.data!!)else cloudDownloadBusy=false}
     }
     override fun onDestroy() {
+        closing=true;pendingCloudMedia=null
         previewDialog?.dismiss()
         picker?.onReceiveValue(null); picker = null; pendingBytes = null
         if (::web.isInitialized) { web.stopLoading(); web.clearHistory(); web.destroy() }

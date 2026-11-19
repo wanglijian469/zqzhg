@@ -262,8 +262,8 @@ class _NativeRegistrationAgreementsState
             ),
             Text(
               zh
-                  ? '基础入驻永久免费，默认免费存储200 MB。'
-                  : 'Permanently free basic admission; default free storage 200 MB.',
+                  ? '基础入驻永久免费，存储额度以当前配置为准。'
+                  : 'Permanently free basic admission; see current storage allowance.',
             ),
           ],
         );
@@ -366,7 +366,7 @@ class NativeFreeStorage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final m = ModelScope.of(context), zh = m.language == 'zh';
-    String mb(num n) => '${(n / 1000000).toStringAsFixed(2)} MB';
+    String mb(num n) => '${(n / 1048576).toStringAsFixed(2)} MiB';
     return AsyncPane(
       identity: 'storage:${m.merchant.key}',
       load: () => m.api('/merchant/storage/usage'),
@@ -403,8 +403,8 @@ class NativeFreeStorage extends StatelessWidget {
                 space(8),
                 Text(
                   zh
-                      ? '默认免费额度200 MB，企业调整以本页为准。'
-                      : 'Default free allowance: 200 MB. Your allowance is shown above.',
+                      ? '容量按实际保存的文件计量，企业额度以本页为准。'
+                      : 'Stored files count toward your current allowance shown above.',
                 ),
                 if ((used + reserved) * 10 >= quota * 9)
                   message(

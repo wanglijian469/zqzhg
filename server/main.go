@@ -34,6 +34,8 @@ type Config struct {
 	MapPreviewDir                                                 string
 }
 type App struct {
+	cloudOnce            sync.Once
+	cloudState           *cloudFilesRuntime
 	uploadMu             sync.Mutex
 	DB                   *gorm.DB
 	Config               Config
@@ -194,6 +196,11 @@ func migrateThrough(db *gorm.DB, maximum int) error {
 				return e
 			}
 		}
+		if version == 39 {
+			if e = backfillEnterpriseFiles(db); e != nil {
+				return e
+			}
+		}
 		if version == 16 {
 			if e = backfillAdministrativeSnapshots(db); e != nil {
 				return e
@@ -263,6 +270,14 @@ func seed(db *gorm.DB) error {
 }
 func main() {
 	loadEnv()
+	if len(os.Args) == 2 && os.Args[1] == "oss-preflight-read" {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		if e := cloudReadPreflight(ctx); e != nil {
+			log.Fatal("OSS read-only preflight failed")
+		}
+		return
+	}
 	if len(os.Args) == 2 && os.Args[1] == "sms-preflight" {
 		if err := smsPreflight(); err != nil {
 			log.Fatal(err)
@@ -301,7 +316,21 @@ func main() {
 	}
 
 	controlDir := controlDirectory(cfg.MediaDir)
-	target, targetError := bootstrapTarget(cfg.MediaDir, env("DB_NAME", "zqzt_exhibition"))
+	var target ActiveTarget
+	var targetError error
+	if len(os.Args) >= 2 && os.Args[1] == "oss-media" {
+		target = ActiveTarget{env("DB_NAME", "zqzt_exhibition"), cfg.MediaDir}
+		host, e := readHostTarget(cfg.MediaDir)
+		targetError = e
+		if e == nil && host.Pending {
+			targetError = fmt.Errorf("pending_restore_requires_operator")
+		}
+		if e == nil && !host.Pending && host.Current.Database != "" {
+			target = host.Current
+		}
+	} else {
+		target, targetError = bootstrapTarget(cfg.MediaDir, env("DB_NAME", "zqzt_exhibition"))
+	}
 	if targetError != nil {
 		log.Fatal("active data configuration could not be loaded")
 	}
@@ -312,7 +341,13 @@ func main() {
 	if e := validateProcurementDemo(cfg, target.Database); e != nil {
 		log.Fatal(e)
 	}
-	db, e := openDB(target.Database)
+	var db *gorm.DB
+	var e error
+	if len(os.Args) >= 2 && os.Args[1] == "oss-media" {
+		db, e = openExistingDB(target.Database, env("DB_USER", "root"), env("DB_PASSWORD", "root"))
+	} else {
+		db, e = openDB(target.Database)
+	}
 	if e != nil {
 		log.Fatal(e)
 	}
@@ -322,6 +357,20 @@ func main() {
 		}
 		if e = db.Exec("DROP DATABASE `zqzt_procurement_demo`").Error; e != nil {
 			log.Fatal(e)
+		}
+		return
+	}
+	if len(os.Args) == 3 && os.Args[1] == "oss-media" && os.Args[2] == "scan-local" {
+		if e = (&App{DB: db, Config: cfg}).scanLocalFiles(context.Background()); e != nil {
+			log.Fatal("local file scan failed")
+		}
+		return
+	}
+	if len(os.Args) == 3 && os.Args[1] == "oss-media" {
+		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Hour)
+		defer cancel()
+		if e = (&App{DB: db, Config: cfg}).operatorFiles(ctx, os.Args[2], os.Stdin); e != nil {
+			log.Fatal("operator storage command failed")
 		}
 		return
 	}
@@ -335,6 +384,11 @@ func main() {
 		log.Fatal(e)
 	}
 	a := &App{DB: db, Config: cfg, SMS: DevelopmentSMS{}}
+	if cloudFilesEnabled() {
+		if e := a.initializeCloudFiles(); e != nil {
+			log.Print("OSS storage configuration invalid; new cloud uploads unavailable; credentials omitted")
+		}
+	}
 	if len(os.Args) == 2 && os.Args[1] == "seed-procurement-demo" {
 		if !cfg.ProcurementDemo {
 			log.Fatal("demo mode required")
@@ -355,7 +409,7 @@ func main() {
 	if e = validateRuntimePaths(a); e != nil {
 		log.Fatal(e)
 	}
-	if e = db.Where("expires_at<=?", time.Now().UTC()).Delete(&MediaUploadReservation{}).Error; e != nil {
+	if e = db.Where("expires_at<=? AND hold_until_reclaimed=0", time.Now().UTC()).Delete(&MediaUploadReservation{}).Error; e != nil {
 		log.Fatal(e)
 	}
 	if len(os.Args) == 4 && os.Args[1] == "ai-import-sample" {
@@ -415,6 +469,7 @@ func main() {
 		log.Fatal("unknown SMS_PROVIDER")
 	}
 	if env("BACKGROUND_WORKERS_ENABLED", "true") == "true" {
+		a.startCloudFileWorker(context.Background())
 		a.startSMSMaintenance(context.Background())
 		a.startMediaWorker(context.Background())
 		a.startProcurementWorker(context.Background())
@@ -429,6 +484,11 @@ func main() {
 	}
 	if env("BACKGROUND_WORKERS_ENABLED", "true") != "true" && env("AI_IMPORT_WORKER_ENABLED", "false") == "true" {
 		a.startAIImportWorker(context.Background())
+	}
+	if env("BACKGROUND_WORKERS_ENABLED", "true") != "true" && env("OSS_FILE_WORKER_ENABLED", "false") == "true" {
+		// Isolated release acceptance processes synthetic uploads without running
+		// historical AI, scheduled publication or backup jobs from a cloned DB.
+		a.startCloudFileWorker(context.Background())
 	}
 	srv := &http.Server{Addr: cfg.Addr, Handler: a.router(), ReadHeaderTimeout: 10 * time.Second, ReadTimeout: 15 * time.Minute, WriteTimeout: 15 * time.Minute, IdleTimeout: 60 * time.Second}
 	log.Printf("中企展馆 API listening on %s (%s)", cfg.Addr, cfg.Env)
@@ -577,6 +637,7 @@ func (a *App) router() *gin.Engine {
 	a.serviceCaseRoutes(pub, merchant, admin)
 	a.homeRotationRoutes(admin)
 	a.storageUsageRoutes(admin, merchant)
+	a.cloudFileRoutes(admin, merchant)
 	a.analyticsRoutes(pub, admin)
 	a.backupRoutes(admin)
 	a.backupDownloadRoutes(admin, api)

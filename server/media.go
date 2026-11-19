@@ -11,6 +11,7 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -41,6 +42,9 @@ func scaled(src image.Image, maxSize int) image.Image {
 	return dst
 }
 func writeImage(path string, img image.Image, format string) error {
+	if format == "webp" {
+		return writeCloudWebP(path, img)
+	}
 	f, e := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
 	if e != nil {
 		return e
@@ -57,6 +61,12 @@ func writeImage(path string, img image.Image, format string) error {
 	return closeErr
 }
 func (a *App) upload(c *gin.Context) {
+	if cloudFilesEnabled() {
+		if _, internal := c.Get("oss_internal_processing"); !internal {
+			a.uploadLegacyCloudFile(c, "image")
+			return
+		}
+	}
 	if e := a.checkUploadDisks(0); e != nil {
 		dbFail(c, e)
 		return
@@ -97,6 +107,10 @@ func (a *App) upload(c *gin.Context) {
 		fail(c, 400, "invalid_image")
 		return
 	}
+	if cloudFilesEnabled() && format == "jpeg" {
+		f.Seek(0, io.SeekStart)
+		img = orientPhoto(img, jpegOrientation(f))
+	}
 	key := randomToken()
 	extension := ".jpg"
 	outputFormat := "jpeg"
@@ -104,8 +118,16 @@ func (a *App) upload(c *gin.Context) {
 		extension = ".png"
 		outputFormat = "png"
 	}
+	if cloudFilesEnabled() && (purpose == "product_image" || purpose == "company_gallery" || purpose == "company_cover" || purpose == "resource_cover") {
+		extension = ".webp"
+		outputFormat = "webp"
+	}
 	path := key + extension
 	thumb := key + "-thumb" + extension
+	if cloudFilesEnabled() {
+		path = a.mediaObjectKey(uploadOwner(c), purpose, key, extension)
+		thumb = a.mediaObjectKey(uploadOwner(c), purpose, key+"-thumb", extension)
+	}
 	fullPath := a.workPath(path)
 	thumbPath := a.workPath(thumb)
 	if e = writeImage(fullPath, scaled(img, 2048), outputFormat); e != nil {
@@ -172,6 +194,9 @@ func (a *App) upload(c *gin.Context) {
 	}
 	e = a.DB.Transaction(func(tx *gorm.DB) error {
 		if e := tx.Create(&media).Error; e != nil {
+			return e
+		}
+		if e := a.bindCloudUpload(tx, c, media.ID); e != nil {
 			return e
 		}
 		if e := stampWatermarkSnapshot(tx, media, purpose); e != nil {
@@ -293,6 +318,16 @@ func (a *App) mediaRead(c *gin.Context) {
 	if path == "" {
 		fail(c, 404, "not_found")
 		return
+	}
+	if count > 0 && c.GetHeader("Authorization") == "" && c.Query("download") != "1" {
+		if width, _ := strconv.Atoi(c.Query("w")); width > 0 && width <= 480 && media.ThumbPath != "" {
+			path = media.ThumbPath
+		}
+		if address, ok := a.cloudPublicAddress(path); ok {
+			c.Header("Cache-Control", "no-store")
+			c.Redirect(http.StatusFound, address)
+			return
+		}
 	}
 	if c.Query("download") == "1" {
 		c.Header("Content-Disposition", "attachment; filename=\"catalog"+filepath.Ext(path)+"\"")

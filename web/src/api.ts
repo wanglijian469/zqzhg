@@ -1,4 +1,4 @@
-import {apiURL,loadRuntime} from './runtime-config';
+import {apiURL,loadRuntime,runtimeConfig} from './runtime-config';
 import {recordPublicResponse} from './analytics';
 let publicRetryUntil=0;
 export const publicRetrySeconds=()=>Math.max(0,Math.ceil((publicRetryUntil-Date.now())/1000));
@@ -11,6 +11,9 @@ export async function currentAgreementRefs(){
 }
 export async function api<T>(path: string, options: RequestInit = {}, role?: 'admin' | 'merchant'): Promise<T> {
  await loadRuntime();
+ if(role&&runtimeConfig().capabilities?.oss_direct_upload&&options.body instanceof FormData&&/^\/(merchant|admin)\/(?:media|(?:contents|resources)\/\d+\/media)$/.test(path)){
+  const file=options.body.get('file');if(file instanceof File){try{const {uploadCloudFile}=await import('./oss-upload');const id=await uploadCloudFile(file,'image',String(options.body.get('purpose')||'unknown'),role,options.signal||new AbortController().signal,()=>{},path);return {id} as T}catch(e){if(role!=='admin'||(e as APIError).code!=='forbidden')throw e}}
+ }
  if(role==='merchant'&&options.method==='POST'&&/^\/merchant\/(?:(?:contents|resources)\/\d+\/submit|ai-import\/tasks\/\d+\/(?:(?:company|products)\/submit|batches\/\d+\/retry))$/.test(path)&&typeof options.body==='string'){
   let payload:Record<string,unknown>|undefined;try{payload=JSON.parse(options.body)}catch{/* Existing validation handles malformed input. */}
   if(payload&&typeof payload==='object'&&!Array.isArray(payload)&&!('agreements' in payload))options={...options,body:JSON.stringify({...payload,agreements:await currentAgreementRefs()})};
