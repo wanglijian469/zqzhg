@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -58,9 +59,9 @@ func (a *App) queueEnterpriseMigration(c *gin.Context) {
 		fail(c, 404, "not_found")
 		return
 	}
-	var objects []StoredObject
-	if e := a.DB.Table("stored_objects s").Select("s.*").Joins("JOIN media_object_owners o ON o.object_key=s.object_key").Where("o.owner_id=? AND s.store_id=0", vendor.OwnerID).Order("s.object_key").Find(&objects).Error; e != nil {
-		cloudFail(c, e)
+	objects, queryError := localObjectsForOwner(a.DB, vendor.OwnerID)
+	if queryError != nil {
+		cloudFail(c, queryError)
 		return
 	}
 	var bytes int64
@@ -122,6 +123,30 @@ func (a *App) queueEnterpriseMigration(c *gin.Context) {
 		return
 	}
 	c.JSON(202, j)
+}
+
+// Old installations may have different collations on the two object-key
+// columns. Resolve owner keys first, then perform bounded indexed lookups using
+// parameters; this avoids cross-column collation comparison and any schema edit.
+func localObjectsForOwner(db *gorm.DB, owner uint64) ([]StoredObject, error) {
+	var keys []string
+	if err := db.Model(&MediaObjectOwner{}).Where("owner_id=?", owner).Pluck("object_key", &keys).Error; err != nil {
+		return nil, err
+	}
+	objects := []StoredObject{}
+	for start := 0; start < len(keys); start += 200 {
+		end := start + 200
+		if end > len(keys) {
+			end = len(keys)
+		}
+		var batch []StoredObject
+		if err := db.Where("store_id=0 AND object_key IN ?", keys[start:end]).Find(&batch).Error; err != nil {
+			return nil, err
+		}
+		objects = append(objects, batch...)
+	}
+	sort.Slice(objects, func(i, j int) bool { return objects[i].Key < objects[j].Key })
+	return objects, nil
 }
 
 func (a *App) executeFileMigration(ctx context.Context, j FileStorageJob) error {

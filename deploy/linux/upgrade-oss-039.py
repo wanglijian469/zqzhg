@@ -204,7 +204,11 @@ def pause_uploads():
     value=state();assert value.get('promoted');setenv({'OSS_UPLOADS_ENABLED':'false'});subprocess.run(['systemctl','restart',UNIT],check=True);wait_health(8089);print(json.dumps({'new_uploads_paused':True,'existing_reads_retained':True}))
 
 def read_fallback():
-    value=state();assert value.get('promoted');setenv({'OSS_ENABLED':'false','OSS_UPLOADS_ENABLED':'false','OSS_DIRECT_UPLOAD_ENABLED':'false','OSS_FILE_WORKER_ENABLED':'false','OSS_ALLOW_LOCAL_WRITES':'false'});subprocess.run(['systemctl','restart',UNIT],check=True);wait_health(8089);print(json.dumps({'read_compatible_fallback':True,'schema_retained':39,'database_restored':False,'legacy_release_not_reactivated':True}))
+    value=state();assert value.get('promoted');fallback=Path(value.get('read_compatible_release',value['release']))
+    assert fallback.parent==BASE/'releases' and json.loads((fallback/'manifest.json').read_text())['schemaVersion']==39
+    setenv({'WEB_DIR':str(fallback/'web/dist'),'MAP_DEMO_DIR':str(fallback/'map-demo'),'OSS_ENABLED':'false','OSS_UPLOADS_ENABLED':'false','OSS_DIRECT_UPLOAD_ENABLED':'false','OSS_FILE_WORKER_ENABLED':'false','OSS_ALLOW_LOCAL_WRITES':'false'})
+    link=BASE/'current.read-fallback';assert not link.exists();link.symlink_to(fallback);os.replace(link,BASE/'current')
+    subprocess.run(['systemctl','restart',UNIT],check=True);wait_health(8089);print(json.dumps({'read_compatible_fallback':True,'schema_retained':39,'database_restored':False,'legacy_release_not_reactivated':True}))
 
 def rollback():
     value=state();cfg,name,_=active();version=int(sql(cfg,'SELECT MAX(version) FROM schema_migrations',name))
