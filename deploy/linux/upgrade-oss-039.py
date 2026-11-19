@@ -29,9 +29,11 @@ def setenv(updates):
     lines=ENV.read_text().splitlines();seen=set();result=[]
     for line in lines:
         key=line.split('=',1)[0] if '=' in line and not line.lstrip().startswith('#') else ''
-        if key in updates:result.append(key+'='+updates[key]);seen.add(key)
+        if key in updates:
+            if updates[key] is not None:result.append(key+'='+updates[key])
+            seen.add(key)
         else:result.append(line)
-    result.extend(k+'='+v for k,v in updates.items() if k not in seen)
+    result.extend(k+'='+v for k,v in updates.items() if k not in seen and v is not None)
     temp=ENV.with_name('exhibition.env.oss-next');temp.write_text('\n'.join(result)+'\n');temp.chmod(0o600);os.replace(temp,ENV)
 def wait_health(port):
     for _ in range(100):
@@ -46,7 +48,7 @@ def filing(cfg,name):
     encoded=json.dumps(current,ensure_ascii=False).encode().hex();sql(cfg,"UPDATE system_settings SET value=CONVERT(0x"+encoded+" USING utf8mb4),updated_at=UTC_TIMESTAMP() WHERE setting_key='system_config_v3'",name)
 def start_detached(command,log,env=None,identity=None):
     with open(log,'ab') as stream:
-        child=subprocess.Popen(command,env=env,stdout=stream,stderr=stream,stdin=subprocess.DEVNULL,start_new_session=True,preexec_fn=identity)
+        child=subprocess.Popen(command,cwd=str(Path(log).parent),env=env,stdout=stream,stderr=stream,stdin=subprocess.DEVNULL,start_new_session=True,preexec_fn=identity)
     return child.pid
 def stop_owned(pid,needle):
     if not pid:return
@@ -66,6 +68,7 @@ def check():
     assert sql(cfg,'SELECT MAX(version) FROM schema_migrations',name)=='38'
     media=legacy()['media_directory'](cfg)
     value={'version':'1.12.4','previous_release':str(old),'database':name,'media_root':str(media),'operations_dir':str(ops),'before_counts':legacy()['counts'](cfg,name),'before_media':media_inventory(media),'protected':legacy()['protected'](),'environment_sha256':digest(ENV),'created':time.time()}
+    value['previous_path_flags']={k:cfg.get(k) for k in ['WEB_DIR','MAP_DEMO_DIR','MAP_DEMO_ENABLED','OSS_ENABLED','OSS_UPLOADS_ENABLED','OSS_DIRECT_UPLOAD_ENABLED','OSS_FILE_WORKER_ENABLED','OSS_ALLOW_LOCAL_WRITES']}
     assert shutil.disk_usage(BASE).free>1<<30
     if STATE.exists():
         current=state();assert current['previous_release']==str(old) and not current.get('promoted');value.update(current)
@@ -125,7 +128,8 @@ def candidate_start():
     init=work/'init.sql';init.write_text("ALTER USER 'root'@'localhost' IDENTIFIED BY '"+secret+"';");init.chmod(0o600)
     mysql_pid=start_detached(common+['--init-file='+str(init)],work/'mysql-stdout.log')
     isolated=dict(cfg,DB_HOST='127.0.0.1',DB_PORT=str(port),DB_USER='root',DB_PASSWORD=secret,DB_MAINTENANCE_USER='',DB_MAINTENANCE_PASSWORD='')
-    value.update(candidate_running=True,candidate={'work':str(work),'mysql_pid':mysql_pid,'app_pid':None,'proxy_pid':None,'config':isolated,'database':'oss1124_candidate','proxy_port':proxy_port,'app_port':app_port});save(value)
+    isolated_access={k:isolated[k] for k in ['DB_HOST','DB_PORT','DB_USER','DB_PASSWORD']}
+    value.update(candidate_running=True,candidate={'work':str(work),'mysql_pid':mysql_pid,'app_pid':None,'proxy_pid':None,'config':isolated_access,'database':'oss1124_candidate','proxy_port':proxy_port,'app_port':app_port});save(value)
     for _ in range(100):
         try:
             if sql(isolated,'SELECT 1')=='1':break
@@ -147,7 +151,7 @@ def candidate_start():
     value['candidate']['app_pid']=app_pid;save(value)
     nginx=work/'nginx.conf';nginx.write_text('pid '+str(work/'nginx.pid')+'; error_log '+str(work/'nginx.log')+'; events {} http { access_log off; server { listen 127.0.0.1:'+str(proxy_port)+'; location / { proxy_pass http://127.0.0.1:'+str(app_port)+'; proxy_set_header Host zqzhg.com; proxy_set_header X-Forwarded-Proto https; } } }')
     proxy_pid=start_detached(['nginx','-c',str(nginx),'-p',str(work),'-g','daemon off;'],work/'nginx-stdout.log');wait_health(proxy_port)
-    value.update(candidate_running=True,backup_restore_sha256=restored_sha.hexdigest(),candidate={'work':str(work),'mysql_pid':mysql_pid,'app_pid':app_pid,'proxy_pid':proxy_pid,'config':isolated,'database':db,'proxy_port':proxy_port,'app_port':app_port});save(value)
+    value.update(candidate_running=True,backup_restore_sha256=restored_sha.hexdigest(),candidate={'work':str(work),'mysql_pid':mysql_pid,'app_pid':app_pid,'proxy_pid':proxy_pid,'config':isolated_access,'database':db,'proxy_port':proxy_port,'app_port':app_port});save(value)
     assert sql(isolated,'SELECT MAX(version) FROM schema_migrations',db)=='39'
     assert legacy()['counts'](isolated,db)==value['before_counts']
     print(json.dumps({'candidate_started':True,'proxy_port':proxy_port,'schema':39,'production_configuration':True,'service_user':'zqzt','source_media_copied_or_deleted':False}))
@@ -171,7 +175,6 @@ def promote(backup_receipt):
     assert subprocess.run(['systemctl','is-active','--quiet',UNIT]).returncode!=0
     backup=json.loads(Path(backup_receipt).read_text());assert backup['verified'] and backup['captured_at']>=value['frozen_at']
     assert legacy()['protected']()==value['protected']
-    oldenv=Path('/etc/zqzt/exhibition.env.before-v1.12.4');assert not oldenv.exists();shutil.copy2(ENV,oldenv);oldenv.chmod(0o600)
     cfg,name,_=active();assert name==value['database'];assert media_inventory(Path(value['media_root']))==value['before_media']
     # Only public filing fields change; all contact data, credentials, AI models,
     # tenant overrides and other settings are retained.
@@ -208,9 +211,7 @@ def rollback():
     if cloud:
         value['promoted']=True;save(value);read_fallback();return
     subprocess.run(['systemctl','stop',UNIT],check=True)
-    original=Path('/etc/zqzt/exhibition.env.before-v1.12.4')
-    if original.exists():
-        temporary=ENV.with_name('exhibition.env.rollback');shutil.copy2(original,temporary);temporary.chmod(0o600);os.replace(temporary,ENV)
+    setenv(value['previous_path_flags'])
     link=BASE/'current.rollback';assert not link.exists();link.symlink_to(value['previous_release']);os.replace(link,BASE/'current')
     subprocess.run(['systemctl','start',UNIT],check=True);wait_health(8089);value['rolled_back_before_cloud_files']=True;save(value);print(json.dumps({'previous_program_restored':True,'database_restored':False,'new_schema_retained':version}))
 
