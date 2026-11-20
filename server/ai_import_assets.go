@@ -348,8 +348,8 @@ func (a *App) aiCropAsset(c *gin.Context) {
 		fail(c, 400, "invalid_request")
 		return
 	}
-	if task.Status != "review_pending" {
-		fail(c, 409, "ai_task_locked")
+	if e := a.DB.Transaction(func(tx *gorm.DB) error { return aiEditable(tx, task.ID, actor(c).ID) }); e != nil {
+		dbFail(c, e)
 		return
 	}
 	next, e := a.aiCrop(c.Request.Context(), task, asset, r)

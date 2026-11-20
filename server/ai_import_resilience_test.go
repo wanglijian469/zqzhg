@@ -331,3 +331,31 @@ func TestAICopyCleanupCreatesOnlyPrivateUpdateDraftAndIsIdempotent(t *testing.T)
 		t.Fatal("cleanup was not idempotent", e, rows)
 	}
 }
+
+func TestAIPartialTaskCanCropOriginalsWithoutPublishing(t *testing.T) {
+	t.Setenv("AI_IMPORT_ENABLED", "true")
+	a := importTestApp(t)
+	tc := testClient{t, a.router()}
+	token := tc.login("13900009781")
+	other := tc.login("13900009782")
+	var session Session
+	a.DB.First(&session, "token_hash=?", digest(token))
+	task := aiTestTask(t, a, session.AccountID)
+	task.Status = "failed"
+	a.DB.Save(&task)
+	source, err := a.aiSaveAsset(context.Background(), task.OwnerID, task.ID, 0, 1, "page", ".png", aiTestPNG(t), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := fmt.Sprintf("/merchant/ai-import/assets/%d/crops", source.ID)
+	request := gin.H{"source_page": 1, "image_type": "product_main", "crop_region": []float64{.1, .1, .8, .8}, "panel": "whole"}
+	tc.call("POST", path, other, request, 404)
+	tc.call("POST", path, token, request, 201)
+	a.DB.First(&task, task.ID)
+	if task.Status != "failed" {
+		t.Fatal("crop changed task state")
+	}
+	task.PublishKey = "legacy-locked"
+	a.DB.Save(&task)
+	tc.call("POST", path, token, request, 409)
+}
