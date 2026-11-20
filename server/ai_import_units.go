@@ -297,7 +297,7 @@ func (a *App) aiStableCatalog(task AIImportTask, incoming []AIInventoryProduct) 
 	for _, p := range incoming {
 		found := false
 		for i, prior := range c.Catalog {
-			if prior.ProductName == p.ProductName && ((len(prior.BlockIDs) > 0 && aiJSON(prior.BlockIDs) == aiJSON(p.BlockIDs)) || aiJSON(prior.SourcePages) == aiJSON(p.SourcePages)) {
+			if prior.ProductName == p.ProductName && ((len(prior.BlockIDs) > 0 && prior.SeriesName == p.SeriesName && aiJSON(prior.BlockIDs) == aiJSON(p.BlockIDs)) || (len(prior.BlockIDs) == 0 && aiJSON(prior.SourcePages) == aiJSON(p.SourcePages))) {
 				found = true
 				if len(prior.BlockIDs) == 0 {
 					p.TempID = prior.TempID

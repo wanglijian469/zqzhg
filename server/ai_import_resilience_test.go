@@ -382,13 +382,13 @@ func TestAISavedCompanyAndIndependentVariantRecovery(t *testing.T) {
 	if after.Data != saved.Data || after.Version != 2 || calls != 0 || unit.Status != "succeeded" || unit.ErrorField != "saved_draft_reused" {
 		t.Fatal("saved company was changed or called again", after.Version, calls, unit)
 	}
-	candidates := []AIInventoryProduct{{ProductName: "X型号普通柱", BlockIDs: []string{"p1-b1"}, SourcePages: []int{1}}, {ProductName: "X型号焊接柱", BlockIDs: []string{"p1-b1"}, SourcePages: []int{1}}}
+	candidates := []AIInventoryProduct{{ProductName: "X型号普通柱", BlockIDs: []string{"p1-b1"}, SourcePages: []int{1}}, {ProductName: "X型号焊接柱", BlockIDs: []string{"p1-b1"}, SourcePages: []int{1}}, {ProductName: "X同型号", BlockIDs: []string{"p1-b2"}, SourcePages: []int{1}}, {ProductName: "X同型号", BlockIDs: []string{"p1-b3"}, SourcePages: []int{1}}}
 	catalog, err := a.aiStableCatalog(task, candidates)
-	if err != nil || len(catalog) != 2 || catalog[0].TempID == catalog[1].TempID || len(catalog[1].ReviewIssues) == 0 {
+	if err != nil || len(catalog) != 4 || catalog[0].TempID == catalog[1].TempID || catalog[2].TempID == catalog[3].TempID || len(catalog[1].ReviewIssues) == 0 {
 		t.Fatal("same-block variants lost", err, catalog)
 	}
 	again, err := a.aiStableCatalog(task, candidates)
-	if err != nil || len(again) != 2 {
+	if err != nil || len(again) != 4 {
 		t.Fatal("recovery duplicated exact candidates", err, again)
 	}
 	var company AICompanyExtraction
