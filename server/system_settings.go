@@ -258,6 +258,7 @@ func (a *App) safeProbe(ctx context.Context, raw, currentOrigin string) (map[str
 }
 func (a *App) settingsRoutes(admin, pub *gin.RouterGroup) {
 	a.aiModelSettingsRoutes(admin)
+	a.aiPromptRoutes(admin)
 	a.watermarkRoutes(admin)
 	pub.GET("/config", a.publicRuntimeConfig)
 	admin.GET("/settings", func(c *gin.Context) {

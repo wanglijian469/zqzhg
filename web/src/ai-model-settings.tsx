@@ -1,3 +1,4 @@
+import {AIPromptSettings} from './ai-prompt-settings';
 import {useEffect,useState} from 'react';
 import {api,APIError} from './api';
 import {Loading,useLoad} from './ui';
@@ -6,7 +7,7 @@ const path='/admin/settings/ai-models',flash='qwen3.8-flash',max='qwen3.8-max';
 const messages:Record<string,string>={ai_invalid_model_settings:'请使用百炼官方HTTPS业务空间地址，选择flash或max，超时应在15至600秒之间。',ai_model_encryption_required:'后端加密配置尚未就绪，请配置CONFIG_ENCRYPTION_KEY。',ai_model_key_unreadable:'密钥无法解密，请检查服务器加密配置。',bailian_configuration_required:'请配置按量计费业务密钥，不使用Coding Plan密钥。',ai_max_confirmation_required:'请明确确认max调用成本较高。',stale_revision:'配置已被其他管理员修改，请重新加载。',bailian_http_401:'密钥无效，请重新填写。',bailian_http_403:'当前业务空间没有该模型权限。'};
 export function AIModelSettings(){
  const request=useLoad<Settings>(path,'admin');const [settings,setSettings]=useState<Settings>();const [keyAction,setKeyAction]=useState('keep'),[key,setKey]=useState('');
- const [busy,setBusy]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState(''),[testMode,setTestMode]=useState('flash'),[confirmMax,setConfirmMax]=useState(false),[confirmConfigMax,setConfirmConfigMax]=useState(false);
+ const [tab,setTab]=useState<'models'|'prompts'>('models');const [busy,setBusy]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState(''),[testMode,setTestMode]=useState('flash'),[confirmMax,setConfirmMax]=useState(false),[confirmConfigMax,setConfirmConfigMax]=useState(false);
  useEffect(()=>{if(request.data){setSettings({...request.data,extraction_model:request.data.extraction_model||request.data.default_model||flash});setConfirmConfigMax(false)}},[request.data]);
  const text=(e:unknown)=>messages[(e as APIError).code]||(e as APIError).code||'请求失败';
  const save=async()=>{if(!settings||busy)return;setBusy(true);setError('');setNotice('');try{
@@ -15,8 +16,10 @@ export function AIModelSettings(){
  }catch(e){setError(text(e))}finally{setBusy(false)}};
  const test=async()=>{setBusy(true);setError('');setNotice('');try{const v=await api<{model:string;usage:{total_tokens?:number}|null}>(path+'/test',{method:'POST',body:JSON.stringify({model_mode:testMode,confirm_max:confirmMax}),signal:AbortSignal.timeout(15*60*1000)},'admin');setNotice(`连通成功：${v.model}；本次Token：${v.usage?.total_tokens??'未返回'}。实际费用以百炼账单为准。`)}catch(e){setError(text(e))}finally{setBusy(false)}};
  if(request.error)return <div className="notice error" role="alert">{messages[request.error]||request.error}<button onClick={request.reload}>重新加载</button></div>;if(!settings)return <Loading/>;
+ const tabs=<div className="settings-actions" role="tablist" aria-label="AI管理配置"><button role="tab" aria-selected={tab==='models'} onClick={()=>setTab('models')}>模型连接</button><button role="tab" aria-selected={tab==='prompts'} onClick={()=>setTab('prompts')}>内容提取规则</button></div>;
+ if(tab==='prompts')return <div>{tabs}<AIPromptSettings/></div>;
  const costly=settings.extraction_model===max||settings.review_model===max;
- return <div className="ai-model-settings"><h2>AI模型配置 · 阿里云百炼</h2><p className="notice">模型由管理员统一配置，厂商无需选择。默认提取、复核均使用flash；不会按文档长度或失败次数自动升级。新任务固化模型，后续配置不改变已有任务。</p>
+ return <div className="ai-model-settings">{tabs}<h2>AI模型配置 · 阿里云百炼</h2><p className="notice">模型由管理员统一配置，厂商无需选择。默认提取、复核均使用flash；不会按文档长度或失败次数自动升级。新任务固化模型，后续配置不改变已有任务。</p>
   <p>密钥状态：{settings.key_configured?'已配置':'未配置'} · 来源：{settings.key_source==='admin'?'后台加密保存':settings.key_source==='disabled'?'已停用':'后端环境变量'} · AI功能：{settings.enabled?'已启用':'未启用（由后端AI_IMPORT_ENABLED控制）'}</p>
   {settings.configuration_error&&<p className="notice error">{messages[settings.configuration_error]||settings.configuration_error}</p>}
   <fieldset disabled={busy}><div className="settings-grid">

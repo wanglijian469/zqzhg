@@ -64,6 +64,9 @@ func aiBatchBlockers(d AIImportDraft, kind string, existing bool) []string {
 	if d.ContentID > 0 {
 		return reasons
 	}
+	if d.GenerationState == "incomplete" {
+		reasons = append(reasons, "ai_product_incomplete")
+	}
 	if d.ActiveBatchID > 0 {
 		reasons = append(reasons, "ai_draft_submitting")
 	}
@@ -173,7 +176,7 @@ func (a *App) aiSubmitBatch(c *gin.Context, kind string) {
 		if !errors.Is(e, gorm.ErrRecordNotFound) {
 			return e
 		}
-		if task.Status != "review_pending" && task.Status != "completed" {
+		if task.Status != "review_pending" && task.Status != "completed" && task.Status != "failed" && task.Status != "processing" && task.Status != "queued" {
 			return serviceFailure{"ai_task_locked", 409}
 		}
 		if kind == "product" {
@@ -224,7 +227,12 @@ func (a *App) aiSubmitBatch(c *gin.Context, kind string) {
 				}
 			}
 		}
-		return tx.Model(&task).Updates(map[string]any{"submission_mode": "batch", "vendor_id": task.VendorID, "status": "review_pending", "stage": "review_pending"}).Error
+		changes := map[string]any{"submission_mode": "batch", "vendor_id": task.VendorID}
+		if task.Status != "processing" && task.Status != "queued" {
+			changes["status"] = "review_pending"
+			changes["stage"] = "review_pending"
+		}
+		return tx.Model(&task).Updates(changes).Error
 	})
 	if err != nil {
 		dbFail(c, err)
@@ -286,6 +294,9 @@ func (a *App) aiExecuteBatchItem(c *gin.Context, who Account, task AIImportTask,
 		}
 		if d.ActiveBatchID != 0 && d.ActiveBatchID != batch.ID {
 			return serviceFailure{"ai_draft_submitting", 409}
+		}
+		if d.GenerationState == "incomplete" {
+			return serviceFailure{"ai_product_incomplete", 409}
 		}
 		if d.Version != item.Version {
 			return serviceFailure{"stale_revision", 409}
@@ -504,6 +515,9 @@ func (a *App) aiFinishBatch(task AIImportTask, batch AISubmissionBatch) error {
 		status, stage := "review_pending", "review_pending"
 		if remaining == 0 && t.VendorID > 0 {
 			status, stage = "completed", "submitted"
+		}
+		if t.Status == "processing" || t.Status == "queued" {
+			return nil
 		}
 		return tx.Model(&t).Updates(map[string]any{"status": status, "stage": stage, "updated_at": time.Now().UTC()}).Error
 	})

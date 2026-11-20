@@ -33,8 +33,15 @@ func aiKeepSafeImages(x *AIProductExtraction, total int, scope []int) {
 	x.Images = images
 }
 
-func (a *App) aiProductPage(ctx context.Context, task AIImportTask, stage, model, prompt string, parts []bailian.Part, scope []int) (AIProductExtraction, error) {
-	var x AIProductExtraction
+func (a *App) aiProductPage(ctx context.Context, task AIImportTask, stage, model, prompt string, parts []bailian.Part, scope []int) (x AIProductExtraction, problemError error) {
+	ctx = context.WithValue(ctx, aiBudgetKey{}, &aiRequestBudget{})
+	defer func() {
+		if problemError != nil && problemError != errAIRetryScheduled && aiLocalFailure(problemError) {
+			if e := a.aiMarkUnitIssue(task, stage, problemError); e != nil {
+				problemError = e
+			}
+		}
+	}()
 	if e := a.aiModel(ctx, task, stage, model, prompt, parts, &x); e != nil {
 		return x, e
 	}
@@ -58,7 +65,12 @@ func (a *App) aiProductPage(ctx context.Context, task AIImportTask, stage, model
 			}
 		}
 		x.ReviewIssues = append(x.ReviewIssues, "该页结果曾因来源或裁剪范围不符而重新提取，请对照原页核对型号、技术原值及图片归属。")
-		fp := fmt.Sprintf("%x", sha256.Sum256([]byte(model+aiExtractionRules+prompt+aiJSON(parts))))
+		rule, re := a.aiUnitBusinessRule(ctx, task, stage)
+		if re != nil {
+			return x, re
+		}
+		system := aiSystemRules(rule)
+		fp := fmt.Sprintf("%x", sha256.Sum256([]byte(model+system+prompt+aiJSON(parts))))
 		if e := a.aiRememberModel(task, stage, fp, &x); e != nil {
 			return x, e
 		}

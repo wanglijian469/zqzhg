@@ -30,13 +30,24 @@ func (a *App) aiStoreDraft(ctx context.Context, task AIImportTask, kind string, 
 		if e := aiGuardWorkerWrite(tx, ctx, task.ID, task.OwnerID); e != nil {
 			return e
 		}
+		if draft.GenerationState == "" {
+			draft.GenerationState = "ready"
+		}
+		var prior AIImportDraft
+		if tx.Table(aiTable(kind)).Where("task_id=? AND temp_id=?", task.ID, draft.TempID).First(&prior).Error == nil && prior.GenerationState == "incomplete" && prior.Version == 1 && prior.ContentID == 0 && prior.ActiveBatchID == 0 && !prior.Deleted && draft.GenerationState == "ready" {
+			if e := tx.Table(aiTable(kind)).Where("id=? AND version=1 AND generation_state='incomplete'", prior.ID).Updates(map[string]any{"data": draft.Data, "review_issues": draft.ReviewIssues, "source_pages": draft.SourcePages, "generation_state": "ready", "version": 2}).Error; e != nil {
+				return e
+			}
+		}
 		if e := tx.Table(aiTable(kind)).Clauses(clause.OnConflict{DoNothing: true}).Create(draft).Error; e != nil {
 			return e
 		}
 		if kind == "product" && draft.TargetContentID > 0 {
-			return tx.Table(aiTable(kind)).Where("task_id=? AND temp_id=? AND content_id=0", task.ID, draft.TempID).Updates(map[string]any{"target_content_id": draft.TargetContentID, "publish_mode": draft.PublishMode}).Error
+			if e := tx.Table(aiTable(kind)).Where("task_id=? AND temp_id=? AND content_id=0", task.ID, draft.TempID).Updates(map[string]any{"target_content_id": draft.TargetContentID, "publish_mode": draft.PublishMode}).Error; e != nil {
+				return e
+			}
 		}
-		return nil
+		return tx.Model(&AIImportTask{}).Where("id=?", task.ID).Update("result_version", gorm.Expr("result_version+1")).Error
 	})
 }
 

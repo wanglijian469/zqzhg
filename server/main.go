@@ -201,6 +201,11 @@ func migrateThrough(db *gorm.DB, maximum int) error {
 				return e
 			}
 		}
+		if version == 40 {
+			if e = seedAIPrompts(db); e != nil {
+				return e
+			}
+		}
 		if version == 16 {
 			if e = backfillAdministrativeSnapshots(db); e != nil {
 				return e
@@ -318,7 +323,7 @@ func main() {
 	controlDir := controlDirectory(cfg.MediaDir)
 	var target ActiveTarget
 	var targetError error
-	if len(os.Args) >= 2 && os.Args[1] == "oss-media" {
+	if len(os.Args) >= 2 && (os.Args[1] == "oss-media" || os.Args[1] == "ai-copy-cleanup") {
 		target = ActiveTarget{env("DB_NAME", "zqzt_exhibition"), cfg.MediaDir}
 		host, e := readHostTarget(cfg.MediaDir)
 		targetError = e
@@ -343,13 +348,30 @@ func main() {
 	}
 	var db *gorm.DB
 	var e error
-	if len(os.Args) >= 2 && os.Args[1] == "oss-media" {
+	if len(os.Args) >= 2 && (os.Args[1] == "oss-media" || os.Args[1] == "ai-copy-cleanup") {
 		db, e = openExistingDB(target.Database, env("DB_USER", "root"), env("DB_PASSWORD", "root"))
 	} else {
 		db, e = openDB(target.Database)
 	}
 	if e != nil {
 		log.Fatal(e)
+	}
+	if len(os.Args) >= 2 && os.Args[1] == "ai-copy-cleanup" {
+		if len(os.Args) != 3 || (os.Args[2] != "--dry-run" && os.Args[2] != "--apply") {
+			log.Fatal("use ai-copy-cleanup --dry-run or --apply")
+		}
+		a := &App{DB: db, Config: cfg}
+		var schema int
+		db.Raw("SELECT MAX(version) FROM schema_migrations").Scan(&schema)
+		if os.Args[2] == "--apply" && schema < 40 {
+			log.Fatal("apply requires deployed schema40; dry-run does not migrate")
+		}
+		rows, err := a.aiCleanupCopies(os.Args[2] == "--apply")
+		if err != nil {
+			log.Fatal("copy cleanup failed; existing published versions retained")
+		}
+		json.NewEncoder(os.Stdout).Encode(rows)
+		return
 	}
 	if len(os.Args) == 2 && os.Args[1] == "reset-procurement-demo" {
 		if !cfg.ProcurementDemo {
@@ -389,6 +411,7 @@ func main() {
 			log.Print("OSS storage configuration invalid; new cloud uploads unavailable; credentials omitted")
 		}
 	}
+
 	if len(os.Args) == 2 && os.Args[1] == "seed-procurement-demo" {
 		if !cfg.ProcurementDemo {
 			log.Fatal("demo mode required")

@@ -6,7 +6,7 @@ $expectedWebOutput = [IO.Path]::GetFullPath((Join-Path $workspaceRoot '.local/an
 if ([IO.Path]::GetFullPath($webOutput) -ne $expectedWebOutput) { throw 'Invalid generated Web output directory.' }
 Push-Location (Join-Path $workspaceRoot 'web')
 try {
-    & node node_modules/typescript/bin/tsc --noEmit
+    & node node_modules/typescript/bin/tsc -b
     if ($LASTEXITCODE -ne 0) { throw 'Web type check failed.' }
     & node node_modules/vite/bin/vite.js build --outDir $webOutput --manifest --emptyOutDir
     if ($LASTEXITCODE -ne 0) { throw 'Embedded workspace build failed.' }
@@ -21,7 +21,7 @@ if (Test-Path -LiteralPath $assetRoot) {
 }
 New-Item -ItemType Directory -Force -Path $assetRoot | Out-Null
 # Explicit allowlist: never include downloads/APKs, secrets or databases.
-foreach ($entry in @('index.html','brand.svg','assets','pdfjs','maps','guide-images')) {
+foreach ($entry in @('index.html','brand.svg','police-beian.png','assets','pdfjs','maps','guide-images')) {
     $source = Join-Path $webOutput $entry
     if (Test-Path -LiteralPath $source) { Copy-Item -LiteralPath $source -Destination $assetRoot -Recurse }
 }

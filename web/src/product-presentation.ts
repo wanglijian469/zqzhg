@@ -1,0 +1,3 @@
+import type {ProductDetails} from './types';
+export function cleanProductText(s:string){return s.replace(/[（(]\s*PDF\s*第\s*[0-9、,，~～\- ]+\s*页\s*[）)]/gi,'').replace(/^\s*(?:\*\*|#{1,6}\s*)?(?:画册来源|材料来源|PDF来源|识别过程|整理说明)(?:\*\*)?\s*[:：]?[^\r\n]*$/gim,'').trim()}
+export function legacyParametersVisible(s:string,details?:ProductDetails){if(!details?.models?.length)return true;const generated=details.models.flatMap(m=>['型号：'+m.model_name+' '+(m.variant||''),...m.parameters.map(p=>p.parameter_name+'：'+p.raw_value+' '+p.raw_unit)]).join('\n');const normalized=(v:string)=>cleanProductText(v).replace(/\s+/g,'');return normalized(s)!==normalized(generated)}

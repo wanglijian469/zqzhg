@@ -84,7 +84,14 @@ func TestAIBatchesIndependentCompanyThreeBatchesAndIsolation(t *testing.T) {
 	bad := p
 	bad.MediaIDs = nil
 	first["items"].([]gin.H)[1]["data"] = bad
+	a.DB.Model(&AIImportTask{}).Where("id=?", task.ID).Updates(map[string]any{"status": "processing", "lease": "synthetic-active-unit"})
 	out := tc.call("POST", prefix+"/products/submit", merchant, first, 200)
+	var activeTask AIImportTask
+	a.DB.First(&activeTask, task.ID)
+	if activeTask.Status != "processing" || activeTask.Lease != "synthetic-active-unit" {
+		t.Fatal("batch submission stopped the worker", activeTask)
+	}
+	a.DB.Model(&AIImportTask{}).Where("id=?", task.ID).Updates(map[string]any{"status": "failed", "lease": ""})
 	if out["submitted"] != float64(1) || out["failed"] != float64(1) {
 		t.Fatal(out)
 	}

@@ -64,7 +64,7 @@ func (a *App) aiClaim(ctx context.Context) (AIImportTask, error) {
 			if count >= int64(settingInt("AI_IMPORT_CONCURRENCY", 1)) {
 				return gorm.ErrRecordNotFound
 			}
-			if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("status='queued'").Order("id").First(&task).Error; e != nil {
+			if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("status='queued' AND (next_retry_at IS NULL OR next_retry_at<=?)", now).Order("id").First(&task).Error; e != nil {
 				return e
 			}
 			until := now.Add(90 * time.Second)
@@ -123,6 +123,19 @@ func (a *App) aiProcessNext(parent context.Context) (bool, error) {
 	}()
 	e = a.aiRun(ctx, task)
 	state, stage, code := "review_pending", "review_pending", ""
+	outcome, next, outcomeErr := a.aiFinalizeOutcome(task)
+	if outcomeErr != nil && e == nil {
+		e = outcomeErr
+	}
+	if errors.Is(e, errAIPaused) {
+		state, stage, code = "queued", "queued", ""
+		e = nil
+	}
+	if next != nil && (e == nil || aiLocalFailure(e)) {
+		state, stage = "queued", "retry_waiting"
+		a.DB.Model(&AIImportTask{}).Where("id=? AND lease=?", task.ID, task.Lease).Update("progress", gorm.Expr("LEAST(progress,97)"))
+		e = nil
+	}
 	if e != nil {
 		state = "failed"
 		var latest AIImportTask
@@ -131,7 +144,7 @@ func (a *App) aiProcessNext(parent context.Context) (bool, error) {
 		code = aiSafeError(e)
 		a.aiInvalidateFailedResponse(task, e)
 	}
-	result := a.DB.Model(&AIImportTask{}).Where("id=? AND lease=? AND status='processing'", task.ID, task.Lease).Updates(map[string]any{"status": state, "stage": stage, "error": code, "lease": "", "locked_until": nil, "updated_at": time.Now().UTC()})
+	result := a.DB.Model(&AIImportTask{}).Where("id=? AND lease=? AND status='processing'", task.ID, task.Lease).Updates(map[string]any{"status": state, "stage": stage, "error": code, "lease": "", "locked_until": nil, "updated_at": time.Now().UTC(), "recognition_outcome": outcome, "next_retry_at": next, "result_version": gorm.Expr("result_version+1")})
 	if result.Error != nil {
 		return true, result.Error
 	}
@@ -145,17 +158,37 @@ func (a *App) aiStage(task *AIImportTask, stage string, progress int) error {
 		return result.Error
 	}
 	if result.RowsAffected != 1 {
-		return errors.New("ai_lease_lost")
+		var current int64
+		if e := a.DB.Model(&AIImportTask{}).Where("id=? AND lease=? AND status='processing'", task.ID, task.Lease).Count(&current).Error; e != nil {
+			return e
+		}
+		if current != 1 {
+			return errors.New("ai_lease_lost")
+		}
 	}
 	return nil
 }
-func (a *App) aiModel(ctx context.Context, task AIImportTask, stage, model, prompt string, parts []bailian.Part, out any) error {
+func (a *App) aiModelAttempt(ctx context.Context, task AIImportTask, stage, model, prompt string, parts []bailian.Part, out any) error {
 	cfg, _, configError := a.aiBailianConfig()
 	if configError != nil {
 		return configError
 	}
+	cfg.Retries = 0
 	client := bailian.Client{Config: cfg}
-	fp := fmt.Sprintf("%x", sha256.Sum256([]byte(model+aiExtractionRules+prompt+aiJSON(parts))))
+	rule, ruleErr := a.aiUnitBusinessRule(ctx, task, stage)
+	if ruleErr != nil {
+		return ruleErr
+	}
+	system := aiExtractionRules
+	if rule != "" {
+		system += "\nAdministrator business guidance (subject to all fixed safety and JSON constraints):\n" + rule + "\nNever override the fixed technical-value, source, permission or output-schema constraints."
+	}
+	fp := fmt.Sprintf("%x", sha256.Sum256([]byte(model+system+prompt+aiJSON(parts))))
+	if b, _ := ctx.Value(aiBudgetKey{}).(*aiRequestBudget); b != nil && b.Stage == stage {
+		if e := a.DB.Model(&AIImportWorkItem{}).Where("id=?", b.WorkID).Update("fingerprint", fp).Error; e != nil {
+			return e
+		}
+	}
 	checkpoint := a.aiReadCheckpoint(task.ID)
 	if cached, ok := checkpoint.Models[stage]; ok && cached.Fingerprint == fp {
 		if e := aiDecode(string(cached.Response), out); e == nil {
@@ -173,12 +206,18 @@ func (a *App) aiModel(ctx context.Context, task AIImportTask, stage, model, prom
 		}
 		a.DB.Model(&cache).Update("error", "ai_invalid_schema")
 	}
+	if e := a.aiAttemptAllowed(ctx); e != nil {
+		return e
+	}
 	marker := AIImportModelCall{TaskID: task.ID, Stage: stage, Fingerprint: fp, Model: model, Error: "bailian_in_flight_unknown", UsageJSON: "null", PriceBasis: "unknown", CreatedAt: time.Now().UTC()}
 	if e := a.DB.Create(&marker).Error; e != nil {
 		return e
 	}
 	var last uint64
-	result, e := client.Complete(ctx, model, aiExtractionRules+"\n"+prompt, parts, func(at bailian.Attempt) error {
+	result, e := client.Complete(ctx, model, system+"\n"+prompt, parts, func(at bailian.Attempt) error {
+		if b, _ := ctx.Value(aiBudgetKey{}).(*aiRequestBudget); b != nil {
+			b.RetryAfter = max(b.RetryAfter, at.RetryAfterSeconds)
+		}
 		price, basis := aiEstimate(model, at.Usage)
 		row := AIImportModelCall{TaskID: task.ID, Stage: stage, Fingerprint: fp, Model: model, RequestID: at.RequestID, Attempt: at.Number, HTTPStatus: at.Status, Error: at.Error, UsageJSON: aiJSON(at.Usage), EstimatedCost: price, PriceBasis: basis, DurationMS: at.DurationMS, CreatedAt: time.Now().UTC()}
 		if e := a.DB.Create(&row).Error; e != nil {
@@ -189,6 +228,12 @@ func (a *App) aiModel(ctx context.Context, task AIImportTask, stage, model, prom
 	})
 	a.DB.Model(&marker).Update("error", "bailian_attempts_recorded")
 	if e != nil {
+		if result.Text != "" {
+			a.DB.Model(&AIImportModelCall{}).Where("id=?", last).Update("response_json", result.Text)
+		}
+		if e.Error() == "bailian_usage_record_failed" {
+			a.DB.Model(&marker).Update("error", "bailian_usage_record_failed")
+		}
 		return e
 	}
 	// Keep every raw response in the private audit ledger, even when its schema fails.
@@ -197,6 +242,9 @@ func (a *App) aiModel(ctx context.Context, task AIImportTask, stage, model, prom
 	}
 	if decodeErr := aiDecode(result.Text, out); decodeErr != nil {
 		a.DB.Model(&AIImportModelCall{}).Where("id=?", last).Update("error", "ai_invalid_schema")
+		if b, _ := ctx.Value(aiBudgetKey{}).(*aiRequestBudget); b != nil {
+			a.DB.Model(&AIImportWorkItem{}).Where("id=?", b.WorkID).Update("error_field", decodeErr.Error())
+		}
 		if strings.HasSuffix(stage, "-repair") {
 			return errors.New("ai_invalid_schema")
 		}
@@ -337,6 +385,9 @@ func (a *App) aiRun(ctx context.Context, task AIImportTask) error {
 		var item AIPageIndex
 		prompt := `Identify every separately presented product/configuration and any supporting continuation/table/drawing blocks on THIS physical page. Preserve distinct structure variants even with the same model. Repeated logos, factory scenes and decorative components are not new products. For mixed products list one block per independently named item. For continuation tables use kind="support" and the exact applicable title/series. Transcribe company facts only when explicitly printed. Return {"company_text":"verbatim company/contact text or empty","blocks":[{"title":"exact product/configuration title","series_name":"explicit series or empty","kind":"product or support"}],"logo_regions":[{"source_page":1,"panel":"left/right/whole","printed_page":"","image_type":"logo","crop_region":[0.1,0.1,0.2,0.2],"caption":""}]}. If no products/supporting content use blocks:[]. No guessed models.`
 		if e = a.aiModel(ctx, task, fmt.Sprintf("index-%d", page.Page), cfg.Model, prompt, parts, &item); e != nil {
+			if aiLocalFailure(e) {
+				continue
+			}
 			return e
 		}
 		for i := range item.Blocks {
@@ -348,7 +399,7 @@ func (a *App) aiRun(ctx context.Context, task AIImportTask) error {
 		}
 		for _, logo := range item.LogoRegions {
 			if logo.ImageType != "logo" || !aiRegionValid(logo, task.Total) || logo.SourcePage != page.Page {
-				return errors.New("ai_invalid_logo_region")
+				continue
 			}
 			if _, e = a.aiCrop(ctx, task, page, logo); e != nil {
 				return e
@@ -365,7 +416,11 @@ func (a *App) aiRun(ctx context.Context, task AIImportTask) error {
 	inventoryPrompt := `Build the complete inventory from these page blocks. Join only genuine cross-page continuations and explicitly shared series tables. KEEP independently presented products and structural/configuration variants separate, even if identifiers match. Assign support blocks to all clearly applicable products; never force ambiguous associations. Every product-kind block must occur in the output. Do not invent a product from a heading, factory photo or ordering-code option. Return {"products":[{"product_name":"","series_name":"","block_ids":["p1-b1"]}],"unassigned_support_blocks":[],"review_issues":[]}. Use only supplied block IDs.`
 	var inventory AIInventory
 	if e := a.aiModel(ctx, task, "inventory-merge", cfg.Model, inventoryPrompt, []bailian.Part{{Type: "text", Text: aiJSON(index)}}, &inventory); e != nil {
-		return e
+		if !aiLocalFailure(e) {
+			return e
+		}
+		inventory = AIInventory{}
+		inventory.Issues = append(inventory.Issues, "目录合并未完成，暂按独立标题保留候选产品，请核对跨页关联。")
 	}
 	inventory = aiPreserveIndependentProducts(index, inventory)
 	if len(inventory.Products) == 0 || len(inventory.Products) > 1000 {
@@ -400,44 +455,15 @@ func (a *App) aiRun(ctx context.Context, task AIImportTask) error {
 			}
 		}
 	}
+	stable, se := a.aiStableCatalog(task, inventory.Products)
+	if se != nil {
+		return se
+	}
+	inventory.Products = stable
 	if e := a.aiWork(&task, "company_extraction", 32, AIImportWork{Done: 0, Total: 1, Message: "正在根据来源整理企业信息"}); e != nil {
 		return e
 	}
-	var company AICompanyExtraction
-	companyPrompt := `Extract company facts ONLY from the supplied verbatim evidence. Return {"data":{"name":"","name_en":"","description":"","description_en":"","main_products":"","phone":"","address":"","region_name":"","company_profile":{"short_name":"","summary":"","website":"","contact_name":""}},"source_pages":[1],"field_sources":{"name":[1],"description":[1]},"review_issues":[]}. Use the website's data field names. Keep missing strings empty. Every nonempty data field must have evidence pages in field_sources (nested profile fields use company_profile.FIELD). Keep all listed contact numbers in company_profile.contacts if phone has multiple values; phone itself must be one original number. Do not invent region, category IDs or commercial claims.`
-	if e := a.aiModel(ctx, task, "company", cfg.Model, companyPrompt, []bailian.Part{{Type: "text", Text: aiJSON(companyEvidence)}}, &company); e != nil {
-		return e
-	}
-	if company.Data.Name == "" || !aiPagesValid(company.SourcePages, task.Total) {
-		return errors.New("ai_company_source_required")
-	}
-	// Whitelist sourced fields; categories/permissions/IDs never come from the model.
-	company.Data = aiSourcedCompany(company, task.Total)
-	if company.Data.Name == "" {
-		return errors.New("ai_company_source_required")
-	}
-	company.ReviewIssues = append(company.ReviewIssues, inventory.Issues...)
-	for _, b := range inventory.Unassigned {
-		company.ReviewIssues = append(company.ReviewIssues, "未明确归属的支持区块："+b)
-	}
-	var logos []AIImportAsset
-	a.DB.Where("task_id=? AND image_type='logo'", task.ID).Order("id").Find(&logos)
-	if len(logos) > 0 {
-		if company.Data.CompanyProfile == nil {
-			company.Data.CompanyProfile = &CompanyProfile{}
-		}
-		company.Data.CompanyProfile.LogoMediaID = logos[0].MediaID
-	}
-	base := uint64(0)
-	if task.VendorID > 0 {
-		var vendor Content
-		if e := a.DB.First(&vendor, "id=? AND owner_id=?", task.VendorID, task.OwnerID).Error; e != nil {
-			return e
-		}
-		base = vendor.DraftRevisionID
-	}
-	companyDraft := AIImportDraft{TaskID: task.ID, OwnerID: task.OwnerID, TempID: "company", Version: 1, Data: aiJSON(company.Data), SourcePages: aiJSON(company.SourcePages), FieldSources: aiJSON(company.FieldSources), ReviewIssues: aiJSON(company.ReviewIssues), SelectedFields: "[]", BaseRevisionID: base}
-	if e := a.aiStoreDraft(ctx, task, "company", &companyDraft); e != nil {
+	if e := a.aiExtractCompany(ctx, task, companyEvidence, inventory); e != nil && !aiLocalFailure(e) {
 		return e
 	}
 	completedUnits, totalUnits := 0, 0
@@ -445,11 +471,14 @@ func (a *App) aiRun(ctx context.Context, task AIImportTask) error {
 		totalUnits += aiProductWorkUnits(product)
 	}
 	for n, product := range inventory.Products {
+		if e := a.aiCheckContinue(ctx); e != nil {
+			return e
+		}
 		work := func(stage string, page int, message string) error {
 			return a.aiWork(&task, stage, 35+60*completedUnits/totalUnits, AIImportWork{Product: product.ProductName, ProductIndex: n + 1, ProductTotal: len(inventory.Products), SourcePage: page, Done: completedUnits, Total: totalUnits, Message: message})
 		}
 		var existing AIImportDraft
-		if a.DB.Table(aiTable("product")).Where("task_id=? AND temp_id=?", task.ID, product.TempID).First(&existing).Error == nil {
+		if a.DB.Table(aiTable("product")).Where("task_id=? AND temp_id=?", task.ID, product.TempID).First(&existing).Error == nil && (existing.GenerationState != "incomplete" || existing.Deleted || existing.ContentID > 0 || existing.Version > 1) {
 			var original Payload
 			if json.Unmarshal([]byte(existing.Data), &original) != nil || existing.SourcePages != aiJSON(product.SourcePages) || (existing.Version == 1 && original.Name != product.ProductName) {
 				return errors.New("ai_inventory_changed_requires_new_task")
@@ -457,133 +486,21 @@ func (a *App) aiRun(ctx context.Context, task AIImportTask) error {
 			completedUnits += aiProductWorkUnits(product)
 			continue
 		}
-		chunks := []AIProductExtraction{}
-		for start := 0; start < len(product.SourcePages); start += 1 {
-			if e := work("product_extraction", product.SourcePages[start], "正在提取该来源页的产品、型号及参数"); e != nil {
+		if e := a.aiExtractOneProduct(ctx, task, cfg, pages, inventory, product, work, &completedUnits); e != nil {
+			if !aiLocalFailure(e) {
 				return e
 			}
-			end := start + 1
-			if end > len(product.SourcePages) {
-				end = len(product.SourcePages)
-			}
-			selected := []AIImportAsset{}
-			for _, p := range product.SourcePages[start:end] {
-				selected = append(selected, pages[p-1])
-			}
-			parts, e := a.aiPageParts(ctx, selected)
-			if e != nil {
-				return e
-			}
-			parts = append(parts, bailian.Part{Type: "text", Text: "Target product and source scope: " + aiJSON(product)})
-			prompt := `Extract ONLY this target product, its explicitly stated models/configurations and applicable specifications from supplied pages. Return {"product_name":"","series_name":"","description":"faithful factual summary or empty","features":[],"applications":[],"category_candidate":"","models":[{"model_name":"exact original identifier","variant":"","parameters":[{"parameter_name":"","raw_value":"exact original string","raw_unit":"","normalized_value":null,"normalized_unit":null,"source_page":1,"review_required":true}]}],"images":[{"source_page":1,"panel":"left/right/whole","printed_page":"","image_type":"product_main/product_photo/structure/schematic/dimensions/parameter_table/other","crop_region":[0.1,0.1,0.2,0.2],"caption":"exact applicability including model/variant"}],"source_pages":[1],"review_issues":[]}. One image_type enum value per image. Crop separately and completely: photos, structure diagrams, hydraulic schematics, installation dimension drawings, and parameter-table screenshots. Retain multi-column/merged-cell table applicability. Do not copy unrelated specifications on the same page. Do not infer complete model combinations from ordering guides. If a table cannot be assigned to one model, keep its original screenshot and flag review; do not guess. All numbers and source pages must be supported by the supplied images.`
-			prompt += ` Include every model literally listed in this target's heading or explicit model list, even if a table only specifies some of them. For an explicitly named model without applicable values, retain parameters:[] and flag the missing data. Never copy another model's parameters.`
-			x, e := a.aiProductPage(ctx, task, fmt.Sprintf("%s-detail-%d", product.TempID, start), cfg.Model, prompt, parts, product.SourcePages[start:end])
-			if e != nil {
-				return e
-			}
-			chunks = append(chunks, x)
-			completedUnits++
-		}
-		x := chunks[0]
-		if len(chunks) > 1 {
-			if e := work("product_extraction", 0, "正在整理跨页型号与参数"); e != nil {
-				return e
-			}
-			prompt := `Merge these partial extractions of ONE target product. Preserve distinct models, structural variants and raw specifications. Do not drop dimensions/photos/parameters. Reconcile only identical duplicates with the same applicability; any conflict must remain raw and be flagged. Return the SAME AIProductExtraction JSON schema as the input objects.`
-			if e := a.aiModel(ctx, task, product.TempID+"-merge", cfg.Model, prompt, []bailian.Part{{Type: "text", Text: aiJSON(chunks)}}, &x); e != nil {
-				return e
-			}
-			completedUnits++
-		}
-		x.ProductName = product.ProductName
-		if x.SeriesName == "" {
-			x.SeriesName = product.SeriesName
-		}
-		x.SourcePages = product.SourcePages
-		if e := aiValidateExtraction(x, task.Total, product.SourcePages); e != nil {
-			return e
-		}
-		// The review model sees the evidence again, not merely the first model's claims.
-		for start := 0; start < len(product.SourcePages); start += 1 {
-			if e := work("parameter_review", product.SourcePages[start], "复核模型正在对照原页检查参数和图片归属"); e != nil {
-				return e
-			}
-			end := start + 1
-			if end > len(product.SourcePages) {
-				end = len(product.SourcePages)
-			}
-			selected := []AIImportAsset{}
-			for _, p := range product.SourcePages[start:end] {
-				selected = append(selected, pages[p-1])
-			}
-			parts, e := a.aiPageParts(ctx, selected)
-			if e != nil {
-				return e
-			}
-			parts = append(parts, bailian.Part{Type: "text", Text: aiJSON(map[string]any{"target": product, "current_evidence_pages": product.SourcePages[start:end], "complete_inventory": inventory.Products, "extraction": x})})
-			var review struct {
-				Issues []string `json:"review_issues"`
-			}
-			prompt := `Independently compare ONLY the target product extraction against current_evidence_pages. Verify raw numbers, units, model/configuration applicability and crop boxes that can be checked on these supplied pages. Do NOT rewrite or correct values. The extraction may include evidence from other source pages reviewed in separate calls: do not flag their absence in this call as a discrepancy. Other independently displayed products already in complete_inventory are processed separately, so do not report them as missing from this target. Report genuinely omitted independently named items only when absent from the complete inventory. Return {"review_issues":[]} in Simplified Chinese. Unclear technical data must be flagged, never guessed.`
-			if e = a.aiModel(ctx, task, fmt.Sprintf("%s-review-%d", product.TempID, start), cfg.ReviewModel, prompt, parts, &review); e != nil {
-				return e
-			}
-			x.ReviewIssues = append(x.ReviewIssues, review.Issues...)
-			completedUnits++
-		}
-		if e := work("image_extraction", 0, "正在保存产品照片、图纸及草稿"); e != nil {
-			return e
-		}
-		for i := range x.Models {
-			for j := range x.Models[i].Parameters {
-				x.Models[i].Parameters[j].NormalizedValue = nil
-				x.Models[i].Parameters[j].NormalizedUnit = nil
-				x.Models[i].Parameters[j].ReviewRequired = true
-			}
-		}
-		payload := aiProductPayload(x)
-		for _, region := range x.Images {
-			asset, e := a.aiCrop(ctx, task, pages[region.SourcePage-1], region)
-			if e != nil {
-				return e
-			}
-			payload.ProductDetails.Images = append(payload.ProductDetails.Images, AIProductImage{MediaID: asset.MediaID, ImageType: region.ImageType, SourcePage: region.SourcePage, Caption: region.Caption})
-			if region.ImageType == "product_main" {
-				payload.MediaIDs = append([]uint64{asset.MediaID}, payload.MediaIDs...)
-			} else if region.ImageType == "product_photo" {
-				payload.MediaIDs = append(payload.MediaIDs, asset.MediaID)
-			}
-		}
-		payload.MediaIDs = aiUniqueMedia(payload.MediaIDs)
-		if len(payload.MediaIDs) == 0 {
-			x.ReviewIssues = append(x.ReviewIssues, "缺少已确认的产品主图，请裁剪或上传产品照片")
-		}
-		if len(payload.MediaIDs) > 12 {
-			x.ReviewIssues = append(x.ReviewIssues, "照片超过12张，需选择保留或拆分产品")
-		}
-		if len(payload.Parameters) > 10000 {
-			x.ReviewIssues = append(x.ReviewIssues, "兼容文本参数超过现有限额，请精简兼容摘要；完整型号参数保存在结构化详情")
-		}
-		draft := AIImportDraft{TaskID: task.ID, OwnerID: task.OwnerID, TempID: product.TempID, Version: 1, Data: aiJSON(payload), SourcePages: aiJSON(product.SourcePages), FieldSources: "{}", ReviewIssues: aiJSON(x.ReviewIssues), SelectedFields: "[]"}
-		if e := a.aiSuggestProductUpdate(task, &payload, &draft); e != nil {
-			return e
-		}
-		if e := a.aiStoreDraft(ctx, task, "product", &draft); e != nil {
-			return e
-		}
-		completedUnits++
-		if e := work("image_extraction", 0, "该产品草稿已保存"); e != nil {
-			return e
+			completedUnits += 1
 		}
 	}
 	if e := a.aiStage(&task, "result_validation", 98); e != nil {
 		return e
 	}
 	var count int64
-	if e := a.DB.Table(aiTable("product")).Where("task_id=? AND deleted=0", task.ID).Count(&count).Error; e != nil {
+	if e := a.DB.Table(aiTable("product")).Where("task_id=?", task.ID).Count(&count).Error; e != nil {
 		return e
 	}
-	if count != int64(len(inventory.Products)) {
+	if count < int64(len(inventory.Products)) {
 		return errors.New("ai_inventory_omission")
 	}
 	return a.aiStage(&task, "result_validation", 100)
@@ -642,4 +559,212 @@ func aiSourcedCompany(x AICompanyExtraction, total int) Payload {
 	var p Payload
 	json.Unmarshal([]byte(aiJSON(clean)), &p)
 	return p
+}
+
+func (a *App) aiExtractCompany(ctx context.Context, task AIImportTask, companyEvidence []any, inventory AIInventory) (problem error) {
+	defer func() {
+		if problem != nil && problem != errAIRetryScheduled && aiLocalFailure(problem) {
+			if e := a.aiMarkUnitIssue(task, "company", problem); e != nil {
+				problem = e
+			}
+		}
+	}()
+	cfg, e := a.aiTaskConfig(task)
+	if e != nil {
+		return e
+	}
+
+	var company AICompanyExtraction
+	companyPrompt := `Extract company facts ONLY from the supplied verbatim evidence. Return {"data":{"name":"","name_en":"","description":"","description_en":"","main_products":"","phone":"","address":"","region_name":"","company_profile":{"short_name":"","summary":"","website":"","contact_name":""}},"source_pages":[1],"field_sources":{"name":[1],"description":[1]},"review_issues":[]}. Use the website's data field names. Keep missing strings empty. Every nonempty data field must have evidence pages in field_sources (nested profile fields use company_profile.FIELD). Keep all listed contact numbers in company_profile.contacts if phone has multiple values; phone itself must be one original number. Do not invent region, category IDs or commercial claims.`
+	if e := a.aiModel(ctx, task, "company", cfg.Model, companyPrompt, []bailian.Part{{Type: "text", Text: aiJSON(companyEvidence)}}, &company); e != nil {
+		return e
+	}
+	if company.Data.Name == "" || !aiPagesValid(company.SourcePages, task.Total) {
+		return errors.New("ai_company_source_required")
+	}
+	// Whitelist sourced fields; categories/permissions/IDs never come from the model.
+	company.Data = aiSourcedCompany(company, task.Total)
+	if company.Data.Name == "" {
+		return errors.New("ai_company_source_required")
+	}
+	company.ReviewIssues = append(company.ReviewIssues, inventory.Issues...)
+	for _, b := range inventory.Unassigned {
+		company.ReviewIssues = append(company.ReviewIssues, "未明确归属的支持区块："+b)
+	}
+	var logos []AIImportAsset
+	a.DB.Where("task_id=? AND image_type='logo'", task.ID).Order("id").Find(&logos)
+	if len(logos) > 0 {
+		if company.Data.CompanyProfile == nil {
+			company.Data.CompanyProfile = &CompanyProfile{}
+		}
+		company.Data.CompanyProfile.LogoMediaID = logos[0].MediaID
+	}
+	base := uint64(0)
+	if task.VendorID > 0 {
+		var vendor Content
+		if e := a.DB.First(&vendor, "id=? AND owner_id=?", task.VendorID, task.OwnerID).Error; e != nil {
+			return e
+		}
+		base = vendor.DraftRevisionID
+	}
+	companyDraft := AIImportDraft{TaskID: task.ID, OwnerID: task.OwnerID, TempID: "company", Version: 1, Data: aiJSON(company.Data), SourcePages: aiJSON(company.SourcePages), FieldSources: aiJSON(company.FieldSources), ReviewIssues: aiJSON(company.ReviewIssues), SelectedFields: "[]", BaseRevisionID: base}
+	if e := a.aiStoreDraft(ctx, task, "company", &companyDraft); e != nil {
+		return e
+	}
+	return nil
+}
+func (a *App) aiExtractOneProduct(ctx context.Context, task AIImportTask, cfg bailian.Config, pages []AIImportAsset, inventory AIInventory, product AIInventoryProduct, work func(string, int, string) error, completedUnits *int) (problem error) {
+
+	var partial *AIProductExtraction
+	var assetUnit AIImportWorkItem
+	defer func() {
+		if assetUnit.ID > 0 {
+			state, code := "succeeded", ""
+			if problem != nil {
+				state, code = "failed", aiSafeError(problem)
+			}
+			if e := a.DB.Model(&assetUnit).Updates(map[string]any{"status": state, "error": code, "updated_at": time.Now().UTC()}).Error; e != nil {
+				problem = e
+			}
+		}
+	}()
+	defer func() {
+		if problem != nil && aiLocalFailure(problem) {
+			if e := a.aiStorePartialProduct(ctx, task, product, partial, problem); e != nil {
+				problem = e
+			}
+		}
+	}()
+	chunks := []AIProductExtraction{}
+	for start := 0; start < len(product.SourcePages); start += 1 {
+		if e := work("product_extraction", product.SourcePages[start], "正在提取该来源页的产品、型号及参数"); e != nil {
+			return e
+		}
+		end := start + 1
+		if end > len(product.SourcePages) {
+			end = len(product.SourcePages)
+		}
+		selected := []AIImportAsset{}
+		for _, p := range product.SourcePages[start:end] {
+			selected = append(selected, pages[p-1])
+		}
+		parts, e := a.aiPageParts(ctx, selected)
+		if e != nil {
+			return e
+		}
+		parts = append(parts, bailian.Part{Type: "text", Text: "Target product and source scope: " + aiJSON(product)})
+		prompt := `Extract ONLY this target product, its explicitly stated models/configurations and applicable specifications from supplied pages. Return {"product_name":"","series_name":"","description":"faithful factual summary or empty","features":[],"applications":[],"category_candidate":"","models":[{"model_name":"exact original identifier","variant":"","parameters":[{"parameter_name":"","raw_value":"exact original string","raw_unit":"","normalized_value":null,"normalized_unit":null,"source_page":1,"review_required":true}]}],"images":[{"source_page":1,"panel":"left/right/whole","printed_page":"","image_type":"product_main/product_photo/structure/schematic/dimensions/parameter_table/other","crop_region":[0.1,0.1,0.2,0.2],"caption":"exact applicability including model/variant"}],"source_pages":[1],"review_issues":[]}. One image_type enum value per image. Crop separately and completely: photos, structure diagrams, hydraulic schematics, installation dimension drawings, and parameter-table screenshots. Retain multi-column/merged-cell table applicability. Do not copy unrelated specifications on the same page. Do not infer complete model combinations from ordering guides. If a table cannot be assigned to one model, keep its original screenshot and flag review; do not guess. All numbers and source pages must be supported by the supplied images.`
+		prompt += ` Include every model literally listed in this target's heading or explicit model list, even if a table only specifies some of them. For an explicitly named model without applicable values, retain parameters:[] and flag the missing data. Never copy another model's parameters.`
+		x, e := a.aiProductPage(ctx, task, fmt.Sprintf("%s-detail-%d", product.TempID, start), cfg.Model, prompt, parts, product.SourcePages[start:end])
+		if e != nil {
+			return e
+		}
+		chunks = append(chunks, x)
+		(*completedUnits)++
+	}
+	x := chunks[0]
+	if len(chunks) > 1 {
+		if e := work("product_extraction", 0, "正在整理跨页型号与参数"); e != nil {
+			return e
+		}
+		prompt := `Merge these partial extractions of ONE target product. Preserve distinct models, structural variants and raw specifications. Do not drop dimensions/photos/parameters. Reconcile only identical duplicates with the same applicability; any conflict must remain raw and be flagged. Return the SAME AIProductExtraction JSON schema as the input objects.`
+		if e := a.aiModel(ctx, task, product.TempID+"-merge", cfg.Model, prompt, []bailian.Part{{Type: "text", Text: aiJSON(chunks)}}, &x); e != nil {
+			return e
+		}
+		(*completedUnits)++
+	}
+	x.ProductName = product.ProductName
+	if x.SeriesName == "" {
+		x.SeriesName = product.SeriesName
+	}
+	x.SourcePages = product.SourcePages
+	x.ReviewIssues = append(x.ReviewIssues, inventory.Issues...)
+	if e := aiValidateExtraction(x, task.Total, product.SourcePages); e != nil {
+		return e
+	}
+	partial = &x
+	if e := a.aiStorePartialProduct(ctx, task, product, &x, errors.New("ai_review_incomplete")); e != nil {
+		return e
+	}
+	// The review model sees the evidence again, not merely the first model's claims.
+	for start := 0; start < len(product.SourcePages); start += 1 {
+		if e := work("parameter_review", product.SourcePages[start], "复核模型正在对照原页检查参数和图片归属"); e != nil {
+			return e
+		}
+		end := start + 1
+		if end > len(product.SourcePages) {
+			end = len(product.SourcePages)
+		}
+		selected := []AIImportAsset{}
+		for _, p := range product.SourcePages[start:end] {
+			selected = append(selected, pages[p-1])
+		}
+		parts, e := a.aiPageParts(ctx, selected)
+		if e != nil {
+			return e
+		}
+		parts = append(parts, bailian.Part{Type: "text", Text: aiJSON(map[string]any{"target": product, "current_evidence_pages": product.SourcePages[start:end], "complete_inventory": inventory.Products, "extraction": x})})
+		var review AIReviewResult
+		prompt := `Independently compare ONLY the target product extraction against current_evidence_pages. Verify raw numbers, units, model/configuration applicability and crop boxes that can be checked on these supplied pages. Do NOT rewrite or correct values. The extraction may include evidence from other source pages reviewed in separate calls: do not flag their absence in this call as a discrepancy. Other independently displayed products already in complete_inventory are processed separately, so do not report them as missing from this target. Report genuinely omitted independently named items only when absent from the complete inventory. Return {"review_issues":[]} in Simplified Chinese. Unclear technical data must be flagged, never guessed.`
+		if e = a.aiModel(ctx, task, fmt.Sprintf("%s-review-%d", product.TempID, start), cfg.ReviewModel, prompt, parts, &review); e != nil {
+			return e
+		}
+		x.ReviewIssues = append(x.ReviewIssues, review.Issues...)
+		(*completedUnits)++
+	}
+	if e := work("image_extraction", 0, "正在保存产品照片、图纸及草稿"); e != nil {
+		return e
+	}
+	for i := range x.Models {
+		for j := range x.Models[i].Parameters {
+			x.Models[i].Parameters[j].NormalizedValue = nil
+			x.Models[i].Parameters[j].NormalizedUnit = nil
+			x.Models[i].Parameters[j].ReviewRequired = true
+		}
+	}
+	payload := aiProductPayload(x)
+	assetUnit = AIImportWorkItem{TaskID: task.ID, Stage: product.TempID + "-assets", Status: "processing", PromptVersionID: max(uint64(1), task.PromptVersionID), UpdatedAt: time.Now().UTC()}
+	if e := a.DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&assetUnit).Error; e != nil {
+		return e
+	}
+	if e := a.DB.First(&assetUnit, "task_id=? AND stage=?", task.ID, product.TempID+"-assets").Error; e != nil {
+		return e
+	}
+	if e := a.DB.Model(&assetUnit).Updates(map[string]any{"status": "processing", "error": ""}).Error; e != nil {
+		return e
+	}
+	for _, region := range x.Images {
+		asset, e := a.aiCrop(ctx, task, pages[region.SourcePage-1], region)
+		if e != nil {
+			return e
+		}
+		payload.ProductDetails.Images = append(payload.ProductDetails.Images, AIProductImage{MediaID: asset.MediaID, ImageType: region.ImageType, SourcePage: region.SourcePage, Caption: region.Caption})
+		if region.ImageType == "product_main" {
+			payload.MediaIDs = append([]uint64{asset.MediaID}, payload.MediaIDs...)
+		} else if region.ImageType == "product_photo" {
+			payload.MediaIDs = append(payload.MediaIDs, asset.MediaID)
+		}
+	}
+	payload.MediaIDs = aiUniqueMedia(payload.MediaIDs)
+	if len(payload.MediaIDs) == 0 {
+		x.ReviewIssues = append(x.ReviewIssues, "缺少已确认的产品主图，请裁剪或上传产品照片")
+	}
+	if len(payload.MediaIDs) > 12 {
+		x.ReviewIssues = append(x.ReviewIssues, "照片超过12张，需选择保留或拆分产品")
+	}
+	if len(payload.Parameters) > 10000 {
+		x.ReviewIssues = append(x.ReviewIssues, "兼容文本参数超过现有限额，请精简兼容摘要；完整型号参数保存在结构化详情")
+	}
+	draft := AIImportDraft{TaskID: task.ID, OwnerID: task.OwnerID, TempID: product.TempID, Version: 1, Data: aiJSON(payload), SourcePages: aiJSON(product.SourcePages), FieldSources: "{}", ReviewIssues: aiJSON(x.ReviewIssues), SelectedFields: "[]"}
+	if e := a.aiSuggestProductUpdate(task, &payload, &draft); e != nil {
+		return e
+	}
+	if e := a.aiStoreDraft(ctx, task, "product", &draft); e != nil {
+		return e
+	}
+	(*completedUnits)++
+	if e := work("image_extraction", 0, "该产品草稿已保存"); e != nil {
+		return e
+	}
+	return nil
 }

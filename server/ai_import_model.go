@@ -9,35 +9,40 @@ import (
 )
 
 type AIImportTask struct {
-	SubmissionMode  string     `json:"submission_mode"`
-	ModelMode       string     `json:"model_mode"`
-	MaxConfirmedAt  *time.Time `json:"max_confirmed_at,omitempty"`
-	ExtractionModel string     `json:"extraction_model"`
-	ReviewModel     string     `json:"review_model"`
-	ID              uint64     `json:"id"`
-	OwnerID         uint64     `json:"-"`
-	VendorID        uint64     `json:"vendor_id"`
-	RequestID       string     `json:"-"`
-	FileHash        string     `json:"file_hash"`
-	FileName        string     `json:"file_name"`
-	SourceIDs       string     `json:"-"`
-	Status          string     `json:"status"`
-	Stage           string     `json:"stage"`
-	Progress        int        `json:"progress"`
-	Total           int        `json:"total"`
-	Checkpoint      string     `json:"-"`
-	Error           string     `json:"error"`
-	Lease           string     `json:"-"`
-	LockedUntil     *time.Time `json:"-"`
-	PublishKey      string     `json:"-"`
-	PublishManifest string     `json:"-"`
-	CreatedAt       time.Time  `json:"created_at"`
-	UpdatedAt       time.Time  `json:"updated_at"`
+	PromptVersionID    uint64     `json:"prompt_version_id"`
+	RecognitionOutcome string     `json:"recognition_outcome"`
+	ResultVersion      uint64     `json:"result_version"`
+	NextRetryAt        *time.Time `json:"next_retry_at,omitempty"`
+	SubmissionMode     string     `json:"submission_mode"`
+	ModelMode          string     `json:"model_mode"`
+	MaxConfirmedAt     *time.Time `json:"max_confirmed_at,omitempty"`
+	ExtractionModel    string     `json:"extraction_model"`
+	ReviewModel        string     `json:"review_model"`
+	ID                 uint64     `json:"id"`
+	OwnerID            uint64     `json:"-"`
+	VendorID           uint64     `json:"vendor_id"`
+	RequestID          string     `json:"-"`
+	FileHash           string     `json:"file_hash"`
+	FileName           string     `json:"file_name"`
+	SourceIDs          string     `json:"-"`
+	Status             string     `json:"status"`
+	Stage              string     `json:"stage"`
+	Progress           int        `json:"progress"`
+	Total              int        `json:"total"`
+	Checkpoint         string     `json:"-"`
+	Error              string     `json:"error"`
+	Lease              string     `json:"-"`
+	LockedUntil        *time.Time `json:"-"`
+	PublishKey         string     `json:"-"`
+	PublishManifest    string     `json:"-"`
+	CreatedAt          time.Time  `json:"created_at"`
+	UpdatedAt          time.Time  `json:"updated_at"`
 }
 
 func (AIImportTask) TableName() string { return "ai_import_tasks" }
 
 type AIImportDraft struct {
+	GenerationState string    `json:"generation_state"`
 	ActiveBatchID   uint64    `json:"active_batch_id"`
 	TargetContentID uint64    `gorm:"->" json:"target_content_id"`
 	PublishMode     string    `gorm:"->" json:"publish_mode"`
@@ -273,7 +278,7 @@ func aiProductPayload(x AIProductExtraction) Payload {
 		names = append(names, m.ModelName)
 		lines = append(lines, "型号："+m.ModelName+" "+m.Variant)
 		for _, v := range m.Parameters {
-			lines = append(lines, v.ParameterName+"："+v.RawValue+" "+v.RawUnit+fmt.Sprintf("（PDF第%d页）", v.SourcePage))
+			lines = append(lines, v.ParameterName+"："+v.RawValue+" "+v.RawUnit)
 		}
 	}
 	p.Model = strings.Join(names, " / ")
@@ -281,7 +286,7 @@ func aiProductPayload(x AIProductExtraction) Payload {
 		p.Model = ""
 	}
 	p.Parameters = strings.Join(lines, "\n")
-	return p
+	return standardAIProductPayload(p)
 }
 
 func normalizeProductDetails(p *ProductDetails) {

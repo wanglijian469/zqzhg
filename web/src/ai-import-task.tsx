@@ -1,7 +1,9 @@
+import {AIErrorState} from './ai-error-state';
+import {useAITaskPolling} from './ai-task-polling';
 import {useEffect,useRef,useState} from 'react';
 import {Link} from 'react-router-dom';
 import {api,APIError} from './api';
-import {ErrorState,Loading,Modal} from './ui';
+import {Loading,Modal} from './ui';
 import {PublicationAgreements} from './service-center';
 import {useAIImportResult} from './ai-import-result';
 import {CompanyReview,ProductReview,CropEditor} from './ai-import-editors';
@@ -9,7 +11,7 @@ import {base,stages,aiMessages,errorText} from './ai-import-common';
 import type {Result,Draft,BatchEdit,BatchResult} from './ai-import-types';
 
 export function batchMissing(row:Draft,edit:BatchEdit,kind:'company'|'product',existing:boolean){
- const missing:string[]=[];const d=edit.data;
+ const missing:string[]=[];const d=edit.data;if(row.generation_state==='incomplete')missing.push('识别尚未完整完成，请重试或保存并标记人工补齐');
  if(!(kind==='company'&&existing&&!edit.selected_fields?.length)&&!d.name?.trim())missing.push('缺少名称');
  if(kind==='product'){
   if(!d.media_ids?.length)missing.push('缺少有效主图');
@@ -20,24 +22,27 @@ export function batchMissing(row:Draft,edit:BatchEdit,kind:'company'|'product',e
  return {missing,requires};
 }
 export function TaskReview({id}:{id:number}){
- const result=useAIImportResult<Result>(base+'/tasks/'+id+'/result');const data=result.data;
+ const result=useAIImportResult<Result>(base+'/tasks/'+id+'/result');const data=result.data;const live=useAITaskPolling(base+'/tasks/'+id,data?.task,result.reload);const [retryUnits,setRetryUnits]=useState<number[]>([]);
  const [tab,setTab]=useState<'company'|'product'>('company');const [filter,setFilter]=useState('unsubmitted');const [page,setPage]=useState(1);
  const [selected,setSelected]=useState<number[]>([]);const [busy,setBusy]=useState(false);const [error,setError]=useState('');
  const [crop,setCrop]=useState(false);const [mergeName,setMergeName]=useState('');const [confirm,setConfirm]=useState<{kind:'company'|'product';items:BatchEdit[];key:string}>();
  const [resolution,setResolution]=useState('');const [response,setResponse]=useState<BatchResult>();
  const snapshots=useRef<Record<string,BatchEdit>>({});const pending=useRef<{fingerprint:string;key:string}|undefined>(undefined);
- useEffect(()=>{if(!data||!['queued','processing'].includes(data.task.status))return;const timer=setInterval(result.reload,2500);return()=>clearInterval(timer)},[data?.task.status,result.reload]);
+
  useEffect(()=>setPage(1),[filter]);
+ useEffect(()=>{setSelected([]);setRetryUnits([]);setConfirm(undefined);setResponse(undefined);snapshots.current={};pending.current=undefined;setError('')},[id]);
  const act=async(fn:()=>Promise<unknown>)=>{if(busy)return;setBusy(true);setError('');try{await fn();result.reload()}catch(e){setError(errorText(e))}finally{setBusy(false)}};
- if(!data)return result.error?<ErrorState code={aiMessages[result.error]||result.error} retry={result.reload}/>:<Loading/>;
- const task=data.task,working=['queued','processing'].includes(task.status),editable=['review_pending','completed'].includes(task.status);
+ if(!data)return result.error?<AIErrorState code={result.error} retry={result.reload}/>:<Loading/>;
+ const task=live.task||data.task,working=['queued','processing'].includes(task.status),editable=true;const units=data.task.units||[];const failedUnits=units.filter(u=>u.status==='failed');const readyCount=data.products.filter(p=>p.generation_state!=='incomplete').length;
+ const retry=(latest=false)=>{if(latest&&!window.confirm('按最新规则版本 '+task.latest_prompt_version+' 重试未完成项？成功项、人工修改和原模型保持，重试会产生Token消耗。'))return;void act(()=>api(base+'/tasks/'+id+'/retry',{method:'POST',body:JSON.stringify({unit_ids:retryUnits,prompt_policy:latest?'latest':'original',...(latest?{prompt_version_id:task.latest_prompt_version}:{})})},'merchant'))};
+ const itemWorking=(temp:string)=>(task.active_units||units).some(u=>u.status==='processing'&&u.stage.startsWith(temp==='company'?'company':temp+'-'));
  const filtered=data.products.filter(p=>filter==='all'||filter==='submitted'?filter==='all'||p.content_id>0:filter==='failed'?!!p.error&&!p.content_id:!p.content_id);
  const pages=Math.max(1,Math.ceil(filtered.length/5)),current=Math.min(page,pages),visible=new Set(filtered.slice((current-1)*5,current*5).map(p=>p.id));
  const chosen=data.products.filter(p=>selected.includes(p.id)&&!p.content_id);
  const editFor=(row:Draft,kind:'company'|'product'):BatchEdit=>snapshots.current[kind+row.id]||{id:row.id,version:row.version,data:row.data,resolution:'',selected_fields:row.selected_fields,publish_mode:row.publish_mode||'create',target_content_id:row.target_content_id,target_revision_id:kind==='company'?data.existing_company?.revision_id:row.target_product?.revision_id};
  const begin=(kind:'company'|'product')=>{
   const rows=kind==='company'?(data.company?[data.company]:[]):chosen;if(!rows.length)return;
-  const items=rows.map(row=>({...editFor(row,kind)}));const fingerprint=JSON.stringify({kind,items});
+  const items=rows.map(row=>({...editFor(row,kind)}));if(items.some(v=>v.conflict)){setError('后台识别结果已更新，请先在对应条目选择采用后台结果或保留人工编辑。');return}const fingerprint=JSON.stringify({kind,items});
   if(pending.current?.fingerprint!==fingerprint)pending.current={fingerprint,key:crypto.randomUUID()};
   setResolution('');setError('');setConfirm({kind,items,key:pending.current!.key});
  };
@@ -50,7 +55,7 @@ export function TaskReview({id}:{id:number}){
   }catch(e){setError(errorText(e));if((e as APIError).code==='stale_revision')result.reload()}finally{setBusy(false)}
  };
  const saveSelected=()=>act(async()=>{
-  for(const row of chosen){const v=editFor(row,'product');const saved=await api<{version:number}>(base+'/products/'+row.id,{method:'PUT',body:JSON.stringify(v)},'merchant');snapshots.current['product'+row.id]={...v,version:saved.version}}
+  for(const row of chosen){const v=editFor(row,'product');if(v.conflict)throw new APIError('ai_result_conflict');const saved=await api<{version:number}>(base+'/products/'+row.id,{method:'PUT',body:JSON.stringify(v)},'merchant');snapshots.current['product'+row.id]={...v,version:saved.version}}
  });
  const allVisible=filtered.filter(p=>visible.has(p.id)&&!p.content_id&&!p.active_batch_id);
  const modalRows=confirm?.items.map(edit=>({edit,row:confirm.kind==='company'?data.company!:data.products.find(p=>p.id===edit.id)!})).filter(v=>!!v.row)||[];
@@ -58,9 +63,16 @@ export function TaskReview({id}:{id:number}){
  const unresolved=checks.some(v=>v.requires&&!v.resolution.trim()&&!resolution.trim());
  return <>
   <Link to="/merchant/ai-import">返回任务列表</Link>
-  <section className="workspace-panel ai-task-summary"><h2>{task.file_name}</h2><p role="status">{working?'AI识别进行中':task.status==='failed'?'识别失败，可从已完成阶段重试':'识别完成，请分批核对提交'} · {task.progress}% · 共 {task.total} 页</p><progress max={100} value={task.progress}/>
+  <section className="workspace-panel ai-task-summary"><h2>{task.file_name}</h2><button disabled={busy} onClick={result.reload}>刷新任务状态（保留当前编辑）</button><p role="status">{working?'AI识别进行中':task.status==='failed'?'部分阶段停止，可处理已保存成果':task.recognition_outcome==='partial'?'部分完成，请先核对成功项并补齐失败项':'识别完成，请分批核对提交'} · {task.progress}% · 共 {task.total} 页</p><progress max={100} value={task.progress}/>
    {task.work&&working&&<p>{task.work.message} {task.work.product||''} · 已完成 {task.work.done}／{task.work.total} 个步骤</p>}
-   {task.error&&<p className="notice error">{aiMessages[task.error]||task.error}</p>}{task.status==='failed'&&<button onClick={()=>void act(()=>api(base+'/tasks/'+id+'/retry',{method:'POST',body:'{}'},'merchant'))}>从已完成阶段重试</button>}
+   {task.error&&<p className="notice error">{aiMessages[task.error]||'识别遇到异常，请查看失败项。'}</p>}
+   <p>已检查目录页 {task.coverage?.indexed_pages??'—'}／{task.total}；规则版本 {[...new Set(units.map(u=>u.prompt_version_id))].join('、')||task.prompt_version_id||'兼容版本'}。识别结果仍需人工核对。</p>
+   <p>可核对产品 {readyCount} 项，待补产品 {data.products.length-readyCount} 项；待补处理单元 {failedUnits.length} 项。来源页及完整性问题保留在后台核对，不会写入公开产品介绍。</p>
+   {task.next_retry_at&&working&&<p role="status">正在等待自动重试，计划时间：{new Date(task.next_retry_at).toLocaleTimeString()}。已保存成果保留。</p>}
+   {live.error&&<p className="notice">状态连接暂时中断，系统将自动重连；后台任务继续，当前编辑保留。</p>}
+   {(!working&&(task.status==='failed'||failedUnits.length>0))&&<div className="ai-actions"><button disabled={busy} onClick={()=>retry()}>从已完成阶段重试</button><button disabled={busy||!failedUnits.length} onClick={()=>retry(true)}>按最新规则重试未完成项</button></div>}
+   {!!failedUnits.length&&<details open><summary>查看并选择待补单元（{failedUnits.length}）</summary>{failedUnits.map(u=><label className="notice" key={u.id}><input type="checkbox" checked={retryUnits.includes(u.id)} disabled={working||busy} onChange={()=>setRetryUnits(ids=>ids.includes(u.id)?ids.filter(n=>n!==u.id):[...ids,u.id])}/>{data.products.find(p=>u.stage.startsWith(p.temp_id+'-'))?.data.name||(/^index-/.test(u.stage)?'来源页 '+u.stage.replace('index-',''):'企业或目录整理')}：{aiMessages[u.error||'']||'该部分需重新识别或人工核对'}<details><summary>技术详情</summary>{u.stage} · {u.error} · {u.error_field||''} · 已请求 {u.attempts}/3 次 · 规则 {u.prompt_version_id}</details></label>)}</details>}
+
    <p>识别完成不等于公开。您确认并提交后，仍须平台审核通过。</p>
    <details><summary>调用与用量记录</summary>{data.calls.map((c,i)=><p key={i}>{c.stage} · {c.error||'成功'} · Token {c.usage?.total_tokens??'未知'} · 估算费用 {c.estimated_cost==null?'未配置价格／未知':c.estimated_cost+'元'}</p>)}</details>
   </section>
@@ -70,15 +82,15 @@ export function TaskReview({id}:{id:number}){
   {response&&<section className="notice" role="status">{response.results.some(v=>v.status==='linked')?'已沿用现有企业资料，没有更新企业内容。':<>本批次已提交 {response.submitted} 项，失败 {response.failed} 项。已提交内容等待平台审核。</>}{response.results.filter(v=>v.error).map(v=><p key={v.id}>条目 {data.products.find(p=>p.id===v.id)?.data.name||v.id}：{aiMessages[v.error]||v.error}{v.fields?.map(f=>' · '+f.field).join('')}</p>)}</section>}
   <div role="tablist" className="ai-review-tabs" aria-label="AI识别资料"><button role="tab" aria-selected={tab==='company'} onClick={()=>setTab('company')}>企业资料</button><button role="tab" aria-selected={tab==='product'} onClick={()=>setTab('product')}>产品资料（{data.products.length}）</button></div>
   <section role="tabpanel" hidden={tab!=='company'} aria-label="企业资料">
-   {data.company?<><CompanyReview key={'company'+data.company.version} draft={data.company} existing={data.existing_company} assets={data.assets} locked={busy||!editable||!!data.company.content_id||!!data.company.active_batch_id} reload={result.reload} onSnapshot={v=>{snapshots.current['company'+v.id]=v}}/>
+   {data.company?<><CompanyReview key={'company'+data.company.id} draft={data.company} existing={data.existing_company} assets={data.assets} locked={busy||!editable||itemWorking('company')||!!data.company.content_id||!!data.company.active_batch_id} reload={result.reload} onSnapshot={v=>{snapshots.current['company'+v.id]=v}}/>
     {data.company.content_id?<p className="notice">企业资料已处理，当前平台状态：{data.existing_company?.status==='pending'?'待审核':data.existing_company?.status==='approved'?'已通过':data.existing_company?.status||'已提交'}。<Link to="/merchant/booth">查看企业资料</Link></p>:<div className="ai-submit-bar"><PublicationAgreements/><button className="button" disabled={busy||!editable||!!data.company.active_batch_id} onClick={()=>begin('company')}>确认并提交企业资料</button></div>}
-   </>:<p>企业资料尚未生成。</p>}
+   </>:<p>企业资料尚未生成。已有企业仍可先核对和提交产品；新企业可<Link to="/merchant/booth/edit">手动填写企业资料</Link>。</p>}
   </section>
   <section role="tabpanel" hidden={tab!=='product'} aria-label="产品资料">
    <section className="workspace-panel"><h2>分批处理产品</h2>{data.existing_company?<p>本批次关联企业：{data.existing_company.data.name}。提交产品不会更新企业资料。</p>:<p className="notice">请先在“企业资料”中单独提交企业，取得企业记录后再提交产品。</p>}
     <div className="ai-actions"><label>产品状态<select value={filter} onChange={e=>setFilter(e.target.value)}><option value="unsubmitted">未提交</option><option value="submitted">已提交</option><option value="failed">失败</option><option value="all">全部</option></select></label><button disabled={!allVisible.length||busy} onClick={()=>setSelected(ids=>Array.from(new Set([...ids,...allVisible.map(p=>p.id)])))}>选择当前页</button><button onClick={()=>setSelected([])}>清空选择</button><span>已提交 {data.products.filter(p=>p.content_id).length}／{data.products.length}，已公开 {data.products.filter(p=>p.public_visible).length}</span></div>
    </section>
-   {data.products.map(p=><div key={p.id+':'+p.version+':'+p.reviewed_version} hidden={!visible.has(p.id)}><ProductReview draft={p} assets={data.assets} locked={busy||!editable||!!p.content_id||!!p.active_batch_id} selected={selected.includes(p.id)} onSelect={()=>setSelected(ids=>ids.includes(p.id)?ids.filter(n=>n!==p.id):[...ids,p.id])} reload={result.reload} onSnapshot={v=>{snapshots.current['product'+v.id]=v}}/></div>)}
+   {data.products.map(p=><div key={p.id} hidden={!visible.has(p.id)}><ProductReview draft={p} assets={data.assets} locked={busy||!editable||itemWorking(p.temp_id)||!!p.content_id||!!p.active_batch_id} selected={selected.includes(p.id)} onSelect={()=>setSelected(ids=>ids.includes(p.id)?ids.filter(n=>n!==p.id):[...ids,p.id])} reload={result.reload} onSnapshot={v=>{snapshots.current['product'+v.id]=v}}/></div>)}
    {!filtered.length&&<p className="notice">当前筛选下没有产品。</p>}
    <div className="ai-actions ai-pagination"><button disabled={current<=1} onClick={()=>setPage(current-1)}>上一页</button><span>第 {current}／{pages} 页，每页5项</span><button disabled={current>=pages} onClick={()=>setPage(current+1)}>下一页</button></div>
    <details className="workspace-panel"><summary>图片裁剪、合并产品</summary><div className="ai-actions"><button disabled={busy||!editable} onClick={()=>setCrop(true)}>从来源页裁剪图片／图纸</button><input aria-label="合并后产品名称" placeholder="合并后产品名称" value={mergeName} onChange={e=>setMergeName(e.target.value)}/><button disabled={busy||chosen.length<2||!mergeName.trim()} onClick={()=>void act(()=>api(base+'/tasks/'+id+'/products/merge',{method:'POST',body:JSON.stringify({name:mergeName,products:chosen.map(p=>({id:p.id,version:p.version}))})},'merchant'))}>合并所选产品</button></div></details>

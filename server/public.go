@@ -50,7 +50,11 @@ func (a *App) publicViews(q *gorm.DB) ([]View, error) {
 		content.DraftRevisionID = 0
 		content.VendorOwnerKey = nil
 		content.Epoch = 0
-		items = append(items, view(content, rev))
+		item := view(content, rev)
+		if content.Kind == "product" && item.Data.ProductDetails != nil {
+			item.Data = standardAIProductPayload(item.Data)
+		}
+		items = append(items, item)
 	}
 	if e := a.resolveCategoryViews(items); e != nil {
 		return nil, e

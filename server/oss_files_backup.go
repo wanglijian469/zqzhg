@@ -306,7 +306,7 @@ func readCloudBackupManifest(ctx context.Context, c *oss.Client, key []byte, id 
 	if e = backupCrypt(io.LimitReader(r.Body, 32<<20), &b, key, false); e != nil {
 		return m, e
 	}
-	if json.Unmarshal(b.Bytes(), &m) != nil || m.Format != 2 || m.Schema < 1 || m.Schema > 39 || len(m.Counts) == 0 || m.SnapshotID != id || m.SQLKey != "snapshots/"+id+"/database.sql.zqenc" {
+	if json.Unmarshal(b.Bytes(), &m) != nil || m.Format != 2 || m.Schema < 1 || m.Schema > 40 || len(m.Counts) == 0 || m.SnapshotID != id || m.SQLKey != "snapshots/"+id+"/database.sql.zqenc" {
 		return m, errors.New("invalid_backup_manifest")
 	}
 	seen := map[string]bool{}

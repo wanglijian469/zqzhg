@@ -18,11 +18,11 @@ func TestAIBatchMigrationPreservesLegacySubmissionsAndConsent(t *testing.T) {
 		oldVersions[doc.DocKey] = doc.Version
 	}
 	old := AIImportTask{OwnerID: 1, VendorID: 7, RequestID: "legacy-source", FileHash: strings.Repeat("a", 64), FileName: "合成旧任务.pdf", SourceIDs: "[]", Status: "review_pending", Stage: "review_pending", Total: 1, Checkpoint: "{}", PublishKey: "legacy-key", PublishManifest: "{}", CreatedAt: time.Now().UTC(), UpdatedAt: time.Now().UTC()}
-	if e := a.DB.Omit("SubmissionMode").Create(&old).Error; e != nil {
+	if e := a.DB.Omit("SubmissionMode", "PromptVersionID", "RecognitionOutcome", "ResultVersion", "NextRetryAt").Create(&old).Error; e != nil {
 		t.Fatal(e)
 	}
 	d := AIImportDraft{TaskID: old.ID, OwnerID: 1, TempID: "legacy-product", Version: 4, ReviewedVersion: 4, ContentID: 19, RevisionID: 28, Data: "{}", SourcePages: "[1]", FieldSources: "{}", ReviewIssues: "[]", SelectedFields: "[]"}
-	if e := a.DB.Table(aiTable("product")).Omit("ActiveBatchID").Create(&d).Error; e != nil {
+	if e := a.DB.Table(aiTable("product")).Omit("ActiveBatchID", "GenerationState").Create(&d).Error; e != nil {
 		t.Fatal(e)
 	}
 	old.PublishManifest = aiJSON(map[string]any{"company_version": 1, "products": []aiPublishSelection{{ID: d.ID, Version: d.Version}}})

@@ -98,13 +98,14 @@ func (u Usage) MarshalJSON() ([]byte, error) {
 }
 
 type Attempt struct {
-	RequestID  string `json:"request_id"`
-	Model      string `json:"model"`
-	Number     int    `json:"attempt"`
-	Status     int    `json:"http_status"`
-	Error      string `json:"error,omitempty"`
-	Usage      *Usage `json:"usage"`
-	DurationMS int64  `json:"duration_ms"`
+	RetryAfterSeconds int    `json:"retry_after_seconds,omitempty"`
+	RequestID         string `json:"request_id"`
+	Model             string `json:"model"`
+	Number            int    `json:"attempt"`
+	Status            int    `json:"http_status"`
+	Error             string `json:"error,omitempty"`
+	Usage             *Usage `json:"usage"`
+	DurationMS        int64  `json:"duration_ms"`
 }
 type Result struct {
 	Text    string
@@ -219,6 +220,7 @@ func (c *Client) Complete(ctx context.Context, model, system string, parts []Par
 				at.Error = "bailian_temporary_failure"
 				if seconds, e := strconv.Atoi(res.Header.Get("Retry-After")); e == nil && seconds > 0 && seconds <= 60 {
 					delay = time.Duration(seconds) * time.Second
+					at.RetryAfterSeconds = seconds
 				}
 			} else if res.StatusCode != 200 {
 				at.Error = fmt.Sprintf("bailian_http_%d", res.StatusCode)
@@ -249,7 +251,11 @@ func (c *Client) Complete(ctx context.Context, model, system string, parts []Par
 			return Result{reply.Choices[0].Message.Content, at}, nil
 		}
 		if !retry || n == c.Config.Retries {
-			return Result{}, errors.New(at.Error)
+			failed := Result{Attempt: at}
+			if len(reply.Choices) > 0 {
+				failed.Text = reply.Choices[0].Message.Content
+			}
+			return failed, errors.New(at.Error)
 		}
 		t := time.NewTimer(delay)
 		select {

@@ -4,10 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"reflect"
 	"strconv"
 	"strings"
 )
+
+type AIReviewResult struct {
+	Issues []string `json:"review_issues"`
+}
 
 // Models sometimes serialize an explicitly printed value as a JSON number.
 // Preserve its exact JSON lexical representation, never float-round a technical
@@ -18,6 +23,9 @@ func aiDecode(raw string, out any) error {
 	var value any
 	if e := dec.Decode(&value); e != nil {
 		return e
+	}
+	if e := dec.Decode(new(any)); e != io.EOF {
+		return fmt.Errorf("schema_field:trailing_json")
 	}
 	notes := []string{}
 	normalized, e := aiShape(value, reflect.TypeOf(out).Elem(), "", &notes)
@@ -34,7 +42,14 @@ func aiDecode(raw string, out any) error {
 	// A syntactically valid {} must never count as a successful extraction.
 	// Returning a schema error lets the existing audited repair request retry it.
 	switch v := out.(type) {
+	case *AIReviewResult:
+		if m, ok := value.(map[string]any); !ok || m["review_issues"] == nil {
+			return fmt.Errorf("schema_field:review_issues")
+		}
 	case *AIProductExtraction:
+		if strings.TrimSpace(v.ProductName) == "" {
+			return fmt.Errorf("schema_field:product_name")
+		}
 		if len(v.SourcePages) == 0 {
 			return fmt.Errorf("schema_field:source_pages")
 		}
@@ -43,6 +58,11 @@ func aiDecode(raw string, out any) error {
 			return fmt.Errorf("schema_field:company_source")
 		}
 	case *AIPageIndex:
+		for _, b := range v.Blocks {
+			if strings.TrimSpace(b.Title) == "" || (b.Kind != "product" && b.Kind != "support") {
+				return fmt.Errorf("schema_field:blocks.title_or_kind")
+			}
+		}
 		m, ok := value.(map[string]any)
 		if !ok {
 			return fmt.Errorf("schema_field:page_index")
@@ -127,6 +147,19 @@ func aiShape(v any, t reflect.Type, path string, notes *[]string) (any, error) {
 		}
 		out := []any{}
 		for i, raw := range list {
+			if t.Elem().Kind() == reflect.String && strings.HasSuffix(path, "review_issues") {
+				if obj, ok := raw.(map[string]any); ok {
+					if len(obj) != 1 {
+						return fail()
+					}
+					message, ok := obj["message"].(string)
+					if !ok || strings.TrimSpace(message) == "" {
+						return fail()
+					}
+					raw = message
+					*notes = append(*notes, path)
+				}
+			}
 			next, e := aiShape(raw, t.Elem(), fmt.Sprintf("%s.%d", path, i), notes)
 			if e != nil {
 				return nil, e
@@ -199,6 +232,7 @@ type aiModelCheckpoint struct {
 	Response    json.RawMessage `json:"response"`
 }
 type aiImportCheckpoint struct {
+	Catalog   []AIInventoryProduct         `json:"catalog,omitempty"`
 	Work      *AIImportWork                `json:"work,omitempty"`
 	TextPages map[string]string            `json:"text_pages,omitempty"`
 	Models    map[string]aiModelCheckpoint `json:"models,omitempty"`

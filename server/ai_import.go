@@ -38,7 +38,7 @@ func (a *App) aiImportRoutes(merchant *gin.RouterGroup) {
 	r.GET("/tasks", a.aiListTasks)
 	r.GET("/tasks/:id", a.aiGetTask)
 	r.GET("/tasks/:id/result", a.aiResult)
-	r.POST("/tasks/:id/retry", a.aiRetry)
+	r.POST("/tasks/:id/retry", a.aiRetryUnits)
 	r.PUT("/company/:id", a.aiSaveDraft("company"))
 	r.PUT("/products/:id", a.aiSaveDraft("product"))
 	r.DELETE("/products/:id", a.aiDeleteDraft)
@@ -80,7 +80,7 @@ func (a *App) aiGetTask(c *gin.Context) {
 		dbFail(c, e)
 		return
 	}
-	c.JSON(200, t)
+	c.JSON(200, a.aiTaskSnapshot(t, false))
 }
 func (a *App) aiCreateTask(c *gin.Context) {
 	if cloudFilesEnabled() && env("OSS_UPLOADS_ENABLED", "true") != "true" {
@@ -237,7 +237,12 @@ func (a *App) aiCreateTask(c *gin.Context) {
 		}
 		assets = append(assets, asset)
 	}
-	task := AIImportTask{ModelMode: modelMode, MaxConfirmedAt: maxConfirmed, ExtractionModel: cfg.Model, ReviewModel: cfg.ReviewModel, OwnerID: who.ID, RequestID: requestID, FileHash: fingerprint, FileName: inputs[0].file.Filename, Status: "queued", Stage: "queued", Total: pages, Checkpoint: "{}", PublishManifest: "[]"}
+	promptVersion, pe := aiActivePrompt(a.DB)
+	if pe != nil {
+		dbFail(c, pe)
+		return
+	}
+	task := AIImportTask{PromptVersionID: promptVersion.ID, ModelMode: modelMode, MaxConfirmedAt: maxConfirmed, ExtractionModel: cfg.Model, ReviewModel: cfg.ReviewModel, OwnerID: who.ID, RequestID: requestID, FileHash: fingerprint, FileName: inputs[0].file.Filename, Status: "queued", Stage: "queued", Total: pages, Checkpoint: "{}", PublishManifest: "[]"}
 	ids := []uint64{}
 	for _, v := range assets {
 		ids = append(ids, v.ID)
@@ -286,13 +291,19 @@ func aiDraftView(d AIImportDraft) gin.H {
 	json.Unmarshal([]byte(d.FieldSources), &sources)
 	var fields []string
 	json.Unmarshal([]byte(d.SelectedFields), &fields)
-	return gin.H{"id": d.ID, "task_id": d.TaskID, "temp_id": d.TempID, "active_batch_id": d.ActiveBatchID, "version": d.Version, "reviewed_version": d.ReviewedVersion, "data": p, "source_pages": pages, "field_sources": sources, "review_issues": issues, "selected_fields": fields, "base_revision_id": d.BaseRevisionID, "content_id": d.ContentID, "revision_id": d.RevisionID, "error": d.Error, "target_content_id": d.TargetContentID, "publish_mode": d.PublishMode}
+	return gin.H{"id": d.ID, "generation_state": d.GenerationState, "task_id": d.TaskID, "temp_id": d.TempID, "active_batch_id": d.ActiveBatchID, "version": d.Version, "reviewed_version": d.ReviewedVersion, "data": p, "source_pages": pages, "field_sources": sources, "review_issues": issues, "selected_fields": fields, "base_revision_id": d.BaseRevisionID, "content_id": d.ContentID, "revision_id": d.RevisionID, "error": d.Error, "target_content_id": d.TargetContentID, "publish_mode": d.PublishMode}
 }
 func (a *App) aiResult(c *gin.Context) {
 	t, e := a.aiOwnedTask(c)
 	if e != nil {
 		dbFail(c, e)
 		return
+	}
+	if t.VendorID == 0 {
+		var owned Content
+		if a.DB.Where("owner_id=? AND kind='vendor'", t.OwnerID).First(&owned).Error == nil {
+			t.VendorID = owned.ID
+		}
 	}
 	companies := []AIImportDraft{}
 	products := []AIImportDraft{}
@@ -376,45 +387,14 @@ func (a *App) aiResult(c *gin.Context) {
 			visible++
 		}
 	}
-	c.JSON(200, gin.H{"task": t, "company": company, "existing_company": existing, "publish_request": json.RawMessage(taskManifest(t)), "products": views, "assets": assets, "calls": usage, "batches": batches, "batch_items": batchItems, "submission_stats": gin.H{"total": len(views), "submitted": submitted, "unsubmitted": len(views) - submitted, "failed": failed, "public": visible}})
-}
-func (a *App) aiRetry(c *gin.Context) {
-	t, e := a.aiOwnedTask(c)
-	if e != nil {
-		dbFail(c, e)
-		return
-	}
-	e = a.DB.Transaction(func(tx *gorm.DB) error {
-		var account Account
-		if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&account, t.OwnerID).Error; e != nil {
-			return e
-		}
-		var n int64
-		tx.Model(&AIImportTask{}).Where("owner_id=? AND status IN ('queued','processing')", t.OwnerID).Count(&n)
-		if n > 0 {
-			return serviceFailure{"ai_task_busy", 409}
-		}
-		r := tx.Model(&AIImportTask{}).Where("id=? AND owner_id=? AND status='failed' AND publish_key=''", t.ID, t.OwnerID).Updates(map[string]any{"status": "queued", "error": "", "lease": "", "locked_until": nil})
-		if r.Error != nil {
-			return r.Error
-		}
-		if r.RowsAffected != 1 {
-			return serviceFailure{"ai_task_locked", 409}
-		}
-		return nil
-	})
-	if e != nil {
-		dbFail(c, e)
-		return
-	}
-	c.JSON(200, gin.H{"ok": true})
+	c.JSON(200, gin.H{"task": a.aiTaskSnapshot(t, true), "company": company, "existing_company": existing, "publish_request": json.RawMessage(taskManifest(t)), "products": views, "assets": assets, "calls": usage, "batches": batches, "batch_items": batchItems, "submission_stats": gin.H{"total": len(views), "submitted": submitted, "unsubmitted": len(views) - submitted, "failed": failed, "public": visible}})
 }
 func aiEditable(tx *gorm.DB, taskID, owner uint64) error {
 	var t AIImportTask
 	if e := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("id=? AND owner_id=?", taskID, owner).First(&t).Error; e != nil {
 		return e
 	}
-	if (t.Status != "review_pending" && !(t.Status == "completed" && t.SubmissionMode == "batch")) || (t.PublishKey != "" && t.SubmissionMode != "batch") {
+	if (t.Status != "review_pending" && t.Status != "processing" && t.Status != "queued" && t.Status != "failed" && !(t.Status == "completed" && t.SubmissionMode == "batch")) || (t.PublishKey != "" && t.SubmissionMode != "batch") {
 		return serviceFailure{"ai_task_locked", 409}
 	}
 	return nil
@@ -425,6 +405,8 @@ func (a *App) aiSaveDraft(kind string) gin.HandlerFunc {
 			PublishMode      string   `json:"publish_mode"`
 			TargetContentID  *uint64  `json:"target_content_id"`
 			TargetRevisionID *uint64  `json:"target_revision_id"`
+			ManualComplete   bool     `json:"manual_complete"`
+			Resolution       string   `json:"resolution"`
 			Version          uint64   `json:"version"`
 			Data             Payload  `json:"data"`
 			SelectedFields   []string `json:"selected_fields"`
@@ -452,6 +434,11 @@ func (a *App) aiSaveDraft(kind string) gin.HandlerFunc {
 			}
 			if e := a.aiValidateTaskMedia(tx, row.TaskID, req.Data); e != nil {
 				return e
+			}
+			if req.ManualComplete && kind == "product" {
+				if e := a.aiManualComplete(tx, row, req.Resolution); e != nil {
+					return e
+				}
 			}
 			updates := map[string]any{"data": aiJSON(req.Data), "selected_fields": aiJSON(req.SelectedFields), "version": row.Version + 1, "reviewed_version": 0, "error": "", "updated_at": time.Now().UTC()}
 			if kind == "product" {
