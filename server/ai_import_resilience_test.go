@@ -359,3 +359,43 @@ func TestAIPartialTaskCanCropOriginalsWithoutPublishing(t *testing.T) {
 	a.DB.Save(&task)
 	tc.call("POST", path, token, request, 409)
 }
+
+func TestAISavedCompanyAndIndependentVariantRecovery(t *testing.T) {
+	a := importTestApp(t)
+	var owner Account
+	a.DB.Where("role='admin'").First(&owner)
+	task := aiTestTask(t, a, owner.ID)
+	task.Status = "processing"
+	a.DB.Save(&task)
+	saved := AIImportDraft{TaskID: task.ID, OwnerID: owner.ID, TempID: "company", Version: 2, GenerationState: "ready", Data: aiJSON(Payload{Name: "人工企业资料保留"}), SourcePages: "[1]", FieldSources: "{}", ReviewIssues: "[]", SelectedFields: "[]"}
+	a.DB.Table(aiTable("company")).Create(&saved)
+	unit := AIImportWorkItem{TaskID: task.ID, Stage: "company", Status: "failed", Attempts: 3, Error: "ai_invalid_schema", PromptVersionID: 2, UpdatedAt: time.Now().UTC()}
+	a.DB.Create(&unit)
+	if err := a.aiExtractCompany(context.Background(), task, []any{"补识别来源"}, AIInventory{}); err != nil {
+		t.Fatal(err)
+	}
+	var after AIImportDraft
+	a.DB.Table(aiTable("company")).First(&after, saved.ID)
+	a.DB.First(&unit, unit.ID)
+	var calls int64
+	a.DB.Model(&AIImportModelCall{}).Where("task_id=?", task.ID).Count(&calls)
+	if after.Data != saved.Data || after.Version != 2 || calls != 0 || unit.Status != "succeeded" || unit.ErrorField != "saved_draft_reused" {
+		t.Fatal("saved company was changed or called again", after.Version, calls, unit)
+	}
+	candidates := []AIInventoryProduct{{ProductName: "X型号普通柱", BlockIDs: []string{"p1-b1"}, SourcePages: []int{1}}, {ProductName: "X型号焊接柱", BlockIDs: []string{"p1-b1"}, SourcePages: []int{1}}}
+	catalog, err := a.aiStableCatalog(task, candidates)
+	if err != nil || len(catalog) != 2 || catalog[0].TempID == catalog[1].TempID || len(catalog[1].ReviewIssues) == 0 {
+		t.Fatal("same-block variants lost", err, catalog)
+	}
+	again, err := a.aiStableCatalog(task, candidates)
+	if err != nil || len(again) != 2 {
+		t.Fatal("recovery duplicated exact candidates", err, again)
+	}
+	var company AICompanyExtraction
+	if err := aiDecode(`{"data":{"name":"联系人结构测试","company_profile":{"contacts":[{"area":"","name":"","phone":"0319-0012300","wechat":""}]}},"source_pages":[1]}`, &company); err != nil || company.Data.CompanyProfile.Contacts[0].Phone != "0319-0012300" {
+		t.Fatal(err, company)
+	}
+	if aiDecode(`{"data":{"name":"联系人结构测试","company_profile":{"contacts":["0319-0012300"]}},"source_pages":[1]}`, &company) == nil {
+		t.Fatal("ambiguous contact shape accepted")
+	}
+}

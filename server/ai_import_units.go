@@ -297,7 +297,7 @@ func (a *App) aiStableCatalog(task AIImportTask, incoming []AIInventoryProduct) 
 	for _, p := range incoming {
 		found := false
 		for i, prior := range c.Catalog {
-			if (len(prior.BlockIDs) > 0 && aiJSON(prior.BlockIDs) == aiJSON(p.BlockIDs)) || (prior.ProductName == p.ProductName && aiJSON(prior.SourcePages) == aiJSON(p.SourcePages)) {
+			if prior.ProductName == p.ProductName && ((len(prior.BlockIDs) > 0 && aiJSON(prior.BlockIDs) == aiJSON(p.BlockIDs)) || aiJSON(prior.SourcePages) == aiJSON(p.SourcePages)) {
 				found = true
 				if len(prior.BlockIDs) == 0 {
 					p.TempID = prior.TempID
@@ -307,6 +307,17 @@ func (a *App) aiStableCatalog(task AIImportTask, incoming []AIInventoryProduct) 
 			}
 		}
 		if !found {
+			for _, prior := range c.Catalog {
+				overlap := false
+				for _, oldBlock := range prior.BlockIDs {
+					for _, newBlock := range p.BlockIDs {
+						overlap = overlap || oldBlock == newBlock
+					}
+				}
+				if overlap {
+					p.ReviewIssues = append(p.ReviewIssues, "与已保存候选 "+prior.TempID+" 存在来源区块重叠，请核对跨页合并或结构变体；系统未自动删除。")
+				}
+			}
 			p.TempID = fmt.Sprintf("product-%d", len(c.Catalog)+1)
 			c.Catalog = append(c.Catalog, p)
 		}
@@ -315,4 +326,33 @@ func (a *App) aiStableCatalog(task AIImportTask, incoming []AIInventoryProduct) 
 		return nil, e
 	}
 	return c.Catalog, nil
+}
+
+// A later recovered directory page must not rerun or overwrite a company phase
+// whose valid result is already saved. The original model-call ledger is kept.
+func (a *App) aiReuseSavedCompany(ctx context.Context, task AIImportTask) (bool, error) {
+	reused := false
+	err := a.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		if err := aiGuardWorkerWrite(tx, ctx, task.ID, task.OwnerID); err != nil {
+			return err
+		}
+		var draft AIImportDraft
+		err := tx.Table(aiTable("company")).Where("task_id=? AND owner_id=? AND generation_state='ready' AND deleted=0", task.ID, task.OwnerID).First(&draft).Error
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		reused = true
+		result := tx.Model(&AIImportWorkItem{}).Where("task_id=? AND stage LIKE 'company%' AND status<>'succeeded'", task.ID).Updates(map[string]any{"status": "succeeded", "error": "", "error_field": "saved_draft_reused", "next_retry_at": nil, "updated_at": time.Now().UTC()})
+		if result.Error != nil {
+			return result.Error
+		}
+		if result.RowsAffected > 0 {
+			return tx.Model(&AIImportTask{}).Where("id=?", task.ID).Update("result_version", gorm.Expr("result_version+1")).Error
+		}
+		return nil
+	})
+	return reused, err
 }

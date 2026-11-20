@@ -562,6 +562,9 @@ func aiSourcedCompany(x AICompanyExtraction, total int) Payload {
 }
 
 func (a *App) aiExtractCompany(ctx context.Context, task AIImportTask, companyEvidence []any, inventory AIInventory) (problem error) {
+	if reused, err := a.aiReuseSavedCompany(ctx, task); err != nil || reused {
+		return err
+	}
 	defer func() {
 		if problem != nil && problem != errAIRetryScheduled && aiLocalFailure(problem) {
 			if e := a.aiMarkUnitIssue(task, "company", problem); e != nil {
@@ -575,7 +578,7 @@ func (a *App) aiExtractCompany(ctx context.Context, task AIImportTask, companyEv
 	}
 
 	var company AICompanyExtraction
-	companyPrompt := `Extract company facts ONLY from the supplied verbatim evidence. Return {"data":{"name":"","name_en":"","description":"","description_en":"","main_products":"","phone":"","address":"","region_name":"","company_profile":{"short_name":"","summary":"","website":"","contact_name":""}},"source_pages":[1],"field_sources":{"name":[1],"description":[1]},"review_issues":[]}. Use the website's data field names. Keep missing strings empty. Every nonempty data field must have evidence pages in field_sources (nested profile fields use company_profile.FIELD). Keep all listed contact numbers in company_profile.contacts if phone has multiple values; phone itself must be one original number. Do not invent region, category IDs or commercial claims.`
+	companyPrompt := `Extract company facts ONLY from the supplied verbatim evidence. Return {"data":{"name":"","name_en":"","description":"","description_en":"","main_products":"","phone":"","address":"","region_name":"","company_profile":{"short_name":"","summary":"","website":"","contact_name":"","contacts":[{"area":"","area_en":"","name":"","name_en":"","phone":"","wechat":""}]}},"source_pages":[1],"field_sources":{"name":[1],"description":[1]},"review_issues":[]}. Use the website's data field names. Keep missing strings empty. Every nonempty data field must have evidence pages in field_sources (nested profile fields use company_profile.FIELD). Contacts must be an array of objects with the exact keys shown, never an array of telephone strings. Each phone remains an original string; missing names, areas and WeChat stay empty. Keep all listed contact numbers in contacts if phone has multiple values; phone itself must be one original number. Return contacts:[] when absent. Do not invent region, category IDs or commercial claims.`
 	if e := a.aiModel(ctx, task, "company", cfg.Model, companyPrompt, []bailian.Part{{Type: "text", Text: aiJSON(companyEvidence)}}, &company); e != nil {
 		return e
 	}
@@ -679,6 +682,7 @@ func (a *App) aiExtractOneProduct(ctx context.Context, task AIImportTask, cfg ba
 	}
 	x.SourcePages = product.SourcePages
 	x.ReviewIssues = append(x.ReviewIssues, inventory.Issues...)
+	x.ReviewIssues = append(x.ReviewIssues, product.ReviewIssues...)
 	if e := aiValidateExtraction(x, task.Total, product.SourcePages); e != nil {
 		return e
 	}

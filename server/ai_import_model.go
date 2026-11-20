@@ -179,11 +179,12 @@ type AIPageIndex struct {
 	LogoRegions []AIRegion    `json:"logo_regions"`
 }
 type AIInventoryProduct struct {
-	TempID      string   `json:"temp_id"`
-	ProductName string   `json:"product_name"`
-	SeriesName  string   `json:"series_name"`
-	BlockIDs    []string `json:"block_ids"`
-	SourcePages []int    `json:"source_pages"`
+	ReviewIssues []string `json:"review_issues,omitempty"`
+	TempID       string   `json:"temp_id"`
+	ProductName  string   `json:"product_name"`
+	SeriesName   string   `json:"series_name"`
+	BlockIDs     []string `json:"block_ids"`
+	SourcePages  []int    `json:"source_pages"`
 }
 type AICompanyExtraction struct {
 	Data         Payload          `json:"data"`
