@@ -10,3 +10,8 @@
 @media(max-width:800px){.admin-settings-page .admin-topbar{padding:10px 20px}.admin-settings-page .admin-tools{margin-left:auto}.admin-settings-page .admin-tools .text-link span{display:inline}}
 
 .ai-model-settings fieldset{border:0;padding:0;margin:0;min-width:0}.ai-model-settings>fieldset>label,.ai-model-settings>label{display:flex;align-items:flex-start;gap:.6rem;margin:1rem 0}.ai-model-settings input[type=checkbox]{width:1rem;height:1rem;flex:0 0 1rem;margin:.2em 0 0}.ai-model-settings input[readonly]{background:#f5f8fc}.ai-model-settings hr{border:0;border-top:1px solid #dbe5f2;margin:1.5rem 0}
+.ai-model-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.ai-model-tabs [role="tab"]{min-height:44px;padding:10px 18px;border:1px solid #c9dbef;border-radius:9px;background:#fff;color:#153554;cursor:pointer}
+.ai-model-tabs [role="tab"][aria-selected="true"]{background:#1769cc;border-color:#1769cc;color:#fff;font-weight:600}
+.ai-prompt-settings fieldset{border:0;padding:0;margin:0;min-width:0}
+.ai-prompt-settings textarea{font-family:inherit;line-height:1.6}

@@ -16,7 +16,7 @@ export function AIModelSettings(){
  }catch(e){setError(text(e))}finally{setBusy(false)}};
  const test=async()=>{setBusy(true);setError('');setNotice('');try{const v=await api<{model:string;usage:{total_tokens?:number}|null}>(path+'/test',{method:'POST',body:JSON.stringify({model_mode:testMode,confirm_max:confirmMax}),signal:AbortSignal.timeout(15*60*1000)},'admin');setNotice(`连通成功：${v.model}；本次Token：${v.usage?.total_tokens??'未返回'}。实际费用以百炼账单为准。`)}catch(e){setError(text(e))}finally{setBusy(false)}};
  if(request.error)return <div className="notice error" role="alert">{messages[request.error]||request.error}<button onClick={request.reload}>重新加载</button></div>;if(!settings)return <Loading/>;
- const tabs=<div className="settings-actions" role="tablist" aria-label="AI管理配置"><button role="tab" aria-selected={tab==='models'} onClick={()=>setTab('models')}>模型连接</button><button role="tab" aria-selected={tab==='prompts'} onClick={()=>setTab('prompts')}>内容提取规则</button></div>;
+ const tabs=<div className="settings-actions ai-model-tabs" role="tablist" aria-label="AI管理配置"><button role="tab" aria-selected={tab==='models'} onClick={()=>setTab('models')}>模型连接</button><button role="tab" aria-selected={tab==='prompts'} onClick={()=>setTab('prompts')}>内容提取规则</button></div>;
  if(tab==='prompts')return <div>{tabs}<AIPromptSettings/></div>;
  const costly=settings.extraction_model===max||settings.review_model===max;
  return <div className="ai-model-settings">{tabs}<h2>AI模型配置 · 阿里云百炼</h2><p className="notice">模型由管理员统一配置，厂商无需选择。默认提取、复核均使用flash；不会按文档长度或失败次数自动升级。新任务固化模型，后续配置不改变已有任务。</p>
