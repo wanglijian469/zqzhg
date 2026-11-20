@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -65,6 +66,38 @@ func (a *App) aiRetryUnits(c *gin.Context) {
 		}
 		ids := []uint64{}
 		checkpoint := a.aiReadCheckpoint(t.ID)
+		legacyLatest := false
+		if version > 0 {
+			var total int64
+			if err := tx.Model(&AIImportWorkItem{}).Where("task_id=?", t.ID).Count(&total).Error; err != nil {
+				return err
+			}
+			if total == 0 && t.Status == "failed" {
+				// Upgrade only unfinished legacy stages. Saved checkpoints retain the
+				// original rules, so changing the default cannot replay their calls.
+				failedStage := ""
+				if aiLocalFailure(errors.New(t.Error)) {
+					var last AIImportModelCall
+					if tx.Select("stage").Where("task_id=?", t.ID).Order("id DESC").First(&last).Error == nil {
+						failedStage = strings.TrimSuffix(last.Stage, "-repair")
+					}
+				}
+				original := t.PromptVersionID
+				if original == 0 {
+					original = 1
+				}
+				for stage, saved := range checkpoint.Models {
+					if stage == failedStage || strings.HasSuffix(stage, "-repair") {
+						continue
+					}
+					unit := AIImportWorkItem{TaskID: t.ID, Stage: stage, Status: "succeeded", PromptVersionID: original, Fingerprint: saved.Fingerprint, UpdatedAt: time.Now().UTC()}
+					if err := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&unit).Error; err != nil {
+						return err
+					}
+				}
+				legacyLatest = true
+			}
+		}
 		var drafts []AIImportDraft
 		if e := tx.Table(aiTable("product")).Where("task_id=?", t.ID).Find(&drafts).Error; e != nil {
 			return e
@@ -114,7 +147,11 @@ func (a *App) aiRetryUnits(c *gin.Context) {
 		if e := recordOperation(tx, actor(c).ID, "ai_import", t.ID, "ai_retry_units", "policy="+req.PromptPolicy+";units="+aiJSON(ids)); e != nil {
 			return e
 		}
-		return tx.Model(&t).Updates(map[string]any{"status": "queued", "error": "", "lease": "", "locked_until": nil, "next_retry_at": nil, "checkpoint": aiJSON(checkpoint), "result_version": gorm.Expr("result_version+1"), "updated_at": time.Now().UTC()}).Error
+		taskUpdates := map[string]any{"status": "queued", "error": "", "lease": "", "locked_until": nil, "next_retry_at": nil, "checkpoint": aiJSON(checkpoint), "result_version": gorm.Expr("result_version+1"), "updated_at": time.Now().UTC()}
+		if legacyLatest {
+			taskUpdates["prompt_version_id"] = version
+		}
+		return tx.Model(&t).Updates(taskUpdates).Error
 	})
 	if e != nil {
 		dbFail(c, e)

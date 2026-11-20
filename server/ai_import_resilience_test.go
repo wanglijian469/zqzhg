@@ -399,3 +399,40 @@ func TestAISavedCompanyAndIndependentVariantRecovery(t *testing.T) {
 		t.Fatal("ambiguous contact shape accepted")
 	}
 }
+
+func TestAILegacyFailedTaskAdoptsLatestWithoutReplayingSavedStage(t *testing.T) {
+	t.Setenv("AI_IMPORT_ENABLED", "true")
+	t.Setenv("DASHSCOPE_API_KEY", "synthetic-legacy-test")
+	t.Setenv("DASHSCOPE_BASE_URL", "https://model.invalid/compatible-mode/v1")
+	a := importTestApp(t)
+	tc := testClient{t, a.router()}
+	token := tc.login("13900009791")
+	var session Session
+	a.DB.First(&session, "token_hash=?", digest(token))
+	task := aiTestTask(t, a, session.AccountID)
+	task.PromptVersionID = 1
+	task.Status = "failed"
+	task.Error = "ai_invalid_schema"
+	task.ExtractionModel = aiFlashModel
+	task.ReviewModel = aiFlashModel
+	prompt := "legacy-index"
+	fp := digest(aiFlashModel + aiExtractionRules + prompt + "null")
+	task.Checkpoint = aiJSON(aiImportCheckpoint{Models: map[string]aiModelCheckpoint{"index-1": {Fingerprint: fp, Response: json.RawMessage(`{"company_text":"","blocks":[],"logo_regions":[]}`)}}})
+	a.DB.Save(&task)
+	a.DB.Create(&AIImportModelCall{TaskID: task.ID, Stage: "company-repair", Error: "ai_invalid_schema", UsageJSON: "null", CreatedAt: time.Now().UTC()})
+	tc.call("POST", fmt.Sprintf("/merchant/ai-import/tasks/%d/retry", task.ID), token, gin.H{"prompt_policy": "latest", "prompt_version_id": 2}, 200)
+	a.DB.First(&task, task.ID)
+	var unit AIImportWorkItem
+	a.DB.First(&unit, "task_id=? AND stage='index-1'", task.ID)
+	if task.PromptVersionID != 2 || task.ExtractionModel != aiFlashModel || unit.PromptVersionID != 1 || unit.Status != "succeeded" {
+		t.Fatal("legacy prompt snapshots lost", task.PromptVersionID, unit)
+	}
+	calls := 0
+	old := http.DefaultTransport
+	t.Cleanup(func() { http.DefaultTransport = old })
+	http.DefaultTransport = aiFixtureTransport(func(*http.Request) (*http.Response, error) { calls++; return nil, fmt.Errorf("unexpected model call") })
+	var page AIPageIndex
+	if err := a.aiModel(context.Background(), task, "index-1", aiFlashModel, prompt, nil, &page); err != nil || calls != 0 {
+		t.Fatal("saved legacy stage replayed", err, calls)
+	}
+}

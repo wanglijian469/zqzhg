@@ -70,7 +70,7 @@ export function TaskReview({id}:{id:number}){
    <p>可核对产品 {readyCount} 项，待补产品 {data.products.length-readyCount} 项；待补处理单元 {failedUnits.length} 项。来源页及完整性问题保留在后台核对，不会写入公开产品介绍。</p>
    {task.next_retry_at&&working&&<p role="status">正在等待自动重试，计划时间：{new Date(task.next_retry_at).toLocaleTimeString()}。已保存成果保留。</p>}
    {live.error&&<p className="notice">状态连接暂时中断，系统将自动重连；后台任务继续，当前编辑保留。</p>}
-   {(!working&&(task.status==='failed'||failedUnits.length>0))&&<div className="ai-actions"><button disabled={busy} onClick={()=>retry()}>从已完成阶段重试</button><button disabled={busy||!failedUnits.length} onClick={()=>retry(true)}>按最新规则重试未完成项</button></div>}
+   {(!working&&(task.status==='failed'||failedUnits.length>0))&&<div className="ai-actions"><button disabled={busy} onClick={()=>retry()}>从已完成阶段重试</button><button disabled={busy||(!failedUnits.length&&task.status!=='failed')} onClick={()=>retry(true)}>按最新规则重试未完成项</button></div>}
    {!!failedUnits.length&&<details open><summary>查看并选择待补单元（{failedUnits.length}）</summary>{failedUnits.map(u=><label className="notice" key={u.id}><input type="checkbox" checked={retryUnits.includes(u.id)} disabled={working||busy} onChange={()=>setRetryUnits(ids=>ids.includes(u.id)?ids.filter(n=>n!==u.id):[...ids,u.id])}/>{data.products.find(p=>u.stage.startsWith(p.temp_id+'-'))?.data.name||(/^index-/.test(u.stage)?'来源页 '+u.stage.replace('index-',''):'企业或目录整理')}：{aiMessages[u.error||'']||'该部分需重新识别或人工核对'}<details><summary>技术详情</summary>{u.stage} · {u.error} · {u.error_field||''} · 已请求 {u.attempts}/3 次 · 规则 {u.prompt_version_id}</details></label>)}</details>}
 
    <p>识别完成不等于公开。您确认并提交后，仍须平台审核通过。</p>
