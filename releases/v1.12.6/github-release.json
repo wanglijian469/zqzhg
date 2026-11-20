@@ -1,0 +1,44 @@
+{
+  "url": "https://github.com/wanglijian469/zqzhg/releases/tag/v1.12.6",
+  "tag": "v1.12.6",
+  "commit": "2198b89bf59c86a5377b90c9598618fd39e4ef9c",
+  "draft": false,
+  "assets": [
+    {
+      "name": "README-v1.12.6.md",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.12.6/README-v1.12.6.md",
+      "size": 7973,
+      "digest": "sha256:8b1530c9b6ecfbf7e47852208706e34807d352339be0e3d32468647a7435ac53"
+    },
+    {
+      "name": "SHA256SUMS-v1.12.6.txt",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.12.6/SHA256SUMS-v1.12.6.txt",
+      "size": 464,
+      "digest": "sha256:843725a22b43ec126267cd53c63cc45ac33deeebce9d53c7f653905fa9489439"
+    },
+    {
+      "name": "upgrade-ai-import-040.py",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.12.6/upgrade-ai-import-040.py",
+      "size": 20401,
+      "digest": "sha256:4d0410d5dd4072f9db72c1b71a425cee5147f1115228de728b4b2da667dec09c"
+    },
+    {
+      "name": "zqzhg-android-1.12.1-54.apk",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.12.6/zqzhg-android-1.12.1-54.apk",
+      "size": 86431253,
+      "digest": "sha256:bdc96a275d3a944c065766d9bd7cc63b9e0b0bc3d52c081515d4f96d68464771"
+    },
+    {
+      "name": "zqzhg-v1.12.6-linux-amd64.tar.gz",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.12.6/zqzhg-v1.12.6-linux-amd64.tar.gz",
+      "size": 83849635,
+      "digest": "sha256:cde9cb7ac693320ca1d3003638f610247b16470aa4508835df7177e7f6cfe639"
+    },
+    {
+      "name": "zqzhg-v1.12.6-source.zip",
+      "url": "https://github.com/wanglijian469/zqzhg/releases/download/v1.12.6/zqzhg-v1.12.6-source.zip",
+      "size": 15484567,
+      "digest": "sha256:24de998da44f64edb6b77a3a442c060d48007ab3e843978f05ff58ed32e27603"
+    }
+  ]
+}
