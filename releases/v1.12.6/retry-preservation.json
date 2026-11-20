@@ -1,0 +1,22 @@
+{
+  "retry_preservation": [
+    {
+      "sample": "paiyi",
+      "status": "review_pending",
+      "ready_product_drafts_unchanged": true,
+      "ready_product_model_calls_unchanged": true,
+      "saved_company_unchanged": true,
+      "company_created_after_retry": false,
+      "company_calls_added": 0
+    },
+    {
+      "sample": "laus",
+      "status": "review_pending",
+      "ready_product_drafts_unchanged": true,
+      "ready_product_model_calls_unchanged": true,
+      "saved_company_unchanged": null,
+      "company_created_after_retry": true,
+      "company_calls_added": 2
+    }
+  ]
+}

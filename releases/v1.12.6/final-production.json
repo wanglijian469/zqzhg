@@ -1,0 +1,12 @@
+{
+  "version": "1.12.6",
+  "schema": 40,
+  "historical_published_revisions_unchanged": true,
+  "private_update_drafts_created": 2,
+  "test_process_ports_closed": true,
+  "paiyi_500_mib_preserved": true,
+  "video_limit_seconds": "300",
+  "production_test_accounts_created": 0,
+  "original_files_protected": true,
+  "passed": true
+}

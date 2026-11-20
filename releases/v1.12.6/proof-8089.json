@@ -1,0 +1,13 @@
+{
+  "port": 8089,
+  "public_product_88_standard_copy": true,
+  "technical_values_unchanged": true,
+  "private_evidence_retained": true,
+  "models_flash_only": true,
+  "no_key_in_settings": true,
+  "four_prompt_stages": true,
+  "merchant_cannot_read_admin_prompts": true,
+  "cross_enterprise_task_denied": true,
+  "tokens_deleted_after_test": true,
+  "passed": true
+}

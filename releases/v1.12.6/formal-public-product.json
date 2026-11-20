@@ -1,0 +1,20 @@
+{
+  "layouts": [
+    {
+      "width": 1440,
+      "publicProduct": 88,
+      "noSourceColumn": true,
+      "noPDFAnnotations": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "publicProduct": 88,
+      "noSourceColumn": true,
+      "noPDFAnnotations": true,
+      "overflow": false
+    }
+  ],
+  "pageErrors": [],
+  "passed": true
+}

@@ -1,0 +1,35 @@
+{
+  "syntheticData": true,
+  "privateAPINetworkRequests": 0,
+  "layouts": [
+    {
+      "width": 1440,
+      "legacyLatestRetryAvailable": true,
+      "adminPrompts": true,
+      "previewNoModel": true,
+      "partialResults": true,
+      "pagination": true,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "legacyLatestRetryAvailable": true,
+      "adminPrompts": true,
+      "previewNoModel": true,
+      "partialResults": true,
+      "pagination": true,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "legacyLatestRetryAvailable": true,
+      "adminPrompts": true,
+      "previewNoModel": true,
+      "partialResults": true,
+      "pagination": true,
+      "overflow": false
+    }
+  ],
+  "pageErrors": [],
+  "passed": true
+}

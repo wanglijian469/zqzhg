@@ -1,0 +1,22 @@
+{
+  "websiteVersion": "1.12.6",
+  "schemaVersion": 40,
+  "binarySourceCommit": "d977ba48d28dd842da50e1124ecbaffa3fd4fbb9",
+  "androidVersion": "1.12.1+54",
+  "productionRelease": "/opt/zqzt/releases/v1.12.6-d977ba4",
+  "backendTestsPassed": 25,
+  "bailianClientTestsPassed": 4,
+  "frontendTestsPassed": 21,
+  "flutterTestsPassed": 18,
+  "flutterTestsSkipped": 1,
+  "physicalDeviceAcceptance": false,
+  "backupLocation": "encrypted_developer_workstation",
+  "productionOriginalsMigratedOrDeletedThisRelease": false,
+  "realPDFAutomaticPublication": false,
+  "linuxSHA256": "cde9cb7ac693320ca1d3003638f610247b16470aa4508835df7177e7f6cfe639",
+  "androidSHA256": "bdc96a275d3a944c065766d9bd7cc63b9e0b0bc3d52c081515d4f96d68464771",
+  "formalWebMapPassed": true,
+  "formalEmbeddedAppMapPassed": true,
+  "publicProduct88Passed": true,
+  "publicAPKWholeFileSHA256Verified": true
+}

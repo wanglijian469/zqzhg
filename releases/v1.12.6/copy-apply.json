@@ -1,0 +1,28 @@
+{
+  "rows": [
+    {
+      "base_revision_id": 99,
+      "changed_fields": [
+        "description",
+        "parameters",
+        "product_details"
+      ],
+      "content_id": 88,
+      "draft_revision_id": 100,
+      "status": "draft_created"
+    },
+    {
+      "base_revision_id": 97,
+      "changed_fields": [
+        "description",
+        "parameters",
+        "product_details"
+      ],
+      "content_id": 87,
+      "draft_revision_id": 101,
+      "status": "draft_created"
+    }
+  ],
+  "schema": 40,
+  "publishedRevisionsUnchanged": true
+}
